@@ -11,8 +11,9 @@ The game advances in ticks of `ms = speedTable[speed]`, a table of 16 speeds at 
 the options slider shows `15 − index` (C, `0x456a1d`, `0x42a5e2`).
 
 All durations in the data are ticks: training and construction (`.chr` 0x18c), upgrades (`Upgrade.upi` 0x204),
-items. Animations advance one sequence step per tick, and a walking unit moves by its walk step for the current
-frame (D). For OpenRA, the mod's `GameSpeeds` can use the same table (`Timestep: 71` as default), so durations
+items. Animations advance one sequence step per tick. A walking unit moves each tick by the walk step for its
+facing and current frame, plus the speed upgrade's bonus on each moving axis (C, `0x45d1a0`). So the "speed"
+in the race tables is pixels per tick: Soldier 5.8 px per tick, about 82 px per second at the default speed. For OpenRA, the mod's `GameSpeeds` can use the same table (`Timestep: 71` as default), so durations
 and speeds keep their original values without rescaling.
 
 ## Resources
@@ -24,6 +25,20 @@ and speeds keep their original values without rescaling.
 - A **second resource** exists (`P_PLAYE` 0x194, 1,000 at start; type cost 0x194; upgrade cost +0x22c), but every
   unit, building and upgrade costs 0 of it in the shipped data. The mod can leave it out.
 - Repair costs 2 berries per +5 HP (C, `0x459379`). Cancelling refunds the full cost (C, `0x4572dc`).
+
+## Combat
+
+Damage per hit (C, `0x457cc4`):
+
+    damage = max(1, attacker attack + attack upgrades − (target armour + armour upgrades))
+
+- The attacker's side is ×1.5 under a status effect (unit flags 0x1f000, likely Morale).
+- The target's armour is raised by a percentage under a shield effect (flags 0xc00).
+- Weapons with a splash radius (weapon record 0x1f8) hit everything inside it
+  ([effect.md](../formats/effect.md)).
+- Whether a weapon can hit air is bit 3 of its target mask.
+- Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
+- The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 
 ## Population
 
@@ -44,8 +59,7 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
   - row 0: % reduction of the value at `.chr` 0x13cc, which is the attack delay (D);
   - row 1: attack range bonus in pixels, also against air;
   - row 2: % mana cost reduction (casters);
-  - row 4: Dilophos only, not decoded;
-  - row 5: an ability that unlocks at a level.
+  - rows 4 and 5 (Dilophos; MudMan and Gargoyle): no code reads them, so they have no effect.
 
 ## Upgrades (`Upgrade.upi`)
 
@@ -101,6 +115,8 @@ originals and releases them when it changes back (C, `0x45ff60`). Units carry fl
 
 ## Open
 
-- The exact unit of walk speed per tick in practice (game loop timing of animation steps).
-- `Level.lvt` row 4, `.chr` 0x13d0 and 0x2410, the two unknown upgrade stats.
-- Spell costs and effects (Elf and Demon, later).
+None of these affect Primitive or Tyrano:
+
+- the spell mana costs (a run-time table; for Elf and Demon);
+- `.chr` 0x13d0 and 0x2410;
+- the two unused upgrade stat blocks.
