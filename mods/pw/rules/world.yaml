@@ -20,7 +20,11 @@
 	MusicPlaylist:
 	ScreenMap:
 	Selection:
-	TerrainRenderer:
+	PwTerrainRenderer:
+		Tilesets:
+			JUNGLE: content|tilesets/jungle.trt
+			DUNGEON: content|tilesets/dungeon.trt
+			RUIN: content|tilesets/ruin.trt
 
 world:
 	Inherits: ^baseworld

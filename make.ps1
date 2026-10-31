@@ -119,9 +119,7 @@ function Check-Command
 	Write-Host "Compiling $modID in Debug configuration..." -ForegroundColor Cyan
 
 	dotnet clean -c Debug --nologo --verbosity minimal
-	# NuGetAudit=false: the engine's NuGet.CommandLine tooling package has a known advisory (NU1901) that newer SDKs
-	# report, and -warnaserror would fail on code we do not own.
-	dotnet build -c Debug --nologo -warnaserror -p:TargetPlatform=win-x64 -p:NuGetAudit=false
+	dotnet build -c Debug --nologo -warnaserror -p:TargetPlatform=win-x64
 
 	if ($lastexitcode -ne 0)
 	{
@@ -297,6 +295,10 @@ $modID = $env:MOD_ID
 
 $env:MOD_SEARCH_PATHS = "./mods,$env:ENGINE_DIRECTORY/mods"
 $env:ENGINE_DIR = ".." # Set to potentially be used by the Utility and different than $env:ENGINE_DIRECTORY, which is for the script.
+
+# The engine's NuGet.CommandLine tooling package has a known advisory (NU1901) that newer .NET SDKs report; the
+# -warnaserror check builds (ours and the engine's) would fail on it. MSBuild reads this as the NuGetAudit property.
+$env:NuGetAudit = "false"
 
 # Fetch the engine if required
 if ($command -eq "all" -or $command -eq "clean" -or $command -eq "check")

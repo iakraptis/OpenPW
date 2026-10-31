@@ -24,6 +24,9 @@ Sequences:
 
 TileSets:
 	pw|tilesets/test.yaml
+	pw|tilesets/jungle.yaml
+	pw|tilesets/dungeon.yaml
+	pw|tilesets/ruin.yaml
 	
 Voices:
 	pw|voices/pw.yaml

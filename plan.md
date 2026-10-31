@@ -362,9 +362,21 @@ Left for Elf and Demon: the spell mana costs.
 - Deliverable: `docs/game/<race>.md` with stats tables and `docs/game/TechTree.md`.
 
 ### Phase 3: First playable (one race, one map)
+- [x] **Terrain renderer** (2026-10-31): `PwTerrainRenderer` (`OpenRA.Mods.Pw/Traits/World`) replaces
+      `TerrainRenderer`. At map load it composes each cell from the original tileset exactly as `Pw.exe` does
+      (material blending through mask tiles, hill overlays, alpha edges, hilltop fill), caching identical cells.
+      The largest map needs about 25,000 cells, which fit in two 4096 sheets.
+  - Maps carry the original cell words in `terrain.bin`. `map.bin` holds the movement type (tilesets `JUNGLE`,
+    `DUNGEON`, `RUIN`: Clear, Ramp, Water, Cliff, with flat placeholder images).
+  - Maps without `terrain.bin` and the editor previews fall back to the template images.
+  - The liquid is static (frame 0) for now.
+  - Until the installer exists, `research/tools/export_dev.py` writes the tilesets and all 17 maps to
+    `^SupportDir/Content/pw/`.
+  - Checked in game (One VS One) with `research/tools/shot.ps1`.
 - The full template tree of §3, with the Primitive race on top of it.
-- Primitive race: Buildman, the core buildings, two combat units; berries + water gathering.
-- Hand-written test map on the converted Jungle tileset.
+- Primitive race: Buildman, the core buildings, two combat units; berries gathering (the second resource is
+  unused, see docs/game/rules.md).
+- Test map: the converted original maps work directly; a small hand-written test map can come later.
 - Port the OpenSYW traits as needed: `Builder` / `UnderConstruction` (if the original uses worker construction),
   per-building production queues, sidebar logic.
 - Lua test maps + `run_tests.py`, as in OpenSYW.

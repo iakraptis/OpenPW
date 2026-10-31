@@ -1,0 +1,56 @@
+General:
+	Name: Ruin
+	Id: RUIN
+	EditorTemplateOrder: Terrain
+	Palette:
+
+# Movement only: PwTerrainRenderer draws the original terrain from the map's terrain.bin (docs/formats/map.md). The
+# map converter picks the template from the original cell flags: walkable and buildable, walkable only (ramps),
+# water, or blocked (cliffs).
+Terrain:
+	TerrainType@Clear:
+		Type: Clear
+		TargetTypes: Ground
+		Color: B09060
+	TerrainType@Ramp:
+		Type: Ramp
+		TargetTypes: Ground
+		Color: A08058
+	TerrainType@Water:
+		Type: Water
+		TargetTypes: Water
+		Color: 6A5A30
+	TerrainType@Cliff:
+		Type: Cliff
+		TargetTypes: Ground
+		Color: 5A4A38
+
+Templates:
+	Template@1:
+		Id: 1
+		Images: tilesets/types/clear.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Clear
+	Template@2:
+		Id: 2
+		Images: tilesets/types/ramp.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Ramp
+	Template@3:
+		Id: 3
+		Images: tilesets/types/water.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Water
+	Template@4:
+		Id: 4
+		Images: tilesets/types/cliff.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Cliff
