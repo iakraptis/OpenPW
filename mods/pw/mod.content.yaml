@@ -19,6 +19,11 @@ Rules:
 
 Sequences:
 	pw|sequences/placeholder.yaml
+	pw|sequences/primitive.yaml
+	pw|sequences/tyrano.yaml
+	pw|sequences/elf.yaml
+	pw|sequences/demon.yaml
+	pw|sequences/wild.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
 
