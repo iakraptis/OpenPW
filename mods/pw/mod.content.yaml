@@ -1,0 +1,32 @@
+Cursors:
+	pw|cursors/default.yaml
+
+Missions:
+	pw|missions/pw.yaml
+
+Music:
+	pw|music/pw.yaml
+
+Notifications:
+	pw|notifications/pw.yaml
+
+Rules:
+	pw|rules/placeholder.yaml
+	pw|rules/mpspawn.yaml
+	pw|rules/palettes.yaml
+	pw|rules/player.yaml
+	pw|rules/world.yaml
+
+Sequences:
+	pw|sequences/placeholder.yaml
+	pw|sequences/mapeditor.yaml
+	pw|sequences/mpspawn.yaml
+
+TileSets:
+	pw|tilesets/test.yaml
+	
+Voices:
+	pw|voices/pw.yaml
+
+Weapons:
+	pw|weapons/pw.yaml

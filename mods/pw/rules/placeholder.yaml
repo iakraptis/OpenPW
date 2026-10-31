@@ -1,0 +1,17 @@
+placeholder:
+	AlwaysVisible:
+	BodyOrientation:
+	HitShape:
+	Immobile:
+	MapEditorData:
+		Categories: Actors
+	QuantizeFacingsFromSequence:
+	RenderSprites:
+	WithSpriteBody:
+
+placeholder.colorpicker:
+	Inherits: placeholder
+	RenderSprites:
+		Image: placeholder
+		Palette: colorpicker
+	-MapEditorData:

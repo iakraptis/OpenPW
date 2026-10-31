@@ -1,0 +1,49 @@
+^baseworld:
+	Inherits: ^palettes
+	ActorMap:
+	AlwaysVisible:
+	ControlGroups:
+	Faction@Random:
+		InternalName: Random
+		Name: faction-random.name
+		RandomFactionMembers: primitive, tyrano
+		Description: faction-random.description
+	Faction@primitive:
+		InternalName: primitive
+		Name: faction-primitive.name
+		Description: faction-primitive.description
+	Faction@tyrano:
+		InternalName: tyrano
+		Name: faction-tyrano.name
+		Description: faction-tyrano.description
+	LoadWidgetAtGameStart:
+	MusicPlaylist:
+	ScreenMap:
+	Selection:
+	TerrainRenderer:
+
+world:
+	Inherits: ^baseworld
+	ColorPickerManager:
+		PreviewActor: placeholder.colorpicker
+	CreateMapPlayers:
+	CustomTerrainDebugOverlay:
+	DebugVisualizations:
+	MapStartingLocations:
+	SpawnMapActors:
+	SpawnStartingUnits:
+	StartingUnits@Placeholder:
+		BaseActor: placeholder
+		Factions: primitive, tyrano
+		ClassName: options-starting-units.unlabeled
+
+editorworld:
+	Inherits: ^baseworld
+	BuildableTerrainOverlay:
+		AllowedTerrainTypes:
+		Palette:
+	EditorActionManager:
+	EditorActorLayer:
+	EditorCursorLayer:
+	MarkerLayerOverlay:
+	TerrainGeometryOverlay:
