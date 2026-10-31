@@ -299,12 +299,35 @@ Priority order:
    terrain types derived from the flags (clear, water, cliff, ramp), so the standard pathfinder keeps working.
 3. **`.doo`** doodads (trees, rocks), **`.spz/.sp`** effects and UI sprites, **`.wpn`/`.maz`** projectiles and
    spell effects (probably the same container as `.chr`). `.doo` **decoded 2026-10-31**
-   ([docs/formats/doo.md](docs/formats/doo.md)): palette + 4 variants of `.chr` frames. `.spz` is one `.chr`
-   frame with a separate `.pnt` palette (berry bushes confirmed); the UI `.spz` still need checking.
-4. **`.pnt/.trt/.mnt/.scr`** UI panels and menus, **`.fnt`** fonts, **`.mcs`** cursors.
-5. Text encodings (`Mm_eng.txt`, campaign dialogue, AI script), masked entry names.
+   ([docs/formats/doo.md](docs/formats/doo.md)): palette + 4 variants of `.chr` frames. **Effects decoded
+   2026-10-31** ([docs/formats/effect.md](docs/formats/effect.md)): weapons and spells share one layout (0xadc
+   record, palette, flat frame list, WAVs); projectiles are 8 flight directions + impact frames. All 69 files
+   parse exactly.
+4. **`.pnt/.trt/.mnt/.scr`** UI panels and menus, **`.fnt`** fonts, **`.mcs`** cursors. **Decoded 2026-10-31**
+   ([docs/formats/ui.md](docs/formats/ui.md)):
+   - every `.spz`/`.sp` is `.chr` frames;
+   - portraits (170 small and middle, by unit type) and the command, upgrade, item, spell and tech button sheets,
+     one block per race (the art is the same, the frame styles differ);
+   - full screens, and the per-race interface bar;
+   - menus: a resource chain of palette, frames and Bink videos (the animated main-menu background);
+   - 100 cursors with hotspots.
 
-Deliverable: one `docs/formats/<ext>.md` per format, plus a preview for each.
+   Fonts render but are only partly understood, which is fine because OpenRA uses TrueType.
+5. Text encodings. **Decoded 2026-10-31** ([docs/formats/text.md](docs/formats/text.md)):
+   - `Mm_*.txt` network and lobby messages in six languages;
+   - the masked `JW2_17` entries are copies of them;
+   - the AI script language, used by the skirmish AI and by 384 campaign scripts (48 scenarios × 8 players);
+   - there is no campaign dialogue in the archives.
+
+Deliverable: one `docs/formats/<ext>.md` per format, plus a preview for each. **Phase 1 is complete
+(2026-10-31).** Open details, none of them blocking:
+- the `.fnt` glyph layout;
+- the menu widget records;
+- `Mousec.dat` and `Version.dat`;
+- a few record fields: the `.chr` type record (0x13cc, 0x13d0, 0x2410), `P_PLAYE` 0xa8, `P_SCENA` 0x2808.
+
+The weapon and spell record fields, the `Upgrade.upi`/`Level.lvt`/`Item.itm` tables, and the AI command
+arguments belong to Phases 2 and 7.
 
 **Player colours:** characters are 8-bit with a reserved ramp (245–254), so OpenRA's palette remap works for
 them. Each `.chr` has its own palette, so expect one palette per actor (or convert to RGBA PNG plus a remap mask,
