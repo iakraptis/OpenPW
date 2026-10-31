@@ -4,7 +4,7 @@ Metadata:
 	WindowTitle: mod-windowtitle
 
 # The converted Primitive Wars content (tilesets, art, sounds, maps) lives in the player's support folder; it is never
-# committed. Until the asset installer exists (plan.md Phase 4) it is written by research/tools/export_dev.py.
+# committed. install-assets.cmd (OpenRA.Mods.Pw/AssetInstaller) writes it from an original installation.
 FileSystem: DefaultFileSystem
 	Packages:
 		^EngineDir

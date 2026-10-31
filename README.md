@@ -3,8 +3,8 @@
 A restoration of **Primitive Wars** (Legend of the Land, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
 engine, built with the OpenRA Mod SDK (engine `release-20250330`).
 
-This repository holds only code, rules and documentation. No original game files are included. When the asset
-installer is ready (plan, Phase 4), it will convert the art, sounds and maps from your own copy of the game.
+This repository holds only code, rules and documentation. No original game files are included: the asset installer
+converts them from your own copy of the game (the terrain and maps so far; the art and sounds are next).
 
 ## Status
 
@@ -24,6 +24,8 @@ Requires the .NET SDK (6.0 or newer).
 
 ```
 make.cmd all          # fetch the engine into ./engine and build (Linux/macOS: make)
+install-assets.cmd [PATH TO PRIMITIVE WARS]
+                      # convert your copy of the game into the mod's content folder (./install-assets.sh)
 launch-game.cmd       # start the mod (Linux/macOS: ./launch-game.sh)
 make.cmd test         # YAML and lint checks
 make.cmd check        # C# style checks

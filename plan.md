@@ -369,9 +369,9 @@ Left for Elf and Demon: the spell mana costs.
   - Maps carry the original cell words in `terrain.bin`. `map.bin` holds the movement type (tilesets `JUNGLE`,
     `DUNGEON`, `RUIN`: Clear, Ramp, Water, Cliff, with flat placeholder images).
   - Maps without `terrain.bin` and the editor previews fall back to the template images.
-  - The liquid is static (frame 0) for now.
-  - Until the installer exists, `research/tools/export_dev.py` writes the tilesets and all 17 maps to
-    `^SupportDir/Content/pw/`.
+  - The liquid animates (frames 0-5 and back, 4 ticks each): it has its own layer under the composed cells,
+    whose liquid share is transparent, so shores blend exactly without a sprite per frame.
+  - The asset installer (Phase 4, started early) writes the tilesets and all 17 maps to `^SupportDir/Content/pw/`.
   - Checked in game (One VS One) with `research/tools/shot.ps1`.
 - The full template tree of §3, with the Primitive race on top of it.
 - Primitive race: Buildman, the core buildings, two combat units; berries gathering (the second resource is
@@ -382,6 +382,10 @@ Left for Elf and Demon: the spell mana costs.
 - Lua test maps + `run_tests.py`, as in OpenSYW.
 
 ### Phase 4: Asset installer
+Started 2026-10-31: `install-assets.cmd` / `.sh` run `utility pw --install-assets [GAME_FOLDER] [--out] [--only]
+[--write-yaml] [--list]` (`OpenRA.Mods.Pw/AssetInstaller`, modelled on OpenSYW's). Stages so far: `tilesets`, `maps`;
+every stage that converts art is added there directly (units next). Its map output matched the Python prototype
+byte for byte.
 - `OpenRA.Mods.Pw/AssetInstaller`: `TrcArchive`, then one stage per format (units, buildings, terrain, effects,
   chrome, audio, maps). Output to `^SupportDir/Content/pw/`, mounted with the same relative paths as `mods/pw/`.
 - `mods/pw-content` first-launch screen: locate the folder holding `Pw.exe` and convert.
