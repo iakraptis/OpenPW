@@ -42,7 +42,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public override object Create(ActorInitializer init) { return new PwTerrainRenderer(init.World, this); }
 	}
 
-	public sealed class PwTerrainRenderer : IRenderTerrain, IWorldLoaded, INotifyActorDisposing, ITiledTerrainRenderer
+	public sealed class PwTerrainRenderer : IRenderTerrain, IWorldLoaded, ITick, INotifyActorDisposing, ITiledTerrainRenderer
 	{
 		const int Tile = 32;
 		const int TileBytes = Tile * Tile;
@@ -55,15 +55,22 @@ namespace OpenRA.Mods.Pw.Traits
 		const int RampBase = 2800;
 		const int MaskBase = 3000;
 		const int AlphaBase = 3400;
+		const int LiquidMaterial = 6;
 		static readonly int[] MaterialBase = { 0, 200, 400, 600, 800, 1000, LiquidBase };
+		static readonly int[] LiquidFrames = { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1 };
 
 		readonly World world;
 		readonly PwTerrainRendererInfo info;
 		readonly DefaultTerrain terrainInfo;
 		readonly DefaultTileCache tileCache;
 		readonly Dictionary<(uint Ground, uint Overlay, int Variant, int Odd), Sprite> cache = new();
+		readonly Dictionary<(int Frame, int Variant), Sprite> liquidSprites = new();
+		readonly List<(CPos Cell, int Variant)> liquidCells = new();
+		ushort[] tiles;
 		SheetBuilder sheetBuilder;
 		TerrainSpriteLayer spriteLayer;
+		TerrainSpriteLayer liquidLayer;
+		int liquidFrame;
 		WorldRenderer worldRenderer;
 		bool templateCells;
 		bool disposed;
@@ -99,7 +106,7 @@ namespace OpenRA.Mods.Pw.Traits
 			var empty = sheetBuilder.Add(new byte[4 * TileBytes], SpriteFrameType.Bgra32, new Size(Tile, Tile));
 			spriteLayer = new TerrainSpriteLayer(world, wr, empty, BlendMode.Alpha, world.Type != WorldType.Editor);
 
-			ushort[] tiles;
+			liquidLayer = new TerrainSpriteLayer(world, wr, empty, BlendMode.Alpha, world.Type != WorldType.Editor);
 			using (var s = Game.ModData.DefaultFileSystem.Open(tilesetFile))
 				tiles = ReadUShorts(s, (int)(s.Length / 2));
 
@@ -119,7 +126,13 @@ namespace OpenRA.Mods.Pw.Traits
 						var ground = s.ReadUInt32();
 						var overlay = s.ReadUInt32();
 						var cell = new MPos(originX + x, originY + y).ToCPos(map);
-						spriteLayer.Update(cell, CellSprite(tiles, ground, overlay, x, y), null);
+						spriteLayer.Update(cell, CellSprite(ground, overlay, x, y, out var hasLiquid), null);
+						if (hasLiquid)
+						{
+							var variant = y % 10 * 20 + x % 20;
+							liquidCells.Add((cell, variant));
+							liquidLayer.Update(cell, LiquidSprite(0, variant), null);
+						}
 					}
 				}
 			}
@@ -143,23 +156,29 @@ namespace OpenRA.Mods.Pw.Traits
 			return result;
 		}
 
-		Sprite CellSprite(ushort[] tiles, uint ground, uint overlay, int x, int y)
+		// One cell, composed like Pw.exe draws it (FUN_00408700). Every pixel keeps its colour premultiplied by the share
+		// that is not liquid, and that liquid share: the liquid itself is drawn underneath by liquidLayer, so it can animate
+		// without a sprite per frame. Returns null for a cell that is all liquid.
+		Sprite CellSprite(uint ground, uint overlay, int x, int y, out bool hasLiquid)
 		{
 			var variant = y % 10 * 20 + x % 20;
 			var materials = new int[6];
 			for (var i = 0; i < 6; i++)
 				materials[i] = (int)(ground >> (3 * i)) & 7;
 
+			hasLiquid = Array.IndexOf(materials, LiquidMaterial) >= 0;
 			var plain = materials[0] == materials[1] && materials[2] == materials[3] && materials[4] == materials[5];
 			var key = (ground & 0x03FFFFFF, overlay, variant, plain ? 0 : x & 1);
 			if (cache.TryGetValue(key, out var sprite))
 				return sprite;
 
-			var pixels = new ushort[TileBytes];
+			var canvas = new Canvas();
 			int Material(int m) => (MaterialBase[m] + variant) * TileBytes;
-
 			if (plain)
-				Array.Copy(tiles, Material(materials[0]), pixels, 0, TileBytes);
+			{
+				for (var i = 0; i < TileBytes; i++)
+					canvas.SetGround(i, tiles, Material(materials[0]), materials[0], 0, 0, 1f);
+			}
 			else
 			{
 				// FUN_004089d0: the mask's green, blue or red channel blends one material pair.
@@ -191,7 +210,7 @@ namespace OpenRA.Mods.Pw.Traits
 						second = materials[0];
 					}
 
-					pixels[i] = Mix(tiles[Material(first) + i], tiles[Material(second) + i], alpha);
+					canvas.SetGround(i, tiles, Material(first), first, Material(second), second, Weight(alpha));
 				}
 			}
 
@@ -203,9 +222,9 @@ namespace OpenRA.Mods.Pw.Traits
 				{
 					var piece = (RampBase + RampTiles[index]) * TileBytes;
 					if (RampAlphaTiles[index] < 0)
-						Keyed(tiles, pixels, piece, Material(5));
+						canvas.Keyed(tiles, piece, Material(5));
 					else
-						AlphaOver(tiles, pixels, piece, (AlphaBase + RampAlphaTiles[index]) * TileBytes);
+						canvas.AlphaOver(tiles, piece, (AlphaBase + RampAlphaTiles[index]) * TileBytes);
 				}
 			}
 			else
@@ -219,71 +238,159 @@ namespace OpenRA.Mods.Pw.Traits
 					var v = (int)(overlay >> (8 * layer + 6)) & 3;
 					var piece = (OverlayBase + OverlayTiles[p * 4 + v]) * TileBytes;
 					if (AlphaTiles[p] >= 0)
-						AlphaOver(tiles, pixels, piece, (AlphaBase + AlphaTiles[p]) * TileBytes);
+						canvas.AlphaOver(tiles, piece, (AlphaBase + AlphaTiles[p]) * TileBytes);
 					else if (MagentaPieces[p] == 1)
 					{
 						// Pw.exe redraws layer 0's piece here, whatever the layer (FUN_004092b0).
 						var p0 = (int)overlay & 0x3F;
 						var v0 = (int)(overlay >> 6) & 3;
-						Keyed(tiles, pixels, (OverlayBase + OverlayTiles[p0 * 4 + v0]) * TileBytes, Material(5));
+						canvas.Keyed(tiles, (OverlayBase + OverlayTiles[p0 * 4 + v0]) * TileBytes, Material(5));
 					}
 					else
-						Keyed(tiles, pixels, piece, -1);
+						canvas.Keyed(tiles, piece, -1);
 				}
 			}
 
-			var bgra = new byte[4 * TileBytes];
-			for (var i = 0; i < TileBytes; i++)
-			{
-				var c = pixels[i];
-				bgra[4 * i] = (byte)((c & 31) * 255 / 31);
-				bgra[4 * i + 1] = (byte)(((c >> 5) & 63) * 255 / 63);
-				bgra[4 * i + 2] = (byte)((c >> 11) * 255 / 31);
-				bgra[4 * i + 3] = 255;
-			}
-
-			sprite = sheetBuilder.Add(bgra, SpriteFrameType.Bgra32, new Size(Tile, Tile));
+			sprite = canvas.AllLiquid ? null : sheetBuilder.Add(canvas.ToBgra(), SpriteFrameType.Bgra32, new Size(Tile, Tile), true);
 			cache[key] = sprite;
 			return sprite;
 		}
 
-		// Pw.exe 565 blend: a * (alpha + 1) / 32 + b * (31 - alpha) / 32; alpha 31 is a alone.
-		static ushort Mix(ushort a, ushort b, int alpha)
-		{
-			if (alpha == 31)
-				return a;
+		// Pw.exe blends a pair as first * (alpha + 1) / 32 + second * (31 - alpha) / 32; alpha 31 is the first alone.
+		static float Weight(int alpha) { return alpha == 31 ? 1f : (alpha + 1) / 32f; }
 
-			var k = alpha + 1;
-			var redBlue = ((a & 0xF81F) * k >> 5 & 0xF81F) + ((b & 0xF81F) * (32 - k) >> 5 & 0xF81F);
-			var green = (((a & 0x07E0) >> 5) * k & 0x07E0) + (((b & 0x07E0) >> 5) * (32 - k) & 0x07E0);
-			return (ushort)(redBlue | green);
-		}
-
-		static void Keyed(ushort[] tiles, ushort[] pixels, int piece, int fill)
+		Sprite LiquidSprite(int frame, int variant)
 		{
-			for (var i = 0; i < TileBytes; i++)
+			if (!liquidSprites.TryGetValue((frame, variant), out var sprite))
 			{
-				var c = tiles[piece + i];
-				if (c == Green)
-					continue;
+				var canvas = new Canvas();
+				var tile = (LiquidBase + frame * 200 + variant) * TileBytes;
+				for (var i = 0; i < TileBytes; i++)
+					canvas.SetGround(i, tiles, tile, 0, 0, 0, 1f);
 
-				pixels[i] = c == Magenta && fill >= 0 ? tiles[fill + i] : c;
+				sprite = sheetBuilder.Add(canvas.ToBgra(), SpriteFrameType.Bgra32, new Size(Tile, Tile), true);
+				liquidSprites[(frame, variant)] = sprite;
 			}
+
+			return sprite;
 		}
 
-		static void AlphaOver(ushort[] tiles, ushort[] pixels, int piece, int alphaTile)
+		void ITick.Tick(Actor self)
 		{
-			for (var i = 0; i < TileBytes; i++)
+			if (liquidCells.Count == 0)
+				return;
+
+			// Pw.exe 0x468bc9: the liquid steps through frames 0-5 and back, 4 ticks each.
+			var frame = LiquidFrames[world.WorldTick / 4 % LiquidFrames.Length];
+			if (frame == liquidFrame)
+				return;
+
+			liquidFrame = frame;
+			foreach (var (cell, variant) in liquidCells)
+				liquidLayer.Update(cell, LiquidSprite(frame, variant), null);
+		}
+
+		// A cell's pixels at 8 bits per channel: colour premultiplied by the part that is not liquid, plus the liquid part.
+		sealed class Canvas
+		{
+			readonly float[] r = new float[TileBytes];
+			readonly float[] g = new float[TileBytes];
+			readonly float[] b = new float[TileBytes];
+			readonly float[] liquid = new float[TileBytes];
+
+			public bool AllLiquid
 			{
-				var c = tiles[piece + i];
-				var a = tiles[alphaTile + i] & 31;
-				if (c != Green && a != 0)
-					pixels[i] = Mix(c, pixels[i], a);
+				get
+				{
+					foreach (var l in liquid)
+						if (l < 1f)
+							return false;
+
+					return true;
+				}
+			}
+
+			static void Rgb(ushort c, out float red, out float green, out float blue)
+			{
+				red = (c >> 11) * 255f / 31;
+				green = ((c >> 5) & 63) * 255f / 63;
+				blue = (c & 31) * 255f / 31;
+			}
+
+			// first * k + second * (1 - k); a liquid material adds its share to the liquid part instead.
+			public void SetGround(int i, ushort[] tiles, int first, int firstMaterial, int second, int secondMaterial, float k)
+			{
+				r[i] = g[i] = b[i] = liquid[i] = 0;
+				Add(i, tiles[first + i], firstMaterial, k);
+				if (k < 1f)
+					Add(i, tiles[second + i], secondMaterial, 1f - k);
+			}
+
+			void Add(int i, ushort c, int material, float k)
+			{
+				if (material == LiquidMaterial)
+				{
+					liquid[i] += k;
+					return;
+				}
+
+				Rgb(c, out var red, out var green, out var blue);
+				r[i] += k * red;
+				g[i] += k * green;
+				b[i] += k * blue;
+			}
+
+			// Green is transparent; magenta shows ground material 5 (fill), when one is given.
+			public void Keyed(ushort[] tiles, int piece, int fill)
+			{
+				for (var i = 0; i < TileBytes; i++)
+				{
+					var c = tiles[piece + i];
+					if (c == Green)
+						continue;
+
+					Rgb(c == Magenta && fill >= 0 ? tiles[fill + i] : c, out r[i], out g[i], out b[i]);
+					liquid[i] = 0;
+				}
+			}
+
+			// The alpha tile's blue channel blends the piece over what is there.
+			public void AlphaOver(ushort[] tiles, int piece, int alphaTile)
+			{
+				for (var i = 0; i < TileBytes; i++)
+				{
+					var c = tiles[piece + i];
+					var a = tiles[alphaTile + i] & 31;
+					if (c == Green || a == 0)
+						continue;
+
+					var k = Weight(a);
+					Rgb(c, out var red, out var green, out var blue);
+					r[i] = k * red + (1 - k) * r[i];
+					g[i] = k * green + (1 - k) * g[i];
+					b[i] = k * blue + (1 - k) * b[i];
+					liquid[i] *= 1 - k;
+				}
+			}
+
+			public byte[] ToBgra()
+			{
+				var data = new byte[4 * TileBytes];
+				for (var i = 0; i < TileBytes; i++)
+				{
+					data[4 * i] = (byte)Math.Round(b[i]);
+					data[4 * i + 1] = (byte)Math.Round(g[i]);
+					data[4 * i + 2] = (byte)Math.Round(r[i]);
+					data[4 * i + 3] = (byte)Math.Round(255 * (1 - liquid[i]));
+				}
+
+				return data;
 			}
 		}
 
 		void IRenderTerrain.RenderTerrain(WorldRenderer wr, Viewport viewport)
 		{
+			liquidLayer?.Draw(wr.Viewport);
 			spriteLayer.Draw(wr.Viewport);
 
 			foreach (var r in wr.World.WorldActor.TraitsImplementing<IRenderOverlay>())
@@ -299,6 +406,7 @@ namespace OpenRA.Mods.Pw.Traits
 				world.Map.Tiles.CellEntryChanged -= UpdateTemplateCell;
 
 			spriteLayer?.Dispose();
+			liquidLayer?.Dispose();
 			sheetBuilder?.Dispose();
 			tileCache.Dispose();
 			disposed = true;
