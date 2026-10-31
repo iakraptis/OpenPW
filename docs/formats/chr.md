@@ -39,13 +39,19 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x0198 | `i32` | Sight, pixels (224–384) | D | |
 | 0x01a0, 0x01a4 | `i32` | Weapon, index into `JW2_12.TRC` (19 = `Velocis hit`, 37 = `Stone.wpn`) | D | names match for every unit |
 | 0x01b0, 0x01b4 | `i32` | Attack range, pixels (32 melee) | D | |
+| 0x0188 | `i32` | Transport size (1 workers, 2 soldiers) | C | subtracted from a transport's space, `0x45f334` |
 | 0x01e8 | `i32` | Experience per level | C | `FUN_00458b2c` |
 | 0x01f4 | `u32` | Flags; bit 2 = gains levels | C | `FUN_00458b2c` |
+| 0x01fc, 0x0200 | `i32`, `i32[]` | Number and list of required buildings | D | Knight needs Blacksmith; Chief needs all six |
+| 0x0240, 0x0244 | `i32`, `i32[]` | Workers: buildings they can build | D | Buildman: the 10 Primitive buildings |
+| 0x0284, 0x0288 | `i32`, `i32[]` | Buildings: units they train | D | PowerHouse: Powerman, Giant |
+| 0x02c8, 0x02cc | `i32`, `i32[]` | Buildings: upgrades they research (`Upgrade.upi` index) | D | LandIncreaser: 2–6 |
 | 0x030c | `u8` | Hotkey letter | D | `B`uildman, `S`oldier, `K`night… |
-| 0x0330–0x0344 | | Building footprint (?) | D | non-zero for buildings only |
+| 0x030f, 0x0310 | `u8`, `u8[]` | Buildings: items they sell (`Item.itm` index) | D | Blacksmith: 9, 5, 6, 7 |
+| 0x0330, 0x0334 | `i32` | Building footprint in 32-pixel cells (width, height) | D | Sanctuary 6 × 4 matches its 199 × 136 frame |
 | 0x0350–0x0388 | `i32` | Bounds / selection boxes (?) | D | |
 | 0x03cc + 0x200·(f−1) | `(i32, i32)[64]` | Walk step displacement in pixels for facing *f* = 1…8, one pair per walk frame | D | see [Movement](#movement) |
-| 0x13cc | `i32` | Unknown (Soldier 11, Buildman 19, Rhamphos 26) | | |
+| 0x13cc | `i32` | Attack delay (Soldier 11, Buildman 19); `Level.lvt` row 0 reduces it by a % per level | C/D | `FUN_004594d2` |
 | 0x13d0 | `i32` | Unknown (320 for ground units, 0 for Rhamphos) | | |
 | 0x13d4 + 4·g | `i32[14]` | Length of the frame sequence of group *g* | D | matches every sequence |
 | 0x140c + 0x100·g | `i32[64]` | Frame sequence of group *g*: frame (within the direction block) shown at each step | C | `0x459e79` |
