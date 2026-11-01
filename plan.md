@@ -409,6 +409,10 @@ Left for Elf and Demon: the spell mana costs.
 - [x] **Items** (2026-11-01): the Blacksmith makes them (`research/tools/item_rules.py`), they lie beside it with their
       own ground sprite, and a unit of the right type picks one up and becomes its item variant, keeping level,
       experience and health. `items-test`.
+- [x] **Air units** (2026-11-01, branch `prim_air`): Revolver (transport for 10: passengers weigh their `.chr` 0x188
+      size, deduced; lands to load), Squadron and Flattop (splash). They hover at a token altitude because the art
+      draws the height and shadow; ground weapons can't reach them, arrows and stones can. `air-test`. Left: the
+      Revolver's +8 transport upgrade (Cargo's capacity is fixed; needs a custom cargo trait).
 - [ ] Projectile and impact art (`effects` stage), sounds and voices (`audio` stage), shroud art.
 - Test map: the converted original maps work directly.
 - Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in

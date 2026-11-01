@@ -32,6 +32,12 @@ actor-primitive-knight =
 
 actor-primitive-bowmachine =
     .name = BowMachine
+actor-primitive-revolver =
+    .name = Revolver
+actor-primitive-squadron =
+    .name = Squadron
+actor-primitive-flattop =
+    .name = Flattop
 
 actor-primitive-chief =
     .name = Chief

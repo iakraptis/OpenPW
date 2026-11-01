@@ -106,3 +106,24 @@ TrapSnap:
 	Range: 2c0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
+
+# Squadron: a shot at ground or air (22 px per tick).
+SquadronShot:
+	Inherits: ^Arrow
+	ReloadDelay: 33
+	Range: 6c0
+	Projectile: Bullet
+		Speed: 704
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 20
+
+# Flattop: fire at ground or air, splashing 48 px (16 px per tick).
+PhantomFire:
+	Inherits: ^Arrow
+	ReloadDelay: 56
+	Range: 7c0
+	Projectile: Bullet
+		Speed: 512
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 75
+		Spread: 1c512
