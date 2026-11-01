@@ -130,6 +130,9 @@ ChiefHit:
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
 	Report: weapon-chief-hit-0.wav
+	# Two strikes per attack, 7 steps apart (.chr 0x247c: steps 5 and 12).
+	Burst: 2
+	BurstDelays: 7
 
 # StoneTower: a thrown stone that also reaches flyers (range 288 px against both; 20 px per tick).
 Stone:

@@ -7,6 +7,7 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 1
 	PwLevels:
@@ -37,6 +38,8 @@ primitive-buildman:
 	RevealsShroud:
 		Range: 7c0
 	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
 		Weapon: BuildManHit
 
 primitive-powerman:
@@ -44,6 +47,7 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 2
 	PwLevels:
@@ -73,6 +77,8 @@ primitive-powerman:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 4
 		Weapon: PowerManHit
 
 primitive-giant:
@@ -80,6 +86,7 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 3
 	PwLevels:
@@ -110,6 +117,8 @@ primitive-giant:
 	RevealsShroud:
 		Range: 10c0
 	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
 		Weapon: ThrowBomb
 
 primitive-soldier:
@@ -117,6 +126,7 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 2
 	PwLevels:
@@ -146,6 +156,8 @@ primitive-soldier:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 13 of its attack animation (.chr 0x247c).
+		FireDelay: 13
 		Weapon: SoldierArrow
 
 primitive-knight:
@@ -153,6 +165,7 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 4
 	PwLevels:
@@ -183,6 +196,8 @@ primitive-knight:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
 		Weapon: ShootSword
 
 primitive-bowmachine:
@@ -190,6 +205,7 @@ primitive-bowmachine:
 	Inherits@move: ^WheeledMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 4
 	UsesPopulation:
@@ -213,6 +229,8 @@ primitive-bowmachine:
 	RevealsShroud:
 		Range: 12c0
 	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
 		Weapon: BowMachineArrow
 
 primitive-chief:
@@ -220,6 +238,7 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 12
 	PwLevels:
@@ -250,7 +269,17 @@ primitive-chief:
 	RevealsShroud:
 		Range: 10c0
 	Armament:
+		# Strikes twice, on steps 5 and 12 of its attack animation (.chr 0x247c; the second is ChiefHit's burst).
+		FireDelay: 5
 		Weapon: ChiefHit
+	# Fall out (aimed: wears the target's life down to 1) for 80 of his 100 mana, once researched.
+	PwMana:
+	PwFallOut:
+	# Morale: Primitive units within 5 cells attack and defend 10% better (^Morale).
+	ProximityExternalCondition@MORALE:
+		Condition: morale
+		Range: 5c0
+		ValidRelationships: Ally
 
 primitive-powerman-shield-of-peace:
 	Inherits: primitive-powerman
@@ -276,6 +305,8 @@ primitive-powerman-shield-of-peace:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 4
 		Weapon: PowerManShieldHit
 
 primitive-soldier-fire-arrow:
@@ -302,6 +333,8 @@ primitive-soldier-fire-arrow:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 13 of its attack animation (.chr 0x247c).
+		FireDelay: 13
 		Weapon: FireArrow
 
 primitive-soldier-venom-arrow:
@@ -328,6 +361,8 @@ primitive-soldier-venom-arrow:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 13 of its attack animation (.chr 0x247c).
+		FireDelay: 13
 		Weapon: VenomArrow
 
 primitive-knight-spear-of-justice:
@@ -354,6 +389,8 @@ primitive-knight-spear-of-justice:
 	RevealsShroud:
 		Range: 9c0
 	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
 		Weapon: SpearOfJustice
 
 # Flying machines (docs/game/primitive.md). They don't gain levels (.chr 0x1f4 bit 1 clear).
@@ -361,6 +398,7 @@ primitive-revolver:
 	Inherits: ^Unit
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 2
 	Buildable:
@@ -401,6 +439,7 @@ primitive-squadron:
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^AirAttack
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 3
 	Buildable:
@@ -420,6 +459,8 @@ primitive-squadron:
 	RevealsShroud:
 		Range: 10c0
 	Armament:
+		# Strikes on step 9 of its attack animation (.chr 0x247c).
+		FireDelay: 9
 		Weapon: SquadronShot
 	WithInfantryBody:
 		IdleSequences: walk
@@ -430,6 +471,7 @@ primitive-flattop:
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^AirAttack
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 10
 	Buildable:
@@ -452,6 +494,8 @@ primitive-flattop:
 	RevealsShroud:
 		Range: 12c0
 	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
 		Weapon: PhantomFire
 	WithInfantryBody:
 		IdleSequences: walk

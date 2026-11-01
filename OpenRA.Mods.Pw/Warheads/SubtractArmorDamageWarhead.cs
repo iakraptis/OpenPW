@@ -30,6 +30,7 @@ namespace OpenRA.Mods.Pw.Warheads
 			var bonus = firedBy != null && !firedBy.Disposed ? firedBy.TraitsImplementing<IPwStatBonus>().Sum(b => b.AttackBonus) : 0;
 			var attack = Util.ApplyPercentageModifiers(Damage + bonus, args.DamageModifiers);
 			var armor = victim.TraitsImplementing<PwArmor>().Sum(a => a.Value) + victim.TraitsImplementing<IPwStatBonus>().Sum(b => b.ArmorBonus);
+			armor = Util.ApplyPercentageModifiers(armor, victim.TraitsImplementing<PwArmorMultiplier>().Select(m => m.Modifier));
 			var damage = Util.ApplyPercentageModifiers(Math.Max(1, attack - armor), new[] { DamageVersus(victim, shape, args) });
 			victim.InflictDamage(firedBy, new Damage(damage, DamageTypes));
 		}

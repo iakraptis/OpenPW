@@ -135,7 +135,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// per race, each in its own frame style: blocks of 13 entries for Primitive, Elf, Tyrano, Demon, with the
 		// palette first and the sheet second. Each type takes its own race's version (wild creatures the Primitive one).
 		// The upgrade buttons (Upgrade.trt, 48) and item buttons (Item.trt, 32) are written once per race, in that race's
-		// style: chrome/upgrades-<race>.png and chrome/items-<race>.png (docs/formats/ui.md).
+		// style: chrome/upgrades-<race>.png and chrome/items-<race>.png, and the ability buttons (Magic.trt, 16) as
+		// chrome/magic-<race>.png (docs/formats/ui.md).
 		static void ExportPortraits(InstallContext c)
 		{
 			var archive = c.Game.Archive("Jw2_02.trc");
@@ -146,6 +147,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var block = 13 * race;
 				c.WriteFile($"chrome/upgrades-{Races[race]}.png", IconSheet(archive, 48, _ => block, 9));
 				c.WriteFile($"chrome/items-{Races[race]}.png", IconSheet(archive, 32, _ => block, 11));
+				c.WriteFile($"chrome/magic-{Races[race]}.png", IconSheet(archive, 16, _ => block, 5));
 			}
 		}
 

@@ -52,5 +52,8 @@ button-replay-player-maximum =
 ## Command panel
 label-berries = Berries: { $amount }
 label-unit-level = { $name }   Level { $level } ({ $experience }/{ $next })
+label-ability-fall-out = Fall out ({ $cost } mana): wears a target's life down to 1
+label-ability-fall-out-locked = Fall out: research Improve Fall out for Chief at the Sanctuary
+label-unit-meat = Meat: { $meat }
 label-population = Population: { $used } / { $limit }
 notification-population-limit = Population limit reached: build more Houses.

@@ -30,4 +30,21 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public int Value => IsTraitDisabled ? 0 : Info.Value;
 	}
+
+	[Desc("Multiplies the actor's armour (PwArmor plus level and upgrade bonuses) by Modifier percent while enabled ",
+		"(the Chief's morale: 110).")]
+	public class PwArmorMultiplierInfo : ConditionalTraitInfo
+	{
+		public readonly int Modifier = 100;
+
+		public override object Create(ActorInitializer init) { return new PwArmorMultiplier(this); }
+	}
+
+	public class PwArmorMultiplier : ConditionalTrait<PwArmorMultiplierInfo>
+	{
+		public PwArmorMultiplier(PwArmorMultiplierInfo info)
+			: base(info) { }
+
+		public int Modifier => IsTraitDisabled ? 100 : Info.Modifier;
+	}
 }

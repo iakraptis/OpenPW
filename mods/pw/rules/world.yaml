@@ -1,6 +1,8 @@
 ^baseworld:
 	Inherits: ^palettes
 	# Soft-edged shroud and fog (sequences/shroud.yaml).
+	# Brings dead wild creatures back after a long while.
+	PwRespawner:
 	ShroudRenderer:
 		ShroudVariants: shroud
 		FogVariants: fog

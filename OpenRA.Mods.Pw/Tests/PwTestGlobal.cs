@@ -122,6 +122,15 @@ namespace OpenRA.Mods.Pw.Tests
 			return false;
 		}
 
+		[Desc("Meat a unit carries, or -1 if it can't carry any.")]
+		public int CarriedMeat(Actor actor) => actor.TraitOrDefault<PwMeatEater>()?.Meat ?? -1;
+
+		[Desc("Meat left in a piece of meat on the ground, or -1 for anything else.")]
+		public int MeatAmount(Actor meat) => meat.TraitOrDefault<PwMeat>()?.Amount ?? -1;
+
+		[Desc("A unit's mana, or -1 without any.")]
+		public int Mana(Actor actor) => actor.TraitOrDefault<PwMana>()?.Mana ?? -1;
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

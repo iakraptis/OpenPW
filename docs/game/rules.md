@@ -42,6 +42,28 @@ Damage per hit (C, `0x457cc4`):
 - Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
 - The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 
+## Meat and healing
+
+- A wild creature (owner 8, type kind 1) killed leaves meat worth its cost (`.chr` 0x190), with a random part, as a
+  ground item of type 1-4 (Food small, middle, large, big: below 500, 1000, 2500 and above) (C, `FUN_00462ea6`).
+- A unit on the meat's cell takes all of it into its carried store (unit +0x2c) (C, `FUN_004630b3`); idle units look
+  for items within 192 px (C, `FUN_004631f6`).
+- A hurt unit that can heal (`.chr` 0x1c8) eats 1 meat per tick for 1 HP. Without meat, units with 0x1cc = 0 (the wild
+  creatures) heal 1 HP every 32 ticks; living Primitive units (0x1cc = 1) only by eating; machines don't heal
+  (C, `FUN_0046089a`).
+- Items on the ground count down every 32 ticks from a per-type period (table `0x5675fc`): Food 1, so meat loses 1
+  per 32 ticks until gone; the other items 400 (C, `FUN_00462a30`). The mod keeps the other items until picked up.
+- Mod addition: dead wild creatures come back where they were placed after a long delay (`PwRespawns`).
+
+## The Chief
+
+- Morale (help file, Special Abilities: "the Morale of chiefs can add to nearby primitive units"): Primitive units
+  within 5 cells of their Chief get +10% attack and +10% armour. The original values are not known; these are the
+  mod's.
+- Fall out (`JW2_11` `Fall out.maz`, unlocked by the upgrade Improve Fall out for Chief): aimed at an enemy unit for
+  80 mana (record 0x1e4); it wears the target's HP down to 1 (1 HP per tick) without killing it. The Chief has 100
+  mana (`.chr` stat 4), regained over time (mod: 1 every 8 ticks).
+
 ## Population
 
 Units use population (`.chr` 0x184), and Houses, Nests and the main building provide it (main 9, House or Nest

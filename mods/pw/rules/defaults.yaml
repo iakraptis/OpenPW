@@ -53,6 +53,12 @@
 	PwAttackVoice:
 	# Killing it gives experience: its population (wild creatures set their own).
 	PwGivesExperience:
+	# Fall out wears it down to 1 HP, with the spell's art on it meanwhile.
+	PwFallOutVictim:
+	WithIdleOverlay@FALLOUT:
+		Image: spell-fall-out
+		Sequence: effect
+		RequiresCondition: fallout
 	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).
 	PwUpgradeBonus:
 	# Picks up Blacksmith items of its own type (PwItem.Equips) and becomes the item's type.
@@ -78,26 +84,24 @@
 	Passenger:
 		CargoType: Ground
 	Crushable:
+	# Living units carry meat they pick up and eat it while hurt (machines don't).
+	PwMeatEater:
 
-# Workers build (Builder, the build list on the concrete worker) and gather (Phase 3, next step). While building
-# they play their build animation instead of the infantry body.
+# Workers build (Builder, the build list on the concrete worker: they go inside the site until it is finished) and
+# gather berries.
 ^Worker:
 	Inherits: ^Infantry
 	Builder:
 	BerryGatherer:
-	# One body at a time: building, gathering, carrying a basket of berries, or the plain infantry body.
+	# One body at a time: gathering, carrying a basket of berries, or the plain infantry body.
 	WithInfantryBody:
-		RequiresCondition: !building && !gathering && !carrying
+		RequiresCondition: !gathering && !carrying
 	WithInfantryBody@CARRY:
 		IdleSequences: stand-carry-b
 		StandSequences: stand-carry-b
 		MoveSequence: walk-carry-b
 		DefaultAttackSequence: attack
-		RequiresCondition: carrying && !building && !gathering
-	WithSpriteBody@BUILD:
-		Name: build
-		Sequence: build
-		RequiresCondition: building
+		RequiresCondition: carrying && !gathering
 	WithSpriteBody@GATHER:
 		Name: gather
 		Sequence: gather
@@ -124,6 +128,10 @@
 	-Guard:
 	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
 	PwFleeWhenHit:
+	# Heals 1 HP every 32 ticks, leaves meat when killed (its amount is set per creature) and comes back long after.
+	PwRegenerates:
+	PwDropsMeat:
+	PwRespawns:
 	Wanders:
 		WanderMoveRadius: 4
 		MinMoveDelay: 150
@@ -142,6 +150,7 @@
 # Pteranodon, Rhamphorhynchus: fly over everything, only arrows reach them.
 ^WildFlyer:
 	Inherits: ^Wild
+	PwTakeOff:
 	-Mobile:
 	-Targetable:
 	Targetable@AIR:
@@ -437,6 +446,38 @@
 	PwItem:
 	MapEditorData:
 		Categories: Items
+
+# Meat on the ground (rules/meat.yaml): left by a killed wild creature, rots, picked up by living units.
+^Meat:
+	Interactable:
+	HiddenUnderFog:
+		Type: CenterPosition
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Immobile:
+		OccupiesSpace: false
+	Targetable:
+		TargetTypes: Meat
+	Tooltip:
+		Name: actor-meat.name
+		ShowOwnerRow: false
+	PwMeat:
+	MapEditorData:
+		Categories: Items
+
+# The Chief's morale (docs/game/rules.md): Primitive units near an allied Chief attack and defend 10% better (the
+# value is not known from the original). The Chief grants "morale" (ProximityExternalCondition on primitive-chief).
+^Morale:
+	ExternalCondition@MORALE:
+		Condition: morale
+	FirepowerMultiplier@MORALE:
+		Modifier: 110
+		RequiresCondition: morale
+	PwArmorMultiplier@MORALE:
+		Modifier: 110
+		RequiresCondition: morale
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:
