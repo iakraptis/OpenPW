@@ -3,6 +3,9 @@
 	# weapons and death animations ask for.
 	PaletteFromGrayscale@effect:
 		Name: effect
+	# Build icons ask for "chrome".
+	PaletteFromGrayscale@chrome:
+		Name: chrome
 	PaletteFromGrayscale@greyscale:
 		Name: greyscale
 	PlayerColorPalette@player:

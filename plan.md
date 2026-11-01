@@ -384,8 +384,16 @@ Left for Elf and Demon: the spell mana costs.
     duplicate copies of the traits are removed.
   - Checked in game: a Sanctuary and four Buildmen in the player's colour.
   - Tyrano is hidden from the lobby until its actors exist.
-- [ ] Production: sidebar with queues per building, the Buildman building with construction (port OpenSYW's
-      `Builder`/`UnderConstruction`).
+- [x] **Production, first version** (2026-11-01):
+  - A command panel (`CommandPanelLogic`, `chrome/layouts/ingame-player.yaml`) shows the berries and either the
+    selected worker's build list or what the selected building trains. Its icons are the original portraits
+    (each image's `icon` sequence; the installer's `chrome` stage writes the sheet).
+  - The Buildman builds as in the original: `Builder`, the `BuildAtCellOrderGenerator` placement mode, and the
+    `ConstructBuilding` activity, ported from OpenSYW. The worker stays beside the site playing its build
+    animation. `UnderConstruction` takes the original build time and `WithConstructionStages` shows the stage
+    frames.
+  - Buildings train from their own queue, with the original training times and prerequisites.
+  - Next: the race interface bar (Intfbg) instead of the plain panel, rally points, population.
 - [ ] Map contents from the installer: doodads, berry bushes, wild creatures; gathering berries from bushes
       (custom: workers gather beside a bush, 12 per trip).
 - [ ] Projectile and impact art (`effects` stage), sounds and voices (`audio` stage), shroud art.

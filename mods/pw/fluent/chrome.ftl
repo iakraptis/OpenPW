@@ -47,3 +47,6 @@ button-replay-player-fast =
 button-replay-player-maximum =
     .tooltip = Maximum speed
     .label = MAX
+
+## Command panel
+label-berries = Berries: { $amount }

@@ -162,6 +162,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				yaml.Append($"\t{name}:\n\t\tFacings: -8\n\t\tLength: {all.Count / 8}\n\t\tFrames: {string.Join(", ", all)}\n");
 			}
 
+			// The build icon: the type's portrait (Chrome.cs writes the sheet, one frame per type).
+			yaml.Append($"\ticon:\n\t\tFilename: chrome/portraits.png\n\t\tStart: {type}\n");
 			return yaml.Append('\n').ToString();
 		}
 

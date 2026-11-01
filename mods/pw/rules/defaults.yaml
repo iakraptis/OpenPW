@@ -27,6 +27,8 @@
 # A unit, without a movement trait: the movement mixins below add one.
 ^Unit:
 	Inherits: ^SpriteActor
+	Buildable:
+		BuildDurationModifier: 100
 	Huntable:
 	OwnerLostAction:
 		Action: Kill
@@ -64,9 +66,16 @@
 		TargetTypes: Ground, Infantry
 	Crushable:
 
-# Workers: gathering and building come with the race's worker traits (Phase 3, next steps).
+# Workers build (Builder, the build list on the concrete worker) and gather (Phase 3, next step). While building
+# they play their build animation instead of the infantry body.
 ^Worker:
 	Inherits: ^Infantry
+	Builder:
+	WithInfantryBody:
+		RequiresCondition: !building
+	WithSpriteBody@BUILD:
+		Sequence: build
+		RequiresCondition: building
 
 # Living creatures that are not people: dinosaurs. Not crushable.
 ^Beast:
@@ -135,15 +144,24 @@
 	Tooltip:
 	WithSpriteBody:
 		Sequence: idle
-	WithMakeAnimation:
-		Sequence: make
+	# Built by a worker (Builder): grows over the original build time, showing the original construction stages.
+	UnderConstruction:
+	WithConstructionStages:
+	ProvidesPrerequisite:
+	Buildable:
+		BuildDurationModifier: 100
 	MapEditorData:
 		Categories: Buildings
 
-# Trains units. The production queues, build palette and rally point come with the sidebar (Phase 3, next step).
+# Trains units: its own queue (Type = the building's actor name, which the units' Buildable.Queue names), shown by the
+# command panel while it is selected. Nothing is trained while it is still being built.
 ^ProductionBuilding:
 	Inherits: ^Building
 	Exit:
+	Production:
+		RequiresCondition: !constructing
+	ProductionQueue:
+		Group: Training
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:

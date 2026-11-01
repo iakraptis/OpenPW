@@ -125,6 +125,39 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 
 			c.RepoYaml("cursors/default.yaml", yaml.ToString());
+			ExportPortraits(c);
+		}
+
+		// Small portraits, 38x38, one per unit type (JW2_02 Char_small.t, 170 frames), used as build icons: each unit and
+		// building image has an "icon" sequence pointing at its frame (Units.cs). The archive holds the portraits once
+		// per race, each in its own frame style: blocks of 13 entries for Primitive, Elf, Tyrano, Demon, with the
+		// palette first and the sheet second. Each type takes its own race's version (wild creatures the Primitive one).
+		static void ExportPortraits(InstallContext c)
+		{
+			const int Size = 38;
+			const int Count = 170;
+			var archive = c.Game.Archive("Jw2_02.trc");
+			var raceBlock = new Dictionary<string, int> { ["primitive"] = 0, ["elf"] = 1, ["tyrano"] = 2, ["demon"] = 3, ["wild"] = 0 };
+
+			var rgba = new byte[4 * Size * Size * Count];
+			for (var type = 0; type < Count; type++)
+			{
+				var block = 13 * raceBlock[Units.Race(type)];
+				var palette = archive.Read(block);
+				var sheet = archive.Read(block + 1);
+				for (var p = 0; p < Size * Size; p++)
+				{
+					var index = sheet[type * Size * Size + p];
+					var o = 4 * (p / Size * Size * Count + type * Size + p % Size);
+					rgba[o] = palette[4 * index];
+					rgba[o + 1] = palette[4 * index + 1];
+					rgba[o + 2] = palette[4 * index + 2];
+					rgba[o + 3] = 255;
+				}
+			}
+
+			var meta = new Dictionary<string, string> { ["FrameSize"] = $"{Size},{Size}", ["FrameAmount"] = $"{Count}" };
+			c.WriteFile("chrome/portraits.png", new Png(rgba, SpriteFrameType.Rgba32, Size * Count, Size, null, meta).Save());
 		}
 	}
 }

@@ -44,6 +44,9 @@ tyrano-dinos:
 		Facings: -8
 		Length: 16
 		Frames: 580, 580, 581, 581, 582, 582, 583, 583, 584, 584, 585, 585, 586, 586, 587, 587, 588, 588, 589, 589, 590, 590, 591, 591, 592, 592, 593, 593, 594, 594, 595, 595, 596, 596, 597, 597, 598, 598, 599, 599, 600, 600, 601, 601, 602, 602, 603, 603, 604, 604, 605, 605, 606, 606, 607, 607, 608, 608, 609, 609, 610, 610, 611, 611, 612, 612, 613, 613, 614, 614, 615, 615, 616, 616, 617, 617, 618, 618, 619, 619, 984, 984, 985, 985, 986, 986, 987, 987, 988, 988, 989, 989, 990, 990, 991, 991, 976, 976, 977, 977, 978, 978, 979, 979, 980, 980, 981, 981, 982, 982, 983, 983, 968, 968, 969, 969, 970, 970, 971, 971, 972, 972, 973, 973, 974, 974, 975, 975
+	icon:
+		Filename: chrome/portraits.png
+		Start: 32
 
 tyrano-masos:
 	Defaults:
@@ -65,6 +68,9 @@ tyrano-masos:
 		Facings: -8
 		Length: 10
 		Frames: 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259
+	icon:
+		Filename: chrome/portraits.png
+		Start: 33
 
 tyrano-velocis:
 	Defaults:
@@ -86,6 +92,9 @@ tyrano-velocis:
 		Facings: -8
 		Length: 10
 		Frames: 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283
+	icon:
+		Filename: chrome/portraits.png
+		Start: 34
 
 tyrano-twinvelocis:
 	Defaults:
@@ -107,6 +116,9 @@ tyrano-twinvelocis:
 		Facings: -8
 		Length: 18
 		Frames: 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427
+	icon:
+		Filename: chrome/portraits.png
+		Start: 35
 
 tyrano-dilophos:
 	Defaults:
@@ -128,6 +140,9 @@ tyrano-dilophos:
 		Facings: -8
 		Length: 10
 		Frames: 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315
+	icon:
+		Filename: chrome/portraits.png
+		Start: 36
 
 tyrano-rhamphos:
 	Defaults:
@@ -144,6 +159,9 @@ tyrano-rhamphos:
 	die:
 		Frames: 80, 81, 82, 83, 84, 85
 		Length: 6
+	icon:
+		Filename: chrome/portraits.png
+		Start: 37
 
 tyrano-twinrhamphos:
 	Defaults:
@@ -156,6 +174,9 @@ tyrano-twinrhamphos:
 	die:
 		Frames: 40, 41, 42, 43, 44, 45
 		Length: 6
+	icon:
+		Filename: chrome/portraits.png
+		Start: 38
 
 tyrano-pteras:
 	Defaults:
@@ -172,6 +193,9 @@ tyrano-pteras:
 	die:
 		Frames: 120, 121, 122, 123, 124, 125
 		Length: 6
+	icon:
+		Filename: chrome/portraits.png
+		Start: 39
 
 tyrano-trices:
 	Defaults:
@@ -193,6 +217,9 @@ tyrano-trices:
 		Facings: -8
 		Length: 20
 		Frames: 180, 180, 181, 181, 182, 182, 183, 183, 184, 184, 185, 185, 186, 186, 187, 187, 188, 188, 189, 189, 190, 190, 191, 191, 192, 192, 193, 193, 194, 194, 195, 195, 196, 196, 197, 197, 198, 198, 199, 199, 200, 200, 201, 201, 202, 202, 203, 203, 204, 204, 205, 205, 206, 206, 207, 207, 208, 208, 209, 209, 210, 210, 211, 211, 212, 212, 213, 213, 214, 214, 215, 215, 216, 216, 217, 217, 218, 218, 219, 219, 220, 220, 221, 221, 222, 222, 223, 223, 224, 224, 225, 225, 226, 226, 227, 227, 228, 228, 229, 229, 358, 358, 359, 359, 360, 360, 361, 361, 362, 362, 363, 363, 364, 364, 365, 365, 366, 366, 367, 367, 348, 348, 349, 349, 350, 350, 351, 351, 352, 352, 353, 353, 354, 354, 355, 355, 356, 356, 357, 357, 338, 338, 339, 339, 340, 340, 341, 341, 342, 342, 343, 343, 344, 344, 345, 345, 346, 346, 347, 347
+	icon:
+		Filename: chrome/portraits.png
+		Start: 40
 
 tyrano-dsunguri:
 	Defaults:
@@ -205,6 +232,9 @@ tyrano-dsunguri:
 	die:
 		Frames: 80, 81, 82, 83, 84, 85
 		Length: 6
+	icon:
+		Filename: chrome/portraits.png
+		Start: 41
 
 tyrano-eggthrower:
 	Defaults:
@@ -226,6 +256,9 @@ tyrano-eggthrower:
 		Facings: -8
 		Length: 6
 		Frames: 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 338, 339, 340, 341, 342, 343, 332, 333, 334, 335, 336, 337, 326, 327, 328, 329, 330, 331
+	icon:
+		Filename: chrome/portraits.png
+		Start: 42
 
 tyrano-mutant:
 	Defaults:
@@ -242,6 +275,9 @@ tyrano-mutant:
 	die:
 		Frames: 160, 161, 162, 163, 164, 165
 		Length: 6
+	icon:
+		Filename: chrome/portraits.png
+		Start: 43
 
 tyrano-tyranos:
 	Defaults:
@@ -263,31 +299,43 @@ tyrano-tyranos:
 		Facings: -8
 		Length: 16
 		Frames: 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431
+	icon:
+		Filename: chrome/portraits.png
+		Start: 44
 
 tyrano-tyranonest:
 	Defaults:
 		Filename: units/tyrano-tyranonest.png
 		Tick: 40
+		Offset: -96, -64
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 128
 
 tyrano-nest:
 	Defaults:
 		Filename: units/tyrano-nest.png
 		Tick: 40
+		Offset: -48, -32
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 130
 
 tyrano-ascomoid:
 	Defaults:
 		Filename: units/tyrano-ascomoid.png
 		Tick: 40
+		Offset: -32, -32
 	make:
 		Start: 0
 		Length: 3
@@ -296,11 +344,15 @@ tyrano-ascomoid:
 	attack:
 		Frames: 4, 5, 6, 7, 8, 9, 10, 11, 12
 		Length: 9
+	icon:
+		Filename: chrome/portraits.png
+		Start: 131
 
 tyrano-eggnest:
 	Defaults:
 		Filename: units/tyrano-eggnest.png
 		Tick: 40
+		Offset: -64, -32
 	make:
 		Start: 0
 		Length: 4
@@ -309,41 +361,57 @@ tyrano-eggnest:
 	active:
 		Frames: 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14
 		Length: 20
+	icon:
+		Filename: chrome/portraits.png
+		Start: 132
 
 tyrano-landnest:
 	Defaults:
 		Filename: units/tyrano-landnest.png
 		Tick: 40
+		Offset: -64, -48
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 133
 
 tyrano-skynest:
 	Defaults:
 		Filename: units/tyrano-skynest.png
 		Tick: 40
+		Offset: -64, -48
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 134
 
 tyrano-thrownest:
 	Defaults:
 		Filename: units/tyrano-thrownest.png
 		Tick: 40
+		Offset: -80, -48
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 135
 
 tyrano-upgradenest:
 	Defaults:
 		Filename: units/tyrano-upgradenest.png
 		Tick: 40
+		Offset: -80, -48
 	make:
 		Start: 0
 		Length: 3
@@ -352,24 +420,35 @@ tyrano-upgradenest:
 	active:
 		Frames: 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
 		Length: 20
+	icon:
+		Filename: chrome/portraits.png
+		Start: 136
 
 tyrano-landnisdos:
 	Defaults:
 		Filename: units/tyrano-landnisdos.png
 		Tick: 40
+		Offset: -64, -48
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 137
 
 tyrano-skynisdos:
 	Defaults:
 		Filename: units/tyrano-skynisdos.png
 		Tick: 40
+		Offset: -64, -48
 	make:
 		Start: 0
 		Length: 3
 	idle:
 		Start: 3
+	icon:
+		Filename: chrome/portraits.png
+		Start: 138
 

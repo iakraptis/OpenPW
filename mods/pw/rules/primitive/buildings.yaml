@@ -1,8 +1,17 @@
-# Primitive buildings (docs/game/primitive.md). Footprints are the original ones in 32 px cells (.chr 0x330/0x334).
+# Primitive buildings (docs/game/primitive.md): build time, prerequisites and the units they train from the
+# original tech tree (.chr 0x18c, 0x1fc, 0x284). Footprints are the original ones in 32 px cells (.chr 0x330/0x334).
 
 primitive-sanctuary:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 10
+	Production:
+		Produces: primitive-sanctuary
+	ProductionQueue:
+		Type: primitive-sanctuary
 	RenderSprites:
 		Image: primitive-sanctuary
 	Tooltip:
@@ -27,6 +36,10 @@ primitive-sanctuary:
 primitive-house:
 	Inherits: ^Building
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 320
+	Buildable:
+		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: primitive-house
 	Tooltip:
@@ -51,6 +64,15 @@ primitive-house:
 primitive-powerhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 880
+	Buildable:
+		BuildPaletteOrder: 30
+		Prerequisites: primitive-sanctuary
+	Production:
+		Produces: primitive-powerhouse
+	ProductionQueue:
+		Type: primitive-powerhouse
 	RenderSprites:
 		Image: primitive-powerhouse
 	Tooltip:
@@ -75,6 +97,15 @@ primitive-powerhouse:
 primitive-soldierhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 960
+	Buildable:
+		BuildPaletteOrder: 40
+		Prerequisites: primitive-powerhouse
+	Production:
+		Produces: primitive-soldierhouse
+	ProductionQueue:
+		Type: primitive-soldierhouse
 	RenderSprites:
 		Image: primitive-soldierhouse
 	Tooltip:
@@ -99,6 +130,15 @@ primitive-soldierhouse:
 primitive-skyhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 70
+		Prerequisites: primitive-blacksmith
+	Production:
+		Produces: primitive-skyhouse
+	ProductionQueue:
+		Type: primitive-skyhouse
 	RenderSprites:
 		Image: primitive-skyhouse
 	Tooltip:
@@ -123,6 +163,15 @@ primitive-skyhouse:
 primitive-blacksmith:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 50
+		Prerequisites: primitive-powerhouse
+	Production:
+		Produces: primitive-blacksmith
+	ProductionQueue:
+		Type: primitive-blacksmith
 	RenderSprites:
 		Image: primitive-blacksmith
 	Tooltip:
@@ -147,6 +196,11 @@ primitive-blacksmith:
 primitive-landincreaser:
 	Inherits: ^Building
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 60
+		Prerequisites: primitive-powerhouse
 	RenderSprites:
 		Image: primitive-landincreaser
 	Tooltip:
@@ -171,6 +225,11 @@ primitive-landincreaser:
 primitive-skyincreaser:
 	Inherits: ^Building
 	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 80
+		Prerequisites: primitive-skyhouse
 	RenderSprites:
 		Image: primitive-skyincreaser
 	Tooltip:

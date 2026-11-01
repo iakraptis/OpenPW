@@ -7,6 +7,12 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Builder:
+		Types: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyhouse, primitive-skyincreaser
+	Buildable:
+		Queue: primitive-sanctuary
+		BuildDuration: 160
+		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: primitive-buildman
 	Tooltip:
@@ -29,6 +35,10 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Buildable:
+		Queue: primitive-powerhouse
+		BuildDuration: 256
+		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: primitive-powerman
 	Tooltip:
@@ -51,6 +61,11 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Buildable:
+		Queue: primitive-powerhouse
+		BuildDuration: 400
+		BuildPaletteOrder: 30
+		Prerequisites: primitive-landincreaser
 	RenderSprites:
 		Image: primitive-giant
 	Tooltip:
@@ -73,6 +88,10 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Buildable:
+		Queue: primitive-soldierhouse
+		BuildDuration: 256
+		BuildPaletteOrder: 40
 	RenderSprites:
 		Image: primitive-soldier
 	Tooltip:
@@ -95,6 +114,11 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Buildable:
+		Queue: primitive-soldierhouse
+		BuildDuration: 480
+		BuildPaletteOrder: 50
+		Prerequisites: primitive-blacksmith
 	RenderSprites:
 		Image: primitive-knight
 	Tooltip:
@@ -117,6 +141,10 @@ primitive-bowmachine:
 	Inherits@move: ^WheeledMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Buildable:
+		Queue: primitive-blacksmith
+		BuildDuration: 400
+		BuildPaletteOrder: 60
 	RenderSprites:
 		Image: primitive-bowmachine
 	Tooltip:
@@ -139,6 +167,11 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Buildable:
+		Queue: primitive-sanctuary
+		BuildDuration: 2880
+		BuildPaletteOrder: 70
+		Prerequisites: primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser
 	RenderSprites:
 		Image: primitive-chief
 	Tooltip:

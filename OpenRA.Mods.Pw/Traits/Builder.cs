@@ -1,0 +1,152 @@
+#region Copyright & License Information
+/*
+ * Copyright (c) The OpenPW Developers and Contributors
+ * This file is part of OpenPW, which is free software. It is made
+ * available to you under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version. For more
+ * information, see COPYING.
+ */
+#endregion
+
+using System.Collections.Generic;
+using OpenRA.Mods.Common;
+using OpenRA.Mods.Common.Orders;
+using OpenRA.Mods.Common.Traits;
+using OpenRA.Mods.Pw.Activities;
+using OpenRA.Primitives;
+using OpenRA.Traits;
+
+namespace OpenRA.Mods.Pw.Traits
+{
+	[Desc("A worker that builds (the Buildman's build list, .chr 0x240): ordered through the build palette ",
+		"(PwBuildAt) it pays, places the site and walks there to build it; right-clicking an unfinished site of its ",
+		"own (PwResumeBuild) sends it to continue. Ported from OpenSYW.")]
+	public class BuilderInfo : TraitInfo
+	{
+		[Desc("Buildings this worker can build.")]
+		public readonly string[] Types = System.Array.Empty<string>();
+
+		[GrantedConditionReference]
+		[Desc("Condition granted while working on a site (plays the build animation).")]
+		public readonly string BuildingCondition = "building";
+
+		[VoiceReference]
+		public readonly string Voice = "Action";
+
+		public override object Create(ActorInitializer init) { return new Builder(this); }
+	}
+
+	public class Builder : IIssueOrder, IResolveOrder, IOrderVoice
+	{
+		public const string OrderID = "PwBuildAt";
+		public const string ResumeOrderID = "PwResumeBuild";
+
+		public readonly BuilderInfo Info;
+
+		public Builder(BuilderInfo info)
+		{
+			Info = info;
+		}
+
+		public bool CanBuild(string actorType) { return System.Array.IndexOf(Info.Types, actorType) >= 0; }
+
+		public bool CanResume(Actor self, Actor site)
+		{
+			if (site == null || site.IsDead || !site.IsInWorld || site.Owner != self.Owner || !CanBuild(site.Info.Name))
+				return false;
+
+			var underConstruction = site.TraitOrDefault<UnderConstruction>();
+			return underConstruction != null && !underConstruction.IsComplete;
+		}
+
+		// The worker's footprint check: free, buildable cells for this building.
+		public static bool CanPlace(World world, Actor builder, ActorInfo actorInfo, BuildingInfo buildingInfo, CPos cell)
+		{
+			return world.CanPlaceBuilding(cell, actorInfo, buildingInfo, builder);
+		}
+
+		IEnumerable<IOrderTargeter> IIssueOrder.Orders
+		{
+			get { yield return new ResumeTargeter(this); }
+		}
+
+		Order IIssueOrder.IssueOrder(Actor self, IOrderTargeter order, in Target target, bool queued)
+		{
+			return order.OrderID == ResumeOrderID ? new Order(order.OrderID, self, target, queued) : null;
+		}
+
+		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order)
+		{
+			return order.OrderString == OrderID || order.OrderString == ResumeOrderID ? Info.Voice : null;
+		}
+
+		void IResolveOrder.ResolveOrder(Actor self, Order order)
+		{
+			if (order.OrderString == ResumeOrderID)
+			{
+				if (order.Target.Type == TargetType.Actor && CanResume(self, order.Target.Actor))
+					self.QueueActivity(order.Queued, new ConstructBuilding(order.Target.Actor));
+
+				return;
+			}
+
+			if (order.OrderString != OrderID || !CanBuild(order.TargetString))
+				return;
+
+			var world = self.World;
+			if (!world.Map.Rules.Actors.TryGetValue(order.TargetString, out var actorInfo))
+				return;
+
+			var buildingInfo = actorInfo.TraitInfoOrDefault<BuildingInfo>();
+			var cell = world.Map.CellContaining(order.Target.CenterPosition);
+			if (buildingInfo == null || !CanPlace(world, self, actorInfo, buildingInfo, cell))
+				return;
+
+			var buildable = actorInfo.TraitInfoOrDefault<BuildableInfo>();
+			var techTree = self.Owner.PlayerActor.Trait<TechTree>();
+			if (buildable != null && buildable.Prerequisites.Length > 0 && !techTree.HasPrerequisites(buildable.Prerequisites))
+				return;
+
+			var cost = actorInfo.TraitInfoOrDefault<ValuedInfo>()?.Cost ?? 0;
+			if (!self.Owner.PlayerActor.Trait<PlayerResources>().TakeCash(cost, true))
+				return;
+
+			var faction = self.Owner.Faction.InternalName;
+			world.AddFrameEndTask(w =>
+			{
+				var site = w.CreateActor(order.TargetString, new TypeDictionary
+				{
+					new LocationInit(cell),
+					new OwnerInit(self.Owner),
+					new FactionInit(faction),
+					new HealthInit(1),
+					new UnderConstructionInit(),
+				});
+
+				self.QueueActivity(false, new ConstructBuilding(site));
+			});
+		}
+
+		sealed class ResumeTargeter : UnitOrderTargeter
+		{
+			readonly Builder builder;
+
+			public ResumeTargeter(Builder builder)
+				: base(ResumeOrderID, 7, "repair", false, true)
+			{
+				this.builder = builder;
+			}
+
+			public override bool CanTargetActor(Actor self, Actor target, TargetModifiers modifiers, ref string cursor)
+			{
+				return builder.CanResume(self, target);
+			}
+
+			public override bool CanTargetFrozenActor(Actor self, FrozenActor target, TargetModifiers modifiers, ref string cursor)
+			{
+				return false;
+			}
+		}
+	}
+}

@@ -4,3 +4,267 @@ Container@PLAYER_WIDGETS:
 		LogicTicker@SIDEBAR_TICKER:
 		MenuButton@OPTIONS_BUTTON:
 			Key: escape
+		# The command panel (OpenRA.Mods.Pw/Widgets/Logic/CommandPanelLogic.cs): berries, and the build list of a selected
+		# worker or what a selected building trains. A plain first version; the race interface bars come later.
+		Container@COMMAND_PANEL:
+			Logic: CommandPanelLogic
+			X: 0
+			Y: 0
+			Width: WINDOW_WIDTH
+			Height: WINDOW_HEIGHT
+			Children:
+				Label@CASH:
+					X: WINDOW_WIDTH - 210
+					Y: 8
+					Width: 200
+					Height: 20
+					Align: Right
+					Font: Bold
+					Contrast: true
+				Label@TITLE:
+					X: 8
+					Y: WINDOW_HEIGHT - 128
+					Width: 270
+					Height: 20
+					Font: Bold
+					Contrast: true
+				Button@SLOT_0:
+					X: 8
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_1:
+					X: 52
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_2:
+					X: 96
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_3:
+					X: 140
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_4:
+					X: 184
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_5:
+					X: 228
+					Y: WINDOW_HEIGHT - 104
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_6:
+					X: 8
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_7:
+					X: 52
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_8:
+					X: 96
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_9:
+					X: 140
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_10:
+					X: 184
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
+				Button@SLOT_11:
+					X: 228
+					Y: WINDOW_HEIGHT - 60
+					Width: 42
+					Height: 42
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: BUTTON_TOOLTIP
+					Children:
+						Sprite@ICON:
+							X: 2
+							Y: 2
+							Width: 38
+							Height: 38
+						Label@PROGRESS:
+							Y: 26
+							Width: 42
+							Height: 14
+							Align: Center
+							Font: TinyBold
+							Contrast: true
