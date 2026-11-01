@@ -9,7 +9,7 @@ weapon-throw-bomb:
 	impact:
 		Start: 1
 		Length: 20
-		Scale: 0.25
+		Scale: 0.5
 		Tick: 240
 
 weapon-soldier-arrows:
