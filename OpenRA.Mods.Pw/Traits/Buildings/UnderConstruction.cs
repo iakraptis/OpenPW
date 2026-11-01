@@ -9,6 +9,8 @@
  */
 #endregion
 
+using System.Linq;
+using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Traits;
 
@@ -18,9 +20,10 @@ namespace OpenRA.Mods.Pw.Traits
 	// this init they start finished.
 	public class UnderConstructionInit : RuntimeFlagInit, ISingleInstanceInit { }
 
-	[Desc("A building placed by a worker (Builder) starts at low HP and only grows while a worker stands at it ",
-		"building (ConstructBuilding); it is finished after Duration ticks of work, as in Primitive Wars (.chr 0x18c). ",
-		"Map and editor placed buildings start finished. Ported from OpenSYW.")]
+	[Desc("A building placed by a worker (Builder) starts at low HP. The worker walks up and goes inside it ",
+		"(ConstructBuilding removes it from the world); the building grows while the worker is inside and is finished ",
+		"after Duration ticks (.chr 0x18c), then lets the worker out beside it. If the site is destroyed meanwhile, the ",
+		"worker is lost with it. Map and editor placed buildings start finished. Ported from OpenSYW.")]
 	public class UnderConstructionInfo : TraitInfo, Requires<HealthInfo>
 	{
 		[FieldLoader.Require]
@@ -31,13 +34,13 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Condition granted while unfinished: disable production, attacks and so on with it.")]
 		public readonly string Condition = "constructing";
 
-		[Desc("How close the worker must be to work on the site.")]
-		public readonly WDist WorkRange = WDist.FromCells(1);
+		[Desc("How close the worker must come to go inside.")]
+		public readonly WDist EnterRange = WDist.FromCells(2);
 
 		public override object Create(ActorInitializer init) { return new UnderConstruction(init, this); }
 	}
 
-	public class UnderConstruction : ITick
+	public class UnderConstruction : ITick, INotifyRemovedFromWorld
 	{
 		public readonly UnderConstructionInfo Info;
 		readonly Health health;
@@ -46,10 +49,10 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public bool IsComplete { get; private set; }
 
-		// The worker building it right now, or null.
+		// The worker inside, building it, or null.
 		public Actor Builder { get; private set; }
 
-		public bool HasBuilder => Builder != null && !Builder.IsDead && Builder.IsInWorld;
+		public bool HasBuilder => Builder != null && !Builder.IsDead && !Builder.Disposed;
 
 		// 0 when placed, 1 when finished.
 		public float Progress => IsComplete ? 1f : (float)worked / Info.Duration;
@@ -77,12 +80,6 @@ namespace OpenRA.Mods.Pw.Traits
 			return true;
 		}
 
-		public void ReleaseBuilder(Actor worker)
-		{
-			if (Builder == worker)
-				Builder = null;
-		}
-
 		void ITick.Tick(Actor self)
 		{
 			if (IsComplete || !HasBuilder)
@@ -108,10 +105,48 @@ namespace OpenRA.Mods.Pw.Traits
 			if (conditionToken != Actor.InvalidConditionToken)
 				conditionToken = self.RevokeCondition(conditionToken);
 
-			// The worker announces it (.chr sound group 8, heard by its owner).
-			if (Builder != null && !Builder.IsDead)
-				foreach (var voiced in Builder.TraitsImplementing<IVoiced>())
-					voiced.PlayVoice(Builder, "Built", Builder.Owner.Faction.InternalName);
+			ReleaseBuilder(self);
+		}
+
+		// The worker comes out on a free cell beside the building and announces it (.chr sound group 8).
+		void ReleaseBuilder(Actor self)
+		{
+			if (Builder == null)
+				return;
+
+			var worker = Builder;
+			Builder = null;
+			self.World.AddFrameEndTask(w =>
+			{
+				if (worker.IsDead || worker.Disposed)
+					return;
+
+				var cell = FreeCellBeside(self, worker);
+				w.Add(worker);
+				worker.Trait<IPositionable>().SetPosition(worker, cell);
+				foreach (var voiced in worker.TraitsImplementing<IVoiced>())
+					voiced.PlayVoice(worker, "Built", worker.Owner.Faction.InternalName);
+			});
+		}
+
+		static CPos FreeCellBeside(Actor building, Actor worker)
+		{
+			var positionable = worker.Trait<IPositionable>();
+			var candidates = Util.AdjacentCells(building.World, Target.FromActor(building))
+				.OrderBy(c => (c - building.Location).LengthSquared);
+
+			foreach (var cell in candidates)
+				if (positionable.CanEnterCell(cell))
+					return cell;
+
+			return building.Location;
+		}
+
+		// Destroyed with the worker inside: there is no outside to put it, so it is lost with the building.
+		void INotifyRemovedFromWorld.RemovedFromWorld(Actor self)
+		{
+			if (Builder != null && !Builder.IsDead && !Builder.Disposed)
+				Builder.Dispose();
 
 			Builder = null;
 		}

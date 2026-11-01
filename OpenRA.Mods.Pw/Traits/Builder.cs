@@ -27,10 +27,6 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Buildings this worker can build.")]
 		public readonly string[] Types = System.Array.Empty<string>();
 
-		[GrantedConditionReference]
-		[Desc("Condition granted while working on a site (plays the build animation).")]
-		public readonly string BuildingCondition = "building";
-
 		[VoiceReference]
 		public readonly string Voice = "Action";
 
@@ -57,7 +53,7 @@ namespace OpenRA.Mods.Pw.Traits
 				return false;
 
 			var underConstruction = site.TraitOrDefault<UnderConstruction>();
-			return underConstruction != null && !underConstruction.IsComplete;
+			return underConstruction != null && !underConstruction.IsComplete && !underConstruction.HasBuilder;
 		}
 
 		// The worker's footprint check: free, buildable cells for this building.

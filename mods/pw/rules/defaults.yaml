@@ -87,25 +87,21 @@
 	# Living units carry meat they pick up and eat it while hurt (machines don't).
 	PwMeatEater:
 
-# Workers build (Builder, the build list on the concrete worker) and gather (Phase 3, next step). While building
-# they play their build animation instead of the infantry body.
+# Workers build (Builder, the build list on the concrete worker: they go inside the site until it is finished) and
+# gather berries.
 ^Worker:
 	Inherits: ^Infantry
 	Builder:
 	BerryGatherer:
-	# One body at a time: building, gathering, carrying a basket of berries, or the plain infantry body.
+	# One body at a time: gathering, carrying a basket of berries, or the plain infantry body.
 	WithInfantryBody:
-		RequiresCondition: !building && !gathering && !carrying
+		RequiresCondition: !gathering && !carrying
 	WithInfantryBody@CARRY:
 		IdleSequences: stand-carry-b
 		StandSequences: stand-carry-b
 		MoveSequence: walk-carry-b
 		DefaultAttackSequence: attack
-		RequiresCondition: carrying && !building && !gathering
-	WithSpriteBody@BUILD:
-		Name: build
-		Sequence: build
-		RequiresCondition: building
+		RequiresCondition: carrying && !gathering
 	WithSpriteBody@GATHER:
 		Name: gather
 		Sequence: gather
