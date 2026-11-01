@@ -274,3 +274,78 @@ primitive-skyincreaser:
 			BottomRight: 2560, 1536
 	RevealsShroud:
 		Range: 8c0
+
+# Defences. They attack in every direction (AttackOmni) whatever is in range.
+primitive-stonetower:
+	Inherits: ^Building
+	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 560
+	Buildable:
+		BuildPaletteOrder: 35
+		Prerequisites: primitive-powerhouse
+	RenderSprites:
+		Image: primitive-stonetower
+	Tooltip:
+		Name: actor-primitive-stonetower.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 400
+	Building:
+		Footprint: xx xx
+		Dimensions: 2,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -1024
+			BottomRight: 1024, 1024
+	RevealsShroud:
+		Range: 11c0
+	Armament:
+		Weapon: Stone
+		RequiresCondition: !constructing
+	AttackOmni:
+		RequiresCondition: !constructing
+	AutoTarget:
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
+		InvalidTargets: Wild
+	WithAttackAnimation:
+		Sequence: attack
+
+primitive-trap:
+	Inherits: ^Building
+	Inherits@race: ^Primitive
+	UnderConstruction:
+		Duration: 480
+	Buildable:
+		BuildPaletteOrder: 90
+		Prerequisites: primitive-landincreaser
+	RenderSprites:
+		Image: primitive-trap
+	Tooltip:
+		Name: actor-primitive-trap.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 200
+	Building:
+		Footprint: xx
+		Dimensions: 2,1
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -512
+			BottomRight: 1024, 512
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		Weapon: TrapSnap
+		RequiresCondition: !constructing
+	AttackOmni:
+		RequiresCondition: !constructing
+	AutoTarget:
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground
+		InvalidTargets: Wild

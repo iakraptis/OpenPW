@@ -67,6 +67,13 @@ namespace OpenRA.Mods.Pw.Tests
 		public void Train(Actor producer, string unit) =>
 			Resolve(producer, new Order("StartProduction", producer, false) { TargetString = unit, ExtraData = 1 });
 
+		[Desc("Whether the player meets an actor type's prerequisites (its tech is available).")]
+		public bool Available(Player player, string actorType)
+		{
+			var buildable = player.World.Map.Rules.Actors[actorType].TraitInfoOrDefault<BuildableInfo>();
+			return buildable == null || player.PlayerActor.Trait<TechTree>().HasPrerequisites(buildable.Prerequisites);
+		}
+
 		[Desc("Population in use: units plus everything in the training queues.")]
 		public int PopulationUsed(Player player) => PwPopulation.Used(player);
 

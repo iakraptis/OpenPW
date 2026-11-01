@@ -86,3 +86,23 @@ ChiefHit:
 	ReloadDelay: 37
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
+
+# StoneTower: a thrown stone that also reaches flyers (range 288 px against both; 20 px per tick).
+Stone:
+	Inherits: ^Thrown
+	ValidTargets: Ground, Air
+	ReloadDelay: 21
+	Range: 9c0
+	Projectile: Bullet
+		Speed: 640
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground, Air
+		Damage: 40
+
+# Trap: snaps at what stands beside it (32 px from its edge; the range is measured from its centre).
+TrapSnap:
+	Inherits: ^Melee
+	ReloadDelay: 8
+	Range: 2c0
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 80

@@ -10,7 +10,7 @@ primitive-buildman:
 	UsesPopulation:
 		Amount: 1
 	Builder:
-		Types: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyhouse, primitive-skyincreaser
+		Types: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyhouse, primitive-skyincreaser, primitive-stonetower, primitive-trap
 	Buildable:
 		Queue: primitive-sanctuary
 		BuildDuration: 160

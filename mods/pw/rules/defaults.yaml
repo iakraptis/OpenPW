@@ -200,8 +200,10 @@
 	SelectionDecorations:
 	Targetable:
 		TargetTypes: Ground, Structure
+	# Targetable at every footprint cell, so melee units can reach a building from any side.
 	HitShape:
 		Type: Rectangle
+		UseTargetableCellsOffsets: true
 	Building:
 		TerrainTypes: Clear
 		RequiresBaseProvider: false
@@ -218,6 +220,7 @@
 	UnderConstruction:
 	WithConstructionStages:
 	ProvidesPrerequisite:
+		RequiresCondition: !constructing
 	Buildable:
 		BuildDurationModifier: 100
 	MapEditorData:

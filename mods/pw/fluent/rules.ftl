@@ -53,6 +53,10 @@ actor-primitive-sanctuary =
 
 actor-primitive-house =
     .name = House
+actor-primitive-stonetower =
+    .name = StoneTower
+actor-primitive-trap =
+    .name = Trap
 
 actor-primitive-powerhouse =
     .name = PowerHouse
