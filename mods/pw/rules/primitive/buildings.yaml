@@ -4,6 +4,7 @@
 primitive-sanctuary:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	AcceptsBerries:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:

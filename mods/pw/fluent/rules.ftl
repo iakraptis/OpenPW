@@ -72,3 +72,7 @@ actor-primitive-landincreaser =
 actor-primitive-skyincreaser =
     .name = SkyIncreaser
 
+
+## Map objects
+actor-berry-bush =
+    .name = Berry bush

@@ -22,6 +22,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public static readonly IReadOnlyList<Stage> All = new Stage[]
 		{
 			new("tilesets", "The Jungle, Dungeon and Ruin tilesets (.trt), copied as they are", Terrain.ExportTilesets),
+			new("objects", "Map objects: the doodads of each tileset and the berry bushes", Objects.Export),
 			new("maps", "Every skirmish map: movement terrain, original terrain cells and start positions", Maps.Export),
 			new("units", "Every unit and building: sprite sheets with player colour, and their sequences", Units.Export),
 			new("chrome", "Interface art: the mouse cursors", Chrome.Export),

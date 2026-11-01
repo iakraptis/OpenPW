@@ -71,11 +71,24 @@
 ^Worker:
 	Inherits: ^Infantry
 	Builder:
+	BerryGatherer:
+	# One body at a time: building, gathering, carrying a basket of berries, or the plain infantry body.
 	WithInfantryBody:
-		RequiresCondition: !building
+		RequiresCondition: !building && !gathering && !carrying
+	WithInfantryBody@CARRY:
+		IdleSequences: stand-carry-b
+		StandSequences: stand-carry-b
+		MoveSequence: walk-carry-b
+		DefaultAttackSequence: attack
+		RequiresCondition: carrying && !building && !gathering
 	WithSpriteBody@BUILD:
+		Name: build
 		Sequence: build
 		RequiresCondition: building
+	WithSpriteBody@GATHER:
+		Name: gather
+		Sequence: gather
+		RequiresCondition: gathering
 
 # Living creatures that are not people: dinosaurs. Not crushable.
 ^Beast:
@@ -167,3 +180,40 @@
 ^Primitive:
 
 ^Tyrano:
+
+# Map decoration from the original maps (rules/objects.yaml, generated): drawn only, its cells are already blocked by
+# the terrain flags.
+^Doodad:
+	Interactable:
+	HiddenUnderShroud:
+		Type: CenterPosition
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Immobile:
+		OccupiesSpace: false
+	MapEditorData:
+		Categories: Doodads
+
+# A berry bush (rules/objects.yaml, generated): two cells, blocks them, gathered by workers until empty.
+^BerryBush:
+	Interactable:
+	HiddenUnderShroud:
+	Tooltip:
+		Name: actor-berry-bush.name
+		ShowOwnerRow: false
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Building:
+		Footprint: xx
+		Dimensions: 2,1
+		TerrainTypes: Clear, Ramp
+	Targetable:
+		TargetTypes: BerryBush
+	BerryBush:
+	AppearsOnRadar:
+	MapEditorData:
+		Categories: Resources

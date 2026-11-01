@@ -54,19 +54,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var count = Int(0x2214 + 4 * g);
 				for (var i = 0; i < count; i++)
 				{
-					var frame = new Frame
-					{
-						Width = BitConverter.ToInt32(data, at),
-						Height = BitConverter.ToInt32(data, at + 4),
-						OffsetX = BitConverter.ToInt32(data, at + 8),
-						OffsetY = BitConverter.ToInt32(data, at + 12),
-						MirroredOffsetX = BitConverter.ToInt32(data, at + 16),
-					};
-
-					var size = BitConverter.ToInt32(data, at + 24);
-					frame.Pixels = Decode(data, at + 32, frame.Width, frame.Height);
-					Frames[g].Add(frame);
-					at += 32 + size;
+					Frames[g].Add(ReadFrame(data, ref at));
 				}
 			}
 
@@ -89,6 +77,24 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public int Int(int offset) { return BitConverter.ToInt32(Record, offset); }
 
 		// Rows of a u16 byte length, then codes: 00 n skips n transparent pixels, any other byte is one pixel.
+		// One frame (32-byte header, then the rows), as in .chr, .doo and .spz files; at moves past it.
+		public static Frame ReadFrame(byte[] data, ref int at)
+		{
+			var frame = new Frame
+			{
+				Width = BitConverter.ToInt32(data, at),
+				Height = BitConverter.ToInt32(data, at + 4),
+				OffsetX = BitConverter.ToInt32(data, at + 8),
+				OffsetY = BitConverter.ToInt32(data, at + 12),
+				MirroredOffsetX = BitConverter.ToInt32(data, at + 16),
+			};
+
+			var size = BitConverter.ToInt32(data, at + 24);
+			frame.Pixels = Decode(data, at + 32, frame.Width, frame.Height);
+			at += 32 + size;
+			return frame;
+		}
+
 		static byte[] Decode(byte[] data, int at, int width, int height)
 		{
 			var pixels = new byte[width * height];

@@ -58,6 +58,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var map2 = jw2.Read("MAP2");
 			var players = jw2.Read("P_SCENA")[4];
 			var starts = StartPositions(jw2.Read("P_PLAYE"));
+			var objects = MapObjects(jw2.Read("MAP3"), Terrain.Tilesets[tileset].Name, width, height);
 
 			var slug = Regex.Replace(title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
 			var folder = $"maps/{slug}";
@@ -112,7 +113,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				c.WriteFile($"{folder}/terrain.bin", stream.ToArray());
 			}
 
-			c.WriteText($"{folder}/map.yaml", MapYaml(title, Terrain.Tilesets[tileset].Id, mapWidth, mapHeight, width, height, players, starts));
+			c.WriteText($"{folder}/map.yaml", MapYaml(title, Terrain.Tilesets[tileset].Id, mapWidth, mapHeight, width, height, players, starts, objects));
 		}
 
 		// MAP1 bits 29-31: walkable, water, buildable (docs/formats/map.md).
@@ -126,6 +127,27 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				return (ushort)((flags & 4) != 0 ? 1 : 2);
 
 			return 4;
+		}
+
+		// MAP3 objects (docs/formats/map.md): kind 3 doodads (code bits 0-7: doodad code >> 2, variant code & 3) and kind 1
+		// berry bushes (variant bits 2-3; the second cell, bit 11, belongs to the same bush). Actors from Objects.cs.
+		static List<(string Actor, int X, int Y)> MapObjects(byte[] map3, string tileset, int width, int height)
+		{
+			var objects = new List<(string Actor, int X, int Y)>();
+			for (var y = 0; y < height; y++)
+			{
+				for (var x = 0; x < width; x++)
+				{
+					var value = BitConverter.ToUInt32(map3, 4 * (y * GridSize + x));
+					var kind = (value >> 8) & 7;
+					if (kind == 3 && (value & 0xff) >> 2 < Objects.Doodads)
+						objects.Add((Objects.DoodadActor(tileset, (int)(value & 0xff) >> 2, (int)value & 3), x + Border, y + Border));
+					else if (kind == 1 && (value & 0x800) == 0)
+						objects.Add((Objects.BushActor((int)(value >> 2) & 3), x + Border, y + Border));
+				}
+			}
+
+			return objects;
 		}
 
 		// P_PLAYE 0x2d4: (x, y) pixel pairs, ended by -1.
@@ -145,7 +167,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		}
 
 		static string MapYaml(string title, string tileset, int mapWidth, int mapHeight, int width, int height, int players,
-			List<(int X, int Y)> starts)
+			List<(int X, int Y)> starts, List<(string Actor, int X, int Y)> objects)
 		{
 			var multi = Enumerable.Range(0, players).Select(i => $"Multi{i}").ToList();
 			var s = new StringBuilder();
@@ -162,6 +184,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			s.Append("\nActors:\n");
 			for (var i = 0; i < starts.Count; i++)
 				s.Append($"\tActor{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
+
+			for (var i = 0; i < objects.Count; i++)
+				s.Append($"\tObject{i}: {objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {objects[i].X},{objects[i].Y}\n");
 
 			return s.ToString();
 		}

@@ -15,6 +15,7 @@ Rules:
 	pw|rules/defaults.yaml
 	pw|rules/primitive/units.yaml
 	pw|rules/primitive/buildings.yaml
+	pw|rules/objects.yaml
 	pw|rules/mpspawn.yaml
 	pw|rules/palettes.yaml
 	pw|rules/player.yaml
@@ -27,6 +28,7 @@ Sequences:
 	pw|sequences/elf.yaml
 	pw|sequences/demon.yaml
 	pw|sequences/wild.yaml
+	pw|sequences/objects.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
 

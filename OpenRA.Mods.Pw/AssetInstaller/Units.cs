@@ -208,15 +208,16 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return (start, end);
 		}
 
-		// RGBA per palette index.
-		static Color[] ConvertPalette(byte[] source)
+		// RGBA per palette index (256 x RGB0). With playerColor, the ramp 245-254 becomes the player colour band; without
+		// it (map objects), the band is only kept clear.
+		public static Color[] ConvertPalette(byte[] source, bool playerColor = true)
 		{
 			var colors = new Color[256];
 			for (var i = 0; i < 256; i++)
 			{
 				var color = Color.FromArgb(source[4 * i], source[4 * i + 1], source[4 * i + 2]);
 				var (hue, saturation, value) = Color.RgbToHsv(color.R / 255f, color.G / 255f, color.B / 255f);
-				if (i >= 245 && i <= 254)
+				if (playerColor && i >= 245 && i <= 254)
 					color = Color.FromAhsv(ColorShiftHue, 1f, value);
 				else if (hue >= ColorShiftMin && hue <= ColorShiftMax && saturation > 0)
 					color = Color.FromAhsv(hue < ColorShiftHue ? ColorShiftMin - 0.005f : ColorShiftMax + 0.005f, saturation, value);
@@ -230,7 +231,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		}
 
 		// Shelf-packed frames with a one pixel gap; Frame[i] = region;offset from the sprite centre.
-		static byte[] Sheet(List<(ChrFile.Frame Frame, bool Mirrored)> frames, Color[] palette)
+		public static byte[] Sheet(List<(ChrFile.Frame Frame, bool Mirrored)> frames, Color[] palette)
 		{
 			var regions = new List<Rectangle>();
 			int x = 0, y = 0, rowHeight = 0;
