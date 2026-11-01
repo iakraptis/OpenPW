@@ -390,3 +390,35 @@ editor:
 		tools: 136, 68, 16, 16
 		history: 136, 51, 16, 16
 		erase: 50, 187, 16, 16
+
+# The Primitive interface bar (chrome/bar-primitive.png, written by the installer from JW2_02 Intfbg.spr), drawn by
+# InterfaceBarWidget: the pieces (the middle is kept whole, one beam section of each lower panel repeats to fill the
+# width), and areas that are not drawn but place the other widgets (minimap hole, panels, buttons). Coordinates in
+# the original 800 x 161 bar.
+bar-primitive:
+	Image: chrome/bar-primitive.png
+	Regions:
+		left-fixed: 0, 0, 77, 161
+		left-tile: 77, 0, 74, 161
+		left-join: 151, 0, 62, 161
+		center: 213, 0, 352, 161
+		right-join: 565, 0, 69, 161
+		right-tile: 634, 0, 75, 161
+		right-fixed: 709, 0, 91, 161
+		hole: 327, 25, 118, 127
+		left-panel: 16, 70, 294, 80
+		right-panel: 462, 70, 322, 80
+		menu: 227, 17, 82, 32
+		allies: 465, 17, 37, 32
+		msg: 504, 17, 41, 32
+
+# The bar's buttons (chrome/bar-primitive-buttons.png: JW2_02 Menu, Allies, Msg; released and pressed).
+bar-primitive-buttons:
+	Image: chrome/bar-primitive-buttons.png
+	Regions:
+		menu: 0, 0, 82, 32
+		menu-pressed: 83, 0, 82, 32
+		allies: 166, 0, 37, 32
+		allies-pressed: 204, 0, 37, 32
+		msg: 242, 0, 41, 32
+		msg-pressed: 284, 0, 41, 32

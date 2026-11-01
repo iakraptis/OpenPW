@@ -23,37 +23,21 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
-	// Also the berries counter (CASH) and the population (POPULATION). Icons are the original portraits (each image's "icon" sequence).
-	// Hosted on an always-visible container, so it keeps ticking while the buttons are hidden.
+	// - the Chief: his ability (Fall out) with his mana.
+	// Icons are the original portraits (each image's "icon" sequence); every slot has a tooltip (name and cost; time, what is missing, how to use it). InterfaceBarLogic
+	// places the panel and the slots; SelectionPanelLogic shows what is selected.
 	public class CommandPanelLogic : ChromeLogic
 	{
 		readonly World world;
 		readonly ButtonWidget[] slots;
-		readonly LabelWidget title;
 
 		[ObjectCreator.UseCtor]
 		public CommandPanelLogic(Widget widget, World world)
 		{
 			this.world = world;
 			slots = widget.Children.OfType<ButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
-			title = widget.Get<LabelWidget>("TITLE");
 			foreach (var slot in slots)
 				slot.Visible = false;
-
-			var cash = widget.Get<LabelWidget>("CASH");
-			cash.GetText = () =>
-			{
-				var resources = world.LocalPlayer?.PlayerActor.TraitOrDefault<PlayerResources>();
-				return resources == null ? "" : FluentProvider.GetMessage("label-berries", "amount", resources.Cash + resources.Resources);
-			};
-
-			var population = widget.Get<LabelWidget>("POPULATION");
-			population.GetText = () =>
-			{
-				var player = world.LocalPlayer;
-				return player == null ? "" : FluentProvider.GetMessage("label-population",
-					"used", PwPopulation.Used(player), "limit", PwPopulation.Capacity(player));
-			};
 		}
 
 		public override void Tick()
@@ -74,12 +58,6 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				foreach (var slot in slots)
 					slot.Visible = false;
 
-				// One unit that levels: its name, level and experience.
-				if (producer != null && producer.TraitOrDefault<PwLevels>() != null)
-					ShowTitle(producer);
-				else
-					title.Visible = false;
-
 				// Its ability (the Chief's Fall out): the button shows the mana, usable once researched and paid for.
 				var fallOut = producer?.TraitOrDefault<PwFallOut>();
 				if (fallOut != null)
@@ -97,7 +75,6 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				.OrderBy(a => a.TraitInfoOrDefault<BuildableInfo>()?.BuildPaletteOrder ?? 9999)
 				.ToArray();
 
-			ShowTitle(builderActor);
 			for (var i = 0; i < slots.Length; i++)
 			{
 				var slot = slots[i];
@@ -113,6 +90,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				var available = buildable == null || buildable.Prerequisites.Length == 0 || techTree.HasPrerequisites(buildable.Prerequisites);
 
 				Show(slot, actorInfo, cost, () => "");
+				var missing = buildable == null ? "" : string.Join(", ", buildable.Prerequisites.Where(p => !p.StartsWith('~'))
+					.Select(p => world.Map.Rules.Actors.TryGetValue(p.TrimStart('!'), out var a) ? ActorName(a) : p));
+				slot.GetTooltipDesc = () => available
+					? FluentProvider.GetMessage("tooltip-build", "time", Seconds(actorInfo))
+					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing);
 				slot.IsDisabled = () => !available || resources.Cash + resources.Resources < cost;
 				slot.OnClick = () => world.OrderGenerator = new BuildAtCellOrderGenerator(world, builderActor, actorInfo.Name);
 			}
@@ -121,7 +103,6 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		void ShowTraining(Actor producer, ProductionQueue queue)
 		{
 			var items = queue.BuildableItems().OrderBy(a => a.TraitInfoOrDefault<BuildableInfo>()?.BuildPaletteOrder ?? 9999).ToArray();
-			ShowTitle(producer);
 			for (var i = 0; i < slots.Length; i++)
 			{
 				var slot = slots[i];
@@ -147,6 +128,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				});
 
 				slot.IsDisabled = () => false;
+				slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo));
 
 				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
 				// alone: the button calls OnClick from it.
@@ -160,19 +142,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			}
 		}
 
-		void ShowTitle(Actor actor)
+		static string ActorName(ActorInfo info)
 		{
-			var tooltip = actor.Info.TraitInfos<TooltipInfo>().FirstOrDefault();
-			title.Visible = true;
-			var levels = actor.TraitOrDefault<PwLevels>();
-			var meat = actor.TraitOrDefault<PwMeatEater>();
-			title.GetText = () =>
-			{
-				var name = tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : actor.Info.Name;
-				var text = levels == null ? name : FluentProvider.GetMessage("label-unit-level",
-					"name", name, "level", levels.Level, "experience", levels.Experience, "next", levels.ExperiencePerLevel);
-				return meat != null && meat.Meat > 0 ? text + "   " + FluentProvider.GetMessage("label-unit-meat", "meat", meat.Meat) : text;
-			};
+			var tooltip = info.TraitInfos<TooltipInfo>().FirstOrDefault();
+			return tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : info.Name;
+		}
+
+		// Build or training time in seconds at the default speed (71 ms per tick): a worker's building takes its
+		// UnderConstruction duration, a trained unit or research its BuildDuration.
+		static int Seconds(ActorInfo info)
+		{
+			var ticks = info.TraitInfoOrDefault<UnderConstructionInfo>()?.Duration ?? info.TraitInfoOrDefault<BuildableInfo>()?.BuildDuration ?? 0;
+			return ticks * 71 / 1000;
 		}
 
 		void ShowAbility(Actor caster, PwFallOut fallOut)
@@ -185,8 +166,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.GetTooltipText = () => FluentProvider.GetMessage(fallOut.IsUnlocked(caster) ? "label-ability-fall-out" : "label-ability-fall-out-locked",
-				"cost", fallOut.Info.Cost);
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-ability-fall-out", "cost", fallOut.Info.Cost);
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage(fallOut.IsUnlocked(caster) ? "tooltip-ability-fall-out" : "label-ability-fall-out-locked");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => $"{mana.Mana}/{mana.Max}";
 			slot.IsDisabled = () => !fallOut.IsReady(caster);
@@ -195,8 +176,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 		void Show(ButtonWidget slot, ActorInfo actorInfo, int cost, System.Func<string> progress)
 		{
-			var tooltip = actorInfo.TraitInfos<TooltipInfo>().FirstOrDefault();
-			var name = tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : actorInfo.Name;
+			var name = ActorName(actorInfo);
 			var image = actorInfo.TraitInfoOrDefault<RenderSpritesInfo>()?.Image ?? actorInfo.Name;
 			Sprite portrait = null;
 			if (world.Map.Sequences.HasSequence(image, "icon"))
@@ -204,7 +184,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.GetTooltipText = () => $"{name} ({cost})";
+			slot.GetTooltipText = () => FluentProvider.GetMessage("tooltip-slot", "name", name, "cost", cost);
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => portrait;
 			slot.Get<LabelWidget>("PROGRESS").GetText = progress;
 		}

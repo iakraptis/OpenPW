@@ -26,6 +26,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		const int CursorSize = 32;
 		const int CursorCount = 100;
 		const int IconSize = 38;
+		const int LargeIconSize = 50;
 		static readonly string[] Races = { "primitive", "elf", "tyrano", "demon" };
 
 		// OpenRA cursor name, first original cursor, frame count. The "blocked" cursors keep the normal pointer: the red
@@ -142,6 +143,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var archive = c.Game.Archive("Jw2_02.trc");
 			var raceBlock = new Dictionary<string, int> { ["primitive"] = 0, ["elf"] = 1, ["tyrano"] = 2, ["demon"] = 3, ["wild"] = 0 };
 			c.WriteFile("chrome/portraits.png", IconSheet(archive, 170, type => 13 * raceBlock[Units.Race(type)], 0));
+
+			// The larger portraits of the selection panel (Char_middle, 50x50, Char_small's palette).
+			c.WriteFile("chrome/portraits-large.png", IconSheet(archive, 170, type => 13 * raceBlock[Units.Race(type)], 0, 2, LargeIconSize));
 			for (var race = 0; race < Races.Length; race++)
 			{
 				var block = 13 * race;
@@ -149,20 +153,79 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				c.WriteFile($"chrome/items-{Races[race]}.png", IconSheet(archive, 32, _ => block, 11));
 				c.WriteFile($"chrome/magic-{Races[race]}.png", IconSheet(archive, 16, _ => block, 5));
 			}
+
+			ExportInterfaceBars(c, archive);
 		}
 
-		// A row of count 38x38 icons: icon i from the sheet after the palette at blockOf(i) + paletteEntry.
-		static byte[] IconSheet(TrcArchive archive, int count, Func<int, int> blockOf, int paletteEntry)
+		// The in-game interface of each race (docs/formats/ui.md): the bottom bar Intfbg.spr (800 wide, its green
+		// surround made transparent) as chrome/bar-<race>.png, and the bar's buttons (Menu, Allies, Msg, each released
+		// and pressed: .spz frames) side by side in chrome/bar-<race>-buttons.png. JW2_02 holds them in blocks of 8
+		// from entry 306: palette, bar, then the six buttons.
+		static void ExportInterfaceBars(InstallContext c, TrcArchive archive)
 		{
-			var rgba = new byte[4 * IconSize * IconSize * count];
+			for (var race = 0; race < Races.Length; race++)
+			{
+				var block = 306 + 8 * race;
+				var palette = archive.Read(block);
+				var bar = archive.Read(block + 1);
+				var width = BitConverter.ToUInt16(bar, 0);
+				var height = BitConverter.ToUInt16(bar, 2);
+
+				// Chrome images need power-of-two sizes: the bar sits at the top left of a padded sheet.
+				var sheetWidth = PowerOfTwo(width);
+				var sheetHeight = PowerOfTwo(height);
+				var rgba = new byte[4 * sheetWidth * sheetHeight];
+				for (var y = 0; y < height; y++)
+				{
+					for (var x = 0; x < width; x++)
+					{
+						var index = bar[12 + y * width + x];
+						var (r, g, b) = (palette[4 * index], palette[4 * index + 1], palette[4 * index + 2]);
+						var transparent = r < 16 && g > 240 && b < 16;
+						var o = 4 * (y * sheetWidth + x);
+						rgba[o] = r;
+						rgba[o + 1] = g;
+						rgba[o + 2] = b;
+						rgba[o + 3] = transparent ? (byte)0 : (byte)255;
+					}
+				}
+
+				c.WriteFile($"chrome/bar-{Races[race]}.png", new Png(rgba, SpriteFrameType.Rgba32, sheetWidth, sheetHeight).Save());
+
+				var colors = Units.ConvertPalette(palette, false);
+				var buttons = new List<(ChrFile.Frame Frame, bool Mirrored)>();
+				for (var i = 0; i < 6; i++)
+				{
+					var at = 0;
+					buttons.Add((ChrFile.ReadFrame(archive.Read(block + 2 + i), ref at), false));
+				}
+
+				c.WriteFile($"chrome/bar-{Races[race]}-buttons.png", Units.Sheet(buttons, colors));
+			}
+		}
+
+		static int PowerOfTwo(int n)
+		{
+			var p = 1;
+			while (p < n)
+				p *= 2;
+
+			return p;
+		}
+
+		// A row of count square icons: icon i from the sheet at blockOf(i) + sheetEntry (by default right after the
+		// palette at blockOf(i) + paletteEntry), size x size each (38 by default).
+		static byte[] IconSheet(TrcArchive archive, int count, Func<int, int> blockOf, int paletteEntry, int sheetEntry = -1, int size = IconSize)
+		{
+			var rgba = new byte[4 * size * size * count];
 			for (var icon = 0; icon < count; icon++)
 			{
 				var palette = archive.Read(blockOf(icon) + paletteEntry);
-				var sheet = archive.Read(blockOf(icon) + paletteEntry + 1);
-				for (var p = 0; p < IconSize * IconSize; p++)
+				var sheet = archive.Read(blockOf(icon) + (sheetEntry < 0 ? paletteEntry + 1 : sheetEntry));
+				for (var p = 0; p < size * size; p++)
 				{
-					var index = sheet[icon * IconSize * IconSize + p];
-					var o = 4 * (p / IconSize * IconSize * count + icon * IconSize + p % IconSize);
+					var index = sheet[icon * size * size + p];
+					var o = 4 * (p / size * size * count + icon * size + p % size);
 					rgba[o] = palette[4 * index];
 					rgba[o + 1] = palette[4 * index + 1];
 					rgba[o + 2] = palette[4 * index + 2];
@@ -170,8 +233,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 			}
 
-			var meta = new Dictionary<string, string> { ["FrameSize"] = $"{IconSize},{IconSize}", ["FrameAmount"] = $"{count}" };
-			return new Png(rgba, SpriteFrameType.Rgba32, IconSize * count, IconSize, null, meta).Save();
+			var meta = new Dictionary<string, string> { ["FrameSize"] = $"{size},{size}", ["FrameAmount"] = $"{count}" };
+			return new Png(rgba, SpriteFrameType.Rgba32, size * count, size, null, meta).Save();
 		}
 	}
 }

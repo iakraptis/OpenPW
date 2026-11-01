@@ -218,6 +218,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			// The build icon: the type's portrait (Chrome.cs writes the sheet, one frame per type). Its own zero offset,
 			// as the image's Defaults carry the building footprint offset.
 			yaml.Append($"\ticon:\n\t\tFilename: chrome/portraits.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
+
+			// The selection panel's portrait: the larger one (Char_middle, 50x50).
+			yaml.Append($"\tportrait:\n\t\tFilename: chrome/portraits-large.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
 			return yaml.Append('\n').ToString();
 		}
 

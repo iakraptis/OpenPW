@@ -51,9 +51,33 @@ button-replay-player-maximum =
 
 ## Command panel
 label-berries = Berries: { $amount }
-label-unit-level = { $name }   Level { $level } ({ $experience }/{ $next })
-label-ability-fall-out = Fall out ({ $cost } mana): wears a target's life down to 1
+label-ability-fall-out = Fall out ({ $cost } mana)
+tooltip-ability-fall-out = Click, then click an enemy: wears its life down to 1.
 label-ability-fall-out-locked = Fall out: research Improve Fall out for Chief at the Sanctuary
-label-unit-meat = Meat: { $meat }
 label-population = Population: { $used } / { $limit }
 notification-population-limit = Population limit reached: build more Houses.
+
+## The interface bar
+tooltip-berries = Berries: gathered by Buildmen from bushes, spent on buildings, units and research.
+tooltip-population = Population in use / limit. Units take population; the Sanctuary, Houses and production buildings provide it.
+tooltip-slot = { $name } ({ $cost } berries)
+tooltip-build = Takes { $time } s. Click, then click where to build.
+tooltip-build-needs = Needs { $needs }.
+tooltip-train = Takes { $time } s. Click to queue one, Shift+click to cancel one.
+button-bar-menu = Menu
+button-bar-allies = Players and objectives
+button-bar-msg = Messages
+label-stat-hp = HP { $hp }/{ $max }
+tooltip-stat-hp = Hit points. Living units heal by eating the meat they carry.
+label-stat-level = Level { $level } ({ $xp }/{ $next } XP)
+tooltip-stat-level = Level and experience: kills give experience; each level raises attack and armour.
+label-stat-attack = Attack { $attack }
+tooltip-stat-attack = Damage per hit before the target's armour (with level, upgrade and morale bonuses).
+label-stat-armor = Armour { $armor }
+tooltip-stat-armor = Taken off every hit it receives (each hit does at least 1).
+label-stat-meat = Meat { $meat }
+tooltip-stat-meat = Meat carried: eaten while hurt, 1 HP per meat.
+label-stat-mana = Mana { $mana }/{ $max }
+tooltip-stat-mana = Mana for abilities; it refills over time.
+label-stat-construction = Building { $percent }%
+tooltip-stat-construction = Under construction: a Buildman inside is building it.
