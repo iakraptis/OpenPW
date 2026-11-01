@@ -29,6 +29,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	public static class Units
 	{
 		const int SheetWidth = 2048;
+
+		// Draw order lift for flying units: more than the tallest building's reach (in world units).
+		const int AirZOffset = 8192;
 		const float ColorShiftHue = 0.835f;
 		const float ColorShiftMin = 0.825f;
 		const float ColorShiftMax = 0.845f;
@@ -169,6 +172,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var y = -16 * chr.Int(0x334);
 				yaml.Append($"\t\tOffset: {x}, {y}\n");
 			}
+
+			// Flying units (move class 3, .chr 0x17c) draw over everything on the ground, buildings included.
+			if (chr.Int(0x17c) == 3)
+				yaml.Append($"\t\tZOffset: {AirZOffset}\n");
 
 			for (var g = 0; g < ChrFile.Groups; g++)
 			{

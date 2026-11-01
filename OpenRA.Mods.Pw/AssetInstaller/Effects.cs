@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,6 +24,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	public static class Effects
 	{
 		const int Record = 0xadc;
+
+		// Impacts are drawn smaller than the original art: half size, the Giant's bomb a quarter.
+		static string ImpactScale(string image) => image == "weapon-throw-bomb" ? "0.25" : "0.5";
 
 		public static string Image(string name) => "weapon-" + Regex.Replace(name.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
 
@@ -57,17 +61,23 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					if (flight > 0)
 					{
 						if (directional && flight % 8 == 0)
-							sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {flight / 8}\n");
+						{
+							// The art's eight blocks start one step clockwise of north: block k points at facing k + 1.
+							var n = flight / 8;
+							var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n));
+							sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n");
+						}
 						else
 							sequences.Append($"\tflight:\n\t\tLength: {flight}\n");
 					}
 
+					var scale = ImpactScale(image);
 					if (impact > 0)
-						sequences.Append($"\timpact:\n\t\tStart: {flight}\n\t\tLength: {impact}\n");
+						sequences.Append($"\timpact:\n\t\tStart: {flight}\n\t\tLength: {impact}\n\t\tScale: {scale}\n");
 
 					// Art with neither (melee sparks, the trap snap): all of it as the impact.
 					if (flight <= 0 && impact <= 0)
-						sequences.Append($"\timpact:\n\t\tLength: {frameCount}\n");
+						sequences.Append($"\timpact:\n\t\tLength: {frameCount}\n\t\tScale: {scale}\n");
 
 					sequences.Append('\n');
 				}

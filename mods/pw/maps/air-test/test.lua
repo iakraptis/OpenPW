@@ -80,6 +80,7 @@ Transport = function()
     for i = 1, 3 do men[i] = Actor.Create("primitive-buildman", true, { Owner = me, Location = CPos.New(20 + i, 27) }) end
     local chief = Actor.Create("primitive-chief", true, { Owner = me, Location = CPos.New(27, 27) })
     Later(5, function()
+        Check(PwTest.CanOrder(men[1], "EnterTransport", revolver), "a right-click on the Revolver loads a Buildman")
         for _, m in ipairs(men) do m.EnterTransport(revolver) end
         chief.EnterTransport(revolver)
     end)

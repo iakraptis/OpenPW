@@ -30,6 +30,9 @@ Limit = function()
         Check(house ~= nil, "a Buildman starts a House")
         if house == nil then return end
         Check(PwTest.PopulationLimit(me) == 10, "a House under construction provides nothing")
+        WaitFor("the Buildman builds from the cell below the House", 300, function()
+            return builder.Location.Y == 25 and builder.Location.X >= 4 and builder.Location.X <= 5
+        end)
         WaitFor("the House is finished", 2000, function() return PwTest.Finished(house) end, function(ok)
             if not ok then return end
             Check(PwTest.PopulationLimit(me) == 20, "a finished House adds 10 (" .. PwTest.PopulationLimit(me) .. ")")

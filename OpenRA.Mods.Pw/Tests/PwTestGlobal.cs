@@ -106,6 +106,22 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Whether a unit has a voice (Select, Action, Attack, Die, Work, Built).")]
 		public bool HasVoice(Actor actor, string voice) => actor.TraitsImplementing<IVoiced>().Any(v => v.HasVoice(actor, voice));
 
+		[Desc("Whether a right-click on the target would give this order (the order's targeter accepts it), as the ",
+			"mouse does; orders given through Lua skip this check.")]
+		public bool CanOrder(Actor actor, string order, Actor target)
+		{
+			var t = Target.FromActor(target);
+			foreach (var o in actor.TraitsImplementing<IIssueOrder>().SelectMany(i => i.Orders))
+			{
+				var modifiers = TargetModifiers.None;
+				string cursor = null;
+				if (o.OrderID == order && o.CanTarget(actor, t, ref modifiers, ref cursor))
+					return true;
+			}
+
+			return false;
+		}
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

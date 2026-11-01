@@ -173,6 +173,7 @@ tyrano-twinrhamphos:
 	Defaults:
 		Filename: units/tyrano-twinrhamphos.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 8
@@ -189,6 +190,7 @@ tyrano-pteras:
 	Defaults:
 		Filename: units/tyrano-pteras.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 12
@@ -234,6 +236,7 @@ tyrano-dsunguri:
 	Defaults:
 		Filename: units/tyrano-dsunguri.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16
@@ -275,6 +278,7 @@ tyrano-mutant:
 	Defaults:
 		Filename: units/tyrano-mutant.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16

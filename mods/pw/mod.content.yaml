@@ -19,6 +19,7 @@ Rules:
 	pw|rules/primitive/items.yaml
 	pw|rules/objects.yaml
 	pw|rules/wild.yaml
+	pw|rules/selection.yaml
 	pw|rules/mpspawn.yaml
 	pw|rules/palettes.yaml
 	pw|rules/player.yaml
