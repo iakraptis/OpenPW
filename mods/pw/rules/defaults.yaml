@@ -167,10 +167,12 @@
 		Categories: Buildings
 
 # Trains units: its own queue (Type = the building's actor name, which the units' Buildable.Queue names), shown by the
-# command panel while it is selected. Nothing is trained while it is still being built.
+# command panel while it is selected. Nothing is trained while it is still being built. Units walk out to the cell
+# below the middle of a 5x3 building (the Sanctuary sets its own).
 ^ProductionBuilding:
 	Inherits: ^Building
 	Exit:
+		ExitCell: 2,3
 	Production:
 		RequiresCondition: !constructing
 	ProductionQueue:

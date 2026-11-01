@@ -1,0 +1,64 @@
+#region Copyright & License Information
+/*
+ * Copyright (c) The OpenPW Developers and Contributors
+ * This file is part of OpenPW, which is free software. It is made
+ * available to you under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version. For more
+ * information, see COPYING.
+ */
+#endregion
+
+using System.Linq;
+using OpenRA.Mods.Common.Traits;
+using OpenRA.Mods.Pw.Activities;
+using OpenRA.Mods.Pw.Traits;
+using OpenRA.Scripting;
+using OpenRA.Traits;
+
+namespace OpenRA.Mods.Pw.Tests
+{
+	// Lua helpers for the test maps (mods/pw/maps/*-test/test.lua). Orders are resolved directly on the actor's traits,
+	// so a script can give the mod's own orders (gathering, construction) that the stock Lua API doesn't expose.
+	[ScriptGlobal("PwTest")]
+	public class PwTestGlobal : ScriptGlobal
+	{
+		public PwTestGlobal(ScriptContext context)
+			: base(context) { }
+
+		static void Resolve(Actor actor, Order order)
+		{
+			foreach (var t in actor.TraitsImplementing<IResolveOrder>().ToArray())
+				t.ResolveOrder(actor, order);
+		}
+
+		[Desc("Issue an order targeting an actor (PwGather on a bush).")]
+		public void OrderOn(Actor actor, string order, Actor target) =>
+			Resolve(actor, new Order(order, actor, Target.FromActor(target), false));
+
+		[Desc("Order a worker onto a berry bush (the real gather order).")]
+		public void Gather(Actor worker, Actor bush) => OrderOn(worker, BerryGatherer.OrderID, bush);
+
+		[Desc("Whether a worker is running its gathering loop.")]
+		public bool Gathering(Actor actor) => actor.CurrentActivity is GatherBerries;
+
+		[Desc("Berries a worker is carrying, or -1 for anything else.")]
+		public int Carried(Actor worker) => worker.TraitOrDefault<BerryGatherer>()?.Carried ?? -1;
+
+		[Desc("Berries left in a bush, or -1 for anything else.")]
+		public int Berries(Actor bush) => bush.TraitOrDefault<BerryBush>()?.Remaining ?? -1;
+
+		[Desc("Set the berries left in a bush (to test emptying and regrowth quickly).")]
+		public void SetBerries(Actor bush, int amount) => bush.Trait<BerryBush>().SetRemaining(amount);
+
+		[Desc("Every unit a building's own training queue offers, prerequisites aside, comma separated.")]
+		public string Trainable(Actor producer) =>
+			string.Join(",", producer.TraitsImplementing<ProductionQueue>().SelectMany(q => q.AllItems()).Select(a => a.Name));
+
+		[Desc("Select one actor, as a click would.")]
+		public void Select(Actor actor) => actor.World.Selection.Combine(actor.World, new[] { actor }, false, true);
+
+		[Desc("Whether the building has finished construction.")]
+		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
+	}
+}

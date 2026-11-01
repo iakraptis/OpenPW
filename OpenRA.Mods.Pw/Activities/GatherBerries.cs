@@ -70,6 +70,17 @@ namespace OpenRA.Mods.Pw.Activities
 					return true;
 			}
 
+			// The bush is empty: the nearest one with berries, or wait here for this one to grow back.
+			if (gatheringToken == Actor.InvalidConditionToken && bush.Trait<BerryBush>().IsEmpty)
+			{
+				var other = gatherer.NearestBush(self, lastBushPosition);
+				if (other == null)
+					return false;
+
+				bush = other;
+				moveAttempts = 0;
+			}
+
 			lastBushPosition = bush.CenterPosition;
 			var bushTarget = Target.FromActor(bush);
 			var bushRange = Reach(bush);
@@ -92,7 +103,7 @@ namespace OpenRA.Mods.Pw.Activities
 				return false;
 
 			StopGathering(self);
-			gatherer.Load(self, bush.Trait<BerryBush>().Take(bush, gatherer.Info.Amount));
+			gatherer.Load(self, bush.Trait<BerryBush>().Take(gatherer.Info.Amount));
 			return false;
 		}
 

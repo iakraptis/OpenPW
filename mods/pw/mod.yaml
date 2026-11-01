@@ -77,6 +77,11 @@ GameSpeeds:
 			Name: options-game-speed.slowest
 			Timestep: 142
 			OrderLatency: 3
+		# The automated test maps only (5x normal): selected by their map options.
+		test:
+			Name: options-game-speed-test
+			Timestep: 14
+			OrderLatency: 3
 
 Include: mod.content.yaml
 Include: mod.chrome.yaml

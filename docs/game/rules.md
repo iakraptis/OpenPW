@@ -20,6 +20,8 @@ and speeds keep their original values without rescaling.
 
 - **Berries** are the resource. Every player starts with 400 (`P_PLAYE` 0x144).
 - Berry bushes hold 4,000 and change art at 1,500, 1,000 and 500 left (C, `FUN_0045bb14`).
+  **Mod change (balance):** an empty bush stays on the map and slowly grows back (1 berry every 30 ticks,
+  `BerryBush.RegrowAmount/RegrowInterval`), instead of being used up for good.
 - A worker plays its gather animation once (`Buildman`: 48 steps), then carries **12 berries**, plus the
   gathering upgrade (+4) (C, `FUN_00476e88`: `12 + bonus[player][type]`). It delivers to the main building.
 - A **second resource** exists (`P_PLAYE` 0x194, 1,000 at start; type cost 0x194; upgrade cost +0x22c), but every

@@ -4,6 +4,8 @@
 primitive-sanctuary:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Exit:
+		ExitCell: 2,4
 	AcceptsBerries:
 	UnderConstruction:
 		Duration: 1440

@@ -27,6 +27,7 @@ options-starting-units =
     .unlabeled = Unlabeled
 
 ## ingame-observer.yaml
+options-game-speed-test = Test (5x, test maps)
 label-mute-indicator = Audio Muted
 button-observer-widgets-options = Options (Esc)
 button-replay-player-pause-tooltip = Pause

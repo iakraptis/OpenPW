@@ -191,6 +191,7 @@ primitive-chief:
 
 primitive-powerman-shield-of-peace:
 	Inherits: primitive-powerman
+	-Buildable:
 	RenderSprites:
 		Image: primitive-powerman-shield-of-peace
 	Tooltip:
@@ -210,6 +211,7 @@ primitive-powerman-shield-of-peace:
 
 primitive-soldier-fire-arrow:
 	Inherits: primitive-soldier
+	-Buildable:
 	RenderSprites:
 		Image: primitive-soldier-fire-arrow
 	Tooltip:
@@ -229,6 +231,7 @@ primitive-soldier-fire-arrow:
 
 primitive-soldier-venom-arrow:
 	Inherits: primitive-soldier
+	-Buildable:
 	RenderSprites:
 		Image: primitive-soldier-venom-arrow
 	Tooltip:
@@ -248,6 +251,7 @@ primitive-soldier-venom-arrow:
 
 primitive-knight-spear-of-justice:
 	Inherits: primitive-knight
+	-Buildable:
 	RenderSprites:
 		Image: primitive-knight-spear-of-justice
 	Tooltip:

@@ -80,7 +80,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public Actor NearestBush(Actor self, WPos from)
 		{
 			return self.World.FindActorsInCircle(from, Info.SearchRange)
-				.Where(a => !a.IsDead && a.IsInWorld && a.Info.HasTraitInfo<BerryBushInfo>())
+				.Where(a => !a.IsDead && a.IsInWorld && a.TraitOrDefault<BerryBush>() is BerryBush b && !b.IsEmpty)
 				.OrderBy(a => (a.CenterPosition - from).LengthSquared)
 				.FirstOrDefault();
 		}

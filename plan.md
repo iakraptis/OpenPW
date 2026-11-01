@@ -394,10 +394,12 @@ Left for Elf and Demon: the spell mana costs.
     frames.
   - Buildings train from their own queue, with the original training times and prerequisites.
   - Next: the race interface bar (Intfbg) instead of the plain panel, rally points, population.
-- [ ] Map contents from the installer: doodads, berry bushes, wild creatures; gathering berries from bushes
-      (custom: workers gather beside a bush, 12 per trip).
+- [ ] Map contents from the installer: doodads and berry bushes done (workers gather beside a bush, 12 per trip;
+      bushes regrow slowly instead of disappearing, a balance change); wild creatures still to do.
 - [ ] Projectile and impact art (`effects` stage), sounds and voices (`audio` stage), shroud art.
-- Test map: the converted original maps work directly; a small hand-written test map can come later.
+- Test map: the converted original maps work directly.
+- Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in
+  `OpenRA.Mods.Pw/Tests`), run by `python run_tests.py`. Each fix gets a check that fails without it.
 - Port the OpenSYW traits as needed: `Builder` / `UnderConstruction` (if the original uses worker construction),
   per-building production queues, sidebar logic.
 - Lua test maps + `run_tests.py`, as in OpenSYW.
