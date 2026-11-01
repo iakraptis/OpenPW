@@ -64,6 +64,7 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x2424 | `u32[9]` | Sound count per sound group | C | `FUN_004030e0` |
 | 0x2448, 0x244c, 0x2454, 0x2458 | `i32` | Buildings only: global sounds (`JW2_05` entries). 0x244c is 20 for every building (the select sound; 0x2448 is −1), 0x2454 22–25 by size (select below 75% HP, D), 0x2458 26–28 by size (destroyed) (−1 none) | C | `FUN_004624a3`, `FUN_00462616` |
 | 0x245c | `i32` | Frame of the work animation that plays the work sound | C | `FUN_004627e1` |
+| 0x247c | `i32[]` | Attack steps that strike (damage or launch the projectile), ended by −1: Soldier 13 of 18, Chief 5 and 12 | C | `FUN_00457a94`, `FUN_00457920` |
 | 0x249c | `i32[]` | Attack frames that play the attack sound, ended by −1 | C | `FUN_004626c7` |
 
 Tyrano merged units cost 0 (`TwinVelocis`, `TwinRhamphos`, `Mutant`): they are made by merging two units, never

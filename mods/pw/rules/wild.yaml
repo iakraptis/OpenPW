@@ -16,6 +16,7 @@ wild-tyranosaurus:
 		Range: 10c0
 	Armament:
 		Weapon: TyranosaurusBite
+		FireDelay: 7
 
 wild-triceratops:
 	Inherits: ^Wild
@@ -34,6 +35,7 @@ wild-triceratops:
 		Range: 8c0
 	Armament:
 		Weapon: TriceratopsBite
+		FireDelay: 9
 
 wild-ceratosaurus:
 	Inherits: ^Wild
@@ -50,6 +52,7 @@ wild-ceratosaurus:
 		Range: 8c0
 	Armament:
 		Weapon: CeratosaurusBite
+		FireDelay: 10
 
 wild-pachycephalosaurus:
 	Inherits: ^Wild
@@ -66,6 +69,7 @@ wild-pachycephalosaurus:
 		Range: 5c0
 	Armament:
 		Weapon: PachycephalosaurusBite
+		FireDelay: 7
 
 wild-dilophosaurus:
 	Inherits: ^Wild
@@ -82,6 +86,7 @@ wild-dilophosaurus:
 		Range: 7c0
 	Armament:
 		Weapon: DilophosaurusSpit
+		FireDelay: 6
 
 wild-velociraptor:
 	Inherits: ^Wild
@@ -98,6 +103,7 @@ wild-velociraptor:
 		Range: 6c0
 	Armament:
 		Weapon: VelociraptorBite
+		FireDelay: 6
 
 wild-brachiosaurus:
 	Inherits: ^Wild
@@ -285,3 +291,4 @@ wild-picatyrano:
 		Range: 10c0
 	Armament:
 		Weapon: PicatyranoBite
+		FireDelay: 7
