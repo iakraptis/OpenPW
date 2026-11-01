@@ -97,8 +97,9 @@
 		TargetTypes: Ground, Beast
 
 # Wild creatures (rules/wild.yaml, generated): placed by the maps, owned by Creeps. They wander around where they
-# were placed; the ones with an attack fight back when attacked (^WildPredator), the others never fight. Units
-# don't pick them as targets on their own (target type Wild): they are hunted by order.
+# were placed. Plant-eaters never fight; predators (^WildPredator) attack player units that come close and fight
+# back when attacked. Units don't pick wild creatures as targets on their own (target type Wild): they are hunted
+# by order.
 ^Wild:
 	Inherits: ^Beast
 	Inherits@move: ^FootMovement
@@ -115,11 +116,13 @@
 	MapEditorData:
 		Categories: Wildlife
 
+# Predators attack enemy (player) units within ScanRadius cells, a short range, so they only bite what passes by.
 ^WildPredator:
 	Inherits: ^Melee
 	AutoTarget:
-		InitialStance: ReturnFire
-		InitialStanceAI: ReturnFire
+		InitialStance: AttackAnything
+		InitialStanceAI: AttackAnything
+		ScanRadius: 3
 
 # Pteranodon, Rhamphorhynchus: fly over everything, only arrows reach them.
 ^WildFlyer:
