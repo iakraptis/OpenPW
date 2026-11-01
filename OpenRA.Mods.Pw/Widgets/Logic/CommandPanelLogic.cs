@@ -129,6 +129,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				});
 
 				slot.IsDisabled = () => false;
+
 				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
 				// alone: the button calls OnClick from it.
 				slot.OnClick = () =>
