@@ -74,6 +74,9 @@
 	Inherits: ^Unit
 	Targetable:
 		TargetTypes: Ground, Infantry
+	# Rides in transports (the Revolver's Cargo takes Ground); each unit sets its Weight (.chr 0x188).
+	Passenger:
+		CargoType: Ground
 	Crushable:
 
 # Workers build (Builder, the build list on the concrete worker) and gather (Phase 3, next step). While building
@@ -170,6 +173,9 @@
 	Inherits: ^Unit
 	Targetable:
 		TargetTypes: Ground, Machine
+	# Rides in transports (the Revolver's Cargo takes Ground); each unit sets its Weight (.chr 0x188).
+	Passenger:
+		CargoType: Ground
 
 # Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
 ^FootMovement:

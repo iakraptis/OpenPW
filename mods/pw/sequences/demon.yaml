@@ -99,6 +99,7 @@ demon-deatheye:
 	Defaults:
 		Filename: units/demon-deatheye.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 8
@@ -115,6 +116,7 @@ demon-phantom:
 	Defaults:
 		Filename: units/demon-phantom.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16
@@ -131,6 +133,7 @@ demon-gargoyle:
 	Defaults:
 		Filename: units/demon-gargoyle.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16
@@ -222,6 +225,7 @@ demon-darkbat:
 	Defaults:
 		Filename: units/demon-darkbat.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16

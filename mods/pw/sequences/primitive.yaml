@@ -153,6 +153,7 @@ primitive-revolver:
 	Defaults:
 		Filename: units/primitive-revolver.png
 		Tick: 40
+		ZOffset: 8192
 	stand:
 		Frames: 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9
 		Length: 20
@@ -197,6 +198,7 @@ primitive-squadron:
 	Defaults:
 		Filename: units/primitive-squadron.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 12
@@ -218,6 +220,7 @@ primitive-flattop:
 	Defaults:
 		Filename: units/primitive-flattop.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 16
@@ -364,6 +367,7 @@ primitive-kalma:
 	Defaults:
 		Filename: units/primitive-kalma.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 8

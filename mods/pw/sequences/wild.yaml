@@ -301,6 +301,7 @@ wild-pteranodon:
 	Defaults:
 		Filename: units/wild-pteranodon.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 12
@@ -317,6 +318,7 @@ wild-rhamphorhynchus:
 	Defaults:
 		Filename: units/wild-rhamphorhynchus.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 8
@@ -436,6 +438,7 @@ wild-alien3:
 	Defaults:
 		Filename: units/wild-alien3.png
 		Tick: 40
+		ZOffset: 8192
 	walk:
 		Facings: -8
 		Length: 8
