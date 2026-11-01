@@ -46,7 +46,8 @@
 	Guard:
 	Guardable:
 	MustBeDestroyed:
-	GivesExperience:
+	# Killing it gives experience: its population (wild creatures set their own).
+	PwGivesExperience:
 	Tooltip:
 	WithInfantryBody:
 		IdleSequences: stand
@@ -212,7 +213,6 @@
 	RevealsShroud:
 	MustBeDestroyed:
 		RequiredForShortGame: true
-	GivesExperience:
 	Tooltip:
 	WithSpriteBody:
 		Sequence: idle

@@ -26,8 +26,10 @@ namespace OpenRA.Mods.Pw.Warheads
 	{
 		protected override void InflictDamage(Actor victim, Actor firedBy, HitShape shape, WarheadArgs args)
 		{
-			var attack = Util.ApplyPercentageModifiers(Damage, args.DamageModifiers);
-			var armor = victim.TraitsImplementing<PwArmor>().Sum(a => a.Value);
+			// Levels and upgrades add flat attack and armour (IPwStatBonus).
+			var bonus = firedBy != null && !firedBy.Disposed ? firedBy.TraitsImplementing<IPwStatBonus>().Sum(b => b.AttackBonus) : 0;
+			var attack = Util.ApplyPercentageModifiers(Damage + bonus, args.DamageModifiers);
+			var armor = victim.TraitsImplementing<PwArmor>().Sum(a => a.Value) + victim.TraitsImplementing<IPwStatBonus>().Sum(b => b.ArmorBonus);
 			var damage = Util.ApplyPercentageModifiers(Math.Max(1, attack - armor), new[] { DamageVersus(victim, shape, args) });
 			victim.InflictDamage(firedBy, new Damage(damage, DamageTypes));
 		}

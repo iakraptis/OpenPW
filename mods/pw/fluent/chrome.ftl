@@ -51,5 +51,6 @@ button-replay-player-maximum =
 
 ## Command panel
 label-berries = Berries: { $amount }
+label-unit-level = { $name }   Level { $level } ({ $experience }/{ $next })
 label-population = Population: { $used } / { $limit }
 notification-population-limit = Population limit reached: build more Houses.

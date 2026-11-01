@@ -7,6 +7,11 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	PwLevels:
+		XpPerLevel: 10
+		AttackGain: 18
+		ArmorGain: 9
+		AttackDelay: 19
 	UsesPopulation:
 		Amount: 1
 	Builder:
@@ -37,6 +42,12 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 22
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 2
 	Buildable:
@@ -65,6 +76,12 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	PwLevels:
+		XpPerLevel: 16
+		AttackGain: 31
+		ArmorGain: 27
+		AttackDelay: 27
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 4
 	Buildable:
@@ -94,6 +111,12 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 11
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 2
 	Buildable:
@@ -122,6 +145,12 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 41
+		ArmorGain: 18
+		AttackDelay: 34
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 5
 	Buildable:
@@ -179,6 +208,12 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	PwLevels:
+		XpPerLevel: 30
+		AttackGain: 45
+		ArmorGain: 18
+		AttackDelay: 21
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 30
 	Buildable:
@@ -205,6 +240,12 @@ primitive-chief:
 
 primitive-powerman-shield-of-peace:
 	Inherits: primitive-powerman
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 18
+		AttackDelay: 20
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	-Buildable:
 	RenderSprites:
 		Image: primitive-powerman-shield-of-peace
@@ -225,6 +266,12 @@ primitive-powerman-shield-of-peace:
 
 primitive-soldier-fire-arrow:
 	Inherits: primitive-soldier
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 22
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	-Buildable:
 	RenderSprites:
 		Image: primitive-soldier-fire-arrow
@@ -245,6 +292,12 @@ primitive-soldier-fire-arrow:
 
 primitive-soldier-venom-arrow:
 	Inherits: primitive-soldier
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 22
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	-Buildable:
 	RenderSprites:
 		Image: primitive-soldier-venom-arrow
@@ -265,6 +318,12 @@ primitive-soldier-venom-arrow:
 
 primitive-knight-spear-of-justice:
 	Inherits: primitive-knight
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 41
+		ArmorGain: 18
+		AttackDelay: 36
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 0, 0, 0
 	-Buildable:
 	RenderSprites:
 		Image: primitive-knight-spear-of-justice

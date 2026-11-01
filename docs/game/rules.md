@@ -51,6 +51,10 @@ Units use population (`.chr` 0x184), and Houses, Nests and the main building pro
 
 Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
 
+- Experience comes from kills only: the killing blow (`FUN_00457d4b`, when HP reaches 0) calls `FUN_00458adc`,
+  which gives the killer the victim's population (`.chr` 0x184), unless the victim is allied or a building (move
+  class 1). Machines and wild creatures count like any unit. The remainder carries over to the next level.
+
 - A level costs `xp_per_level − reduction` experience. The reduction comes from the "Reduce Level Up Exp."
   upgrade, 2 per level, kept per player at `0x54de20`.
 - Each level raises HP, attack, armour and two more stats by an even share of `cap − base`, so at level 9 each

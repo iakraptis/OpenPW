@@ -80,6 +80,15 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Population limit: what the player's finished buildings provide.")]
 		public int PopulationLimit(Player player) => PwPopulation.Capacity(player);
 
+		[Desc("A unit's level, or -1 if it doesn't level.")]
+		public int Level(Actor actor) => actor.TraitOrDefault<PwLevels>()?.Level ?? -1;
+
+		[Desc("A unit's experience towards its next level, or -1 if it doesn't level.")]
+		public int Experience(Actor actor) => actor.TraitOrDefault<PwLevels>()?.Experience ?? -1;
+
+		[Desc("Give a unit experience, as kills would.")]
+		public void GiveExperience(Actor actor, int amount) => actor.TraitOrDefault<PwLevels>()?.GiveExperience(amount);
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

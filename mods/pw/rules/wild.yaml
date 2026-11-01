@@ -8,6 +8,8 @@ wild-tyranosaurus:
 		Name: actor-wild-tyranosaurus.name
 	Health:
 		HP: 3000
+	PwGivesExperience:
+		Experience: 40
 	Mobile:
 		Speed: 172
 	RevealsShroud:
@@ -22,6 +24,8 @@ wild-triceratops:
 		Name: actor-wild-triceratops.name
 	Health:
 		HP: 1000
+	PwGivesExperience:
+		Experience: 20
 	PwArmor:
 		Value: 15
 	Mobile:
@@ -38,6 +42,8 @@ wild-ceratosaurus:
 		Name: actor-wild-ceratosaurus.name
 	Health:
 		HP: 600
+	PwGivesExperience:
+		Experience: 10
 	Mobile:
 		Speed: 130
 	RevealsShroud:
@@ -52,6 +58,8 @@ wild-pachycephalosaurus:
 		Name: actor-wild-pachycephalosaurus.name
 	Health:
 		HP: 400
+	PwGivesExperience:
+		Experience: 8
 	Mobile:
 		Speed: 148
 	RevealsShroud:
@@ -66,6 +74,8 @@ wild-dilophosaurus:
 		Name: actor-wild-dilophosaurus.name
 	Health:
 		HP: 300
+	PwGivesExperience:
+		Experience: 6
 	Mobile:
 		Speed: 256
 	RevealsShroud:
@@ -80,6 +90,8 @@ wild-velociraptor:
 		Name: actor-wild-velociraptor.name
 	Health:
 		HP: 200
+	PwGivesExperience:
+		Experience: 5
 	Mobile:
 		Speed: 320
 	RevealsShroud:
@@ -93,6 +105,8 @@ wild-brachiosaurus:
 		Name: actor-wild-brachiosaurus.name
 	Health:
 		HP: 1500
+	PwGivesExperience:
+		Experience: 30
 	Mobile:
 		Speed: 88
 	RevealsShroud:
@@ -106,6 +120,8 @@ wild-stegosaurus:
 		Name: actor-wild-stegosaurus.name
 	Health:
 		HP: 800
+	PwGivesExperience:
+		Experience: 10
 	Mobile:
 		Speed: 86
 	RevealsShroud:
@@ -119,6 +135,8 @@ wild-parasaurolophus:
 		Name: actor-wild-parasaurolophus.name
 	Health:
 		HP: 600
+	PwGivesExperience:
+		Experience: 8
 	Mobile:
 		Speed: 130
 	RevealsShroud:
@@ -132,6 +150,8 @@ wild-saltasaurus:
 		Name: actor-wild-saltasaurus.name
 	Health:
 		HP: 450
+	PwGivesExperience:
+		Experience: 6
 	Mobile:
 		Speed: 92
 	RevealsShroud:
@@ -145,6 +165,8 @@ wild-protoceratops:
 		Name: actor-wild-protoceratops.name
 	Health:
 		HP: 180
+	PwGivesExperience:
+		Experience: 4
 	Mobile:
 		Speed: 160
 	RevealsShroud:
@@ -158,6 +180,8 @@ wild-galimimus:
 		Name: actor-wild-galimimus.name
 	Health:
 		HP: 150
+	PwGivesExperience:
+		Experience: 4
 	Mobile:
 		Speed: 192
 	RevealsShroud:
@@ -171,6 +195,8 @@ wild-psittacosaurus:
 		Name: actor-wild-psittacosaurus.name
 	Health:
 		HP: 120
+	PwGivesExperience:
+		Experience: 3
 	Mobile:
 		Speed: 224
 	RevealsShroud:
@@ -184,6 +210,8 @@ wild-pteranodon:
 		Name: actor-wild-pteranodon.name
 	Health:
 		HP: 400
+	PwGivesExperience:
+		Experience: 6
 	Aircraft:
 		Speed: 224
 	RevealsShroud:
@@ -199,6 +227,8 @@ wild-rhamphorhynchus:
 		Name: actor-wild-rhamphorhynchus.name
 	Health:
 		HP: 150
+	PwGivesExperience:
+		Experience: 3
 	Aircraft:
 		Speed: 192
 	RevealsShroud:
@@ -214,6 +244,8 @@ wild-plesiosaurs:
 		Name: actor-wild-plesiosaurs.name
 	Health:
 		HP: 500
+	PwGivesExperience:
+		Experience: 6
 	Mobile:
 		Speed: 128
 	RevealsShroud:
@@ -227,6 +259,8 @@ wild-peleneustes:
 		Name: actor-wild-peleneustes.name
 	Health:
 		HP: 200
+	PwGivesExperience:
+		Experience: 3
 	Mobile:
 		Speed: 96
 	RevealsShroud:
@@ -243,6 +277,8 @@ wild-picatyrano:
 		Name: actor-wild-picatyrano.name
 	Health:
 		HP: 3000
+	PwGivesExperience:
+		Experience: 40
 	Mobile:
 		Speed: 172
 	RevealsShroud:

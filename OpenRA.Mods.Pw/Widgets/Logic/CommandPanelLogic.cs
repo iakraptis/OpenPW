@@ -71,9 +71,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				ShowTraining(producer, queue);
 			else
 			{
-				title.Visible = false;
 				foreach (var slot in slots)
 					slot.Visible = false;
+
+				// One unit that levels: its name, level and experience.
+				if (producer != null && producer.TraitOrDefault<PwLevels>() != null)
+					ShowTitle(producer);
+				else
+					title.Visible = false;
 			}
 		}
 
@@ -154,7 +159,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		{
 			var tooltip = actor.Info.TraitInfos<TooltipInfo>().FirstOrDefault();
 			title.Visible = true;
-			title.GetText = () => tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : actor.Info.Name;
+			var levels = actor.TraitOrDefault<PwLevels>();
+			title.GetText = () =>
+			{
+				var name = tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : actor.Info.Name;
+				return levels == null ? name : FluentProvider.GetMessage("label-unit-level",
+					"name", name, "level", levels.Level, "experience", levels.Experience, "next", levels.ExperiencePerLevel);
+			};
 		}
 
 		void Show(ButtonWidget slot, ActorInfo actorInfo, int cost, System.Func<string> progress)
