@@ -2,11 +2,15 @@
 # speed only. Original values convert as: pixels x 32 = WDist (32 px = 1c0), ticks = ticks.
 # Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
 
+# Hits strike the target actor itself (TargetActorCenter); a projectile, which lands on a position, damages what it
+# lands on (Spread 0c64, the size of a hit point). Splash weapons set a larger Spread.
 ^PwWeapon:
 	ValidTargets: Ground
+	TargetActorCenter: true
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground
 		DamageTypes: DefaultDeath
+		Spread: 0c64
 
 # Instant hits at touching range (the original's 32 px).
 ^Melee:

@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// - map.bin: the movement terrain per cell (tileset templates 1 Clear, 2 Ramp, 3 Water, 4 Cliff) from MAP1's flags;
 	// - terrain.bin: "PWT1", u16 width, u16 height, u16 origin x, u16 origin y, then per cell (row by row) the original
 	//   u32 MAP1 and u32 MAP2 words, which PwTerrainRenderer draws;
-	// - map.yaml: title, tileset, players and a spawn at each start position.
+	// - map.yaml: title, tileset, players, a spawn at each start position, the map objects and the wild creatures.
 	// The map gets a one-cell border, so original cell (x, y) is OpenRA cell (x + 1, y + 1).
 	public static class Maps
 	{
@@ -31,11 +31,21 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		public static void Export(InstallContext c)
 		{
+			var types = c.Game.Archive("Jw2_09.trc");
+			var images = new Dictionary<int, string>();
+			string Image(int type)
+			{
+				if (!images.TryGetValue(type, out var image))
+					images[type] = image = Units.ImageName(type, new ChrFile(types.Read(type)));
+
+				return image;
+			}
+
 			foreach (var file in c.Game.MapFiles())
 			{
 				try
 				{
-					ExportMap(c, new TrcArchive(file));
+					ExportMap(c, new TrcArchive(file), Image);
 				}
 				catch (Exception e) when (e is InvalidDataException or FileNotFoundException)
 				{
@@ -44,7 +54,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 		}
 
-		static void ExportMap(InstallContext c, TrcArchive jw2)
+		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)
 		{
 			var pMap = jw2.Read("P_MAP");
 			var title = Encoding.GetEncoding(949).GetString(pMap, 0, Math.Max(0, Array.IndexOf(pMap, (byte)0, 0, 0x20)));
@@ -59,6 +69,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var players = jw2.Read("P_SCENA")[4];
 			var starts = StartPositions(jw2.Read("P_PLAYE"));
 			var objects = MapObjects(jw2.Read("MAP3"), Terrain.Tilesets[tileset].Name, width, height);
+			var creatures = Creatures(jw2.Read("OBC"), image);
 
 			var slug = Regex.Replace(title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
 			var folder = $"maps/{slug}";
@@ -113,7 +124,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				c.WriteFile($"{folder}/terrain.bin", stream.ToArray());
 			}
 
-			c.WriteText($"{folder}/map.yaml", MapYaml(title, Terrain.Tilesets[tileset].Id, mapWidth, mapHeight, width, height, players, starts, objects));
+			c.WriteText($"{folder}/map.yaml", MapYaml(title, Terrain.Tilesets[tileset].Id, mapWidth, mapHeight, width, height, players, starts, objects, creatures));
 		}
 
 		// MAP1 bits 29-31: walkable, water, buildable (docs/formats/map.md).
@@ -150,6 +161,27 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return objects;
 		}
 
+		// OBC (docs/formats/map.md): the unit table, 0xe8-byte slots, live when +0x60 is 1. The shipped maps place only
+		// wild creatures (owner 8), which become Creeps actors. Facing 1-8 runs clockwise from north.
+		static List<(string Actor, int X, int Y, int Facing)> Creatures(byte[] obc, Func<int, string> image)
+		{
+			const int SlotSize = 0xe8;
+			var creatures = new List<(string Actor, int X, int Y, int Facing)>();
+			for (var o = 0; o + SlotSize <= obc.Length; o += SlotSize)
+			{
+				if (BitConverter.ToInt32(obc, o + 0x60) != 1 || BitConverter.ToInt32(obc, o + 4) != 8)
+					continue;
+
+				var facing = Math.Clamp(BitConverter.ToInt32(obc, o + 0xa8), 1, 8);
+				creatures.Add((image(BitConverter.ToInt32(obc, o)),
+					BitConverter.ToInt32(obc, o + 0xb8) / 32 + Border,
+					BitConverter.ToInt32(obc, o + 0xbc) / 32 + Border,
+					(1024 - (facing - 1) * 128) % 1024));
+			}
+
+			return creatures;
+		}
+
 		// P_PLAYE 0x2d4: (x, y) pixel pairs, ended by -1.
 		static List<(int X, int Y)> StartPositions(byte[] pPlaye)
 		{
@@ -167,7 +199,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		}
 
 		static string MapYaml(string title, string tileset, int mapWidth, int mapHeight, int width, int height, int players,
-			List<(int X, int Y)> starts, List<(string Actor, int X, int Y)> objects)
+			List<(int X, int Y)> starts, List<(string Actor, int X, int Y)> objects,
+			List<(string Actor, int X, int Y, int Facing)> creatures)
 		{
 			var multi = Enumerable.Range(0, players).Select(i => $"Multi{i}").ToList();
 			var s = new StringBuilder();
@@ -187,6 +220,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			for (var i = 0; i < objects.Count; i++)
 				s.Append($"\tObject{i}: {objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {objects[i].X},{objects[i].Y}\n");
+
+			for (var i = 0; i < creatures.Count; i++)
+			{
+				var (actor, x, y, facing) = creatures[i];
+				s.Append($"\tCreature{i}: {actor}\n\t\tOwner: Creeps\n\t\tLocation: {x},{y}\n\t\tFacing: {facing}\n");
+			}
 
 			return s.ToString();
 		}

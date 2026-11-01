@@ -96,6 +96,59 @@
 	Targetable:
 		TargetTypes: Ground, Beast
 
+# Wild creatures (rules/wild.yaml, generated): placed by the maps, owned by Creeps. They wander around where they
+# were placed; the ones with an attack fight back when attacked (^WildPredator), the others never fight. Units
+# don't pick them as targets on their own (target type Wild): they are hunted by order.
+^Wild:
+	Inherits: ^Beast
+	Inherits@move: ^FootMovement
+	Targetable:
+		TargetTypes: Ground, Beast, Wild
+	-Buildable:
+	-MustBeDestroyed:
+	-AttackMove:
+	-Guard:
+	Wanders:
+		WanderMoveRadius: 4
+		MinMoveDelay: 150
+		MaxMoveDelay: 600
+	MapEditorData:
+		Categories: Wildlife
+
+^WildPredator:
+	Inherits: ^Melee
+	AutoTarget:
+		InitialStance: ReturnFire
+		InitialStanceAI: ReturnFire
+
+# Pteranodon, Rhamphorhynchus: fly over everything, only arrows reach them.
+^WildFlyer:
+	Inherits: ^Wild
+	-Mobile:
+	-Targetable:
+	Targetable@AIR:
+		TargetTypes: Air, Wild
+		RequiresCondition: airborne
+	Targetable@GROUND:
+		TargetTypes: Ground, Beast, Wild
+		RequiresCondition: !airborne
+	Aircraft:
+		CruiseAltitude: 512
+		CanHover: true
+		TurnSpeed: 64
+		AirborneCondition: airborne
+		Repulsable: false
+	HiddenUnderFog:
+		Type: CenterPosition
+	RevealsShroud:
+		Type: CenterPosition
+
+# Plesiosaurs, Peleneustes: water only.
+^WildSwimmer:
+	Inherits: ^Wild
+	Mobile:
+		Locomotor: water
+
 # Constructed: Bowmachine, flying machines. Repaired, not healed.
 ^Machine:
 	Inherits: ^Unit
@@ -125,6 +178,7 @@
 	AutoTarget:
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
+		InvalidTargets: Wild
 
 ^Ranged:
 	Inherits: ^Melee

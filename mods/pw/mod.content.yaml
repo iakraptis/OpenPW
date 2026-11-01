@@ -16,6 +16,7 @@ Rules:
 	pw|rules/primitive/units.yaml
 	pw|rules/primitive/buildings.yaml
 	pw|rules/objects.yaml
+	pw|rules/wild.yaml
 	pw|rules/mpspawn.yaml
 	pw|rules/palettes.yaml
 	pw|rules/player.yaml
@@ -44,3 +45,4 @@ Voices:
 Weapons:
 	pw|weapons/defaults.yaml
 	pw|weapons/primitive.yaml
+	pw|weapons/wild.yaml

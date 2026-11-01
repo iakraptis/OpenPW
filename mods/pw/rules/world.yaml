@@ -39,6 +39,10 @@
 		TerrainSpeeds:
 			Clear: 100
 			Ramp: 100
+	Locomotor@WATER:
+		Name: water
+		TerrainSpeeds:
+			Water: 100
 	Locomotor@WHEELED:
 		Name: wheeled
 		TerrainSpeeds:
