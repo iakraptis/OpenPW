@@ -9,7 +9,8 @@
  */
 #endregion
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenRA.Activities;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Mods.Pw.Traits;
@@ -18,12 +19,15 @@ using OpenRA.Traits;
 namespace OpenRA.Mods.Pw.Activities
 {
 	// The gathering loop: to the bush, gather (the worker's gather animation), to the main building, deliver, back.
+	// Workers gather and deliver from any cell around the bush or building (its sides and corners), the nearest free one,
+	// so several workers spread around it instead of queueing for one spot.
 	public class GatherBerries : Activity
 	{
 		const int MaxMoveAttempts = 3;
 
 		readonly BerryGatherer gatherer;
 		readonly IMove move;
+		readonly Mobile mobile;
 		Actor bush;
 		WPos lastBushPosition;
 		int gatherTicks;
@@ -34,6 +38,7 @@ namespace OpenRA.Mods.Pw.Activities
 		{
 			gatherer = self.Trait<BerryGatherer>();
 			move = self.Trait<IMove>();
+			mobile = self.TraitOrDefault<Mobile>();
 			this.bush = bush;
 			lastBushPosition = bush.CenterPosition;
 		}
@@ -50,10 +55,8 @@ namespace OpenRA.Mods.Pw.Activities
 				if (dropOff == null)
 					return true;
 
-				var target = Target.FromActor(dropOff);
-				var range = Reach(dropOff);
-				if (!target.IsInRange(self.CenterPosition, range))
-					return MoveTo(target, range);
+				if (!IsBeside(self, dropOff))
+					return MoveBeside(self, dropOff);
 
 				var berries = gatherer.Unload(self);
 				self.Owner.PlayerActor.Trait<PlayerResources>().GiveCash(berries);
@@ -82,12 +85,10 @@ namespace OpenRA.Mods.Pw.Activities
 			}
 
 			lastBushPosition = bush.CenterPosition;
-			var bushTarget = Target.FromActor(bush);
-			var bushRange = Reach(bush);
 			if (gatheringToken == Actor.InvalidConditionToken)
 			{
-				if (!bushTarget.IsInRange(self.CenterPosition, bushRange))
-					return MoveTo(bushTarget, bushRange);
+				if (!IsBeside(self, bush))
+					return MoveBeside(self, bush);
 
 				moveAttempts = 0;
 				gatherTicks = gatherer.Info.GatherTicks;
@@ -107,20 +108,39 @@ namespace OpenRA.Mods.Pw.Activities
 			return false;
 		}
 
-		bool MoveTo(in Target target, WDist range)
+		// To the nearest free cell around the actor; when all are taken, as near to the nearest one as possible.
+		bool MoveBeside(Actor self, Actor actor)
 		{
 			if (moveAttempts++ >= MaxMoveAttempts)
 				return true;
 
-			QueueChild(move.MoveWithinRange(target, range));
+			var cells = Around(actor)
+				.Where(self.World.Map.Contains)
+				.OrderBy(c => (self.World.Map.CenterOfCell(c) - self.CenterPosition).LengthSquared)
+				.ToList();
+
+			if (cells.Count == 0)
+				return true;
+
+			var free = cells.Where(c => mobile == null || mobile.CanEnterCell(c, self)).Select(c => (CPos?)c).FirstOrDefault();
+			QueueChild(free.HasValue ? move.MoveTo(free.Value) : move.MoveTo(cells[0], 0, null, true));
 			return false;
 		}
 
-		// The actor's edge plus a cell: half its footprint (buildings, two-cell bushes) and one cell.
-		static WDist Reach(Actor actor)
+		static bool IsBeside(Actor self, Actor actor)
 		{
-			var dimensions = actor.Info.TraitInfoOrDefault<BuildingInfo>()?.Dimensions ?? new CVec(1, 1);
-			return new WDist(512 * Math.Max(dimensions.X, dimensions.Y) + 1024);
+			return Around(actor).Contains(self.Location);
+		}
+
+		// The cells next to the actor's footprint, corners included.
+		static IEnumerable<CPos> Around(Actor actor)
+		{
+			var building = actor.Info.TraitInfoOrDefault<BuildingInfo>();
+			var footprint = building != null ? building.Tiles(actor.Location).ToHashSet() : new HashSet<CPos> { actor.Location };
+			return footprint
+				.SelectMany(c => CVec.Directions.Select(d => c + d))
+				.Where(c => !footprint.Contains(c))
+				.Distinct();
 		}
 
 		void StopGathering(Actor self)

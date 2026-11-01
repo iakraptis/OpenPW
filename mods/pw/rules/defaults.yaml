@@ -167,16 +167,123 @@
 		Categories: Buildings
 
 # Trains units: its own queue (Type = the building's actor name, which the units' Buildable.Queue names), shown by the
-# command panel while it is selected. Nothing is trained while it is still being built. Units walk out to the cell
-# below the middle of a 5x3 building (the Sanctuary sets its own).
+# command panel while it is selected. Nothing is trained while it is still being built. Its exits come from the
+# ^Exits template of its footprint size.
 ^ProductionBuilding:
 	Inherits: ^Building
-	Exit:
-		ExitCell: 2,3
 	Production:
 		RequiresCondition: !constructing
 	ProductionQueue:
 		Group: Training
+
+# Exit cells all around a footprint (corners included): a trained unit walks out to a random free cell along the
+# front (the bottom row, Priority 2), or to the sides and back when the front is blocked.
+^Exits5x3:
+	Exit@0:
+		ExitCell: -1,3
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,3
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,3
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,3
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,3
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,3
+		Priority: 2
+	Exit@6:
+		ExitCell: 5,3
+		Priority: 2
+	Exit@7:
+		ExitCell: -1,2
+	Exit@8:
+		ExitCell: 5,2
+	Exit@9:
+		ExitCell: -1,1
+	Exit@10:
+		ExitCell: 5,1
+	Exit@11:
+		ExitCell: -1,0
+	Exit@12:
+		ExitCell: 5,0
+	Exit@13:
+		ExitCell: -1,-1
+	Exit@14:
+		ExitCell: 0,-1
+	Exit@15:
+		ExitCell: 1,-1
+	Exit@16:
+		ExitCell: 2,-1
+	Exit@17:
+		ExitCell: 3,-1
+	Exit@18:
+		ExitCell: 4,-1
+	Exit@19:
+		ExitCell: 5,-1
+
+^Exits6x4:
+	Exit@0:
+		ExitCell: -1,4
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,4
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,4
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,4
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,4
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,4
+		Priority: 2
+	Exit@6:
+		ExitCell: 5,4
+		Priority: 2
+	Exit@7:
+		ExitCell: 6,4
+		Priority: 2
+	Exit@8:
+		ExitCell: -1,3
+	Exit@9:
+		ExitCell: 6,3
+	Exit@10:
+		ExitCell: -1,2
+	Exit@11:
+		ExitCell: 6,2
+	Exit@12:
+		ExitCell: -1,1
+	Exit@13:
+		ExitCell: 6,1
+	Exit@14:
+		ExitCell: -1,0
+	Exit@15:
+		ExitCell: 6,0
+	Exit@16:
+		ExitCell: -1,-1
+	Exit@17:
+		ExitCell: 0,-1
+	Exit@18:
+		ExitCell: 1,-1
+	Exit@19:
+		ExitCell: 2,-1
+	Exit@20:
+		ExitCell: 3,-1
+	Exit@21:
+		ExitCell: 4,-1
+	Exit@22:
+		ExitCell: 5,-1
+	Exit@23:
+		ExitCell: 6,-1
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:

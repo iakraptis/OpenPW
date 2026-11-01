@@ -1,10 +1,12 @@
 -- Gathering berries. The local player (Multi0) is Primitive; BushNear lies below the Sanctuary, BushFar far to the right.
 -- 1. A Buildman fresh out of the Sanctuary takes a gather order as its first order and delivers berries.
 -- 2. An emptied bush stays on the map and grows its berries back.
--- 3. Units with an item (Shield of Peace, ...) can't be trained; they come from equipping at the Blacksmith.
+-- 3. Trained units walk out to different cells around the building, the front row first.
+-- 4. Workers deliver from a cell right beside the Sanctuary, on the side nearest to them.
+-- 5. Units with an item (Shield of Peace, ...) can't be trained; they come from equipping at the Blacksmith.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
-    me.Cash = 1000
+    me.Cash = 5000
     sanctuary = Actor.Create("primitive-sanctuary", true, { Owner = me, Location = CPos.New(10, 10) })
     powerhouse = Actor.Create("primitive-powerhouse", true, { Owner = me, Location = CPos.New(18, 2) })
     soldierhouse = Actor.Create("primitive-soldierhouse", true, { Owner = me, Location = CPos.New(2, 2) })
@@ -12,6 +14,7 @@ WorldLoaded = function()
     Later(5, TrainAndGather)
     Later(5, EmptyAndRegrow)
     Later(5, ItemUnitsNotTrainable)
+    Later(5, SpreadOverExits)
     FinishWhenDone("GATHERING", 3000)
 end
 
@@ -25,8 +28,10 @@ TrainAndGather = function()
                 PwTest.Gather(worker, BushNear)
                 WaitFor("trained Buildman gathers berries on its first order", 600, function() return PwTest.Carried(worker) > 0 end, function(ok)
                     if not ok then return end
-                    local start = me.Cash
-                    WaitFor("trained Buildman delivers them", 600, function() return PwTest.Carried(worker) == 0 and me.Cash > start end)
+                    -- Unloaded means delivered (cash isn't a measure here: the Powerhouse is paying for Powermen meanwhile).
+                    WaitFor("trained Buildman delivers them", 600, function() return PwTest.Carried(worker) == 0 end, function(ok)
+                        if ok then Check(Beside(worker.Location, 10, 10, 6, 4), "Buildman delivers from right beside the Sanctuary") end
+                    end)
                 end)
             end)
         end)
@@ -43,6 +48,33 @@ EmptyAndRegrow = function()
             WaitFor("empty bush grows berries back", 200, function() return PwTest.Berries(BushFar) > 0 end)
         end)
     end)
+end
+
+-- Whether a cell is next to (not on) the footprint at x, y of size w x h.
+Beside = function(cell, x, y, w, h)
+    local inside = cell.X >= x and cell.X < x + w and cell.Y >= y and cell.Y < y + h
+    return not inside and cell.X >= x - 1 and cell.X <= x + w and cell.Y >= y - 1 and cell.Y <= y + h
+end
+
+SpreadOverExits = function()
+    local types = { "primitive-powerman", "primitive-powerman", "primitive-powerman" }
+    powerhouse.Build(types, Expect("Powerhouse trains three Powermen", function(units)
+        local men = units
+        WaitFor("trained Powermen walk out", 300, function()
+            for _, m in ipairs(men) do if not m.IsIdle then return false end end
+            return true
+        end, function()
+            local seen, distinct, front = { }, true, true
+            for _, m in ipairs(men) do
+                local key = m.Location.X .. "," .. m.Location.Y
+                if seen[key] then distinct = false end
+                seen[key] = true
+                if not (Beside(m.Location, 18, 2, 5, 3) and m.Location.Y == 5) then front = false end
+            end
+            Check(distinct, "trained Powermen stand on different exit cells")
+            Check(front, "trained Powermen use the front exits below the Powerhouse")
+        end)
+    end))
 end
 
 ItemUnitsNotTrainable = function()

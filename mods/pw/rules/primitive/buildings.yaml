@@ -4,8 +4,7 @@
 primitive-sanctuary:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
-	Exit:
-		ExitCell: 2,4
+	Inherits@exits: ^Exits6x4
 	AcceptsBerries:
 	UnderConstruction:
 		Duration: 1440
@@ -67,6 +66,7 @@ primitive-house:
 primitive-powerhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Inherits@exits: ^Exits5x3
 	UnderConstruction:
 		Duration: 880
 	Buildable:
@@ -100,6 +100,7 @@ primitive-powerhouse:
 primitive-soldierhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Inherits@exits: ^Exits5x3
 	UnderConstruction:
 		Duration: 960
 	Buildable:
@@ -133,6 +134,7 @@ primitive-soldierhouse:
 primitive-skyhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Inherits@exits: ^Exits5x3
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
@@ -166,6 +168,7 @@ primitive-skyhouse:
 primitive-blacksmith:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Inherits@exits: ^Exits5x3
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
