@@ -27,6 +27,7 @@ elf-wizard:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 16
+		Offset: 0, 0
 
 elf-redelf:
 	Defaults:
@@ -51,6 +52,7 @@ elf-redelf:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 17
+		Offset: 0, 0
 
 elf-whiteelf:
 	Defaults:
@@ -75,6 +77,7 @@ elf-whiteelf:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 18
+		Offset: 0, 0
 
 elf-ranger:
 	Defaults:
@@ -99,6 +102,7 @@ elf-ranger:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 19
+		Offset: 0, 0
 
 elf-blueelf:
 	Defaults:
@@ -123,6 +127,7 @@ elf-blueelf:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 20
+		Offset: 0, 0
 
 elf-unicorn:
 	Defaults:
@@ -147,6 +152,7 @@ elf-unicorn:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 21
+		Offset: 0, 0
 
 elf-pixie:
 	Defaults:
@@ -162,6 +168,7 @@ elf-pixie:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 22
+		Offset: 0, 0
 
 elf-manaspread:
 	Defaults:
@@ -180,6 +187,7 @@ elf-manaspread:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 23
+		Offset: 0, 0
 
 elf-elfring:
 	Defaults:
@@ -195,6 +203,7 @@ elf-elfring:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 24
+		Offset: 0, 0
 
 elf-dragon:
 	Defaults:
@@ -214,6 +223,7 @@ elf-dragon:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 25
+		Offset: 0, 0
 
 elf-phoenix:
 	Defaults:
@@ -233,6 +243,7 @@ elf-phoenix:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 26
+		Offset: 0, 0
 
 elf-angelelf:
 	Defaults:
@@ -252,6 +263,7 @@ elf-angelelf:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 27
+		Offset: 0, 0
 
 elf-heaven:
 	Defaults:
@@ -266,6 +278,7 @@ elf-heaven:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 112
+		Offset: 0, 0
 
 elf-elftree:
 	Defaults:
@@ -277,6 +290,7 @@ elf-elftree:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 114
+		Offset: 0, 0
 
 elf-bubble:
 	Defaults:
@@ -291,6 +305,7 @@ elf-bubble:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 115
+		Offset: 0, 0
 
 elf-redhall:
 	Defaults:
@@ -305,6 +320,7 @@ elf-redhall:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 116
+		Offset: 0, 0
 
 elf-bluehall:
 	Defaults:
@@ -316,6 +332,7 @@ elf-bluehall:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 117
+		Offset: 0, 0
 
 elf-manahall:
 	Defaults:
@@ -327,6 +344,7 @@ elf-manahall:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 118
+		Offset: 0, 0
 
 elf-skyhall:
 	Defaults:
@@ -341,6 +359,7 @@ elf-skyhall:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 119
+		Offset: 0, 0
 
 elf-elflibrary:
 	Defaults:
@@ -352,6 +371,7 @@ elf-elflibrary:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 120
+		Offset: 0, 0
 
 elf-skylibrary:
 	Defaults:
@@ -363,6 +383,7 @@ elf-skylibrary:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 121
+		Offset: 0, 0
 
 elf-manalibrary:
 	Defaults:
@@ -374,4 +395,5 @@ elf-manalibrary:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 122
+		Offset: 0, 0
 

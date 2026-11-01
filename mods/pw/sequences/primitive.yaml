@@ -47,6 +47,7 @@ primitive-buildman:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 0
+		Offset: 0, 0
 
 primitive-powerman:
 	Defaults:
@@ -71,6 +72,7 @@ primitive-powerman:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 1
+		Offset: 0, 0
 
 primitive-giant:
 	Defaults:
@@ -95,6 +97,7 @@ primitive-giant:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 2
+		Offset: 0, 0
 
 primitive-soldier:
 	Defaults:
@@ -119,6 +122,7 @@ primitive-soldier:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 3
+		Offset: 0, 0
 
 primitive-knight:
 	Defaults:
@@ -143,6 +147,7 @@ primitive-knight:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 4
+		Offset: 0, 0
 
 primitive-revolver:
 	Defaults:
@@ -161,6 +166,7 @@ primitive-revolver:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 5
+		Offset: 0, 0
 
 primitive-bowmachine:
 	Defaults:
@@ -185,6 +191,7 @@ primitive-bowmachine:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 6
+		Offset: 0, 0
 
 primitive-squadron:
 	Defaults:
@@ -205,6 +212,7 @@ primitive-squadron:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 7
+		Offset: 0, 0
 
 primitive-flattop:
 	Defaults:
@@ -225,6 +233,7 @@ primitive-flattop:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 8
+		Offset: 0, 0
 
 primitive-chief:
 	Defaults:
@@ -249,6 +258,7 @@ primitive-chief:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 9
+		Offset: 0, 0
 
 primitive-powerman-shield-of-peace:
 	Defaults:
@@ -273,6 +283,7 @@ primitive-powerman-shield-of-peace:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 10
+		Offset: 0, 0
 
 primitive-soldier-fire-arrow:
 	Defaults:
@@ -297,6 +308,7 @@ primitive-soldier-fire-arrow:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 11
+		Offset: 0, 0
 
 primitive-soldier-venom-arrow:
 	Defaults:
@@ -321,6 +333,7 @@ primitive-soldier-venom-arrow:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 12
+		Offset: 0, 0
 
 primitive-knight-spear-of-justice:
 	Defaults:
@@ -345,6 +358,7 @@ primitive-knight-spear-of-justice:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 13
+		Offset: 0, 0
 
 primitive-kalma:
 	Defaults:
@@ -357,6 +371,7 @@ primitive-kalma:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 14
+		Offset: 0, 0
 
 primitive-sanctuary:
 	Defaults:
@@ -371,6 +386,7 @@ primitive-sanctuary:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 96
+		Offset: 0, 0
 
 primitive-house:
 	Defaults:
@@ -385,6 +401,7 @@ primitive-house:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 98
+		Offset: 0, 0
 
 primitive-stonetower:
 	Defaults:
@@ -402,6 +419,7 @@ primitive-stonetower:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 99
+		Offset: 0, 0
 
 primitive-powerhouse:
 	Defaults:
@@ -416,6 +434,7 @@ primitive-powerhouse:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 100
+		Offset: 0, 0
 
 primitive-soldierhouse:
 	Defaults:
@@ -430,6 +449,7 @@ primitive-soldierhouse:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 101
+		Offset: 0, 0
 
 primitive-skyhouse:
 	Defaults:
@@ -447,6 +467,7 @@ primitive-skyhouse:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 102
+		Offset: 0, 0
 
 primitive-blacksmith:
 	Defaults:
@@ -464,6 +485,7 @@ primitive-blacksmith:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 103
+		Offset: 0, 0
 
 primitive-landincreaser:
 	Defaults:
@@ -478,6 +500,7 @@ primitive-landincreaser:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 104
+		Offset: 0, 0
 
 primitive-skyincreaser:
 	Defaults:
@@ -492,6 +515,7 @@ primitive-skyincreaser:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 105
+		Offset: 0, 0
 
 primitive-trap:
 	Defaults:
@@ -506,4 +530,5 @@ primitive-trap:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 106
+		Offset: 0, 0
 

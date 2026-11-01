@@ -47,6 +47,7 @@ tyrano-dinos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 32
+		Offset: 0, 0
 
 tyrano-masos:
 	Defaults:
@@ -71,6 +72,7 @@ tyrano-masos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 33
+		Offset: 0, 0
 
 tyrano-velocis:
 	Defaults:
@@ -95,6 +97,7 @@ tyrano-velocis:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 34
+		Offset: 0, 0
 
 tyrano-twinvelocis:
 	Defaults:
@@ -119,6 +122,7 @@ tyrano-twinvelocis:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 35
+		Offset: 0, 0
 
 tyrano-dilophos:
 	Defaults:
@@ -143,6 +147,7 @@ tyrano-dilophos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 36
+		Offset: 0, 0
 
 tyrano-rhamphos:
 	Defaults:
@@ -162,6 +167,7 @@ tyrano-rhamphos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 37
+		Offset: 0, 0
 
 tyrano-twinrhamphos:
 	Defaults:
@@ -177,6 +183,7 @@ tyrano-twinrhamphos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 38
+		Offset: 0, 0
 
 tyrano-pteras:
 	Defaults:
@@ -196,6 +203,7 @@ tyrano-pteras:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 39
+		Offset: 0, 0
 
 tyrano-trices:
 	Defaults:
@@ -220,6 +228,7 @@ tyrano-trices:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 40
+		Offset: 0, 0
 
 tyrano-dsunguri:
 	Defaults:
@@ -235,6 +244,7 @@ tyrano-dsunguri:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 41
+		Offset: 0, 0
 
 tyrano-eggthrower:
 	Defaults:
@@ -259,6 +269,7 @@ tyrano-eggthrower:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 42
+		Offset: 0, 0
 
 tyrano-mutant:
 	Defaults:
@@ -278,6 +289,7 @@ tyrano-mutant:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 43
+		Offset: 0, 0
 
 tyrano-tyranos:
 	Defaults:
@@ -302,6 +314,7 @@ tyrano-tyranos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 44
+		Offset: 0, 0
 
 tyrano-tyranonest:
 	Defaults:
@@ -316,6 +329,7 @@ tyrano-tyranonest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 128
+		Offset: 0, 0
 
 tyrano-nest:
 	Defaults:
@@ -330,6 +344,7 @@ tyrano-nest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 130
+		Offset: 0, 0
 
 tyrano-ascomoid:
 	Defaults:
@@ -347,6 +362,7 @@ tyrano-ascomoid:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 131
+		Offset: 0, 0
 
 tyrano-eggnest:
 	Defaults:
@@ -364,6 +380,7 @@ tyrano-eggnest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 132
+		Offset: 0, 0
 
 tyrano-landnest:
 	Defaults:
@@ -378,6 +395,7 @@ tyrano-landnest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 133
+		Offset: 0, 0
 
 tyrano-skynest:
 	Defaults:
@@ -392,6 +410,7 @@ tyrano-skynest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 134
+		Offset: 0, 0
 
 tyrano-thrownest:
 	Defaults:
@@ -406,6 +425,7 @@ tyrano-thrownest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 135
+		Offset: 0, 0
 
 tyrano-upgradenest:
 	Defaults:
@@ -423,6 +443,7 @@ tyrano-upgradenest:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 136
+		Offset: 0, 0
 
 tyrano-landnisdos:
 	Defaults:
@@ -437,6 +458,7 @@ tyrano-landnisdos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 137
+		Offset: 0, 0
 
 tyrano-skynisdos:
 	Defaults:
@@ -451,4 +473,5 @@ tyrano-skynisdos:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 138
+		Offset: 0, 0
 

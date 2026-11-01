@@ -23,6 +23,7 @@ wild-tyranosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 64
+		Offset: 0, 0
 
 wild-triceratops:
 	Defaults:
@@ -47,6 +48,7 @@ wild-triceratops:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 65
+		Offset: 0, 0
 
 wild-ceratosaurus:
 	Defaults:
@@ -71,6 +73,7 @@ wild-ceratosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 66
+		Offset: 0, 0
 
 wild-pachycephalosaurus:
 	Defaults:
@@ -95,6 +98,7 @@ wild-pachycephalosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 67
+		Offset: 0, 0
 
 wild-dilophosaurus:
 	Defaults:
@@ -119,6 +123,7 @@ wild-dilophosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 68
+		Offset: 0, 0
 
 wild-velociraptor:
 	Defaults:
@@ -143,6 +148,7 @@ wild-velociraptor:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 69
+		Offset: 0, 0
 
 wild-brachiosaurus:
 	Defaults:
@@ -163,6 +169,7 @@ wild-brachiosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 70
+		Offset: 0, 0
 
 wild-stegosaurus:
 	Defaults:
@@ -183,6 +190,7 @@ wild-stegosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 71
+		Offset: 0, 0
 
 wild-parasaurolophus:
 	Defaults:
@@ -203,6 +211,7 @@ wild-parasaurolophus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 72
+		Offset: 0, 0
 
 wild-saltasaurus:
 	Defaults:
@@ -223,6 +232,7 @@ wild-saltasaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 73
+		Offset: 0, 0
 
 wild-protoceratops:
 	Defaults:
@@ -243,6 +253,7 @@ wild-protoceratops:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 74
+		Offset: 0, 0
 
 wild-galimimus:
 	Defaults:
@@ -263,6 +274,7 @@ wild-galimimus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 75
+		Offset: 0, 0
 
 wild-psittacosaurus:
 	Defaults:
@@ -283,6 +295,7 @@ wild-psittacosaurus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 76
+		Offset: 0, 0
 
 wild-pteranodon:
 	Defaults:
@@ -298,6 +311,7 @@ wild-pteranodon:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 77
+		Offset: 0, 0
 
 wild-rhamphorhynchus:
 	Defaults:
@@ -313,6 +327,7 @@ wild-rhamphorhynchus:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 78
+		Offset: 0, 0
 
 wild-plesiosaurs:
 	Defaults:
@@ -333,6 +348,7 @@ wild-plesiosaurs:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 79
+		Offset: 0, 0
 
 wild-peleneustes:
 	Defaults:
@@ -349,6 +365,7 @@ wild-peleneustes:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 80
+		Offset: 0, 0
 
 wild-picatyrano:
 	Defaults:
@@ -373,6 +390,7 @@ wild-picatyrano:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 81
+		Offset: 0, 0
 
 wild-alien1:
 	Defaults:
@@ -392,6 +410,7 @@ wild-alien1:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 83
+		Offset: 0, 0
 
 wild-alien2:
 	Defaults:
@@ -411,6 +430,7 @@ wild-alien2:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 84
+		Offset: 0, 0
 
 wild-alien3:
 	Defaults:
@@ -429,6 +449,7 @@ wild-alien3:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 85
+		Offset: 0, 0
 
 wild-noxiousweed:
 	Defaults:
@@ -440,6 +461,7 @@ wild-noxiousweed:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 160
+		Offset: 0, 0
 
 wild-poisonous:
 	Defaults:
@@ -454,6 +476,7 @@ wild-poisonous:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 161
+		Offset: 0, 0
 
 wild-treant:
 	Defaults:
@@ -468,6 +491,7 @@ wild-treant:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 162
+		Offset: 0, 0
 
 wild-demonflower:
 	Defaults:
@@ -485,6 +509,7 @@ wild-demonflower:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 163
+		Offset: 0, 0
 
 wild-alien4:
 	Defaults:
@@ -499,4 +524,5 @@ wild-alien4:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 164
+		Offset: 0, 0
 

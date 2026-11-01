@@ -43,6 +43,7 @@ demon-insect:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 48
+		Offset: 0, 0
 
 demon-skeleton:
 	Defaults:
@@ -67,6 +68,7 @@ demon-skeleton:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 49
+		Offset: 0, 0
 
 demon-mudman:
 	Defaults:
@@ -91,6 +93,7 @@ demon-mudman:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 50
+		Offset: 0, 0
 
 demon-deatheye:
 	Defaults:
@@ -106,6 +109,7 @@ demon-deatheye:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 51
+		Offset: 0, 0
 
 demon-phantom:
 	Defaults:
@@ -121,6 +125,7 @@ demon-phantom:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 52
+		Offset: 0, 0
 
 demon-gargoyle:
 	Defaults:
@@ -140,6 +145,7 @@ demon-gargoyle:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 53
+		Offset: 0, 0
 
 demon-kelpa:
 	Defaults:
@@ -164,6 +170,7 @@ demon-kelpa:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 54
+		Offset: 0, 0
 
 demon-warlock:
 	Defaults:
@@ -184,6 +191,7 @@ demon-warlock:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 55
+		Offset: 0, 0
 
 demon-kingdemon:
 	Defaults:
@@ -208,6 +216,7 @@ demon-kingdemon:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 56
+		Offset: 0, 0
 
 demon-darkbat:
 	Defaults:
@@ -227,6 +236,7 @@ demon-darkbat:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 57
+		Offset: 0, 0
 
 demon-devil:
 	Defaults:
@@ -251,6 +261,7 @@ demon-devil:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 58
+		Offset: 0, 0
 
 demon-risezombie1:
 	Defaults:
@@ -275,6 +286,7 @@ demon-risezombie1:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 59
+		Offset: 0, 0
 
 demon-risezombie2:
 	Defaults:
@@ -299,6 +311,7 @@ demon-risezombie2:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 60
+		Offset: 0, 0
 
 demon-imp:
 	Defaults:
@@ -323,6 +336,7 @@ demon-imp:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 61
+		Offset: 0, 0
 
 demon-demonden:
 	Defaults:
@@ -337,6 +351,7 @@ demon-demonden:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 144
+		Offset: 0, 0
 
 demon-tomb:
 	Defaults:
@@ -351,6 +366,7 @@ demon-tomb:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 146
+		Offset: 0, 0
 
 demon-volcano:
 	Defaults:
@@ -368,6 +384,7 @@ demon-volcano:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 147
+		Offset: 0, 0
 
 demon-deathden:
 	Defaults:
@@ -382,6 +399,7 @@ demon-deathden:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 148
+		Offset: 0, 0
 
 demon-flyden:
 	Defaults:
@@ -399,6 +417,7 @@ demon-flyden:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 149
+		Offset: 0, 0
 
 demon-magicden:
 	Defaults:
@@ -416,6 +435,7 @@ demon-magicden:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 150
+		Offset: 0, 0
 
 demon-hell:
 	Defaults:
@@ -433,6 +453,7 @@ demon-hell:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 151
+		Offset: 0, 0
 
 demon-dirtyportal:
 	Defaults:
@@ -450,6 +471,7 @@ demon-dirtyportal:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 152
+		Offset: 0, 0
 
 demon-highportal:
 	Defaults:
@@ -467,4 +489,5 @@ demon-highportal:
 	icon:
 		Filename: chrome/portraits.png
 		Start: 153
+		Offset: 0, 0
 

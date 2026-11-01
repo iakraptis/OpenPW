@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 {
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
-	// - one producing building selected: what it trains; left click queues one, right click cancels one.
+	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
 	// Also the berries counter (CASH). Icons are the original portraits (each image's "icon" sequence).
 	// Hosted on an always-visible container, so it keeps ticking while the buttons are hidden.
 	public class CommandPanelLogic : ChromeLogic
@@ -97,7 +97,6 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				Show(slot, actorInfo, cost, () => "");
 				slot.IsDisabled = () => !available || resources.Cash + resources.Resources < cost;
 				slot.OnClick = () => world.OrderGenerator = new BuildAtCellOrderGenerator(world, builderActor, actorInfo.Name);
-				slot.OnMouseUp = _ => { };
 			}
 		}
 
@@ -130,11 +129,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				});
 
 				slot.IsDisabled = () => false;
-				slot.OnClick = () => world.IssueOrder(Order.StartProduction(producer, name, 1));
-				slot.OnMouseUp = mi =>
+				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
+				// alone: the button calls OnClick from it.
+				slot.OnClick = () =>
 				{
-					if (mi.Button == MouseButton.Right)
+					if (Game.GetModifierKeys().HasModifier(Modifiers.Shift))
 						world.IssueOrder(Order.CancelProduction(producer, name, 1));
+					else
+						world.IssueOrder(Order.StartProduction(producer, name, 1));
 				};
 			}
 		}
