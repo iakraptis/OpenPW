@@ -108,6 +108,11 @@ namespace OpenRA.Mods.Pw.Traits
 			if (conditionToken != Actor.InvalidConditionToken)
 				conditionToken = self.RevokeCondition(conditionToken);
 
+			// The worker announces it (.chr sound group 8, heard by its owner).
+			if (Builder != null && !Builder.IsDead)
+				foreach (var voiced in Builder.TraitsImplementing<IVoiced>())
+					voiced.PlayVoice(Builder, "Built", Builder.Owner.Faction.InternalName);
+
 			Builder = null;
 		}
 	}

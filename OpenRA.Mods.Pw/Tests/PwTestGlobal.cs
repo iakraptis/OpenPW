@@ -93,11 +93,18 @@ namespace OpenRA.Mods.Pw.Tests
 		public bool Researched(Player player, string upgrade) =>
 			player.PlayerActor.TraitOrDefault<PwUpgrades>()?.IsResearched(upgrade) ?? false;
 
+		[Desc("Complete an upgrade level at once, as if researched.")]
+		public void CompleteUpgrade(Player player, string upgrade) =>
+			player.PlayerActor.Trait<PwUpgrades>().Complete(player.World.Map.Rules.Actors[upgrade]);
+
 		[Desc("How many items a building's queues hold.")]
 		public int QueueLength(Actor producer) => producer.TraitsImplementing<ProductionQueue>().Sum(q => q.AllQueued().Count());
 
 		[Desc("Order a unit to pick up an item (the real pick-up order).")]
 		public void PickUp(Actor unit, Actor item) => OrderOn(unit, PwItemUser.OrderID, item);
+
+		[Desc("Whether a unit has a voice (Select, Action, Attack, Die, Work, Built).")]
+		public bool HasVoice(Actor actor, string voice) => actor.TraitsImplementing<IVoiced>().Any(v => v.HasVoice(actor, voice));
 
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;

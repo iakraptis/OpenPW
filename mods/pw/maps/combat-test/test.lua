@@ -11,6 +11,7 @@ WorldLoaded = function()
     Later(5, function() FirstHit("primitive-soldier", "primitive-powerman", 17, CPos.New(4, 12), CPos.New(10, 12)) end)
     Later(5, function() FirstHit("primitive-buildman", "primitive-powerman-shield-of-peace", 1, CPos.New(4, 20), CPos.New(5, 20)) end)
     Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, CPos.New(20, 20), CPos.New(22, 14)) end)
+    Later(5, Voices)
     FinishWhenDone("COMBAT", 2000)
 end
 
@@ -26,5 +27,19 @@ FirstHit = function(attackerType, targetType, damage, at, targetAt)
         if ok and not target.IsDead then
             Check(full - target.Health == damage, label .. " for " .. damage .. " (did " .. (full - target.Health) .. ")")
         end
+    end)
+end
+
+-- 5. Units have their original voices (voices/units.yaml): a Buildman can be selected, ordered, work, finish a
+--    building and die with its own sounds; a Knight has attack sounds.
+Voices = function()
+    local man = Actor.Create("primitive-buildman", true, { Owner = me, Location = CPos.New(28, 4) })
+    local knight = Actor.Create("primitive-knight", true, { Owner = me, Location = CPos.New(28, 8) })
+    Later(1, function()
+        local voices = { "Select", "Action", "Die", "Work", "Built" }
+        local all = true
+        for _, v in ipairs(voices) do if not PwTest.HasVoice(man, v) then all = false end end
+        Check(all, "a Buildman has its select, order, death, work and built voices")
+        Check(PwTest.HasVoice(knight, "Attack"), "a Knight has its attack sound")
     end)
 end

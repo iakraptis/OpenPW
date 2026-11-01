@@ -7,6 +7,8 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 1
 	PwLevels:
 		XpPerLevel: 10
 		AttackGain: 18
@@ -42,6 +44,8 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 2
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 36
@@ -76,6 +80,8 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 3
 	PwLevels:
 		XpPerLevel: 16
 		AttackGain: 31
@@ -111,6 +117,8 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 2
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 36
@@ -145,6 +153,8 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 4
 	PwLevels:
 		XpPerLevel: 18
 		AttackGain: 41
@@ -180,6 +190,8 @@ primitive-bowmachine:
 	Inherits@move: ^WheeledMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 4
 	UsesPopulation:
 		Amount: 4
 	Buildable:
@@ -208,6 +220,8 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 12
 	PwLevels:
 		XpPerLevel: 30
 		AttackGain: 45
@@ -341,3 +355,104 @@ primitive-knight-spear-of-justice:
 		Range: 9c0
 	Armament:
 		Weapon: SpearOfJustice
+
+# Flying machines (docs/game/primitive.md). They don't gain levels (.chr 0x1f4 bit 1 clear).
+primitive-revolver:
+	Inherits: ^Unit
+	Inherits@move: ^AirMovement
+	Inherits@race: ^Primitive
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: primitive-blacksmith
+		BuildDuration: 480
+		BuildPaletteOrder: 50
+		Prerequisites: primitive-skyhouse
+	RenderSprites:
+		Image: primitive-revolver
+	Tooltip:
+		Name: actor-primitive-revolver.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 300
+	Aircraft:
+		Speed: 187
+		IdleBehavior: Land
+		LandableTerrainTypes: Clear, Ramp
+	RevealsShroud:
+		Range: 12c0
+	# Room for 10 (.chr 0x188 on a transport, deduced), 18 with Improve Revolver Transportation (+8); passengers
+	# weigh their transport size. Landed to load.
+	Cargo:
+		Types: Ground
+		MaxWeight: 18
+		UnloadVoice: Action
+	PwTransportCapacity:
+		Capacity: 10
+	WithInfantryBody:
+		IdleSequences: stand
+		StandSequences: stand
+		MoveSequence: walk
+		DefaultAttackSequence: stand
+
+primitive-squadron:
+	Inherits: ^Unit
+	Inherits@move: ^AirMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^AirAttack
+	UsesPopulation:
+		Amount: 3
+	Buildable:
+		Queue: primitive-skyhouse
+		BuildDuration: 400
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: primitive-squadron
+	Tooltip:
+		Name: actor-primitive-squadron.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 150
+	Aircraft:
+		Speed: 256
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: SquadronShot
+	WithInfantryBody:
+		IdleSequences: walk
+		StandSequences: walk
+
+primitive-flattop:
+	Inherits: ^Unit
+	Inherits@move: ^AirMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^AirAttack
+	UsesPopulation:
+		Amount: 10
+	Buildable:
+		Queue: primitive-skyhouse
+		BuildDuration: 1040
+		BuildPaletteOrder: 20
+		Prerequisites: primitive-skyincreaser
+	RenderSprites:
+		Image: primitive-flattop
+	Tooltip:
+		Name: actor-primitive-flattop.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 400
+	PwArmor:
+		Value: 10
+	Aircraft:
+		Speed: 166
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		Weapon: PhantomFire
+	WithInfantryBody:
+		IdleSequences: walk
+		StandSequences: walk

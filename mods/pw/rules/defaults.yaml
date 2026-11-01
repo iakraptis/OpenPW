@@ -46,6 +46,11 @@
 	Guard:
 	Guardable:
 	MustBeDestroyed:
+	# Its voices (the voice set named like its image) and death sound.
+	PwVoiced:
+	DeathSounds:
+		Voice: Die
+	PwAttackVoice:
 	# Killing it gives experience: its population (wild creatures set their own).
 	PwGivesExperience:
 	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).
@@ -114,6 +119,8 @@
 	-MustBeDestroyed:
 	-AttackMove:
 	-Guard:
+	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
+	PwFleeWhenHit:
 	Wanders:
 		WanderMoveRadius: 4
 		MinMoveDelay: 150
@@ -141,7 +148,8 @@
 		TargetTypes: Ground, Beast, Wild
 		RequiresCondition: !airborne
 	Aircraft:
-		CruiseAltitude: 512
+		# The art draws the flight height and the shadow itself: fly just high enough to count as airborne.
+		CruiseAltitude: 16
 		CanHover: true
 		TurnSpeed: 64
 		AirborneCondition: airborne
@@ -179,6 +187,28 @@
 		Locomotor: wheeled
 		AlwaysTurnInPlace: true
 
+# Flying machines (Revolver, Squadron, Flattop): hover over any terrain; only the Revolver lands (to load). In the air only weapons
+# that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
+# (not ^Machine), since these targetables replace the ground one.
+^AirMovement:
+	Targetable@AIR:
+		TargetTypes: Air, Machine
+		RequiresCondition: airborne
+	Targetable@GROUND:
+		TargetTypes: Ground, Machine
+		RequiresCondition: !airborne
+	Aircraft:
+		# The art draws the flight height and the shadow itself: fly just high enough to count as airborne.
+		CruiseAltitude: 16
+		CanHover: true
+		VTOL: true
+		TurnSpeed: 64
+		AirborneCondition: airborne
+	HiddenUnderFog:
+		Type: CenterPosition
+	RevealsShroud:
+		Type: CenterPosition
+
 # Attack mixins.
 ^Melee:
 	AttackFrontal:
@@ -188,8 +218,22 @@
 		ValidTargets: Ground
 		InvalidTargets: Wild
 
+# Ranged units also pick flying targets on their own, when their weapon reaches the air (arrows yes, bombs no).
+# Flying attackers: fire while hovering, at ground and air targets; they take off as soon as they appear.
+^AirAttack:
+	PwTakeOff:
+	AttackAircraft:
+		AttackType: Hover
+		FacingTolerance: 128
+	AutoTarget:
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
+		InvalidTargets: Wild
+
 ^Ranged:
 	Inherits: ^Melee
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
 
 # Buildings (§3.1): Building needs the world's BuildingInfluence.
 ^Building:
@@ -220,6 +264,10 @@
 	Tooltip:
 	WithSpriteBody:
 		Sequence: idle
+	# The global select and destroyed sounds of its kind (voices/units.yaml).
+	PwVoiced:
+	DeathSounds:
+		Voice: Die
 	# Built by a worker (Builder): grows over the original build time, showing the original construction stages.
 	UnderConstruction:
 	WithConstructionStages:

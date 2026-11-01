@@ -1,9 +1,9 @@
 ^baseplayer:
 	AlwaysVisible:
-	# No fog or shroud art yet: the map starts explored and without fog.
+	# Fog of war and an unexplored map, as in the original (both can be changed in the lobby).
 	Shroud:
-		FogCheckboxEnabled: false
-		ExploredMapCheckboxEnabled: true
+		FogCheckboxEnabled: true
+		ExploredMapCheckboxEnabled: false
 
 player:
 	Inherits: ^baseplayer
@@ -17,6 +17,10 @@ player:
 	PlayerResources:
 		DefaultCash: 400
 	MissionObjectives:
+		WinNotification: Win
+		LoseNotification: Lose
+	# Buildings under attack: the race's spoken warning (notifications/pw.yaml).
+	BaseAttackNotifier:
 	ConquestVictoryConditions:
 
 editorplayer:

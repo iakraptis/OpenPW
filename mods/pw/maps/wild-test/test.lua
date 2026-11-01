@@ -2,6 +2,7 @@
 -- 1. A plant-eater wanders around where it was placed and never fights.
 -- 2. A predator attacks player units within 3 cells, leaves the others alone, and fights back when attacked.
 -- 3. A flyer wanders too, and melee can't reach it.
+-- 4. A plant-eater that is hit runs off.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     creeps = Player.GetPlayer("Creeps")
@@ -9,6 +10,7 @@ WorldLoaded = function()
     Later(5, Grazer)
     Later(5, Predator)
     Later(5, Flyer)
+    Later(5, Flee)
     FinishWhenDone("WILD", 3000)
 end
 
@@ -46,5 +48,15 @@ Flyer = function()
         local fighter = Actor.Create("primitive-powerman", true, { Owner = me, Location = flyer.Location })
         fighter.Attack(flyer)
         Later(300, function() Check(flyer.Health == flyer.MaxHealth, "melee can't reach a flyer") end)
+    end)
+end
+
+Flee = function()
+    local start = CPos.New(10, 6)
+    local grazer = Actor.Create("wild-protoceratops", true, { Owner = creeps, Location = start })
+    local hunter = Actor.Create("primitive-soldier", true, { Owner = me, Location = CPos.New(10, 12) })
+    Later(2, function() hunter.Attack(grazer) end)
+    WaitFor("a hit plant-eater runs off", 400, function()
+        return grazer.IsDead or (grazer.Health < grazer.MaxHealth and grazer.Location ~= start)
     end)
 end

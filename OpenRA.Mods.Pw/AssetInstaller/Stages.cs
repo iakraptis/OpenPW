@@ -25,7 +25,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			new("objects", "Map objects: the doodads of each tileset and the berry bushes", Objects.Export),
 			new("maps", "Every skirmish map: movement terrain, original terrain cells and start positions", Maps.Export),
 			new("units", "Every unit and building: sprite sheets with player colour, and their sequences", Units.Export),
-			new("chrome", "Interface art: the mouse cursors", Chrome.Export),
+			new("chrome", "Interface art: the mouse cursors, portraits, upgrade and item buttons", Chrome.Export),
+			new("audio", "Interface sounds: clicks, victory, under attack, building sounds", Audio.Export),
+			new("effects", "Weapon effects: projectile and impact art, and the weapon sounds", Effects.Export),
 		};
 	}
 }

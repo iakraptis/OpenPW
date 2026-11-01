@@ -23,8 +23,12 @@ namespace OpenRA.Mods.Pw.Activities
 	{
 		const int MaxMoveAttempts = 3;
 
+		// Ticks between work sounds: about one cycle of a worker's build animation.
+		const int WorkCycle = 32;
+
 		readonly Actor site;
 		int moveAttempts;
+		int workTicks;
 		int conditionToken = Actor.InvalidConditionToken;
 		UnderConstruction working;
 
@@ -69,6 +73,10 @@ namespace OpenRA.Mods.Pw.Activities
 				if (facing != null)
 					facing.Facing = (site.CenterPosition - self.CenterPosition).Yaw;
 			}
+
+			// The work sound, once per cycle of the build animation.
+			if (workTicks++ % WorkCycle == 0)
+				PwVoiced.PlayLocal(self, "Work");
 
 			return false;
 		}
