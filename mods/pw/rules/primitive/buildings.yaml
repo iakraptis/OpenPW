@@ -1,0 +1,193 @@
+# Primitive buildings (docs/game/primitive.md). Footprints are the original ones in 32 px cells (.chr 0x330/0x334).
+
+primitive-sanctuary:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-sanctuary
+	Tooltip:
+		Name: actor-primitive-sanctuary.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 4000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxxx xxxxxx xxxxxx xxxxxx
+		Dimensions: 6,4
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -3072, -2048
+			BottomRight: 3072, 2048
+	RevealsShroud:
+		Range: 12c0
+
+primitive-house:
+	Inherits: ^Building
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-house
+	Tooltip:
+		Name: actor-primitive-house.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 1000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xx
+		Dimensions: 2,1
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -512
+			BottomRight: 1024, 512
+	RevealsShroud:
+		Range: 8c0
+
+primitive-powerhouse:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-powerhouse
+	Tooltip:
+		Name: actor-primitive-powerhouse.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+primitive-soldierhouse:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-soldierhouse
+	Tooltip:
+		Name: actor-primitive-soldierhouse.name
+	Valued:
+		Cost: 500
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+primitive-skyhouse:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-skyhouse
+	Tooltip:
+		Name: actor-primitive-skyhouse.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+primitive-blacksmith:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-blacksmith
+	Tooltip:
+		Name: actor-primitive-blacksmith.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+primitive-landincreaser:
+	Inherits: ^Building
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-landincreaser
+	Tooltip:
+		Name: actor-primitive-landincreaser.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 2000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+primitive-skyincreaser:
+	Inherits: ^Building
+	Inherits@race: ^Primitive
+	RenderSprites:
+		Image: primitive-skyincreaser
+	Tooltip:
+		Name: actor-primitive-skyincreaser.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0

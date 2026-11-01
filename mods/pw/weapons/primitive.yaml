@@ -1,0 +1,88 @@
+# Primitive weapons (docs/game/primitive.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the
+# attack delay (.chr 0x13dc sequence length + 0x13cc, D).
+
+BuildManHit:
+	Inherits: ^Melee
+	ReloadDelay: 29
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 10
+
+PowerManHit:
+	Inherits: ^Melee
+	ReloadDelay: 30
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 25
+
+PowerManShieldHit:
+	Inherits: PowerManHit
+	ReloadDelay: 28
+
+ThrowBomb:
+	Inherits: ^Thrown
+	ReloadDelay: 39
+	Range: 5c0
+	Projectile: Bullet
+		Speed: 480
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 45
+		Spread: 1c512
+
+SoldierArrow:
+	Inherits: ^Arrow
+	ReloadDelay: 29
+	Range: 8c0
+	Projectile: Bullet
+		Speed: 576
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 20
+
+# Equipped forms: the item adds 15 attack (Item.itm 0xd4).
+FireArrow:
+	Inherits: SoldierArrow
+	ReloadDelay: 40
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 35
+		Spread: 1c256
+
+VenomArrow:
+	Inherits: SoldierArrow
+	ReloadDelay: 40
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 35
+
+ShootSword:
+	Inherits: ^Arrow
+	ValidTargets: Ground
+	ReloadDelay: 46
+	Range: 6c0
+	Projectile: Bullet
+		Speed: 576
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground
+		Damage: 45
+
+SpearOfJustice:
+	Inherits: ShootSword
+	ValidTargets: Ground, Air
+	ReloadDelay: 48
+	Range: 7c0
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground, Air
+		Damage: 60
+
+BowMachineArrow:
+	Inherits: ^Thrown
+	ReloadDelay: 65
+	Range: 11c0
+	Projectile: Bullet
+		Speed: 576
+		LaunchAngle: 0
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 100
+		Spread: 1c0
+
+ChiefHit:
+	Inherits: ^Melee
+	ReloadDelay: 37
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 80

@@ -1,13 +1,29 @@
 ^palettes:
+	# The converted art is RGBA, so palettes only colour-shift (player colours); "effect" is the default name
+	# weapons and death animations ask for.
+	PaletteFromGrayscale@effect:
+		Name: effect
 	PaletteFromGrayscale@greyscale:
 		Name: greyscale
 	PlayerColorPalette@player:
 		BasePalette: greyscale
+	# The installer moves the original player colour ramp (palette 245-254) into this hue band
+	# (OpenRA.Mods.Pw/AssetInstaller/Units.cs); keep the two in step.
 	PlayerColorShift:
 		BasePalette: player
+		MinHue: 0.825
+		MaxHue: 0.845
+		ReferenceHue: 0.835
+		ReferenceSaturation: 1
+		ReferenceValue: 0.95
 	ColorPickerPalette@colorpicker:
 		Name: colorpicker
 		BasePalette: greyscale
 		AllowModifiers: false
 	ColorPickerColorShift:
 		BasePalette: colorpicker
+		MinHue: 0.825
+		MaxHue: 0.845
+		ReferenceHue: 0.835
+		ReferenceSaturation: 1
+		ReferenceValue: 0.95

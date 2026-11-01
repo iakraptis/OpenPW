@@ -1,0 +1,233 @@
+# Primitive units (docs/game/primitive.md). Speeds are the average walk step (px per tick) x 32; ranges, sight
+# and speeds in WDist (32 px = 1c0); armour is the original flat value. Equipped forms (Blacksmith items) inherit
+# their base unit; the item adds 15 attack (in their weapon) or 7 armour.
+
+primitive-buildman:
+	Inherits: ^Worker
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Melee
+	RenderSprites:
+		Image: primitive-buildman
+	Tooltip:
+		Name: actor-primitive-buildman.name
+	Valued:
+		Cost: 100
+	Health:
+		HP: 100
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 160
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		Weapon: BuildManHit
+
+primitive-powerman:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Melee
+	RenderSprites:
+		Image: primitive-powerman
+	Tooltip:
+		Name: actor-primitive-powerman.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 160
+	PwArmor:
+		Value: 3
+	Mobile:
+		Speed: 222
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: PowerManHit
+
+primitive-giant:
+	Inherits: ^Infantry
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Ranged
+	RenderSprites:
+		Image: primitive-giant
+	Tooltip:
+		Name: actor-primitive-giant.name
+	Valued:
+		Cost: 500
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 168
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: ThrowBomb
+
+primitive-soldier:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Ranged
+	RenderSprites:
+		Image: primitive-soldier
+	Tooltip:
+		Name: actor-primitive-soldier.name
+	Valued:
+		Cost: 250
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 2
+	Mobile:
+		Speed: 187
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: SoldierArrow
+
+primitive-knight:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Ranged
+	RenderSprites:
+		Image: primitive-knight
+	Tooltip:
+		Name: actor-primitive-knight.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 181
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: ShootSword
+
+primitive-bowmachine:
+	Inherits: ^Machine
+	Inherits@move: ^WheeledMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Ranged
+	RenderSprites:
+		Image: primitive-bowmachine
+	Tooltip:
+		Name: actor-primitive-bowmachine.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 250
+	PwArmor:
+		Value: 3
+	Mobile:
+		Speed: 112
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		Weapon: BowMachineArrow
+
+primitive-chief:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Primitive
+	Inherits@attack: ^Melee
+	RenderSprites:
+		Image: primitive-chief
+	Tooltip:
+		Name: actor-primitive-chief.name
+	Valued:
+		Cost: 4500
+	Health:
+		HP: 700
+	PwArmor:
+		Value: 40
+	Mobile:
+		Speed: 218
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: ChiefHit
+
+primitive-powerman-shield-of-peace:
+	Inherits: primitive-powerman
+	RenderSprites:
+		Image: primitive-powerman-shield-of-peace
+	Tooltip:
+		Name: actor-primitive-powerman-shield-of-peace.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 10
+	Mobile:
+		Speed: 222
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: PowerManShieldHit
+
+primitive-soldier-fire-arrow:
+	Inherits: primitive-soldier
+	RenderSprites:
+		Image: primitive-soldier-fire-arrow
+	Tooltip:
+		Name: actor-primitive-soldier-fire-arrow.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 2
+	Mobile:
+		Speed: 187
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: FireArrow
+
+primitive-soldier-venom-arrow:
+	Inherits: primitive-soldier
+	RenderSprites:
+		Image: primitive-soldier-venom-arrow
+	Tooltip:
+		Name: actor-primitive-soldier-venom-arrow.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 2
+	Mobile:
+		Speed: 187
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: VenomArrow
+
+primitive-knight-spear-of-justice:
+	Inherits: primitive-knight
+	RenderSprites:
+		Image: primitive-knight-spear-of-justice
+	Tooltip:
+		Name: actor-primitive-knight-spear-of-justice.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 208
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		Weapon: SpearOfJustice

@@ -24,6 +24,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			new("tilesets", "The Jungle, Dungeon and Ruin tilesets (.trt), copied as they are", Terrain.ExportTilesets),
 			new("maps", "Every skirmish map: movement terrain, original terrain cells and start positions", Maps.Export),
 			new("units", "Every unit and building: sprite sheets with player colour, and their sequences", Units.Export),
+			new("chrome", "Interface art: the mouse cursors", Chrome.Export),
 		};
 	}
 }

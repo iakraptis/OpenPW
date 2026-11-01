@@ -6,7 +6,8 @@
 	Faction@Random:
 		InternalName: Random
 		Name: faction-random.name
-		RandomFactionMembers: primitive, tyrano
+		# Tyrano joins when its actors exist (Phase 5).
+		RandomFactionMembers: primitive
 		Description: faction-random.description
 	Faction@primitive:
 		InternalName: primitive
@@ -16,6 +17,7 @@
 		InternalName: tyrano
 		Name: faction-tyrano.name
 		Description: faction-tyrano.description
+		Selectable: false
 	LoadWidgetAtGameStart:
 	MusicPlaylist:
 	ScreenMap:
@@ -25,6 +27,23 @@
 			JUNGLE: content|tilesets/jungle.trt
 			DUNGEON: content|tilesets/dungeon.trt
 			RUIN: content|tilesets/ruin.trt
+	# Movement over the terrain types of the converted maps (tilesets/*.yaml): Cliff and Water block ground units.
+	Locomotor@FOOT:
+		Name: foot
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 100
+	Locomotor@HEAVY:
+		Name: heavy
+		Crushes: infantry
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 100
+	Locomotor@WHEELED:
+		Name: wheeled
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 80
 
 world:
 	Inherits: ^baseworld
@@ -33,12 +52,22 @@ world:
 	CreateMapPlayers:
 	CustomTerrainDebugOverlay:
 	DebugVisualizations:
+	MapOptions:
+		TechLevelDropdownVisible: false
 	MapStartingLocations:
 	SpawnMapActors:
 	SpawnStartingUnits:
-	StartingUnits@Placeholder:
+	PathFinder:
+	BuildingInfluence:
+	# The original start is not in the map data (no player units in OBC); a main building and four workers.
+	StartingUnits@Primitive:
+		BaseActor: primitive-sanctuary
+		SupportActors: primitive-buildman, primitive-buildman, primitive-buildman, primitive-buildman
+		Factions: primitive
+		ClassName: options-starting-units.unlabeled
+	StartingUnits@Tyrano:
 		BaseActor: placeholder
-		Factions: primitive, tyrano
+		Factions: tyrano
 		ClassName: options-starting-units.unlabeled
 
 editorworld:

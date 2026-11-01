@@ -1,10 +1,21 @@
 ^baseplayer:
 	AlwaysVisible:
+	# No fog or shroud art yet: the map starts explored and without fog.
 	Shroud:
+		FogCheckboxEnabled: false
+		ExploredMapCheckboxEnabled: true
 
 player:
 	Inherits: ^baseplayer
 	DeveloperMode:
+	FrozenActorLayer:
+	PlayerStatistics:
+	TechTree:
+	# Berries, the one resource (docs/game/rules.md): every player starts with 400 (P_PLAYE 0x144).
+	PlayerResources:
+		DefaultCash: 400
+	MissionObjectives:
+	ConquestVictoryConditions:
 
 editorplayer:
 	Inherits: ^baseplayer

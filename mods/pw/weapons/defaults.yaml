@@ -1,0 +1,29 @@
+# Weapon templates (plan.md §3.3). Concrete weapons set damage (the unit's attack), range, reload and projectile
+# speed only. Original values convert as: pixels x 32 = WDist (32 px = 1c0), ticks = ticks.
+# Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
+
+^PwWeapon:
+	ValidTargets: Ground
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground
+		DamageTypes: DefaultDeath
+
+# Instant hits at touching range (the original's 32 px).
+^Melee:
+	Inherits: ^PwWeapon
+	Range: 1c256
+	Projectile: InstantHit
+
+# Arrows and bolts: a straight missile; can hit flying units (target mask bit 3).
+^Arrow:
+	Inherits: ^PwWeapon
+	ValidTargets: Ground, Air
+	Projectile: Bullet
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground, Air
+
+# Bombs, stones and eggs: lobbed, ground only, usually with splash.
+^Thrown:
+	Inherits: ^PwWeapon
+	Projectile: Bullet
+		LaunchAngle: 64

@@ -12,6 +12,9 @@ Notifications:
 
 Rules:
 	pw|rules/placeholder.yaml
+	pw|rules/defaults.yaml
+	pw|rules/primitive/units.yaml
+	pw|rules/primitive/buildings.yaml
 	pw|rules/mpspawn.yaml
 	pw|rules/palettes.yaml
 	pw|rules/player.yaml
@@ -37,4 +40,5 @@ Voices:
 	pw|voices/pw.yaml
 
 Weapons:
-	pw|weapons/pw.yaml
+	pw|weapons/defaults.yaml
+	pw|weapons/primitive.yaml

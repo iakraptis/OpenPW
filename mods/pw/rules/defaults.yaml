@@ -1,0 +1,151 @@
+# The actor template tree (plan.md §3.1). Templates hold behaviour, never balance: HP, attack, armour, cost, speed,
+# sight and build time live on the concrete actors, with the values from docs/game/<race>.md.
+#
+# Units in the original are measured in pixels and ticks; here 1 px = 32 WDist (a 32 px cell is 1c0) and one tick
+# is one world tick (the game speeds in mod.yaml are the original ones).
+
+# Everything that takes part in a game.
+^ExistsInWorld:
+	AppearsOnRadar:
+	UpdatesPlayerStatistics:
+	CombatDebugOverlay:
+	ScriptTriggers:
+	RenderDebugState:
+	HiddenUnderFog:
+	HandicapFirepowerMultiplier:
+	HandicapDamageMultiplier:
+	HandicapProductionTimeMultiplier:
+
+# Drawn from the converted .chr art (sequences/<race>.yaml).
+^SpriteActor:
+	Inherits: ^ExistsInWorld
+	BodyOrientation:
+	QuantizeFacingsFromSequence:
+		Sequence: walk
+	RenderSprites:
+
+# A unit, without a movement trait: the movement mixins below add one.
+^Unit:
+	Inherits: ^SpriteActor
+	Huntable:
+	OwnerLostAction:
+		Action: Kill
+	Selectable:
+		Priority: 10
+		PriorityModifiers: Ctrl
+		Bounds: 1024, 1024, 0, -512
+		DecorationBounds: 768, 1024, 0, -512
+	SelectionDecorations:
+	HitShape:
+	Health:
+	PwArmor:
+	RevealsShroud:
+	AttackMove:
+	Guard:
+	Guardable:
+	MustBeDestroyed:
+	GivesExperience:
+	Tooltip:
+	WithInfantryBody:
+		IdleSequences: stand
+		StandSequences: stand
+		MoveSequence: walk
+		DefaultAttackSequence: attack
+	WithDeathAnimation:
+		DeathSequence: die
+		UseDeathTypeSuffix: false
+		CrushedSequence: die
+	MapEditorData:
+		Categories: Units
+
+^Infantry:
+	Inherits: ^Unit
+	Targetable:
+		TargetTypes: Ground, Infantry
+	Crushable:
+
+# Workers: gathering and building come with the race's worker traits (Phase 3, next steps).
+^Worker:
+	Inherits: ^Infantry
+
+# Living creatures that are not people: dinosaurs. Not crushable.
+^Beast:
+	Inherits: ^Unit
+	Targetable:
+		TargetTypes: Ground, Beast
+
+# Constructed: Bowmachine, flying machines. Repaired, not healed.
+^Machine:
+	Inherits: ^Unit
+	Targetable:
+		TargetTypes: Ground, Machine
+
+# Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
+^FootMovement:
+	Mobile:
+		Locomotor: foot
+		AlwaysTurnInPlace: true
+
+^HeavyMovement:
+	Mobile:
+		Locomotor: heavy
+		AlwaysTurnInPlace: true
+
+^WheeledMovement:
+	Mobile:
+		Locomotor: wheeled
+		AlwaysTurnInPlace: true
+
+# Attack mixins.
+^Melee:
+	AttackFrontal:
+		FacingTolerance: 128
+	AutoTarget:
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground
+
+^Ranged:
+	Inherits: ^Melee
+
+# Buildings (§3.1): Building needs the world's BuildingInfluence.
+^Building:
+	Inherits: ^SpriteActor
+	-QuantizeFacingsFromSequence:
+	BodyOrientation:
+		QuantizedFacings: 1
+	Huntable:
+	OwnerLostAction:
+		Action: Kill
+	Selectable:
+		Priority: 3
+	SelectionDecorations:
+	Targetable:
+		TargetTypes: Ground, Structure
+	HitShape:
+		Type: Rectangle
+	Building:
+		TerrainTypes: Clear
+		RequiresBaseProvider: false
+	Health:
+	PwArmor:
+	RevealsShroud:
+	MustBeDestroyed:
+		RequiredForShortGame: true
+	GivesExperience:
+	Tooltip:
+	WithSpriteBody:
+		Sequence: idle
+	WithMakeAnimation:
+		Sequence: make
+	MapEditorData:
+		Categories: Buildings
+
+# Trains units. The production queues, build palette and rally point come with the sidebar (Phase 3, next step).
+^ProductionBuilding:
+	Inherits: ^Building
+	Exit:
+
+# Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
+^Primitive:
+
+^Tyrano:

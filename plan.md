@@ -373,9 +373,22 @@ Left for Elf and Demon: the spell mana costs.
     whose liquid share is transparent, so shores blend exactly without a sprite per frame.
   - The asset installer (Phase 4, started early) writes the tilesets and all 17 maps to `^SupportDir/Content/pw/`.
   - Checked in game (One VS One) with `research/tools/shot.ps1`.
-- The full template tree of §3, with the Primitive race on top of it.
-- Primitive race: Buildman, the core buildings, two combat units; berries gathering (the second resource is
-  unused, see docs/game/rules.md).
+- [x] **Art and the first actors** (2026-11-01):
+  - Installer stages `units` (sprite sheets for all 119 types, generated `sequences/<race>.yaml`) and `chrome`
+    (the 100 original cursors).
+  - The template tree of §3 is in `rules/defaults.yaml`.
+  - The Primitive units and buildings, with their weapons, are in `rules/primitive/` and `weapons/`; damage uses
+    the original rule (`SubtractArmorDamage` warhead, `PwArmor`).
+  - Game speeds are the original ones (71 ms default).
+  - The team colour goes through the engine's `PlayerColorShift`, with the band set in `palettes.yaml`. The SDK's
+    duplicate copies of the traits are removed.
+  - Checked in game: a Sanctuary and four Buildmen in the player's colour.
+  - Tyrano is hidden from the lobby until its actors exist.
+- [ ] Production: sidebar with queues per building, the Buildman building with construction (port OpenSYW's
+      `Builder`/`UnderConstruction`).
+- [ ] Map contents from the installer: doodads, berry bushes, wild creatures; gathering berries from bushes
+      (custom: workers gather beside a bush, 12 per trip).
+- [ ] Projectile and impact art (`effects` stage), sounds and voices (`audio` stage), shroud art.
 - Test map: the converted original maps work directly; a small hand-written test map can come later.
 - Port the OpenSYW traits as needed: `Builder` / `UnderConstruction` (if the original uses worker construction),
   per-building production queues, sidebar logic.

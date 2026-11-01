@@ -114,6 +114,16 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			var building = type >= 96;
 			var yaml = new StringBuilder($"{image}:\n\tDefaults:\n\t\tFilename: units/{image}.png\n\t\tTick: 40\n");
+
+			// The original anchors a building at its footprint's top-left corner (.chr 0x330/0x334, in 32 px cells);
+			// OpenRA draws it around the footprint's centre.
+			if (building && chr.Int(0x330) > 0 && chr.Int(0x334) > 0)
+			{
+				var x = -16 * chr.Int(0x330);
+				var y = -16 * chr.Int(0x334);
+				yaml.Append($"\t\tOffset: {x}, {y}\n");
+			}
+
 			for (var g = 0; g < ChrFile.Groups; g++)
 			{
 				var count = chr.Frames[g].Count;
