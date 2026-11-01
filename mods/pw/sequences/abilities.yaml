@@ -1,0 +1,5 @@
+# Ability buttons (chrome/magic-<race>.png: JW2_02 Magic.trt, written by the installer's chrome stage).
+ability-fall-out:
+	icon:
+		Filename: chrome/magic-primitive.png
+		Start: 0

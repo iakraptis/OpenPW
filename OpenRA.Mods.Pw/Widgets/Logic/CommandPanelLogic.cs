@@ -79,6 +79,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					ShowTitle(producer);
 				else
 					title.Visible = false;
+
+				// Its ability (the Chief's Fall out): the button shows the mana, usable once researched and paid for.
+				var fallOut = producer?.TraitOrDefault<PwFallOut>();
+				if (fallOut != null)
+					ShowAbility(producer, fallOut);
 			}
 		}
 
@@ -168,6 +173,24 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					"name", name, "level", levels.Level, "experience", levels.Experience, "next", levels.ExperiencePerLevel);
 				return meat != null && meat.Meat > 0 ? text + "   " + FluentProvider.GetMessage("label-unit-meat", "meat", meat.Meat) : text;
 			};
+		}
+
+		void ShowAbility(Actor caster, PwFallOut fallOut)
+		{
+			var slot = slots[0];
+			var mana = caster.Trait<PwMana>();
+			Sprite icon = null;
+			if (world.Map.Sequences.HasSequence(fallOut.Info.Image, "icon"))
+				icon = world.Map.Sequences.GetSequence(fallOut.Info.Image, "icon").GetSprite(0);
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.GetTooltipText = () => FluentProvider.GetMessage(fallOut.IsUnlocked(caster) ? "label-ability-fall-out" : "label-ability-fall-out-locked",
+				"cost", fallOut.Info.Cost);
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => $"{mana.Mana}/{mana.Max}";
+			slot.IsDisabled = () => !fallOut.IsReady(caster);
+			slot.OnClick = () => world.OrderGenerator = new AbilityOrderGenerator(caster, PwFallOut.OrderID, PwFallOut.CanTarget);
 		}
 
 		void Show(ButtonWidget slot, ActorInfo actorInfo, int cost, System.Func<string> progress)

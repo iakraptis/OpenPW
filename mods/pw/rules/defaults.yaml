@@ -53,6 +53,12 @@
 	PwAttackVoice:
 	# Killing it gives experience: its population (wild creatures set their own).
 	PwGivesExperience:
+	# Fall out wears it down to 1 HP, with the spell's art on it meanwhile.
+	PwFallOutVictim:
+	WithIdleOverlay@FALLOUT:
+		Image: spell-fall-out
+		Sequence: effect
+		RequiresCondition: fallout
 	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).
 	PwUpgradeBonus:
 	# Picks up Blacksmith items of its own type (PwItem.Equips) and becomes the item's type.
@@ -464,6 +470,18 @@
 	PwMeat:
 	MapEditorData:
 		Categories: Items
+
+# The Chief's morale (docs/game/rules.md): Primitive units near an allied Chief attack and defend 10% better (the
+# value is not known from the original). The Chief grants "morale" (ProximityExternalCondition on primitive-chief).
+^Morale:
+	ExternalCondition@MORALE:
+		Condition: morale
+	FirepowerMultiplier@MORALE:
+		Modifier: 110
+		RequiresCondition: morale
+	PwArmorMultiplier@MORALE:
+		Modifier: 110
+		RequiresCondition: morale
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:

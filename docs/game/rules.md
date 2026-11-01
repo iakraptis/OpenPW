@@ -55,6 +55,15 @@ Damage per hit (C, `0x457cc4`):
   per 32 ticks until gone; the other items 400 (C, `FUN_00462a30`). The mod keeps the other items until picked up.
 - Mod addition: dead wild creatures come back where they were placed after a long delay (`PwRespawns`).
 
+## The Chief
+
+- Morale (help file, Special Abilities: "the Morale of chiefs can add to nearby primitive units"): Primitive units
+  within 5 cells of their Chief get +10% attack and +10% armour. The original values are not known; these are the
+  mod's.
+- Fall out (`JW2_11` `Fall out.maz`, unlocked by the upgrade Improve Fall out for Chief): aimed at an enemy unit for
+  80 mana (record 0x1e4); it wears the target's HP down to 1 (1 HP per tick) without killing it. The Chief has 100
+  mana (`.chr` stat 4), regained over time (mod: 1 every 8 ticks).
+
 ## Population
 
 Units use population (`.chr` 0x184), and Houses, Nests and the main building provide it (main 9, House or Nest

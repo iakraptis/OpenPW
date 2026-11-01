@@ -27,8 +27,8 @@ namespace OpenRA.Mods.Pw.Traits
 		"world keeps the timers).")]
 	public class PwRespawnsInfo : TraitInfo
 	{
-		[Desc("Ticks from death to return (12,000: about 14 minutes at the default speed).")]
-		public readonly int Delay = 12000;
+		[Desc("Ticks from death to return (1,690: about 2 minutes at the default speed).")]
+		public readonly int Delay = 1690;
 
 		public override object Create(ActorInitializer init) { return new PwRespawns(init, this); }
 	}

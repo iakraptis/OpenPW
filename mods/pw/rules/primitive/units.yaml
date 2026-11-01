@@ -7,6 +7,7 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 1
 	PwLevels:
@@ -46,6 +47,7 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 2
 	PwLevels:
@@ -84,6 +86,7 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 3
 	PwLevels:
@@ -123,6 +126,7 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 2
 	PwLevels:
@@ -161,6 +165,7 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 4
 	PwLevels:
@@ -200,6 +205,7 @@ primitive-bowmachine:
 	Inherits@move: ^WheeledMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 4
 	UsesPopulation:
@@ -232,6 +238,7 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	Inherits@morale: ^Morale
 	Passenger:
 		Weight: 12
 	PwLevels:
@@ -265,6 +272,14 @@ primitive-chief:
 		# Strikes twice, on steps 5 and 12 of its attack animation (.chr 0x247c; the second is ChiefHit's burst).
 		FireDelay: 5
 		Weapon: ChiefHit
+	# Fall out (aimed: wears the target's life down to 1) for 80 of his 100 mana, once researched.
+	PwMana:
+	PwFallOut:
+	# Morale: Primitive units within 5 cells attack and defend 10% better (^Morale).
+	ProximityExternalCondition@MORALE:
+		Condition: morale
+		Range: 5c0
+		ValidRelationships: Ally
 
 primitive-powerman-shield-of-peace:
 	Inherits: primitive-powerman
@@ -383,6 +398,7 @@ primitive-revolver:
 	Inherits: ^Unit
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 2
 	Buildable:
@@ -423,6 +439,7 @@ primitive-squadron:
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^AirAttack
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 3
 	Buildable:
@@ -454,6 +471,7 @@ primitive-flattop:
 	Inherits@move: ^AirMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^AirAttack
+	Inherits@morale: ^Morale
 	UsesPopulation:
 		Amount: 10
 	Buildable:
