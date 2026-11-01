@@ -19,10 +19,9 @@ Cursors:
 			X: -1
 			Y: -1
 		move:
-			Start: 92
-			Length: 8
-			X: -16
-			Y: -17
+			Start: 0
+			X: -1
+			Y: -1
 		move-blocked:
 			Start: 32
 			X: -15
@@ -56,10 +55,10 @@ Cursors:
 			X: -15
 			Y: -14
 		enter:
-			Start: 80
-			Length: 4
+			Start: 92
+			Length: 8
 			X: -16
-			Y: -19
+			Y: -17
 		enter-blocked:
 			Start: 32
 			X: -15

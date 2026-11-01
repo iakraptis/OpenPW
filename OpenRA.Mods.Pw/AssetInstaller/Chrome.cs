@@ -33,7 +33,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			("generic-blocked", 32, 1),
 			("select", 64, 8),
 			("joystick-all", 0, 1),
-			("move", 92, 8),
+			// Moving keeps the normal pointer: the original does not change the cursor over open ground.
+			("move", 0, 1),
 			("move-blocked", 32, 1),
 			("attack", 40, 8),
 			("attackoutsiderange", 40, 8),
@@ -41,7 +42,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			("attackmove-blocked", 32, 1),
 			("assaultmove", 48, 8),
 			("assaultmove-blocked", 32, 1),
-			("enter", 80, 4),
+			// The ring with the arrow pointing down: loading units into a transport.
+			("enter", 92, 8),
 			("enter-blocked", 32, 1),
 			("capture", 80, 4),
 			("capture-blocked", 32, 1),

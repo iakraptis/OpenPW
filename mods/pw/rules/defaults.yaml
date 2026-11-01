@@ -33,8 +33,8 @@
 	Selectable:
 		Priority: 10
 		PriorityModifiers: Ctrl
-		Bounds: 1024, 1024, 0, -512
-		DecorationBounds: 768, 1024, 0, -512
+		Bounds: 1024, 1024, 0, -256
+		DecorationBounds: 768, 1024, 0, -256
 	SelectionDecorations:
 	HitShape:
 	Health:
