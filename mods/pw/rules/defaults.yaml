@@ -46,6 +46,11 @@
 	Guard:
 	Guardable:
 	MustBeDestroyed:
+	# Its voices (the voice set named like its image) and death sound.
+	PwVoiced:
+	DeathSounds:
+		Voice: Die
+	PwAttackVoice:
 	# Killing it gives experience: its population (wild creatures set their own).
 	PwGivesExperience:
 	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).

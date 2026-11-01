@@ -95,6 +95,8 @@ namespace OpenRA.Mods.Pw.Activities
 				if (!string.IsNullOrEmpty(gatherer.Info.GatheringCondition))
 					gatheringToken = self.GrantCondition(gatherer.Info.GatheringCondition);
 
+				PwVoiced.PlayLocal(self, "Work");
+
 				var facing = self.TraitOrDefault<IFacing>();
 				if (facing != null)
 					facing.Facing = (bush.CenterPosition - self.CenterPosition).Yaw;

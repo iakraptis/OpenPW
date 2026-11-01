@@ -99,6 +99,9 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Order a unit to pick up an item (the real pick-up order).")]
 		public void PickUp(Actor unit, Actor item) => OrderOn(unit, PwItemUser.OrderID, item);
 
+		[Desc("Whether a unit has a voice (Select, Action, Attack, Die, Work, Built).")]
+		public bool HasVoice(Actor actor, string voice) => actor.TraitsImplementing<IVoiced>().Any(v => v.HasVoice(actor, voice));
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

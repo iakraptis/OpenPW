@@ -11,6 +11,8 @@ FileSystem: DefaultFileSystem
 		$pw: pw
 		^EngineDir|mods/common: common
 		~^SupportDir|Content/pw/: content
+		# Sounds (weapons, voices) are referred to by file name.
+		~content|sounds
 
 MapFolders:
 	pw|maps: System

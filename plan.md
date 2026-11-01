@@ -413,7 +413,11 @@ Left for Elf and Demon: the spell mana costs.
       size, deduced; lands to load), Squadron and Flattop (splash). They hover at a token altitude because the art
       draws the height and shadow; ground weapons can't reach them, arrows and stones can. `air-test`. Left: the
       Revolver's +8 transport upgrade (Cargo's capacity is fixed; needs a custom cargo trait).
-- [ ] Projectile and impact art (`effects` stage), sounds and voices (`audio` stage), shroud art.
+- [x] **Effects and sounds** (2026-11-01, branch `prim_air`): the installer's `effects` stage writes every weapon's
+      flight and impact art (`sequences/weapons.yaml`) and sounds; the `units` stage writes each unit's sounds and a
+      voice set per image (`voices/units.yaml`: Select, Action, Attack, Die, Work, Built). Weapons reference them
+      (`research/tools/wire_weapons.py`); `PwVoiced` gives each unit its image's voice set. Still to do: shroud art,
+      the idle roar of wild creatures, interface sounds.
 - Test map: the converted original maps work directly.
 - Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in
   `OpenRA.Mods.Pw/Tests`), run by `python run_tests.py`. Each fix gets a check that fails without it.

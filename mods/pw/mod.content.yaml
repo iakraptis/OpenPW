@@ -33,6 +33,7 @@ Sequences:
 	pw|sequences/wild.yaml
 	pw|sequences/objects.yaml
 	pw|sequences/upgrades.yaml
+	pw|sequences/weapons.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
 
@@ -44,6 +45,7 @@ TileSets:
 	
 Voices:
 	pw|voices/pw.yaml
+	pw|voices/units.yaml
 
 Weapons:
 	pw|weapons/defaults.yaml

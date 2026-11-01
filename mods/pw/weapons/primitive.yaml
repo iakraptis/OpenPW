@@ -6,12 +6,14 @@ BuildManHit:
 	ReloadDelay: 29
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 10
+	Report: weapon-buildman-hit-0.wav
 
 PowerManHit:
 	Inherits: ^Melee
 	ReloadDelay: 30
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 25
+	Report: weapon-powerman-hit-0.wav
 
 PowerManShieldHit:
 	Inherits: PowerManHit
@@ -22,19 +24,34 @@ ThrowBomb:
 	ReloadDelay: 39
 	Range: 5c0
 	Projectile: Bullet
+		Image: weapon-throw-bomb
+		Sequences: flight
 		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 45
 		Spread: 1c512
+	Report: weapon-throw-bomb-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-throw-bomb
+		Explosions: impact
+		ImpactSounds: weapon-throw-bomb-1.wav
 
 SoldierArrow:
 	Inherits: ^Arrow
 	ReloadDelay: 29
 	Range: 8c0
 	Projectile: Bullet
+		Image: weapon-soldier-arrows
+		Sequences: flight
 		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
+	Report: weapon-soldier-arrows-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-soldier-arrows
+		Explosions: impact
 
 # Equipped forms: the item adds 15 attack (Item.itm 0xd4).
 FireArrow:
@@ -43,12 +60,24 @@ FireArrow:
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
 		Spread: 1c256
+	Report: weapon-fire-arrow-0.wav
+	Projectile: Bullet
+		Image: weapon-fire-arrow
+		Sequences: flight
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-fire-arrow
+		Explosions: impact
 
 VenomArrow:
 	Inherits: SoldierArrow
 	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
+	Report: weapon-poison-arrow-0.wav
+	Projectile: Bullet
+		Image: weapon-poison-arrow
+		Sequences: flight
 
 ShootSword:
 	Inherits: ^Arrow
@@ -56,10 +85,17 @@ ShootSword:
 	ReloadDelay: 46
 	Range: 6c0
 	Projectile: Bullet
+		Image: weapon-shoot-sword-sprit
+		Sequences: flight
 		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground
 		Damage: 45
+	Report: weapon-shoot-sword-sprit-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-shoot-sword-sprit
+		Explosions: impact
 
 SpearOfJustice:
 	Inherits: ShootSword
@@ -75,17 +111,25 @@ BowMachineArrow:
 	ReloadDelay: 65
 	Range: 11c0
 	Projectile: Bullet
+		Image: weapon-bow-machine-arrows
+		Sequences: flight
 		Speed: 576
 		LaunchAngle: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
 		Spread: 1c0
+	Report: weapon-bow-machine-arrows-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-bow-machine-arrows
+		Explosions: impact
 
 ChiefHit:
 	Inherits: ^Melee
 	ReloadDelay: 37
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
+	Report: weapon-chief-hit-0.wav
 
 # StoneTower: a thrown stone that also reaches flyers (range 288 px against both; 20 px per tick).
 Stone:
@@ -94,10 +138,17 @@ Stone:
 	ReloadDelay: 21
 	Range: 9c0
 	Projectile: Bullet
+		Image: weapon-stone
+		Sequences: flight
 		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40
+	Report: weapon-stone-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-stone
+		Explosions: impact
 
 # Trap: snaps at what stands beside it (32 px from its edge; the range is measured from its centre).
 TrapSnap:
@@ -106,6 +157,11 @@ TrapSnap:
 	Range: 2c0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
+	Report: weapon-trap-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-trap
+		Explosions: impact
 
 # Squadron: a shot at ground or air (22 px per tick).
 SquadronShot:
@@ -113,9 +169,16 @@ SquadronShot:
 	ReloadDelay: 33
 	Range: 6c0
 	Projectile: Bullet
+		Image: weapon-squadron-shoot
+		Sequences: flight
 		Speed: 704
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
+	Report: weapon-squadron-shoot-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-squadron-shoot
+		Explosions: impact
 
 # Flattop: fire at ground or air, splashing 48 px (16 px per tick).
 PhantomFire:
@@ -123,7 +186,14 @@ PhantomFire:
 	ReloadDelay: 56
 	Range: 7c0
 	Projectile: Bullet
+		Image: weapon-phantom-fire
+		Sequences: flight
 		Speed: 512
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 75
 		Spread: 1c512
+	Report: weapon-phantom-fire-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-phantom-fire
+		Explosions: impact
