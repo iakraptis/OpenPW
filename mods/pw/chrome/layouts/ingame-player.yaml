@@ -21,6 +21,14 @@ Container@PLAYER_WIDGETS:
 					Align: Right
 					Font: Bold
 					Contrast: true
+				Label@POPULATION:
+					X: WINDOW_WIDTH - 210
+					Y: 28
+					Width: 200
+					Height: 20
+					Align: Right
+					Font: Bold
+					Contrast: true
 				Label@TITLE:
 					X: 8
 					Y: WINDOW_HEIGHT - 128

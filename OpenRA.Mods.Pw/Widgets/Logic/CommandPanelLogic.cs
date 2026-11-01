@@ -23,7 +23,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
-	// Also the berries counter (CASH). Icons are the original portraits (each image's "icon" sequence).
+	// Also the berries counter (CASH) and the population (POPULATION). Icons are the original portraits (each image's "icon" sequence).
 	// Hosted on an always-visible container, so it keeps ticking while the buttons are hidden.
 	public class CommandPanelLogic : ChromeLogic
 	{
@@ -45,6 +45,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			{
 				var resources = world.LocalPlayer?.PlayerActor.TraitOrDefault<PlayerResources>();
 				return resources == null ? "" : FluentProvider.GetMessage("label-berries", "amount", resources.Cash + resources.Resources);
+			};
+
+			var population = widget.Get<LabelWidget>("POPULATION");
+			population.GetText = () =>
+			{
+				var player = world.LocalPlayer;
+				return player == null ? "" : FluentProvider.GetMessage("label-population",
+					"used", PwPopulation.Used(player), "limit", PwPopulation.Capacity(player));
 			};
 		}
 

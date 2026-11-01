@@ -230,8 +230,9 @@
 	Inherits: ^Building
 	Production:
 		RequiresCondition: !constructing
-	ProductionQueue:
+	PwProductionQueue:
 		Group: Training
+		PopulationLimitTextNotification: notification-population-limit
 
 # Exit cells all around a footprint (corners included): a trained unit walks out to a random free cell along the
 # front (the bottom row, Priority 2), or to the sides and back when the front is blocked.

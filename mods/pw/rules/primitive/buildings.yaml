@@ -5,6 +5,9 @@ primitive-sanctuary:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
 	Inherits@exits: ^Exits6x4
+	ProvidesPopulation:
+		Amount: 9
+		RequiresCondition: !constructing
 	AcceptsBerries:
 	UnderConstruction:
 		Duration: 1440
@@ -12,7 +15,7 @@ primitive-sanctuary:
 		BuildPaletteOrder: 10
 	Production:
 		Produces: primitive-sanctuary
-	ProductionQueue:
+	PwProductionQueue:
 		Type: primitive-sanctuary
 	RenderSprites:
 		Image: primitive-sanctuary
@@ -38,6 +41,9 @@ primitive-sanctuary:
 primitive-house:
 	Inherits: ^Building
 	Inherits@race: ^Primitive
+	ProvidesPopulation:
+		Amount: 10
+		RequiresCondition: !constructing
 	UnderConstruction:
 		Duration: 320
 	Buildable:
@@ -67,6 +73,9 @@ primitive-powerhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
 	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
 	UnderConstruction:
 		Duration: 880
 	Buildable:
@@ -74,7 +83,7 @@ primitive-powerhouse:
 		Prerequisites: primitive-sanctuary
 	Production:
 		Produces: primitive-powerhouse
-	ProductionQueue:
+	PwProductionQueue:
 		Type: primitive-powerhouse
 	RenderSprites:
 		Image: primitive-powerhouse
@@ -101,6 +110,9 @@ primitive-soldierhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
 	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
 	UnderConstruction:
 		Duration: 960
 	Buildable:
@@ -108,7 +120,7 @@ primitive-soldierhouse:
 		Prerequisites: primitive-powerhouse
 	Production:
 		Produces: primitive-soldierhouse
-	ProductionQueue:
+	PwProductionQueue:
 		Type: primitive-soldierhouse
 	RenderSprites:
 		Image: primitive-soldierhouse
@@ -135,6 +147,9 @@ primitive-skyhouse:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
 	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
@@ -142,7 +157,7 @@ primitive-skyhouse:
 		Prerequisites: primitive-blacksmith
 	Production:
 		Produces: primitive-skyhouse
-	ProductionQueue:
+	PwProductionQueue:
 		Type: primitive-skyhouse
 	RenderSprites:
 		Image: primitive-skyhouse
@@ -169,6 +184,9 @@ primitive-blacksmith:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
 	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
@@ -176,7 +194,7 @@ primitive-blacksmith:
 		Prerequisites: primitive-powerhouse
 	Production:
 		Produces: primitive-blacksmith
-	ProductionQueue:
+	PwProductionQueue:
 		Type: primitive-blacksmith
 	RenderSprites:
 		Image: primitive-blacksmith

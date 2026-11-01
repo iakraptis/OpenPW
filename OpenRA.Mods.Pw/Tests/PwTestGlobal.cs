@@ -58,6 +58,21 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Select one actor, as a click would.")]
 		public void Select(Actor actor) => actor.World.Selection.Combine(actor.World, new[] { actor }, false, true);
 
+		[Desc("Order a worker to construct a building at a cell (the real build order).")]
+		public void Construct(Actor builder, string building, CPos cell) =>
+			Resolve(builder, new Order(Builder.OrderID, builder, Target.FromCell(builder.World, cell), false) { TargetString = building });
+
+		[Desc("Start training a unit at a building, as a click on its icon would (Lua's Build waits for every unit it ",
+			"asked for, so it can't test refused units).")]
+		public void Train(Actor producer, string unit) =>
+			Resolve(producer, new Order("StartProduction", producer, false) { TargetString = unit, ExtraData = 1 });
+
+		[Desc("Population in use: units plus everything in the training queues.")]
+		public int PopulationUsed(Player player) => PwPopulation.Used(player);
+
+		[Desc("Population limit: what the player's finished buildings provide.")]
+		public int PopulationLimit(Player player) => PwPopulation.Capacity(player);
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

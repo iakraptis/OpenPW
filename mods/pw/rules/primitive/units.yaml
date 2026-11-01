@@ -7,6 +7,8 @@ primitive-buildman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	UsesPopulation:
+		Amount: 1
 	Builder:
 		Types: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyhouse, primitive-skyincreaser
 	Buildable:
@@ -35,6 +37,8 @@ primitive-powerman:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	UsesPopulation:
+		Amount: 2
 	Buildable:
 		Queue: primitive-powerhouse
 		BuildDuration: 256
@@ -61,6 +65,8 @@ primitive-giant:
 	Inherits@move: ^HeavyMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	UsesPopulation:
+		Amount: 4
 	Buildable:
 		Queue: primitive-powerhouse
 		BuildDuration: 400
@@ -88,6 +94,8 @@ primitive-soldier:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	UsesPopulation:
+		Amount: 2
 	Buildable:
 		Queue: primitive-soldierhouse
 		BuildDuration: 256
@@ -114,6 +122,8 @@ primitive-knight:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	UsesPopulation:
+		Amount: 5
 	Buildable:
 		Queue: primitive-soldierhouse
 		BuildDuration: 480
@@ -141,6 +151,8 @@ primitive-bowmachine:
 	Inherits@move: ^WheeledMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
+	UsesPopulation:
+		Amount: 4
 	Buildable:
 		Queue: primitive-blacksmith
 		BuildDuration: 400
@@ -167,6 +179,8 @@ primitive-chief:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Melee
+	UsesPopulation:
+		Amount: 30
 	Buildable:
 		Queue: primitive-sanctuary
 		BuildDuration: 2880
