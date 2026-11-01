@@ -3,222 +3,222 @@ Cursors:
 	cursors/cursors.png:
 		default:
 			Start: 0
-			X: -1
-			Y: -1
-		generic-blocked:
-			Start: 32
 			X: -15
-			Y: -14
+			Y: -15
+		generic-blocked:
+			Start: 0
+			X: -15
+			Y: -15
 		select:
 			Start: 64
 			Length: 8
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		joystick-all:
 			Start: 0
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		move:
 			Start: 0
-			X: -1
-			Y: -1
-		move-blocked:
-			Start: 32
 			X: -15
-			Y: -14
+			Y: -15
+		move-blocked:
+			Start: 0
+			X: -15
+			Y: -15
 		attack:
 			Start: 40
 			Length: 8
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		attackoutsiderange:
 			Start: 40
 			Length: 8
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		attackmove:
 			Start: 48
 			Length: 8
-			X: -1
-			Y: -1
-		attackmove-blocked:
-			Start: 32
 			X: -15
-			Y: -14
+			Y: -15
+		attackmove-blocked:
+			Start: 0
+			X: -15
+			Y: -15
 		assaultmove:
 			Start: 48
 			Length: 8
-			X: -1
-			Y: -1
-		assaultmove-blocked:
-			Start: 32
 			X: -15
-			Y: -14
+			Y: -15
+		assaultmove-blocked:
+			Start: 0
+			X: -15
+			Y: -15
 		enter:
 			Start: 92
 			Length: 8
-			X: -16
-			Y: -17
+			X: 0
+			Y: 1
 		enter-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		capture:
 			Start: 80
 			Length: 4
-			X: -16
-			Y: -19
+			X: 0
+			Y: 3
 		capture-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		harvest:
 			Start: 36
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		deploy:
 			Start: 72
-			X: -3
-			Y: -3
+			X: -13
+			Y: -13
 		deploy-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		ability:
 			Start: 56
 			Length: 8
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		heal:
 			Start: 56
 			Length: 8
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		repair:
 			Start: 72
-			X: -3
-			Y: -3
+			X: -13
+			Y: -13
 		repair-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		goldwrench:
 			Start: 72
-			X: -3
-			Y: -3
+			X: -13
+			Y: -13
 		goldwrench-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		sell:
 			Start: 7
-			X: -15
-			Y: -13
+			X: -1
+			Y: -3
 		sell-blocked:
-			Start: 32
+			Start: 0
 			X: -15
-			Y: -14
+			Y: -15
 		c4:
 			Start: 40
-			X: -1
-			Y: -1
+			X: -15
+			Y: -15
 		wait:
 			Start: 13
-			X: -17
-			Y: -15
+			X: 1
+			Y: -1
 		scroll-t:
 			Start: 1
-			X: -15
-			Y: -7
+			X: -1
+			Y: -9
 		scroll-t-blocked:
-			Start: 21
-			X: -15
-			Y: -14
+			Start: 1
+			X: -1
+			Y: -9
 		joystick-t-blocked:
-			Start: 21
-			X: -15
-			Y: -14
+			Start: 1
+			X: -1
+			Y: -9
 		scroll-tr:
 			Start: 3
-			X: -27
-			Y: -6
+			X: 11
+			Y: -10
 		scroll-tr-blocked:
-			Start: 23
-			X: -15
-			Y: -14
+			Start: 3
+			X: 11
+			Y: -10
 		joystick-tr-blocked:
-			Start: 23
-			X: -15
-			Y: -14
+			Start: 3
+			X: 11
+			Y: -10
 		scroll-r:
 			Start: 2
-			X: -25
-			Y: -14
+			X: 9
+			Y: -2
 		scroll-r-blocked:
-			Start: 22
-			X: -15
-			Y: -14
+			Start: 2
+			X: 9
+			Y: -2
 		joystick-r-blocked:
-			Start: 22
-			X: -15
-			Y: -14
+			Start: 2
+			X: 9
+			Y: -2
 		scroll-br:
 			Start: 6
-			X: -26
-			Y: -22
+			X: 10
+			Y: 6
 		scroll-br-blocked:
-			Start: 26
-			X: -15
-			Y: -14
+			Start: 6
+			X: 10
+			Y: 6
 		joystick-br-blocked:
-			Start: 26
-			X: -15
-			Y: -14
+			Start: 6
+			X: 10
+			Y: 6
 		scroll-b:
 			Start: 4
-			X: -15
-			Y: -23
+			X: -1
+			Y: 7
 		scroll-b-blocked:
-			Start: 24
-			X: -15
-			Y: -14
+			Start: 4
+			X: -1
+			Y: 7
 		joystick-b-blocked:
-			Start: 24
-			X: -15
-			Y: -14
+			Start: 4
+			X: -1
+			Y: 7
 		scroll-bl:
 			Start: 12
-			X: -3
-			Y: -23
+			X: -13
+			Y: 7
 		scroll-bl-blocked:
-			Start: 32
-			X: -15
-			Y: -14
+			Start: 12
+			X: -13
+			Y: 7
 		joystick-bl-blocked:
-			Start: 32
-			X: -15
-			Y: -14
+			Start: 12
+			X: -13
+			Y: 7
 		scroll-l:
 			Start: 8
-			X: -4
-			Y: -14
+			X: -12
+			Y: -2
 		scroll-l-blocked:
-			Start: 28
-			X: -15
-			Y: -14
+			Start: 8
+			X: -12
+			Y: -2
 		joystick-l-blocked:
-			Start: 28
-			X: -15
-			Y: -14
+			Start: 8
+			X: -12
+			Y: -2
 		scroll-tl:
 			Start: 9
-			X: -3
-			Y: -6
+			X: -13
+			Y: -10
 		scroll-tl-blocked:
-			Start: 29
-			X: -15
-			Y: -14
+			Start: 9
+			X: -13
+			Y: -10
 		joystick-tl-blocked:
-			Start: 29
-			X: -15
-			Y: -14
+			Start: 9
+			X: -13
+			Y: -10

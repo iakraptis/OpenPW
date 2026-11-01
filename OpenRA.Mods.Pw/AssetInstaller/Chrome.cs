@@ -26,43 +26,46 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		const int CursorSize = 32;
 		const int CursorCount = 100;
 
-		// OpenRA cursor name, first original cursor, frame count.
+		// OpenRA cursor name, first original cursor, frame count. The "blocked" cursors keep the normal pointer: the red
+		// no-entry signs (20-32) are not used.
 		static readonly (string Name, int Start, int Length)[] Cursors =
 		{
 			("default", 0, 1),
-			("generic-blocked", 32, 1),
+			("generic-blocked", 0, 1),
 			("select", 64, 8),
 			("joystick-all", 0, 1),
+
 			// Moving keeps the normal pointer: the original does not change the cursor over open ground.
 			("move", 0, 1),
-			("move-blocked", 32, 1),
+			("move-blocked", 0, 1),
 			("attack", 40, 8),
 			("attackoutsiderange", 40, 8),
 			("attackmove", 48, 8),
-			("attackmove-blocked", 32, 1),
+			("attackmove-blocked", 0, 1),
 			("assaultmove", 48, 8),
-			("assaultmove-blocked", 32, 1),
+			("assaultmove-blocked", 0, 1),
+
 			// The ring with the arrow pointing down: loading units into a transport.
 			("enter", 92, 8),
-			("enter-blocked", 32, 1),
+			("enter-blocked", 0, 1),
 			("capture", 80, 4),
-			("capture-blocked", 32, 1),
+			("capture-blocked", 0, 1),
 			("harvest", 36, 1),
 			("deploy", 72, 1),
-			("deploy-blocked", 32, 1),
+			("deploy-blocked", 0, 1),
 			("ability", 56, 8),
 			("heal", 56, 8),
 			("repair", 72, 1),
-			("repair-blocked", 32, 1),
+			("repair-blocked", 0, 1),
 			("goldwrench", 72, 1),
-			("goldwrench-blocked", 32, 1),
+			("goldwrench-blocked", 0, 1),
 			("sell", 7, 1),
-			("sell-blocked", 32, 1),
+			("sell-blocked", 0, 1),
 			("c4", 40, 1),
 			("wait", 13, 1),
 		};
 
-		// Scroll arrows by direction, and their blocked versions (+20).
+		// Scroll arrows by direction; scrolling against the map edge shows the same arrow.
 		static readonly (string Direction, int Cursor)[] Scroll =
 		{
 			("t", 1), ("tr", 3), ("r", 2), ("br", 6), ("b", 4), ("bl", 12), ("l", 8), ("tl", 9)
@@ -107,7 +110,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				if (length > 1)
 					yaml.Append($"\t\t\tLength: {length}\n");
 
-				yaml.Append($"\t\t\tX: {-hotspots[start].X}\n\t\t\tY: {-hotspots[start].Y}\n");
+				// OpenRA measures the hotspot from the centre of the frame, the original from its top-left corner.
+				yaml.Append($"\t\t\tX: {hotspots[start].X - CursorSize / 2}\n\t\t\tY: {hotspots[start].Y - CursorSize / 2}\n");
 			}
 
 			foreach (var (name, start, length) in Cursors)
@@ -116,8 +120,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			foreach (var (direction, cursor) in Scroll)
 			{
 				Add($"scroll-{direction}", cursor, 1);
-				Add($"scroll-{direction}-blocked", cursor + 20, 1);
-				Add($"joystick-{direction}-blocked", cursor + 20, 1);
+				Add($"scroll-{direction}-blocked", cursor, 1);
+				Add($"joystick-{direction}-blocked", cursor, 1);
 			}
 
 			c.RepoYaml("cursors/default.yaml", yaml.ToString());
