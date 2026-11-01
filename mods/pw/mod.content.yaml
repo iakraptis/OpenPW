@@ -34,6 +34,7 @@ Sequences:
 	pw|sequences/objects.yaml
 	pw|sequences/upgrades.yaml
 	pw|sequences/weapons.yaml
+	pw|sequences/shroud.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
 

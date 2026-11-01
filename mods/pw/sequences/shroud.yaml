@@ -1,0 +1,14 @@
+# Shroud and fog tiles (shroud.png, drawn by tools/shroud_art.py): 12 edge tiles and a full one, then the same at
+# half strength for fog (ShroudRenderer in rules/world.yaml).
+shroud:
+	Defaults:
+		Filename: shroud.png
+	shroud:
+		Length: 12
+	full:
+		Start: 12
+	fog:
+		Start: 13
+		Length: 12
+	fullfog:
+		Start: 25

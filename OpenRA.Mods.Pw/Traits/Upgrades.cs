@@ -47,7 +47,7 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Not used yet: a unit ability (Chief's fall out).")]
 		public readonly int Ability = 0;
 
-		[Desc("Not used yet: transport capacity.")]
+		[Desc("Transport room added (PwTransportCapacity).")]
 		public readonly int Transport = 0;
 
 		[Desc("Not used yet: detection.")]

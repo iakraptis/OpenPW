@@ -62,7 +62,7 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x2410, 0x2414 | `i32` | Unknown point (x, y), maybe the sprite centre (Rhamphos 53, 52; Blacksmith 72, 115) | | `FUN_0041cde0` |
 | 0x2420 | `i32` | Attack sound chance: played 1 in *n* times | C | `FUN_004626c7` |
 | 0x2424 | `u32[9]` | Sound count per sound group | C | `FUN_004030e0` |
-| 0x2448, 0x244c, 0x2454, 0x2458 | `i32` | Buildings only: global sound for select, select under construction, select below 75% HP, destroyed (−1 none) | C | `FUN_004624a3`, `FUN_00462616` |
+| 0x2448, 0x244c, 0x2454, 0x2458 | `i32` | Buildings only: global sounds (`JW2_05` entries). 0x244c is 20 for every building (the select sound; 0x2448 is −1), 0x2454 22–25 by size (select below 75% HP, D), 0x2458 26–28 by size (destroyed) (−1 none) | C | `FUN_004624a3`, `FUN_00462616` |
 | 0x245c | `i32` | Frame of the work animation that plays the work sound | C | `FUN_004627e1` |
 | 0x249c | `i32[]` | Attack frames that play the attack sound, ended by −1 | C | `FUN_004626c7` |
 
@@ -153,7 +153,7 @@ counts at `0x2424`. The game picks one at random from the group (`FUN_0046950d`)
 
 | Group | Use | Trigger in `Pw.exe` |
 |---|---|---|
-| 0 | Select. Wild creatures (types 64–90): idle roar, 1 in 4 | `FUN_004624a3` (selection), `FUN_00458278`; select and acknowledge are each limited to one per second |
+| 0 | Select. Wild creatures (types 64–90): when hit while idle and not fighting back, they run to a random spot within 64 px and roar 1 in 4 | `FUN_004624a3` (selection), `FUN_00458278` (reaction to a hit); select and acknowledge are each limited to one per second |
 | 1 | Acknowledge an order | `FUN_00462561`, called from about 20 order handlers |
 | 2 | Attack | `FUN_004626c7`, on the frames listed at `0x249c`, 1 in `record[0x2420]` |
 | 3 | Not played (`Wizard` has one) | |

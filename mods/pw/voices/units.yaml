@@ -2,441 +2,737 @@
 # One voice set per unit image (docs/formats/chr.md, Sounds); the files are sounds/<image>-<voice>-<n>.wav.
 
 primitive-buildman:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-buildman-select-0.wav, primitive-buildman-select-1.wav
-		Action: primitive-buildman-action-0.wav, primitive-buildman-action-1.wav, primitive-buildman-action-2.wav
-		Die: primitive-buildman-die-0.wav
-		Work: primitive-buildman-work-0.wav, primitive-buildman-work-1.wav, primitive-buildman-work-2.wav
-		Built: primitive-buildman-built-0.wav
+		Select: primitive-buildman-select-0, primitive-buildman-select-1
+		Action: primitive-buildman-action-0, primitive-buildman-action-1, primitive-buildman-action-2
+		Die: primitive-buildman-die-0
+		Work: primitive-buildman-work-0, primitive-buildman-work-1, primitive-buildman-work-2
+		Built: primitive-buildman-built-0
 
 primitive-powerman:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-powerman-select-0.wav, primitive-powerman-select-1.wav
-		Action: primitive-powerman-action-0.wav, primitive-powerman-action-1.wav, primitive-powerman-action-2.wav
-		Die: primitive-powerman-die-0.wav
+		Select: primitive-powerman-select-0, primitive-powerman-select-1
+		Action: primitive-powerman-action-0, primitive-powerman-action-1, primitive-powerman-action-2
+		Die: primitive-powerman-die-0
 
 primitive-giant:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-giant-select-0.wav, primitive-giant-select-1.wav, primitive-giant-select-2.wav, primitive-giant-select-3.wav
-		Action: primitive-giant-action-0.wav, primitive-giant-action-1.wav, primitive-giant-action-2.wav
-		Die: primitive-giant-die-0.wav
+		Select: primitive-giant-select-0, primitive-giant-select-1, primitive-giant-select-2, primitive-giant-select-3
+		Action: primitive-giant-action-0, primitive-giant-action-1, primitive-giant-action-2
+		Die: primitive-giant-die-0
 
 primitive-soldier:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-soldier-select-0.wav, primitive-soldier-select-1.wav
-		Action: primitive-soldier-action-0.wav, primitive-soldier-action-1.wav, primitive-soldier-action-2.wav
-		Die: primitive-soldier-die-0.wav
+		Select: primitive-soldier-select-0, primitive-soldier-select-1
+		Action: primitive-soldier-action-0, primitive-soldier-action-1, primitive-soldier-action-2
+		Die: primitive-soldier-die-0
 
 primitive-knight:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-knight-select-0.wav, primitive-knight-select-1.wav, primitive-knight-select-2.wav, primitive-knight-select-3.wav
-		Action: primitive-knight-action-0.wav, primitive-knight-action-1.wav, primitive-knight-action-2.wav
-		Attack: primitive-knight-attack-0.wav
-		Die: primitive-knight-die-0.wav
+		Select: primitive-knight-select-0, primitive-knight-select-1, primitive-knight-select-2, primitive-knight-select-3
+		Action: primitive-knight-action-0, primitive-knight-action-1, primitive-knight-action-2
+		Attack: primitive-knight-attack-0
+		Die: primitive-knight-die-0
 
 primitive-revolver:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-revolver-select-0.wav, primitive-revolver-select-1.wav
-		Action: primitive-revolver-action-0.wav, primitive-revolver-action-1.wav
-		Die: primitive-revolver-die-0.wav
+		Select: primitive-revolver-select-0, primitive-revolver-select-1
+		Action: primitive-revolver-action-0, primitive-revolver-action-1
+		Die: primitive-revolver-die-0
 
 primitive-bowmachine:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-bowmachine-select-0.wav
-		Action: primitive-bowmachine-action-0.wav
-		Attack: primitive-bowmachine-attack-0.wav
-		Die: primitive-bowmachine-die-0.wav
+		Select: primitive-bowmachine-select-0
+		Action: primitive-bowmachine-action-0
+		Attack: primitive-bowmachine-attack-0
+		Die: primitive-bowmachine-die-0
 
 primitive-squadron:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-squadron-select-0.wav, primitive-squadron-select-1.wav
-		Action: primitive-squadron-action-0.wav, primitive-squadron-action-1.wav, primitive-squadron-action-2.wav
-		Die: primitive-squadron-die-0.wav
+		Select: primitive-squadron-select-0, primitive-squadron-select-1
+		Action: primitive-squadron-action-0, primitive-squadron-action-1, primitive-squadron-action-2
+		Die: primitive-squadron-die-0
 
 primitive-flattop:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-flattop-select-0.wav, primitive-flattop-select-1.wav, primitive-flattop-select-2.wav
-		Action: primitive-flattop-action-0.wav, primitive-flattop-action-1.wav, primitive-flattop-action-2.wav, primitive-flattop-action-3.wav
-		Die: primitive-flattop-die-0.wav
+		Select: primitive-flattop-select-0, primitive-flattop-select-1, primitive-flattop-select-2
+		Action: primitive-flattop-action-0, primitive-flattop-action-1, primitive-flattop-action-2, primitive-flattop-action-3
+		Die: primitive-flattop-die-0
 
 primitive-chief:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-chief-select-0.wav, primitive-chief-select-1.wav, primitive-chief-select-2.wav
-		Action: primitive-chief-action-0.wav, primitive-chief-action-1.wav, primitive-chief-action-2.wav
-		Die: primitive-chief-die-0.wav
+		Select: primitive-chief-select-0, primitive-chief-select-1, primitive-chief-select-2
+		Action: primitive-chief-action-0, primitive-chief-action-1, primitive-chief-action-2
+		Die: primitive-chief-die-0
 
 primitive-powerman-shield-of-peace:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-powerman-shield-of-peace-select-0.wav, primitive-powerman-shield-of-peace-select-1.wav
-		Action: primitive-powerman-shield-of-peace-action-0.wav, primitive-powerman-shield-of-peace-action-1.wav, primitive-powerman-shield-of-peace-action-2.wav
-		Die: primitive-powerman-shield-of-peace-die-0.wav
+		Select: primitive-powerman-shield-of-peace-select-0, primitive-powerman-shield-of-peace-select-1
+		Action: primitive-powerman-shield-of-peace-action-0, primitive-powerman-shield-of-peace-action-1, primitive-powerman-shield-of-peace-action-2
+		Die: primitive-powerman-shield-of-peace-die-0
 
 primitive-soldier-fire-arrow:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-soldier-fire-arrow-select-0.wav, primitive-soldier-fire-arrow-select-1.wav
-		Action: primitive-soldier-fire-arrow-action-0.wav, primitive-soldier-fire-arrow-action-1.wav, primitive-soldier-fire-arrow-action-2.wav
-		Attack: primitive-soldier-fire-arrow-attack-0.wav
-		Die: primitive-soldier-fire-arrow-die-0.wav
+		Select: primitive-soldier-fire-arrow-select-0, primitive-soldier-fire-arrow-select-1
+		Action: primitive-soldier-fire-arrow-action-0, primitive-soldier-fire-arrow-action-1, primitive-soldier-fire-arrow-action-2
+		Attack: primitive-soldier-fire-arrow-attack-0
+		Die: primitive-soldier-fire-arrow-die-0
 
 primitive-soldier-venom-arrow:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-soldier-venom-arrow-select-0.wav, primitive-soldier-venom-arrow-select-1.wav
-		Action: primitive-soldier-venom-arrow-action-0.wav, primitive-soldier-venom-arrow-action-1.wav, primitive-soldier-venom-arrow-action-2.wav
-		Attack: primitive-soldier-venom-arrow-attack-0.wav
-		Die: primitive-soldier-venom-arrow-die-0.wav
+		Select: primitive-soldier-venom-arrow-select-0, primitive-soldier-venom-arrow-select-1
+		Action: primitive-soldier-venom-arrow-action-0, primitive-soldier-venom-arrow-action-1, primitive-soldier-venom-arrow-action-2
+		Attack: primitive-soldier-venom-arrow-attack-0
+		Die: primitive-soldier-venom-arrow-die-0
 
 primitive-knight-spear-of-justice:
+	DefaultVariant: .wav
 	Voices:
-		Select: primitive-knight-spear-of-justice-select-0.wav, primitive-knight-spear-of-justice-select-1.wav, primitive-knight-spear-of-justice-select-2.wav, primitive-knight-spear-of-justice-select-3.wav
-		Action: primitive-knight-spear-of-justice-action-0.wav, primitive-knight-spear-of-justice-action-1.wav, primitive-knight-spear-of-justice-action-2.wav
-		Attack: primitive-knight-spear-of-justice-attack-0.wav
-		Die: primitive-knight-spear-of-justice-die-0.wav
+		Select: primitive-knight-spear-of-justice-select-0, primitive-knight-spear-of-justice-select-1, primitive-knight-spear-of-justice-select-2, primitive-knight-spear-of-justice-select-3
+		Action: primitive-knight-spear-of-justice-action-0, primitive-knight-spear-of-justice-action-1, primitive-knight-spear-of-justice-action-2
+		Attack: primitive-knight-spear-of-justice-attack-0
+		Die: primitive-knight-spear-of-justice-die-0
 
 primitive-kalma:
+	DefaultVariant: .wav
 	Voices:
-		Action: primitive-kalma-action-0.wav
+		Action: primitive-kalma-action-0
 
 elf-wizard:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-wizard-select-0.wav, elf-wizard-select-1.wav, elf-wizard-select-2.wav
-		Action: elf-wizard-action-0.wav, elf-wizard-action-1.wav, elf-wizard-action-2.wav
-		Die: elf-wizard-die-0.wav
-		Work: elf-wizard-work-0.wav, elf-wizard-work-1.wav
-		Built: elf-wizard-built-0.wav
+		Select: elf-wizard-select-0, elf-wizard-select-1, elf-wizard-select-2
+		Action: elf-wizard-action-0, elf-wizard-action-1, elf-wizard-action-2
+		Die: elf-wizard-die-0
+		Work: elf-wizard-work-0, elf-wizard-work-1
+		Built: elf-wizard-built-0
 
 elf-redelf:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-redelf-select-0.wav, elf-redelf-select-1.wav, elf-redelf-select-2.wav, elf-redelf-select-3.wav
-		Action: elf-redelf-action-0.wav, elf-redelf-action-1.wav, elf-redelf-action-2.wav, elf-redelf-action-3.wav
-		Attack: elf-redelf-attack-0.wav
-		Die: elf-redelf-die-0.wav
+		Select: elf-redelf-select-0, elf-redelf-select-1, elf-redelf-select-2, elf-redelf-select-3
+		Action: elf-redelf-action-0, elf-redelf-action-1, elf-redelf-action-2, elf-redelf-action-3
+		Attack: elf-redelf-attack-0
+		Die: elf-redelf-die-0
 
 elf-whiteelf:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-whiteelf-select-0.wav, elf-whiteelf-select-1.wav, elf-whiteelf-select-2.wav
-		Action: elf-whiteelf-action-0.wav, elf-whiteelf-action-1.wav, elf-whiteelf-action-2.wav
-		Die: elf-whiteelf-die-0.wav
+		Select: elf-whiteelf-select-0, elf-whiteelf-select-1, elf-whiteelf-select-2
+		Action: elf-whiteelf-action-0, elf-whiteelf-action-1, elf-whiteelf-action-2
+		Die: elf-whiteelf-die-0
 
 elf-ranger:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-ranger-select-0.wav, elf-ranger-select-1.wav, elf-ranger-select-2.wav, elf-ranger-select-3.wav
-		Action: elf-ranger-action-0.wav, elf-ranger-action-1.wav, elf-ranger-action-2.wav, elf-ranger-action-3.wav
-		Die: elf-ranger-die-0.wav
+		Select: elf-ranger-select-0, elf-ranger-select-1, elf-ranger-select-2, elf-ranger-select-3
+		Action: elf-ranger-action-0, elf-ranger-action-1, elf-ranger-action-2, elf-ranger-action-3
+		Die: elf-ranger-die-0
 
 elf-blueelf:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-blueelf-select-0.wav, elf-blueelf-select-1.wav, elf-blueelf-select-2.wav, elf-blueelf-select-3.wav, elf-blueelf-select-4.wav
-		Action: elf-blueelf-action-0.wav, elf-blueelf-action-1.wav, elf-blueelf-action-2.wav
-		Die: elf-blueelf-die-0.wav
+		Select: elf-blueelf-select-0, elf-blueelf-select-1, elf-blueelf-select-2, elf-blueelf-select-3, elf-blueelf-select-4
+		Action: elf-blueelf-action-0, elf-blueelf-action-1, elf-blueelf-action-2
+		Die: elf-blueelf-die-0
 
 elf-unicorn:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-unicorn-select-0.wav, elf-unicorn-select-1.wav, elf-unicorn-select-2.wav
-		Action: elf-unicorn-action-0.wav, elf-unicorn-action-1.wav, elf-unicorn-action-2.wav
-		Die: elf-unicorn-die-0.wav
+		Select: elf-unicorn-select-0, elf-unicorn-select-1, elf-unicorn-select-2
+		Action: elf-unicorn-action-0, elf-unicorn-action-1, elf-unicorn-action-2
+		Die: elf-unicorn-die-0
 
 elf-pixie:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-pixie-select-0.wav, elf-pixie-select-1.wav, elf-pixie-select-2.wav
-		Action: elf-pixie-action-0.wav, elf-pixie-action-1.wav, elf-pixie-action-2.wav, elf-pixie-action-3.wav, elf-pixie-action-4.wav
-		Die: elf-pixie-die-0.wav
+		Select: elf-pixie-select-0, elf-pixie-select-1, elf-pixie-select-2
+		Action: elf-pixie-action-0, elf-pixie-action-1, elf-pixie-action-2, elf-pixie-action-3, elf-pixie-action-4
+		Die: elf-pixie-die-0
 
 elf-manaspread:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-manaspread-select-0.wav
-		Action: elf-manaspread-action-0.wav, elf-manaspread-action-1.wav
-		Die: elf-manaspread-die-0.wav
-		Built: elf-manaspread-built-0.wav
+		Select: elf-manaspread-select-0
+		Action: elf-manaspread-action-0, elf-manaspread-action-1
+		Die: elf-manaspread-die-0
+		Built: elf-manaspread-built-0
 
 elf-elfring:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-elfring-select-0.wav, elf-elfring-select-1.wav, elf-elfring-select-2.wav
-		Action: elf-elfring-action-0.wav, elf-elfring-action-1.wav, elf-elfring-action-2.wav, elf-elfring-action-3.wav
+		Select: elf-elfring-select-0, elf-elfring-select-1, elf-elfring-select-2
+		Action: elf-elfring-action-0, elf-elfring-action-1, elf-elfring-action-2, elf-elfring-action-3
 
 elf-dragon:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-dragon-select-0.wav, elf-dragon-select-1.wav
-		Action: elf-dragon-action-0.wav, elf-dragon-action-1.wav, elf-dragon-action-2.wav
-		Die: elf-dragon-die-0.wav
+		Select: elf-dragon-select-0, elf-dragon-select-1
+		Action: elf-dragon-action-0, elf-dragon-action-1, elf-dragon-action-2
+		Die: elf-dragon-die-0
 
 elf-phoenix:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-phoenix-select-0.wav, elf-phoenix-select-1.wav
-		Action: elf-phoenix-action-0.wav, elf-phoenix-action-1.wav, elf-phoenix-action-2.wav
-		Die: elf-phoenix-die-0.wav
+		Select: elf-phoenix-select-0, elf-phoenix-select-1
+		Action: elf-phoenix-action-0, elf-phoenix-action-1, elf-phoenix-action-2
+		Die: elf-phoenix-die-0
 
 elf-angelelf:
+	DefaultVariant: .wav
 	Voices:
-		Select: elf-angelelf-select-0.wav, elf-angelelf-select-1.wav, elf-angelelf-select-2.wav
-		Action: elf-angelelf-action-0.wav, elf-angelelf-action-1.wav, elf-angelelf-action-2.wav
-		Die: elf-angelelf-die-0.wav
-		Built: elf-angelelf-built-0.wav
+		Select: elf-angelelf-select-0, elf-angelelf-select-1, elf-angelelf-select-2
+		Action: elf-angelelf-action-0, elf-angelelf-action-1, elf-angelelf-action-2
+		Die: elf-angelelf-die-0
+		Built: elf-angelelf-built-0
 
 tyrano-dinos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-dinos-select-0.wav, tyrano-dinos-select-1.wav
-		Action: tyrano-dinos-action-0.wav, tyrano-dinos-action-1.wav
-		Die: tyrano-dinos-die-0.wav
-		Work: tyrano-dinos-work-0.wav, tyrano-dinos-work-1.wav, tyrano-dinos-work-2.wav
-		Built: tyrano-dinos-built-0.wav
+		Select: tyrano-dinos-select-0, tyrano-dinos-select-1
+		Action: tyrano-dinos-action-0, tyrano-dinos-action-1
+		Die: tyrano-dinos-die-0
+		Work: tyrano-dinos-work-0, tyrano-dinos-work-1, tyrano-dinos-work-2
+		Built: tyrano-dinos-built-0
 
 tyrano-masos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-masos-select-0.wav, tyrano-masos-select-1.wav, tyrano-masos-select-2.wav, tyrano-masos-select-3.wav, tyrano-masos-select-4.wav
-		Action: tyrano-masos-action-0.wav, tyrano-masos-action-1.wav, tyrano-masos-action-2.wav, tyrano-masos-action-3.wav, tyrano-masos-action-4.wav
-		Attack: tyrano-masos-attack-0.wav, tyrano-masos-attack-1.wav, tyrano-masos-attack-2.wav, tyrano-masos-attack-3.wav
-		Die: tyrano-masos-die-0.wav
+		Select: tyrano-masos-select-0, tyrano-masos-select-1, tyrano-masos-select-2, tyrano-masos-select-3, tyrano-masos-select-4
+		Action: tyrano-masos-action-0, tyrano-masos-action-1, tyrano-masos-action-2, tyrano-masos-action-3, tyrano-masos-action-4
+		Attack: tyrano-masos-attack-0, tyrano-masos-attack-1, tyrano-masos-attack-2, tyrano-masos-attack-3
+		Die: tyrano-masos-die-0
 
 tyrano-velocis:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-velocis-select-0.wav, tyrano-velocis-select-1.wav, tyrano-velocis-select-2.wav, tyrano-velocis-select-3.wav
-		Action: tyrano-velocis-action-0.wav, tyrano-velocis-action-1.wav, tyrano-velocis-action-2.wav, tyrano-velocis-action-3.wav
-		Attack: tyrano-velocis-attack-0.wav, tyrano-velocis-attack-1.wav, tyrano-velocis-attack-2.wav, tyrano-velocis-attack-3.wav
-		Die: tyrano-velocis-die-0.wav, tyrano-velocis-die-1.wav
+		Select: tyrano-velocis-select-0, tyrano-velocis-select-1, tyrano-velocis-select-2, tyrano-velocis-select-3
+		Action: tyrano-velocis-action-0, tyrano-velocis-action-1, tyrano-velocis-action-2, tyrano-velocis-action-3
+		Attack: tyrano-velocis-attack-0, tyrano-velocis-attack-1, tyrano-velocis-attack-2, tyrano-velocis-attack-3
+		Die: tyrano-velocis-die-0, tyrano-velocis-die-1
 
 tyrano-twinvelocis:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-twinvelocis-select-0.wav, tyrano-twinvelocis-select-1.wav, tyrano-twinvelocis-select-2.wav, tyrano-twinvelocis-select-3.wav
-		Action: tyrano-twinvelocis-action-0.wav, tyrano-twinvelocis-action-1.wav, tyrano-twinvelocis-action-2.wav
-		Attack: tyrano-twinvelocis-attack-0.wav, tyrano-twinvelocis-attack-1.wav
-		Die: tyrano-twinvelocis-die-0.wav
+		Select: tyrano-twinvelocis-select-0, tyrano-twinvelocis-select-1, tyrano-twinvelocis-select-2, tyrano-twinvelocis-select-3
+		Action: tyrano-twinvelocis-action-0, tyrano-twinvelocis-action-1, tyrano-twinvelocis-action-2
+		Attack: tyrano-twinvelocis-attack-0, tyrano-twinvelocis-attack-1
+		Die: tyrano-twinvelocis-die-0
 
 tyrano-dilophos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-dilophos-select-0.wav, tyrano-dilophos-select-1.wav, tyrano-dilophos-select-2.wav, tyrano-dilophos-select-3.wav
-		Action: tyrano-dilophos-action-0.wav, tyrano-dilophos-action-1.wav, tyrano-dilophos-action-2.wav
-		Attack: tyrano-dilophos-attack-0.wav, tyrano-dilophos-attack-1.wav, tyrano-dilophos-attack-2.wav
-		Die: tyrano-dilophos-die-0.wav
+		Select: tyrano-dilophos-select-0, tyrano-dilophos-select-1, tyrano-dilophos-select-2, tyrano-dilophos-select-3
+		Action: tyrano-dilophos-action-0, tyrano-dilophos-action-1, tyrano-dilophos-action-2
+		Attack: tyrano-dilophos-attack-0, tyrano-dilophos-attack-1, tyrano-dilophos-attack-2
+		Die: tyrano-dilophos-die-0
 
 tyrano-rhamphos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-rhamphos-select-0.wav, tyrano-rhamphos-select-1.wav
-		Action: tyrano-rhamphos-action-0.wav, tyrano-rhamphos-action-1.wav, tyrano-rhamphos-action-2.wav
-		Die: tyrano-rhamphos-die-0.wav
+		Select: tyrano-rhamphos-select-0, tyrano-rhamphos-select-1
+		Action: tyrano-rhamphos-action-0, tyrano-rhamphos-action-1, tyrano-rhamphos-action-2
+		Die: tyrano-rhamphos-die-0
 
 tyrano-twinrhamphos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-twinrhamphos-select-0.wav, tyrano-twinrhamphos-select-1.wav
-		Action: tyrano-twinrhamphos-action-0.wav, tyrano-twinrhamphos-action-1.wav, tyrano-twinrhamphos-action-2.wav
-		Attack: tyrano-twinrhamphos-attack-0.wav
-		Die: tyrano-twinrhamphos-die-0.wav
+		Select: tyrano-twinrhamphos-select-0, tyrano-twinrhamphos-select-1
+		Action: tyrano-twinrhamphos-action-0, tyrano-twinrhamphos-action-1, tyrano-twinrhamphos-action-2
+		Attack: tyrano-twinrhamphos-attack-0
+		Die: tyrano-twinrhamphos-die-0
 
 tyrano-pteras:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-pteras-select-0.wav, tyrano-pteras-select-1.wav
-		Action: tyrano-pteras-action-0.wav, tyrano-pteras-action-1.wav, tyrano-pteras-action-2.wav
-		Die: tyrano-pteras-die-0.wav
+		Select: tyrano-pteras-select-0, tyrano-pteras-select-1
+		Action: tyrano-pteras-action-0, tyrano-pteras-action-1, tyrano-pteras-action-2
+		Die: tyrano-pteras-die-0
 
 tyrano-trices:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-trices-select-0.wav, tyrano-trices-select-1.wav, tyrano-trices-select-2.wav, tyrano-trices-select-3.wav
-		Action: tyrano-trices-action-0.wav, tyrano-trices-action-1.wav, tyrano-trices-action-2.wav, tyrano-trices-action-3.wav
-		Die: tyrano-trices-die-0.wav
+		Select: tyrano-trices-select-0, tyrano-trices-select-1, tyrano-trices-select-2, tyrano-trices-select-3
+		Action: tyrano-trices-action-0, tyrano-trices-action-1, tyrano-trices-action-2, tyrano-trices-action-3
+		Die: tyrano-trices-die-0
 
 tyrano-dsunguri:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-dsunguri-select-0.wav, tyrano-dsunguri-select-1.wav, tyrano-dsunguri-select-2.wav, tyrano-dsunguri-select-3.wav
-		Action: tyrano-dsunguri-action-0.wav, tyrano-dsunguri-action-1.wav, tyrano-dsunguri-action-2.wav
-		Die: tyrano-dsunguri-die-0.wav
+		Select: tyrano-dsunguri-select-0, tyrano-dsunguri-select-1, tyrano-dsunguri-select-2, tyrano-dsunguri-select-3
+		Action: tyrano-dsunguri-action-0, tyrano-dsunguri-action-1, tyrano-dsunguri-action-2
+		Die: tyrano-dsunguri-die-0
 
 tyrano-eggthrower:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-eggthrower-select-0.wav
-		Action: tyrano-eggthrower-action-0.wav
-		Die: tyrano-eggthrower-die-0.wav
+		Select: tyrano-eggthrower-select-0
+		Action: tyrano-eggthrower-action-0
+		Die: tyrano-eggthrower-die-0
 
 tyrano-mutant:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-mutant-select-0.wav, tyrano-mutant-select-1.wav, tyrano-mutant-select-2.wav
-		Action: tyrano-mutant-action-0.wav, tyrano-mutant-action-1.wav, tyrano-mutant-action-2.wav, tyrano-mutant-action-3.wav
-		Die: tyrano-mutant-die-0.wav
+		Select: tyrano-mutant-select-0, tyrano-mutant-select-1, tyrano-mutant-select-2
+		Action: tyrano-mutant-action-0, tyrano-mutant-action-1, tyrano-mutant-action-2, tyrano-mutant-action-3
+		Die: tyrano-mutant-die-0
 
 tyrano-tyranos:
+	DefaultVariant: .wav
 	Voices:
-		Select: tyrano-tyranos-select-0.wav, tyrano-tyranos-select-1.wav, tyrano-tyranos-select-2.wav, tyrano-tyranos-select-3.wav
-		Action: tyrano-tyranos-action-0.wav, tyrano-tyranos-action-1.wav, tyrano-tyranos-action-2.wav, tyrano-tyranos-action-3.wav
-		Die: tyrano-tyranos-die-0.wav
+		Select: tyrano-tyranos-select-0, tyrano-tyranos-select-1, tyrano-tyranos-select-2, tyrano-tyranos-select-3
+		Action: tyrano-tyranos-action-0, tyrano-tyranos-action-1, tyrano-tyranos-action-2, tyrano-tyranos-action-3
+		Die: tyrano-tyranos-die-0
 
 demon-insect:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-insect-select-0.wav, demon-insect-select-1.wav
-		Action: demon-insect-action-0.wav, demon-insect-action-1.wav, demon-insect-action-2.wav, demon-insect-action-3.wav
-		Die: demon-insect-die-0.wav
-		Work: demon-insect-work-0.wav, demon-insect-work-1.wav, demon-insect-work-2.wav
-		Built: demon-insect-built-0.wav
+		Select: demon-insect-select-0, demon-insect-select-1
+		Action: demon-insect-action-0, demon-insect-action-1, demon-insect-action-2, demon-insect-action-3
+		Die: demon-insect-die-0
+		Work: demon-insect-work-0, demon-insect-work-1, demon-insect-work-2
+		Built: demon-insect-built-0
 
 demon-skeleton:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-skeleton-select-0.wav, demon-skeleton-select-1.wav
-		Action: demon-skeleton-action-0.wav, demon-skeleton-action-1.wav
-		Die: demon-skeleton-die-0.wav
+		Select: demon-skeleton-select-0, demon-skeleton-select-1
+		Action: demon-skeleton-action-0, demon-skeleton-action-1
+		Die: demon-skeleton-die-0
 
 demon-mudman:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-mudman-select-0.wav, demon-mudman-select-1.wav
-		Action: demon-mudman-action-0.wav, demon-mudman-action-1.wav
-		Attack: demon-mudman-attack-0.wav, demon-mudman-attack-1.wav
-		Die: demon-mudman-die-0.wav
+		Select: demon-mudman-select-0, demon-mudman-select-1
+		Action: demon-mudman-action-0, demon-mudman-action-1
+		Attack: demon-mudman-attack-0, demon-mudman-attack-1
+		Die: demon-mudman-die-0
 
 demon-deatheye:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-deatheye-select-0.wav, demon-deatheye-select-1.wav, demon-deatheye-select-2.wav
-		Action: demon-deatheye-action-0.wav, demon-deatheye-action-1.wav, demon-deatheye-action-2.wav, demon-deatheye-action-3.wav
-		Die: demon-deatheye-die-0.wav
+		Select: demon-deatheye-select-0, demon-deatheye-select-1, demon-deatheye-select-2
+		Action: demon-deatheye-action-0, demon-deatheye-action-1, demon-deatheye-action-2, demon-deatheye-action-3
+		Die: demon-deatheye-die-0
 
 demon-phantom:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-phantom-select-0.wav, demon-phantom-select-1.wav
-		Action: demon-phantom-action-0.wav, demon-phantom-action-1.wav, demon-phantom-action-2.wav
-		Die: demon-phantom-die-0.wav
+		Select: demon-phantom-select-0, demon-phantom-select-1
+		Action: demon-phantom-action-0, demon-phantom-action-1, demon-phantom-action-2
+		Die: demon-phantom-die-0
 
 demon-gargoyle:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-gargoyle-select-0.wav, demon-gargoyle-select-1.wav, demon-gargoyle-select-2.wav
-		Action: demon-gargoyle-action-0.wav, demon-gargoyle-action-1.wav, demon-gargoyle-action-2.wav
-		Die: demon-gargoyle-die-0.wav
+		Select: demon-gargoyle-select-0, demon-gargoyle-select-1, demon-gargoyle-select-2
+		Action: demon-gargoyle-action-0, demon-gargoyle-action-1, demon-gargoyle-action-2
+		Die: demon-gargoyle-die-0
 
 demon-kelpa:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-kelpa-select-0.wav, demon-kelpa-select-1.wav, demon-kelpa-select-2.wav
-		Action: demon-kelpa-action-0.wav, demon-kelpa-action-1.wav, demon-kelpa-action-2.wav
-		Die: demon-kelpa-die-0.wav
+		Select: demon-kelpa-select-0, demon-kelpa-select-1, demon-kelpa-select-2
+		Action: demon-kelpa-action-0, demon-kelpa-action-1, demon-kelpa-action-2
+		Die: demon-kelpa-die-0
 
 demon-warlock:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-warlock-select-0.wav, demon-warlock-select-1.wav
-		Action: demon-warlock-action-0.wav, demon-warlock-action-1.wav, demon-warlock-action-2.wav, demon-warlock-action-3.wav
-		Die: demon-warlock-die-0.wav
+		Select: demon-warlock-select-0, demon-warlock-select-1
+		Action: demon-warlock-action-0, demon-warlock-action-1, demon-warlock-action-2, demon-warlock-action-3
+		Die: demon-warlock-die-0
 
 demon-kingdemon:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-kingdemon-select-0.wav, demon-kingdemon-select-1.wav, demon-kingdemon-select-2.wav, demon-kingdemon-select-3.wav
-		Action: demon-kingdemon-action-0.wav, demon-kingdemon-action-1.wav, demon-kingdemon-action-2.wav, demon-kingdemon-action-3.wav
-		Die: demon-kingdemon-die-0.wav
+		Select: demon-kingdemon-select-0, demon-kingdemon-select-1, demon-kingdemon-select-2, demon-kingdemon-select-3
+		Action: demon-kingdemon-action-0, demon-kingdemon-action-1, demon-kingdemon-action-2, demon-kingdemon-action-3
+		Die: demon-kingdemon-die-0
 
 demon-darkbat:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-darkbat-select-0.wav, demon-darkbat-select-1.wav
-		Action: demon-darkbat-action-0.wav, demon-darkbat-action-1.wav, demon-darkbat-action-2.wav
-		Die: demon-darkbat-die-0.wav
+		Select: demon-darkbat-select-0, demon-darkbat-select-1
+		Action: demon-darkbat-action-0, demon-darkbat-action-1, demon-darkbat-action-2
+		Die: demon-darkbat-die-0
 
 demon-devil:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-devil-select-0.wav, demon-devil-select-1.wav, demon-devil-select-2.wav
-		Action: demon-devil-action-0.wav, demon-devil-action-1.wav, demon-devil-action-2.wav
-		Die: demon-devil-die-0.wav
+		Select: demon-devil-select-0, demon-devil-select-1, demon-devil-select-2
+		Action: demon-devil-action-0, demon-devil-action-1, demon-devil-action-2
+		Die: demon-devil-die-0
 
 demon-risezombie1:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-risezombie1-select-0.wav
-		Action: demon-risezombie1-action-0.wav, demon-risezombie1-action-1.wav
-		Attack: demon-risezombie1-attack-0.wav
-		Die: demon-risezombie1-die-0.wav
+		Select: demon-risezombie1-select-0
+		Action: demon-risezombie1-action-0, demon-risezombie1-action-1
+		Attack: demon-risezombie1-attack-0
+		Die: demon-risezombie1-die-0
 
 demon-risezombie2:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-risezombie2-select-0.wav, demon-risezombie2-select-1.wav
-		Action: demon-risezombie2-action-0.wav, demon-risezombie2-action-1.wav, demon-risezombie2-action-2.wav
-		Attack: demon-risezombie2-attack-0.wav
-		Die: demon-risezombie2-die-0.wav
+		Select: demon-risezombie2-select-0, demon-risezombie2-select-1
+		Action: demon-risezombie2-action-0, demon-risezombie2-action-1, demon-risezombie2-action-2
+		Attack: demon-risezombie2-attack-0
+		Die: demon-risezombie2-die-0
 
 demon-imp:
+	DefaultVariant: .wav
 	Voices:
-		Select: demon-imp-select-0.wav, demon-imp-select-1.wav
-		Action: demon-imp-action-0.wav, demon-imp-action-1.wav, demon-imp-action-2.wav
-		Die: demon-imp-die-0.wav
+		Select: demon-imp-select-0, demon-imp-select-1
+		Action: demon-imp-action-0, demon-imp-action-1, demon-imp-action-2
+		Die: demon-imp-die-0
 
 wild-tyranosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-tyranosaurus-select-0.wav, wild-tyranosaurus-select-1.wav
-		Attack: wild-tyranosaurus-attack-0.wav
-		Die: wild-tyranosaurus-die-0.wav
+		Select: wild-tyranosaurus-select-0, wild-tyranosaurus-select-1
+		Attack: wild-tyranosaurus-attack-0
+		Die: wild-tyranosaurus-die-0
 
 wild-triceratops:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-triceratops-select-0.wav, wild-triceratops-select-1.wav
-		Die: wild-triceratops-die-0.wav
+		Select: wild-triceratops-select-0, wild-triceratops-select-1
+		Die: wild-triceratops-die-0
 
 wild-ceratosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-ceratosaurus-select-0.wav, wild-ceratosaurus-select-1.wav
-		Attack: wild-ceratosaurus-attack-0.wav
-		Die: wild-ceratosaurus-die-0.wav
+		Select: wild-ceratosaurus-select-0, wild-ceratosaurus-select-1
+		Attack: wild-ceratosaurus-attack-0
+		Die: wild-ceratosaurus-die-0
 
 wild-pachycephalosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-pachycephalosaurus-select-0.wav, wild-pachycephalosaurus-select-1.wav
-		Die: wild-pachycephalosaurus-die-0.wav
+		Select: wild-pachycephalosaurus-select-0, wild-pachycephalosaurus-select-1
+		Die: wild-pachycephalosaurus-die-0
 
 wild-dilophosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-dilophosaurus-select-0.wav, wild-dilophosaurus-select-1.wav
-		Attack: wild-dilophosaurus-attack-0.wav
-		Die: wild-dilophosaurus-die-0.wav
+		Select: wild-dilophosaurus-select-0, wild-dilophosaurus-select-1
+		Attack: wild-dilophosaurus-attack-0
+		Die: wild-dilophosaurus-die-0
 
 wild-velociraptor:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-velociraptor-select-0.wav, wild-velociraptor-select-1.wav
-		Die: wild-velociraptor-die-0.wav
+		Select: wild-velociraptor-select-0, wild-velociraptor-select-1
+		Die: wild-velociraptor-die-0
 
 wild-brachiosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-brachiosaurus-select-0.wav, wild-brachiosaurus-select-1.wav, wild-brachiosaurus-select-2.wav
-		Die: wild-brachiosaurus-die-0.wav
+		Select: wild-brachiosaurus-select-0, wild-brachiosaurus-select-1, wild-brachiosaurus-select-2
+		Die: wild-brachiosaurus-die-0
 
 wild-stegosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-stegosaurus-select-0.wav, wild-stegosaurus-select-1.wav
-		Die: wild-stegosaurus-die-0.wav
+		Select: wild-stegosaurus-select-0, wild-stegosaurus-select-1
+		Die: wild-stegosaurus-die-0
 
 wild-parasaurolophus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-parasaurolophus-select-0.wav, wild-parasaurolophus-select-1.wav
-		Die: wild-parasaurolophus-die-0.wav
+		Select: wild-parasaurolophus-select-0, wild-parasaurolophus-select-1
+		Die: wild-parasaurolophus-die-0
 
 wild-saltasaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-saltasaurus-select-0.wav, wild-saltasaurus-select-1.wav
-		Die: wild-saltasaurus-die-0.wav
+		Select: wild-saltasaurus-select-0, wild-saltasaurus-select-1
+		Die: wild-saltasaurus-die-0
 
 wild-protoceratops:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-protoceratops-select-0.wav, wild-protoceratops-select-1.wav
-		Die: wild-protoceratops-die-0.wav
+		Select: wild-protoceratops-select-0, wild-protoceratops-select-1
+		Die: wild-protoceratops-die-0
 
 wild-galimimus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-galimimus-select-0.wav, wild-galimimus-select-1.wav
-		Die: wild-galimimus-die-0.wav
+		Select: wild-galimimus-select-0, wild-galimimus-select-1
+		Die: wild-galimimus-die-0
 
 wild-psittacosaurus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-psittacosaurus-select-0.wav, wild-psittacosaurus-select-1.wav
-		Die: wild-psittacosaurus-die-0.wav
+		Select: wild-psittacosaurus-select-0, wild-psittacosaurus-select-1
+		Die: wild-psittacosaurus-die-0
 
 wild-pteranodon:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-pteranodon-select-0.wav, wild-pteranodon-select-1.wav
-		Die: wild-pteranodon-die-0.wav
+		Select: wild-pteranodon-select-0, wild-pteranodon-select-1
+		Die: wild-pteranodon-die-0
 
 wild-rhamphorhynchus:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-rhamphorhynchus-select-0.wav, wild-rhamphorhynchus-select-1.wav
-		Die: wild-rhamphorhynchus-die-0.wav
+		Select: wild-rhamphorhynchus-select-0, wild-rhamphorhynchus-select-1
+		Die: wild-rhamphorhynchus-die-0
 
 wild-plesiosaurs:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-plesiosaurs-select-0.wav, wild-plesiosaurs-select-1.wav
-		Die: wild-plesiosaurs-die-0.wav
+		Select: wild-plesiosaurs-select-0, wild-plesiosaurs-select-1
+		Die: wild-plesiosaurs-die-0
 
 wild-peleneustes:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-peleneustes-select-0.wav, wild-peleneustes-select-1.wav
-		Die: wild-peleneustes-die-0.wav
+		Select: wild-peleneustes-select-0, wild-peleneustes-select-1
+		Die: wild-peleneustes-die-0
 
 wild-picatyrano:
+	DefaultVariant: .wav
 	Voices:
-		Select: wild-picatyrano-select-0.wav, wild-picatyrano-select-1.wav
-		Attack: wild-picatyrano-attack-0.wav
-		Die: wild-picatyrano-die-0.wav
+		Select: wild-picatyrano-select-0, wild-picatyrano-select-1
+		Attack: wild-picatyrano-attack-0
+		Die: wild-picatyrano-die-0
+
+primitive-sanctuary:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-26
+
+primitive-house:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+primitive-stonetower:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+primitive-powerhouse:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-soldierhouse:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-skyhouse:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-blacksmith:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-landincreaser:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-skyincreaser:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+primitive-trap:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+elf-heaven:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-elftree:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-bubble:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-redhall:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-bluehall:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-manahall:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-skyhall:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-elflibrary:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-skylibrary:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+elf-manalibrary:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-21
+
+tyrano-tyranonest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-26
+
+tyrano-nest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+tyrano-ascomoid:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+tyrano-eggnest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+tyrano-landnest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+tyrano-skynest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+tyrano-thrownest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+tyrano-upgradenest:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+tyrano-landnisdos:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-26
+
+tyrano-skynisdos:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-26
+
+demon-demonden:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-26
+
+demon-tomb:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-28
+
+demon-volcano:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-22
+		Die: ui-28
+
+demon-deathden:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+demon-flyden:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+demon-magicden:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+demon-hell:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+demon-dirtyportal:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
+
+demon-highportal:
+	DefaultVariant: .wav
+	Voices:
+		Select: ui-20
+		Die: ui-27
 

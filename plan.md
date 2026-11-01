@@ -411,13 +411,15 @@ Left for Elf and Demon: the spell mana costs.
       experience and health. `items-test`.
 - [x] **Air units** (2026-11-01, branch `prim_air`): Revolver (transport for 10: passengers weigh their `.chr` 0x188
       size, deduced; lands to load), Squadron and Flattop (splash). They hover at a token altitude because the art
-      draws the height and shadow; ground weapons can't reach them, arrows and stones can. `air-test`. Left: the
-      Revolver's +8 transport upgrade (Cargo's capacity is fixed; needs a custom cargo trait).
+      draws the height and shadow; ground weapons can't reach them, arrows and stones can. `air-test`. The
+      Revolver's +8 transport upgrade works through `PwTransportCapacity`.
 - [x] **Effects and sounds** (2026-11-01, branch `prim_air`): the installer's `effects` stage writes every weapon's
       flight and impact art (`sequences/weapons.yaml`) and sounds; the `units` stage writes each unit's sounds and a
       voice set per image (`voices/units.yaml`: Select, Action, Attack, Die, Work, Built). Weapons reference them
-      (`research/tools/wire_weapons.py`); `PwVoiced` gives each unit its image's voice set. Still to do: shroud art,
-      the idle roar of wild creatures, interface sounds.
+      (`research/tools/wire_weapons.py`); `PwVoiced` gives each unit its image's voice set. The `audio` stage writes
+      the interface sounds (JW2_05): button click, victory, defeat (assumed entry 7), the race's "under attack",
+      buildings' select and destroyed sounds. Hit plant-eaters run off and roar 1 in 4 (`PwFleeWhenHit`). Soft
+      shroud and fog tiles (`tools/shroud_art.py`; the original shades fog per pixel), fog and shroud on by default.
 - Test map: the converted original maps work directly.
 - Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in
   `OpenRA.Mods.Pw/Tests`), run by `python run_tests.py`. Each fix gets a check that fails without it.

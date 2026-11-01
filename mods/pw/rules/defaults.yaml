@@ -119,6 +119,8 @@
 	-MustBeDestroyed:
 	-AttackMove:
 	-Guard:
+	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
+	PwFleeWhenHit:
 	Wanders:
 		WanderMoveRadius: 4
 		MinMoveDelay: 150
@@ -262,6 +264,10 @@
 	Tooltip:
 	WithSpriteBody:
 		Sequence: idle
+	# The global select and destroyed sounds of its kind (voices/units.yaml).
+	PwVoiced:
+	DeathSounds:
+		Voice: Die
 	# Built by a worker (Builder): grows over the original build time, showing the original construction stages.
 	UnderConstruction:
 	WithConstructionStages:

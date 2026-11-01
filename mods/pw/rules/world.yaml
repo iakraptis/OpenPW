@@ -1,5 +1,13 @@
 ^baseworld:
 	Inherits: ^palettes
+	# Soft-edged shroud and fog (sequences/shroud.yaml).
+	ShroudRenderer:
+		ShroudVariants: shroud
+		FogVariants: fog
+		OverrideFullShroud: full
+		OverrideFullFog: fullfog
+		ShroudPalette: greyscale
+		FogPalette: greyscale
 	ActorMap:
 	AlwaysVisible:
 	ControlGroups:

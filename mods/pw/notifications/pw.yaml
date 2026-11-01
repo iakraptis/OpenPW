@@ -1,5 +1,22 @@
+# Interface sounds (the installer's audio stage: JW2_05 entry n is ui-<nn>.wav). The engine appends DefaultVariant.
 Sounds:
+	DefaultVariant: .wav
 	Notifications:
 		ChatLine:
 		ClickDisabledSound:
-		ClickSound:
+		ClickSound: ui-00
+
+# Spoken notices in the player's race: the faction picks the prefix (<race>-under-attack-<n>.wav).
+Speech:
+	DefaultVariant: .wav
+	Prefixes:
+		primitive: primitive-
+		elf: elf-
+		tyrano: tyrano-
+		demon: demon-
+	DisablePrefixes: Win, Lose
+	Notifications:
+		BaseAttack: under-attack-1, under-attack-2
+		# Victory is entry 6 (06m_win.wav). Defeat is assumed to be entry 7, the other long sound (masked name).
+		Win: ui-06
+		Lose: ui-07

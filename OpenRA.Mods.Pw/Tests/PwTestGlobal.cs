@@ -93,6 +93,10 @@ namespace OpenRA.Mods.Pw.Tests
 		public bool Researched(Player player, string upgrade) =>
 			player.PlayerActor.TraitOrDefault<PwUpgrades>()?.IsResearched(upgrade) ?? false;
 
+		[Desc("Complete an upgrade level at once, as if researched.")]
+		public void CompleteUpgrade(Player player, string upgrade) =>
+			player.PlayerActor.Trait<PwUpgrades>().Complete(player.World.Map.Rules.Actors[upgrade]);
+
 		[Desc("How many items a building's queues hold.")]
 		public int QueueLength(Actor producer) => producer.TraitsImplementing<ProductionQueue>().Sum(q => q.AllQueued().Count());
 

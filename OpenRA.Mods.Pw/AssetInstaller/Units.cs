@@ -103,8 +103,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var files = new List<string>();
 				for (var n = 0; n < chr.Sounds[group].Count; n++)
 				{
-					var file = $"{image}-{voice.ToLowerInvariant()}-{n}.wav";
-					c.WriteFile($"sounds/{file}", chr.Sounds[group][n]);
+					var file = $"{image}-{voice.ToLowerInvariant()}-{n}";
+					c.WriteFile($"sounds/{file}.wav", chr.Sounds[group][n]);
 					files.Add(file);
 				}
 
@@ -112,7 +112,21 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					yaml.Append($"\t\t{voice}: {string.Join(", ", files)}\n");
 			}
 
-			return yaml.Length == 0 ? "" : $"{image}:\n\tVoices:\n{yaml}\n";
+			// Buildings have no sounds of their own: they play global sounds (JW2_05, written by the audio stage as
+			// ui-<nn>.wav): .chr 0x244c on select, 0x2458 when destroyed (-1 none).
+			if (yaml.Length == 0)
+			{
+				var select = BitConverter.ToInt32(chr.Record, 0x244c);
+				var destroyed = BitConverter.ToInt32(chr.Record, 0x2458);
+				if (select >= 0)
+					yaml.Append($"\t\tSelect: ui-{select:D2}\n");
+
+				if (destroyed >= 0)
+					yaml.Append($"\t\tDie: ui-{destroyed:D2}\n");
+			}
+
+			// The engine appends DefaultVariant to each listed name.
+			return yaml.Length == 0 ? "" : $"{image}:\n\tDefaultVariant: .wav\n\tVoices:\n{yaml}\n";
 		}
 
 		static string Export(InstallContext c, int type, ChrFile chr, string image)

@@ -46,6 +46,12 @@ Actors:
 
 Rules:
 	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
 		# Scripted actors appear after the first victory check.
 		-ConquestVictoryConditions:
 	world:

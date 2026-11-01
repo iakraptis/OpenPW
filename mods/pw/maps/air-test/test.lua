@@ -5,6 +5,7 @@
 -- 3. A Soldier shoots at a Squadron on its own; a Powerman can't reach it.
 -- 4. The Flattop's fire splashes: two units side by side are both hurt.
 -- 5. The Revolver carries 10: Buildmen (1 each) board it, the Chief (12) doesn't fit; it flies them and unloads.
+--    With Improve Revolver Transportation (+8) the Chief fits.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Creeps")
@@ -90,6 +91,14 @@ Transport = function()
             revolver.UnloadPassengers()
             WaitFor("the Revolver flies them over and unloads", 900, function()
                 return not revolver.HasPassengers and men[1].IsInWorld and men[1].Location.X < 16
+            end, function(ok)
+                if not ok then return end
+                -- Improve Revolver Transportation: room for 18, so the Chief now fits.
+                PwTest.CompleteUpgrade(me, "primitive-upgrade-revolover-transportation-1")
+                Later(5, function() chief.EnterTransport(revolver) end)
+                WaitFor("with the transport upgrade the Chief fits in the Revolver", 900, function()
+                    return revolver.PassengerCount == 1 and not chief.IsInWorld
+                end)
             end)
         end)
     end)
