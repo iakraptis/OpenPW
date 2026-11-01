@@ -1,0 +1,20 @@
+# Meat (^Meat in defaults.yaml): the four Food sprites by amount (Item.itm 1-4: Food small, middle, large, big).
+meat-small:
+	Inherits: ^Meat
+	RenderSprites:
+		Image: item-01
+
+meat-middle:
+	Inherits: ^Meat
+	RenderSprites:
+		Image: item-02
+
+meat-large:
+	Inherits: ^Meat
+	RenderSprites:
+		Image: item-03
+
+meat-big:
+	Inherits: ^Meat
+	RenderSprites:
+		Image: item-04

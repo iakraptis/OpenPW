@@ -78,6 +78,8 @@
 	Passenger:
 		CargoType: Ground
 	Crushable:
+	# Living units carry meat they pick up and eat it while hurt (machines don't).
+	PwMeatEater:
 
 # Workers build (Builder, the build list on the concrete worker) and gather (Phase 3, next step). While building
 # they play their build animation instead of the infantry body.
@@ -124,6 +126,10 @@
 	-Guard:
 	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
 	PwFleeWhenHit:
+	# Heals 1 HP every 32 ticks, leaves meat when killed (its amount is set per creature) and comes back long after.
+	PwRegenerates:
+	PwDropsMeat:
+	PwRespawns:
 	Wanders:
 		WanderMoveRadius: 4
 		MinMoveDelay: 150
@@ -142,6 +148,7 @@
 # Pteranodon, Rhamphorhynchus: fly over everything, only arrows reach them.
 ^WildFlyer:
 	Inherits: ^Wild
+	PwTakeOff:
 	-Mobile:
 	-Targetable:
 	Targetable@AIR:
@@ -435,6 +442,26 @@
 		BuildDurationModifier: 100
 	Valued:
 	PwItem:
+	MapEditorData:
+		Categories: Items
+
+# Meat on the ground (rules/meat.yaml): left by a killed wild creature, rots, picked up by living units.
+^Meat:
+	Interactable:
+	HiddenUnderFog:
+		Type: CenterPosition
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Immobile:
+		OccupiesSpace: false
+	Targetable:
+		TargetTypes: Meat
+	Tooltip:
+		Name: actor-meat.name
+		ShowOwnerRow: false
+	PwMeat:
 	MapEditorData:
 		Categories: Items
 

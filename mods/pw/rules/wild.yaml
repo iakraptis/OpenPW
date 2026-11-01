@@ -10,6 +10,8 @@ wild-tyranosaurus:
 		HP: 3000
 	PwGivesExperience:
 		Experience: 40
+	PwDropsMeat:
+		Amount: 400
 	Mobile:
 		Speed: 172
 	RevealsShroud:
@@ -27,6 +29,8 @@ wild-triceratops:
 		HP: 1000
 	PwGivesExperience:
 		Experience: 20
+	PwDropsMeat:
+		Amount: 300
 	PwArmor:
 		Value: 15
 	Mobile:
@@ -46,6 +50,8 @@ wild-ceratosaurus:
 		HP: 600
 	PwGivesExperience:
 		Experience: 10
+	PwDropsMeat:
+		Amount: 200
 	Mobile:
 		Speed: 130
 	RevealsShroud:
@@ -63,6 +69,8 @@ wild-pachycephalosaurus:
 		HP: 400
 	PwGivesExperience:
 		Experience: 8
+	PwDropsMeat:
+		Amount: 200
 	Mobile:
 		Speed: 148
 	RevealsShroud:
@@ -80,6 +88,8 @@ wild-dilophosaurus:
 		HP: 300
 	PwGivesExperience:
 		Experience: 6
+	PwDropsMeat:
+		Amount: 150
 	Mobile:
 		Speed: 256
 	RevealsShroud:
@@ -97,6 +107,8 @@ wild-velociraptor:
 		HP: 200
 	PwGivesExperience:
 		Experience: 5
+	PwDropsMeat:
+		Amount: 120
 	Mobile:
 		Speed: 320
 	RevealsShroud:
@@ -113,6 +125,8 @@ wild-brachiosaurus:
 		HP: 1500
 	PwGivesExperience:
 		Experience: 30
+	PwDropsMeat:
+		Amount: 500
 	Mobile:
 		Speed: 88
 	RevealsShroud:
@@ -128,6 +142,8 @@ wild-stegosaurus:
 		HP: 800
 	PwGivesExperience:
 		Experience: 10
+	PwDropsMeat:
+		Amount: 200
 	Mobile:
 		Speed: 86
 	RevealsShroud:
@@ -143,6 +159,8 @@ wild-parasaurolophus:
 		HP: 600
 	PwGivesExperience:
 		Experience: 8
+	PwDropsMeat:
+		Amount: 150
 	Mobile:
 		Speed: 130
 	RevealsShroud:
@@ -158,6 +176,8 @@ wild-saltasaurus:
 		HP: 450
 	PwGivesExperience:
 		Experience: 6
+	PwDropsMeat:
+		Amount: 125
 	Mobile:
 		Speed: 92
 	RevealsShroud:
@@ -173,6 +193,8 @@ wild-protoceratops:
 		HP: 180
 	PwGivesExperience:
 		Experience: 4
+	PwDropsMeat:
+		Amount: 70
 	Mobile:
 		Speed: 160
 	RevealsShroud:
@@ -188,6 +210,8 @@ wild-galimimus:
 		HP: 150
 	PwGivesExperience:
 		Experience: 4
+	PwDropsMeat:
+		Amount: 40
 	Mobile:
 		Speed: 192
 	RevealsShroud:
@@ -203,6 +227,8 @@ wild-psittacosaurus:
 		HP: 120
 	PwGivesExperience:
 		Experience: 3
+	PwDropsMeat:
+		Amount: 20
 	Mobile:
 		Speed: 224
 	RevealsShroud:
@@ -218,6 +244,8 @@ wild-pteranodon:
 		HP: 400
 	PwGivesExperience:
 		Experience: 6
+	PwDropsMeat:
+		Amount: 100
 	Aircraft:
 		Speed: 224
 	RevealsShroud:
@@ -235,6 +263,8 @@ wild-rhamphorhynchus:
 		HP: 150
 	PwGivesExperience:
 		Experience: 3
+	PwDropsMeat:
+		Amount: 50
 	Aircraft:
 		Speed: 192
 	RevealsShroud:
@@ -252,6 +282,8 @@ wild-plesiosaurs:
 		HP: 500
 	PwGivesExperience:
 		Experience: 6
+	PwDropsMeat:
+		Amount: 0
 	Mobile:
 		Speed: 128
 	RevealsShroud:
@@ -267,6 +299,8 @@ wild-peleneustes:
 		HP: 200
 	PwGivesExperience:
 		Experience: 3
+	PwDropsMeat:
+		Amount: 0
 	Mobile:
 		Speed: 96
 	RevealsShroud:
@@ -285,6 +319,8 @@ wild-picatyrano:
 		HP: 3000
 	PwGivesExperience:
 		Experience: 40
+	PwDropsMeat:
+		Amount: 600
 	Mobile:
 		Speed: 172
 	RevealsShroud:

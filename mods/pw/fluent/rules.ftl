@@ -84,6 +84,8 @@ actor-primitive-skyincreaser =
 
 
 ## Map objects
+actor-meat =
+    .name = Meat
 actor-berry-bush =
     .name = Berry bush
 

@@ -160,11 +160,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var tooltip = actor.Info.TraitInfos<TooltipInfo>().FirstOrDefault();
 			title.Visible = true;
 			var levels = actor.TraitOrDefault<PwLevels>();
+			var meat = actor.TraitOrDefault<PwMeatEater>();
 			title.GetText = () =>
 			{
 				var name = tooltip != null ? FluentProvider.GetMessage(tooltip.Name) : actor.Info.Name;
-				return levels == null ? name : FluentProvider.GetMessage("label-unit-level",
+				var text = levels == null ? name : FluentProvider.GetMessage("label-unit-level",
 					"name", name, "level", levels.Level, "experience", levels.Experience, "next", levels.ExperiencePerLevel);
+				return meat != null && meat.Meat > 0 ? text + "   " + FluentProvider.GetMessage("label-unit-meat", "meat", meat.Meat) : text;
 			};
 		}
 
