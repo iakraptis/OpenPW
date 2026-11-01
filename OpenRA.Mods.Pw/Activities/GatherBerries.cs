@@ -104,7 +104,7 @@ namespace OpenRA.Mods.Pw.Activities
 				return false;
 
 			StopGathering(self);
-			gatherer.Load(self, bush.Trait<BerryBush>().Take(gatherer.Info.Amount));
+			gatherer.Load(self, bush.Trait<BerryBush>().Take(gatherer.TripAmount(self)));
 			return false;
 		}
 

@@ -60,6 +60,9 @@ namespace OpenRA.Mods.Pw.Traits
 			Info = info;
 		}
 
+		// Berries per trip: Amount plus the gathering upgrade.
+		public int TripAmount(Actor self) => Info.Amount + PwUpgrades.Bonus(self, u => u.Gathering);
+
 		public void Load(Actor self, int berries)
 		{
 			Carried += berries;

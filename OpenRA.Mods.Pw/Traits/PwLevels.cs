@@ -58,7 +58,9 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public int Level { get; private set; }
 		public int Experience { get; private set; }
-		public int ExperiencePerLevel => info.XpPerLevel;
+
+		// Experience per level, less the player's "Reduce Level Up Exp." upgrade.
+		public int ExperiencePerLevel => Math.Max(1, info.XpPerLevel - PwUpgrades.Bonus(self, u => u.LevelCost));
 
 		public PwLevels(Actor self, PwLevelsInfo info)
 		{
@@ -80,9 +82,9 @@ namespace OpenRA.Mods.Pw.Traits
 				return;
 
 			Experience += amount;
-			while (Level < info.MaxLevel && Experience >= info.XpPerLevel)
+			while (Level < info.MaxLevel && Experience >= ExperiencePerLevel)
 			{
-				Experience -= info.XpPerLevel;
+				Experience -= ExperiencePerLevel;
 				Level++;
 			}
 		}

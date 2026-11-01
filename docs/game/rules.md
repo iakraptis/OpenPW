@@ -79,7 +79,7 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
 | 0x84, 0x88 | Number and list of affected unit types |
 | 0xc8 | Levels (1, 3 or 5) |
 | 0xcc + 0x14·s | Bonus per level for stat *s*: HP, mana, attack (0xf4), armour (0x108), 2 unknown, range (0x144), speed (0x158), sight (0x16c), transport (0x180), gathering (0x194), ability (0x1a8), detection (0x1bc), skill (0x1d0) |
-| 0x1e4 | Icon |
+| 0x1e4 | Hotkey (ASCII: `G`athering, `W`eapon, `A`rmour, …). The button icon is the record number: `Upgrade.trt` has one per record (48) |
 | 0x204 | Time per level (ticks) |
 | 0x218 | Cost per level (berries) (C, `0x476e2e`) |
 | 0x22c | Second-resource cost per level |

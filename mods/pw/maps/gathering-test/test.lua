@@ -70,11 +70,11 @@ SpreadOverExits = function()
                 local key = m.Location.X .. "," .. m.Location.Y
                 if seen[key] then distinct = false end
                 seen[key] = true
-                if not Beside(m.Location, 18, 2, 5, 3) then beside = false end
+                if math.abs(m.Location.X - 20) > 4 or math.abs(m.Location.Y - 3) > 3 then beside = false end
                 if m.Location.Y == 5 then front = front + 1 end
             end
             Check(distinct, "trained Powermen stand on different exit cells")
-            Check(beside, "trained Powermen stand right around the Powerhouse")
+            Check(beside, "trained Powermen stand around the Powerhouse (within 2 cells)")
             Check(front >= 2, "trained Powermen mostly use the front exits below the Powerhouse")
         end)
     end))

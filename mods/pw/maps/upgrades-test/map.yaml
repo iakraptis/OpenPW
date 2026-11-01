@@ -1,0 +1,58 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Upgrades
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 34,34
+
+Bounds: 1,1,32,32
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Multi0
+		Location: 28,28
+	BushNear: berry-bush-0
+		Owner: Neutral
+		Location: 12,20
+	BushFar: berry-bush-1
+		Owner: Neutral
+		Location: 24,8
+
+Rules:
+	player:
+		# Scripted actors appear after the first victory check.
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true

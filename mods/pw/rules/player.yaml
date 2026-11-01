@@ -11,6 +11,8 @@ player:
 	FrozenActorLayer:
 	PlayerStatistics:
 	TechTree:
+	# Researched upgrades (rules/<race>/upgrades.yaml), which also count as prerequisites.
+	PwUpgrades:
 	# Berries, the one resource (docs/game/rules.md): every player starts with 400 (P_PLAYE 0x144).
 	PlayerResources:
 		DefaultCash: 400

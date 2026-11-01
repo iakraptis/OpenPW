@@ -218,8 +218,12 @@ primitive-blacksmith:
 		Range: 8c0
 
 primitive-landincreaser:
-	Inherits: ^Building
+	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Production:
+		Produces: primitive-landincreaser
+	PwProductionQueue:
+		Type: primitive-landincreaser
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
@@ -247,8 +251,12 @@ primitive-landincreaser:
 		Range: 8c0
 
 primitive-skyincreaser:
-	Inherits: ^Building
+	Inherits: ^ProductionBuilding
 	Inherits@race: ^Primitive
+	Production:
+		Produces: primitive-skyincreaser
+	PwProductionQueue:
+		Type: primitive-skyincreaser
 	UnderConstruction:
 		Duration: 1440
 	Buildable:

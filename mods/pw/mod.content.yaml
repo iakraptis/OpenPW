@@ -15,6 +15,7 @@ Rules:
 	pw|rules/defaults.yaml
 	pw|rules/primitive/units.yaml
 	pw|rules/primitive/buildings.yaml
+	pw|rules/primitive/upgrades.yaml
 	pw|rules/objects.yaml
 	pw|rules/wild.yaml
 	pw|rules/mpspawn.yaml
@@ -30,6 +31,7 @@ Sequences:
 	pw|sequences/demon.yaml
 	pw|sequences/wild.yaml
 	pw|sequences/objects.yaml
+	pw|sequences/upgrades.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
 

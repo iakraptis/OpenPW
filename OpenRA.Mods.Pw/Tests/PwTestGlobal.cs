@@ -89,6 +89,13 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Give a unit experience, as kills would.")]
 		public void GiveExperience(Actor actor, int amount) => actor.TraitOrDefault<PwLevels>()?.GiveExperience(amount);
 
+		[Desc("Whether the player has researched an upgrade level.")]
+		public bool Researched(Player player, string upgrade) =>
+			player.PlayerActor.TraitOrDefault<PwUpgrades>()?.IsResearched(upgrade) ?? false;
+
+		[Desc("How many items a building's queues hold.")]
+		public int QueueLength(Actor producer) => producer.TraitsImplementing<ProductionQueue>().Sum(q => q.AllQueued().Count());
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 	}

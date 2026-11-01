@@ -75,7 +75,8 @@ namespace OpenRA.Mods.Pw.Traits
 		}
 	}
 
-	[Desc("A building's training queue that won't start a unit past the population limit (PwPopulation).")]
+	[Desc("A building's training queue that won't start a unit past the population limit (PwPopulation), and that ",
+		"researches upgrades (PwUpgrade) without producing an actor.")]
 	public class PwProductionQueueInfo : ProductionQueueInfo
 	{
 		[FluentReference(optional: true)]
@@ -92,13 +93,39 @@ namespace OpenRA.Mods.Pw.Traits
 
 		protected override void BeginProduction(ProductionItem item, bool hasPriority)
 		{
-			if (!PwPopulation.HasRoomFor(Actor.Owner, Actor.World.Map.Rules.Actors[item.Item]))
+			// An upgrade level is researched once: not again, and not in two queues at the same time.
+			var unit = Actor.World.Map.Rules.Actors[item.Item];
+			if (unit.HasTraitInfo<PwUpgradeInfo>())
+			{
+				var upgrades = Actor.Owner.PlayerActor.Trait<PwUpgrades>();
+				var queued = Actor.World.ActorsWithTrait<ProductionQueue>()
+					.Any(q => q.Actor.Owner == Actor.Owner && q.Trait.AllQueued().Any(i => i.Item == item.Item));
+				if (upgrades.IsResearched(item.Item) || queued)
+					return;
+			}
+
+			if (!PwPopulation.HasRoomFor(Actor.Owner, unit))
 			{
 				TextNotificationsManager.AddTransientLine(Actor.Owner, ((PwProductionQueueInfo)Info).PopulationLimitTextNotification);
 				return;
 			}
 
 			base.BeginProduction(item, hasPriority);
+		}
+
+		// A finished upgrade is recorded on the player instead of producing an actor.
+		protected override bool BuildUnit(ActorInfo unit)
+		{
+			if (!unit.HasTraitInfo<PwUpgradeInfo>())
+				return base.BuildUnit(unit);
+
+			var item = Queue.FirstOrDefault(i => i.Done && i.Item == unit.Name);
+			if (item == null)
+				return false;
+
+			Actor.Owner.PlayerActor.Trait<PwUpgrades>().Complete(unit);
+			EndProduction(item);
+			return true;
 		}
 	}
 }

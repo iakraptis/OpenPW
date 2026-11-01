@@ -48,6 +48,8 @@
 	MustBeDestroyed:
 	# Killing it gives experience: its population (wild creatures set their own).
 	PwGivesExperience:
+	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).
+	PwUpgradeBonus:
 	Tooltip:
 	WithInfantryBody:
 		IdleSequences: stand
@@ -226,7 +228,7 @@
 	MapEditorData:
 		Categories: Buildings
 
-# Trains units: its own queue (Type = the building's actor name, which the units' Buildable.Queue names), shown by the
+# Trains units or researches upgrades (the LandIncreaser and SkyIncreaser only research): its own queue (Type = the building's actor name, which the units' Buildable.Queue names), shown by the
 # command panel while it is selected. Nothing is trained while it is still being built. Its exits come from the
 # ^Exits template of its footprint size.
 ^ProductionBuilding:
@@ -345,6 +347,18 @@
 		ExitCell: 5,-1
 	Exit@23:
 		ExitCell: 6,-1
+
+# An upgrade level (rules/<race>/upgrades.yaml, generated): researched by its building like a unit, never placed in the
+# world. Its icon is the "icon" sequence of its image (sequences/upgrades.yaml).
+^Upgrade:
+	AlwaysVisible:
+	Interactable:
+	Buildable:
+		BuildDurationModifier: 100
+	Valued:
+	Tooltip:
+	RenderSprites:
+	PwUpgrade:
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:

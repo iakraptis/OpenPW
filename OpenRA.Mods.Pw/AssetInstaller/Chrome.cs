@@ -25,6 +25,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	{
 		const int CursorSize = 32;
 		const int CursorCount = 100;
+		const int IconSize = 38;
+		static readonly string[] Races = { "primitive", "elf", "tyrano", "demon" };
 
 		// OpenRA cursor name, first original cursor, frame count. The "blocked" cursors keep the normal pointer: the red
 		// no-entry signs (20-32) are not used.
@@ -132,23 +134,33 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// building image has an "icon" sequence pointing at its frame (Units.cs). The archive holds the portraits once
 		// per race, each in its own frame style: blocks of 13 entries for Primitive, Elf, Tyrano, Demon, with the
 		// palette first and the sheet second. Each type takes its own race's version (wild creatures the Primitive one).
+		// The upgrade buttons (Upgrade.trt, 48) and item buttons (Item.trt, 32) are written once per race, in that race's
+		// style: chrome/upgrades-<race>.png and chrome/items-<race>.png (docs/formats/ui.md).
 		static void ExportPortraits(InstallContext c)
 		{
-			const int Size = 38;
-			const int Count = 170;
 			var archive = c.Game.Archive("Jw2_02.trc");
 			var raceBlock = new Dictionary<string, int> { ["primitive"] = 0, ["elf"] = 1, ["tyrano"] = 2, ["demon"] = 3, ["wild"] = 0 };
-
-			var rgba = new byte[4 * Size * Size * Count];
-			for (var type = 0; type < Count; type++)
+			c.WriteFile("chrome/portraits.png", IconSheet(archive, 170, type => 13 * raceBlock[Units.Race(type)], 0));
+			for (var race = 0; race < Races.Length; race++)
 			{
-				var block = 13 * raceBlock[Units.Race(type)];
-				var palette = archive.Read(block);
-				var sheet = archive.Read(block + 1);
-				for (var p = 0; p < Size * Size; p++)
+				var block = 13 * race;
+				c.WriteFile($"chrome/upgrades-{Races[race]}.png", IconSheet(archive, 48, _ => block, 9));
+				c.WriteFile($"chrome/items-{Races[race]}.png", IconSheet(archive, 32, _ => block, 11));
+			}
+		}
+
+		// A row of count 38x38 icons: icon i from the sheet after the palette at blockOf(i) + paletteEntry.
+		static byte[] IconSheet(TrcArchive archive, int count, Func<int, int> blockOf, int paletteEntry)
+		{
+			var rgba = new byte[4 * IconSize * IconSize * count];
+			for (var icon = 0; icon < count; icon++)
+			{
+				var palette = archive.Read(blockOf(icon) + paletteEntry);
+				var sheet = archive.Read(blockOf(icon) + paletteEntry + 1);
+				for (var p = 0; p < IconSize * IconSize; p++)
 				{
-					var index = sheet[type * Size * Size + p];
-					var o = 4 * (p / Size * Size * Count + type * Size + p % Size);
+					var index = sheet[icon * IconSize * IconSize + p];
+					var o = 4 * (p / IconSize * IconSize * count + icon * IconSize + p % IconSize);
 					rgba[o] = palette[4 * index];
 					rgba[o + 1] = palette[4 * index + 1];
 					rgba[o + 2] = palette[4 * index + 2];
@@ -156,8 +168,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 			}
 
-			var meta = new Dictionary<string, string> { ["FrameSize"] = $"{Size},{Size}", ["FrameAmount"] = $"{Count}" };
-			c.WriteFile("chrome/portraits.png", new Png(rgba, SpriteFrameType.Rgba32, Size * Count, Size, null, meta).Save());
+			var meta = new Dictionary<string, string> { ["FrameSize"] = $"{IconSize},{IconSize}", ["FrameAmount"] = $"{count}" };
+			return new Png(rgba, SpriteFrameType.Rgba32, IconSize * count, IconSize, null, meta).Save();
 		}
 	}
 }
