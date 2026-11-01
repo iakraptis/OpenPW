@@ -111,5 +111,6 @@ FluentMessages:
 	pw|fluent/chrome.ftl
 	pw|fluent/rules.ftl
 	pw|fluent/upgrades.ftl
+	pw|fluent/items.ftl
 
 AllowUnusedFluentMessagesInExternalPackages: true

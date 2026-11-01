@@ -11,6 +11,7 @@
 
 using System.Linq;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -76,7 +77,7 @@ namespace OpenRA.Mods.Pw.Traits
 	}
 
 	[Desc("A building's training queue that won't start a unit past the population limit (PwPopulation), and that ",
-		"researches upgrades (PwUpgrade) without producing an actor.")]
+		"researches upgrades (PwUpgrade) and lays items (PwItem) beside the building.")]
 	public class PwProductionQueueInfo : ProductionQueueInfo
 	{
 		[FluentReference(optional: true)]
@@ -113,18 +114,31 @@ namespace OpenRA.Mods.Pw.Traits
 			base.BeginProduction(item, hasPriority);
 		}
 
-		// A finished upgrade is recorded on the player instead of producing an actor.
+		// A finished upgrade is recorded on the player, and a finished item laid beside the building (even on an occupied
+		// cell), instead of producing an actor through an exit.
 		protected override bool BuildUnit(ActorInfo unit)
 		{
-			if (!unit.HasTraitInfo<PwUpgradeInfo>())
+			var isUpgrade = unit.HasTraitInfo<PwUpgradeInfo>();
+			if (!isUpgrade && !unit.HasTraitInfo<PwItemInfo>())
 				return base.BuildUnit(unit);
 
-			var item = Queue.FirstOrDefault(i => i.Done && i.Item == unit.Name);
-			if (item == null)
+			var done = Queue.FirstOrDefault(i => i.Done && i.Item == unit.Name);
+			if (done == null || !Actor.IsInWorld || Actor.IsDead)
 				return false;
 
-			Actor.Owner.PlayerActor.Trait<PwUpgrades>().Complete(unit);
-			EndProduction(item);
+			if (isUpgrade)
+				Actor.Owner.PlayerActor.Trait<PwUpgrades>().Complete(unit);
+			else
+			{
+				var cell = PwItemPlacement.Cell(Actor);
+				Actor.World.AddFrameEndTask(w => w.CreateActor(unit.Name, new TypeDictionary
+				{
+					new OwnerInit(Actor.Owner),
+					new LocationInit(cell),
+				}));
+			}
+
+			EndProduction(done);
 			return true;
 		}
 	}

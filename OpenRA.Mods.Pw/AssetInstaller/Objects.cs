@@ -27,10 +27,13 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// The original draws an object from its cell's top-left corner; OpenRA from the actor's centre.
 		const string DoodadOffset = "-16, -16";
 		const string BushOffset = "-32, -16";
+		const int ItemCount = 32;
 
 		public static string DoodadActor(string tileset, int doodad, int variant) { return $"doodad-{tileset}-{doodad:D2}-{variant}"; }
 
 		public static string BushActor(int variant) { return $"berry-bush-{variant}"; }
+
+		public static string ItemImage(int item) { return $"item-{item:D2}"; }
 
 		public static void Export(InstallContext c)
 		{
@@ -82,6 +85,22 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				sequences.Append("\tidle:\n\t\tStart: 0\n\t\tLength: 4\n\n");
 				rules.Append($"{image}:\n\tInherits: ^BerryBush\n\tRenderSprites:\n\t\tImage: {image}\n\n");
 			}
+
+			// Items on the ground (Blacksmith items before a unit picks them up): JW2_07 I<nn>.spz, one per Item.itm record,
+			// with palette Item.pnt. Image item-<nn>, whose icon is its button (Item.trt has one per record; the chrome stage
+			// writes the sheets). The item actors are in rules/<race>/items.yaml.
+			var itemPalette = Units.ConvertPalette(effects.Read("Item.pnt"), false);
+			var items = new List<(ChrFile.Frame, bool)>();
+			for (var i = 0; i < ItemCount; i++)
+			{
+				var at = 0;
+				items.Add((ChrFile.ReadFrame(effects.Read($"I{i:D2}.spz"), ref at), false));
+			}
+
+			c.WriteFile("objects/items.png", Units.Sheet(items, itemPalette));
+			for (var i = 0; i < ItemCount; i++)
+				sequences.Append($"{ItemImage(i)}:\n\tidle:\n\t\tFilename: objects/items.png\n\t\tStart: {i}\n" +
+					$"\ticon:\n\t\tFilename: chrome/items-primitive.png\n\t\tStart: {i}\n\n");
 
 			c.RepoYaml("sequences/objects.yaml", sequences.ToString());
 			c.RepoYaml("rules/objects.yaml", rules.ToString());

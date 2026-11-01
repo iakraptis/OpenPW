@@ -539,3 +539,259 @@ berry-bush-3:
 		Start: 0
 		Length: 4
 
+item-00:
+	idle:
+		Filename: objects/items.png
+		Start: 0
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 0
+
+item-01:
+	idle:
+		Filename: objects/items.png
+		Start: 1
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 1
+
+item-02:
+	idle:
+		Filename: objects/items.png
+		Start: 2
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 2
+
+item-03:
+	idle:
+		Filename: objects/items.png
+		Start: 3
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 3
+
+item-04:
+	idle:
+		Filename: objects/items.png
+		Start: 4
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 4
+
+item-05:
+	idle:
+		Filename: objects/items.png
+		Start: 5
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 5
+
+item-06:
+	idle:
+		Filename: objects/items.png
+		Start: 6
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 6
+
+item-07:
+	idle:
+		Filename: objects/items.png
+		Start: 7
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 7
+
+item-08:
+	idle:
+		Filename: objects/items.png
+		Start: 8
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 8
+
+item-09:
+	idle:
+		Filename: objects/items.png
+		Start: 9
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 9
+
+item-10:
+	idle:
+		Filename: objects/items.png
+		Start: 10
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 10
+
+item-11:
+	idle:
+		Filename: objects/items.png
+		Start: 11
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 11
+
+item-12:
+	idle:
+		Filename: objects/items.png
+		Start: 12
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 12
+
+item-13:
+	idle:
+		Filename: objects/items.png
+		Start: 13
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 13
+
+item-14:
+	idle:
+		Filename: objects/items.png
+		Start: 14
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 14
+
+item-15:
+	idle:
+		Filename: objects/items.png
+		Start: 15
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 15
+
+item-16:
+	idle:
+		Filename: objects/items.png
+		Start: 16
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 16
+
+item-17:
+	idle:
+		Filename: objects/items.png
+		Start: 17
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 17
+
+item-18:
+	idle:
+		Filename: objects/items.png
+		Start: 18
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 18
+
+item-19:
+	idle:
+		Filename: objects/items.png
+		Start: 19
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 19
+
+item-20:
+	idle:
+		Filename: objects/items.png
+		Start: 20
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 20
+
+item-21:
+	idle:
+		Filename: objects/items.png
+		Start: 21
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 21
+
+item-22:
+	idle:
+		Filename: objects/items.png
+		Start: 22
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 22
+
+item-23:
+	idle:
+		Filename: objects/items.png
+		Start: 23
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 23
+
+item-24:
+	idle:
+		Filename: objects/items.png
+		Start: 24
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 24
+
+item-25:
+	idle:
+		Filename: objects/items.png
+		Start: 25
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 25
+
+item-26:
+	idle:
+		Filename: objects/items.png
+		Start: 26
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 26
+
+item-27:
+	idle:
+		Filename: objects/items.png
+		Start: 27
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 27
+
+item-28:
+	idle:
+		Filename: objects/items.png
+		Start: 28
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 28
+
+item-29:
+	idle:
+		Filename: objects/items.png
+		Start: 29
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 29
+
+item-30:
+	idle:
+		Filename: objects/items.png
+		Start: 30
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 30
+
+item-31:
+	idle:
+		Filename: objects/items.png
+		Start: 31
+	icon:
+		Filename: chrome/items-primitive.png
+		Start: 31
+

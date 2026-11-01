@@ -50,6 +50,8 @@
 	PwGivesExperience:
 	# Researched upgrades' attack, armour and speed (PwUpgrades on the player).
 	PwUpgradeBonus:
+	# Picks up Blacksmith items of its own type (PwItem.Equips) and becomes the item's type.
+	PwItemUser:
 	Tooltip:
 	WithInfantryBody:
 		IdleSequences: stand
@@ -359,6 +361,28 @@
 	Tooltip:
 	RenderSprites:
 	PwUpgrade:
+
+# An item on the ground (rules/<race>/items.yaml, generated): made by a building and laid beside it, even on an occupied
+# cell (it takes up no space); picked up by its owner's unit of the Equips type. Its icon is its button.
+^Item:
+	Interactable:
+	HiddenUnderFog:
+		Type: CenterPosition
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Immobile:
+		OccupiesSpace: false
+	Targetable:
+		TargetTypes: Item
+	Tooltip:
+	Buildable:
+		BuildDurationModifier: 100
+	Valued:
+	PwItem:
+	MapEditorData:
+		Categories: Items
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:

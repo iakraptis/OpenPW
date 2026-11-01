@@ -12,6 +12,7 @@
 using System;
 using System.Linq;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -47,10 +48,10 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Per level 0-9: attack range bonus in pixels (Level.lvt row 1).")]
 		public readonly int[] RangeBonus = Array.Empty<int>();
 
-		public override object Create(ActorInitializer init) { return new PwLevels(init.Self, this); }
+		public override object Create(ActorInitializer init) { return new PwLevels(init, this); }
 	}
 
-	public class PwLevels : IPwStatBonus, IReloadModifier, IRangeModifier
+	public class PwLevels : IPwStatBonus, IReloadModifier, IRangeModifier, ITransformActorInitModifier
 	{
 		readonly PwLevelsInfo info;
 		readonly Actor self;
@@ -62,10 +63,20 @@ namespace OpenRA.Mods.Pw.Traits
 		// Experience per level, less the player's "Reduce Level Up Exp." upgrade.
 		public int ExperiencePerLevel => Math.Max(1, info.XpPerLevel - PwUpgrades.Bonus(self, u => u.LevelCost));
 
-		public PwLevels(Actor self, PwLevelsInfo info)
+		public PwLevels(ActorInitializer init, PwLevelsInfo info)
 		{
-			this.self = self;
+			self = init.Self;
 			this.info = info;
+
+			// Carried over when the unit becomes another type (an item picked up).
+			Level = init.GetValue<PwLevelInit, int>(0);
+			Experience = init.GetValue<PwExperienceInit, int>(0);
+		}
+
+		void ITransformActorInitModifier.ModifyTransformActorInit(Actor self, TypeDictionary init)
+		{
+			init.Add(new PwLevelInit(Level));
+			init.Add(new PwExperienceInit(Experience));
 		}
 
 		// Cumulative even shares: gain(L) = ⌊d·(L+1)/9⌋ − ⌊d·L/9⌋ per level, so ⌊d·L/9⌋ in all.
@@ -112,6 +123,18 @@ namespace OpenRA.Mods.Pw.Traits
 
 			return (range + bonus * 32) * 100 / range;
 		}
+	}
+
+	public class PwLevelInit : ValueActorInit<int>, ISingleInstanceInit
+	{
+		public PwLevelInit(int value)
+			: base(value) { }
+	}
+
+	public class PwExperienceInit : ValueActorInit<int>, ISingleInstanceInit
+	{
+		public PwExperienceInit(int value)
+			: base(value) { }
 	}
 
 	[Desc("A kill of this actor gives its killer experience (Pw.exe FUN_00458adc): its population (.chr 0x184), unless ",

@@ -89,8 +89,13 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
 ## Items (`Item.itm`)
 
 32 records of 0x174 bytes: name, cost (0x40), time (0x48), the unit type that can equip it (0x50), the type it
-becomes (0x90), attack bonus (0xd4) and armour bonus (0xd8), icon (0xf4). The Blacksmith sells the four Primitive
-items (`.chr` 0x30f count, 0x310 bytes). Equipping is permanent: the unit becomes the equipped type. The other
+becomes (0x90), attack bonus (0xd4) and armour bonus (0xd8), hotkey (0xf4, ASCII; the button icon is the record
+number in `Item.trt`). On the ground an item is `JW2_07` `I<nn>.spz` (palette `Item.pnt`). The Blacksmith sells the four Primitive
+items (`.chr` 0x30f count, 0x310 bytes). Equipping is permanent: the unit becomes the equipped type.
+
+In play (from the original game): the Blacksmith makes the item, which appears on the ground beside it, even when
+every cell there is taken. The player selects a unit of the item's type and clicks the item; the unit walks over,
+picks it up and becomes the equipped type, keeping its level and experience. The other
 items (Medical Herb, the Dragon's Pearl, …) have no target type and belong to the campaign.
 
 ## Tech tree (`.chr`)
