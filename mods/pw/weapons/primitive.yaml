@@ -29,7 +29,9 @@ ThrowBomb:
 		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 45
-		Spread: 1c512
+		# Splash: full damage within the original radius (1c512).
+		Range: 0, 1c512, 1600
+		Falloff: 100, 100, 0
 	Report: weapon-throw-bomb-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -59,7 +61,9 @@ FireArrow:
 	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
-		Spread: 1c256
+		# Splash: full damage within the original radius (1c256).
+		Range: 0, 1c256, 1344
+		Falloff: 100, 100, 0
 	Report: weapon-fire-arrow-0.wav
 	Projectile: Bullet
 		Image: weapon-fire-arrow
@@ -117,7 +121,9 @@ BowMachineArrow:
 		LaunchAngle: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
-		Spread: 1c0
+		# Splash: full damage within the original radius (1c0).
+		Range: 0, 1c0, 1088
+		Falloff: 100, 100, 0
 	Report: weapon-bow-machine-arrows-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -178,10 +184,7 @@ SquadronShot:
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-squadron-shoot-0.wav
-	Warhead@2Eff: CreateEffect
-		ValidTargets: Ground, Air
-		Image: weapon-squadron-shoot
-		Explosions: impact
+	# No impact effect: only the two spears are seen.
 
 # Flattop: fire at ground or air, splashing 48 px (16 px per tick).
 PhantomFire:
@@ -194,7 +197,9 @@ PhantomFire:
 		Speed: 512
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 75
-		Spread: 1c512
+		# Splash: full damage within the original radius (1c512).
+		Range: 0, 1c512, 1600
+		Falloff: 100, 100, 0
 	Report: weapon-phantom-fire-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air

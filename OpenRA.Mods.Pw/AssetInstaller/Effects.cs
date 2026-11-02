@@ -30,9 +30,27 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// Impacts are drawn at half the original art's size.
 		const string ImpactScale = "0.5";
 
+		// The blending of glowing art (GlowingFlights, impacts not in SolidImpacts).
+		const string Glow = "\t\tBlendMode: Screen\n";
+
 		// Smoke art: its palette holds only reds, which are the smoke's density, not colours (the Giant's bomb). It is
 		// drawn as black of that opacity, so it darkens the ground beneath (dark green smoke on grass, as in the game).
 		static readonly HashSet<string> Smoke = new() { "weapon-throw-bomb" };
+
+		// Glowing art (fire, sparks, magic) is painted on black, which the game shows as light added to what lies beneath:
+		// drawn with Screen blending, its black adds nothing (drawn opaque it showed black halos and outlines). Every
+		// impact glows except these solid ones (debris, spikes, egg shell, bubble; the smoke darkens instead).
+		static readonly HashSet<string> SolidImpacts = new()
+		{
+			"weapon-throw-bomb", "weapon-stone", "weapon-trap", "weapon-egg-throw", "weapon-bubble"
+		};
+
+		// Projectiles are solid (arrows, spears, stones) except these fireballs and magic shots.
+		static readonly HashSet<string> GlowingFlights = new()
+		{
+			"weapon-shoot-sword-sprit", "weapon-phantom-fire", "weapon-wizard-firebolt", "weapon-redbolt", "weapon-whitebolt",
+			"weapon-angelring", "weapon-kingdemon-fire", "weapon-noise-wave"
+		};
 
 		static Color[] SmokePalette(Color[] palette) =>
 			palette.Select(c => c.A == 0 ? c : Color.FromArgb(c.R * c.A / 255, 0, 0, 0)).ToArray();
@@ -70,10 +88,13 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					}
 					else
 						sequences.Append($"\tflight:\n\t\tLength: {flight}\n\t\tTick: {FrameTicks(data, 0x218)}\n");
+
+					if (GlowingFlights.Contains(image))
+						sequences.Append(Glow);
 				}
 
 				// The impact at its own pace: 0x21c ticks per frame (the Giant's bomb 6).
-				var impactLook = $"\t\tScale: {ImpactScale}\n\t\tTick: {FrameTicks(data, 0x21c)}\n";
+				var impactLook = $"\t\tScale: {ImpactScale}\n\t\tTick: {FrameTicks(data, 0x21c)}\n" + (SolidImpacts.Contains(image) ? "" : Glow);
 
 				if (impact > 0)
 					sequences.Append($"\timpact:\n\t\tStart: {flight}\n\t\tLength: {impact}\n{impactLook}");
