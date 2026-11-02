@@ -129,6 +129,12 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public const string OrderID = "PwPickUpMeat";
 
+		// Share meat (the command panel's button): sent to one member, the others in ExtraActors.
+		public const string ShareOrderID = "PwShareMeat";
+
+		// Ticks the members have to meet before the meat is shared among those who made it.
+		const int ShareTimeout = 400;
+
 		readonly PwMeatEaterInfo info;
 		readonly IHealth health;
 		int searchTicks;
@@ -142,6 +148,12 @@ namespace OpenRA.Mods.Pw.Traits
 		}
 
 		public void Store(int amount) => Meat += Math.Max(0, amount);
+
+		public void SetMeat(int amount) => Meat = Math.Max(0, amount);
+
+		// The order that makes the units meet and split their meat evenly.
+		public static Order Share(Actor[] units) =>
+			new(ShareOrderID, units[0], false) { ExtraActors = units.Skip(1).ToArray() };
 
 		public static bool IsMeat(Actor a) => a != null && !a.IsDead && a.IsInWorld && a.TraitOrDefault<PwMeat>() is PwMeat m && !m.Taken;
 
@@ -181,11 +193,29 @@ namespace OpenRA.Mods.Pw.Traits
 
 		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order)
 		{
-			return order.OrderString == OrderID ? info.Voice : null;
+			return order.OrderString == OrderID || order.OrderString == ShareOrderID ? info.Voice : null;
 		}
 
 		void IResolveOrder.ResolveOrder(Actor self, Order order)
 		{
+			if (order.OrderString == ShareOrderID)
+			{
+				// The living meat eaters of the owner, meeting at the one nearest their middle.
+				var members = new[] { self }.Concat(order.ExtraActors ?? Array.Empty<Actor>())
+					.Where(a => !a.IsDead && a.IsInWorld && a.Owner == self.Owner && a.TraitOrDefault<PwMeatEater>() != null && a.TraitOrDefault<IMove>() != null)
+					.Distinct().ToList();
+				if (members.Count < 2)
+					return;
+
+				var middle = new WPos(members.Sum(m => m.CenterPosition.X) / members.Count, members.Sum(m => m.CenterPosition.Y) / members.Count, 0);
+				var meeting = members.MinBy(m => (m.CenterPosition - middle).HorizontalLengthSquared).Location;
+				var group = new MeatShareGroup(members, meeting, self.World.WorldTick + ShareTimeout);
+				foreach (var m in members)
+					m.QueueActivity(false, new ShareMeat(m, group));
+
+				return;
+			}
+
 			if (order.OrderString == OrderID && order.Target.Type == TargetType.Actor && IsMeat(order.Target.Actor))
 				self.QueueActivity(order.Queued, new PickUpMeat(self, order.Target.Actor));
 		}
