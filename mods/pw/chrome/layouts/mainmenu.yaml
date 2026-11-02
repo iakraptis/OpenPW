@@ -1,0 +1,253 @@
+# The original main menu (Main.mnt), from common|chrome/mainmenu.yaml (release-20250330): MainMenuLogic runs the
+# menus as in the stock one; PwMainMenuLogic scales the original 800x600 screen to fit the window (centred, black
+# around it) and places every widget below on its original spot (the "area-*" regions of chrome/main-menu.yaml):
+# the five picture buttons along the bottom, the submenus in the panel in the middle, the version at the bottom right.
+# No player profile (OpenRA forum accounts), news or update notice.
+Container@MAINMENU:
+	Logic: MainMenuLogic, PwMainMenuLogic
+	Children:
+		LogicKeyListener@GLOBAL_KEYHANDLER:
+			Logic: MusicHotkeyLogic, ScreenshotHotkeyLogic, MuteHotkeyLogic
+				StopMusicKey: StopMusic
+				PauseMusicKey: PauseMusic
+				PrevMusicKey: PrevMusic
+				NextMusicKey: NextMusic
+				TakeScreenshotKey: TakeScreenshot
+				MuteAudioKey: ToggleMute
+		# Covers the shellmap around the screen when the window isn't 4:3.
+		ColorBlock@SURROUND:
+			Width: WINDOW_WIDTH
+			Height: WINDOW_HEIGHT
+			Color: 000000
+		StretchedImage@BACKGROUND:
+			ImageCollection: main-menu
+			ImageName: background
+		Label@VERSION_LABEL:
+			Logic: VersionLabelLogic
+			Align: Right
+			Font: Small
+			Contrast: true
+		# The picture buttons; each draws its state from the original art (ART). Only on the main screen, as the
+		# original's: the submenus have Back.
+		Container@MAIN_MENU:
+			Width: WINDOW_WIDTH
+			Height: WINDOW_HEIGHT
+			Children:
+				Button@SINGLEPLAYER_BUTTON:
+					IgnoreChildMouseOver: true
+					Background:
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipText: label-singleplayer-title
+					Children:
+						StretchedImage@ART:
+							ImageCollection: main-menu
+				Button@MULTIPLAYER_BUTTON:
+					IgnoreChildMouseOver: true
+					Background:
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipText: label-multiplayer-title
+					Children:
+						StretchedImage@ART:
+							ImageCollection: main-menu
+				Button@INTRO_BUTTON:
+					IgnoreChildMouseOver: true
+					Background:
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipText: button-main-menu-intro
+					Children:
+						StretchedImage@ART:
+							ImageCollection: main-menu
+				Button@MAIN_CREDITS_BUTTON:
+					IgnoreChildMouseOver: true
+					Background:
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipText: label-credits-title
+					Children:
+						StretchedImage@ART:
+							ImageCollection: main-menu
+				Button@QUIT_BUTTON:
+					IgnoreChildMouseOver: true
+					Background:
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipText: button-quit
+					Children:
+						StretchedImage@ART:
+							ImageCollection: main-menu
+				# Not in the original: the settings and the extras (replays, music, map editor, ...), at the bottom
+				# right of the panel.
+				Container@PANEL_BUTTONS:
+					Width: 270
+					Height: 46
+					Children:
+						Button@SETTINGS_BUTTON:
+							X: PARENT_WIDTH - 260
+							Y: PARENT_HEIGHT - 36
+							Width: 120
+							Height: 26
+							Text: button-settings-title
+							Font: Bold
+						Button@EXTRAS_BUTTON:
+							X: PARENT_WIDTH - 130
+							Y: PARENT_HEIGHT - 36
+							Width: 120
+							Height: 26
+							Text: button-extras-title
+							Font: Bold
+		# The submenus, in the panel: a title and two columns of buttons, Back at the bottom.
+		# Fixed size (its children are placed from it when the layout loads); PwMainMenuLogic centres it in the panel.
+		Container@MENUS:
+			Width: 320
+			Height: 240
+			Children:
+				Container@SINGLEPLAYER_MENU:
+					Width: PARENT_WIDTH
+					Height: PARENT_HEIGHT
+					Children:
+						Label@SINGLEPLAYER_MENU_TITLE:
+							Y: PARENT_HEIGHT / 2 - 100
+							Width: PARENT_WIDTH
+							Height: 30
+							Text: label-singleplayer-title
+							Align: Center
+							Font: MediumBold
+							Contrast: true
+						Button@SKIRMISH_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-singleplayer-menu-skirmish
+							Font: Bold
+						Button@MISSIONS_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: label-missions-title
+							Font: Bold
+						Button@LOAD_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 15
+							Width: 140
+							Height: 30
+							Text: button-singleplayer-menu-load
+							Font: Bold
+						Button@BACK_BUTTON:
+							X: PARENT_WIDTH / 2 - WIDTH / 2
+							Y: PARENT_HEIGHT / 2 + 55
+							Width: 140
+							Height: 30
+							Key: escape
+							Text: button-back
+							Font: Bold
+				Container@EXTRAS_MENU:
+					Width: PARENT_WIDTH
+					Height: PARENT_HEIGHT
+					Children:
+						Label@EXTRAS_MENU_TITLE:
+							Y: PARENT_HEIGHT / 2 - 100
+							Width: PARENT_WIDTH
+							Height: 30
+							Text: button-extras-title
+							Align: Center
+							Font: MediumBold
+							Contrast: true
+						Button@REPLAYS_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-extras-menu-replays
+							Font: Bold
+						Button@MUSIC_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: label-music-title
+							Font: Bold
+						Button@MAP_EDITOR_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 15
+							Width: 140
+							Height: 30
+							Text: label-map-editor-title
+							Font: Bold
+						Button@ASSETBROWSER_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 15
+							Width: 140
+							Height: 30
+							Text: button-extras-menu-assetbrowser
+							Font: Bold
+						Button@CREDITS_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 + 25
+							Width: 140
+							Height: 30
+							Text: label-credits-title
+							Font: Bold
+						Button@BACK_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 + 25
+							Width: 140
+							Height: 30
+							Key: escape
+							Text: button-back
+							Font: Bold
+				Container@MAP_EDITOR_MENU:
+					Width: PARENT_WIDTH
+					Height: PARENT_HEIGHT
+					Children:
+						Label@MAP_EDITOR_MENU_TITLE:
+							Y: PARENT_HEIGHT / 2 - 100
+							Width: PARENT_WIDTH
+							Height: 30
+							Text: label-map-editor-title
+							Align: Center
+							Font: MediumBold
+							Contrast: true
+						Button@NEW_MAP_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-map-editor-new-map
+							Font: Bold
+						Button@LOAD_MAP_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-map-editor-load-map
+							Font: Bold
+						Button@BACK_BUTTON:
+							X: PARENT_WIDTH / 2 - WIDTH / 2
+							Y: PARENT_HEIGHT / 2 + 55
+							Width: 140
+							Height: 30
+							Key: escape
+							Text: button-back
+							Font: Bold
+		Container@PERFORMANCE_INFO:
+			Logic: PerfDebugLogic
+			Children:
+				Label@PERF_TEXT:
+					X: 30
+					Y: WINDOW_HEIGHT - 70
+					Width: 170
+					Height: 40
+					Contrast: true
+				Background@GRAPH_BG:
+					ClickThrough: true
+					Background: dialog4
+					X: WINDOW_WIDTH - 240
+					Y: WINDOW_HEIGHT - 240
+					Width: 210
+					Height: 210
+					Children:
+						PerfGraph@GRAPH:
+							X: 5
+							Y: 5
+							Width: 200
+							Height: 200

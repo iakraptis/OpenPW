@@ -1,5 +1,6 @@
 Chrome:
 	pw|chrome/chrome.yaml
+	pw|chrome/main-menu.yaml
 
 ChromeLayout:
 	common|chrome/assetbrowser.yaml
@@ -35,7 +36,7 @@ ChromeLayout:
 	common|chrome/lobby-options.yaml
 	common|chrome/lobby-players.yaml
 	common|chrome/lobby-servers.yaml
-	common|chrome/mainmenu.yaml
+	pw|chrome/layouts/mainmenu.yaml
 	common|chrome/mainmenu-prompts.yaml
 	common|chrome/map-chooser.yaml
 	common|chrome/missionbrowser.yaml

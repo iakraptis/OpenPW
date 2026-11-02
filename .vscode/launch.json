@@ -11,6 +11,7 @@
 				"Engine.EngineDir=${workspaceRoot}/engine",
 				"Engine.ModSearchPaths=${workspaceRoot}/mods, ${workspaceRoot}/engine/mods",
 				"Debug.DisplayDeveloperSettings=true",
+				"Graphics.GLProfile=Modern",
 			],
 			"preLaunchTask": "build",
 		},

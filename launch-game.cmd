@@ -16,7 +16,9 @@ if not exist %ENGINE_DIRECTORY%\bin\OpenRA.exe goto noengine
 >nul find %ENGINE_VERSION% %ENGINE_DIRECTORY%\VERSION || goto noengine
 cd %ENGINE_DIRECTORY%
 
-bin\OpenRA.exe Game.Mod=%MOD_ID% Engine.EngineDir=".." Engine.LaunchPath="%TEMPLATE_LAUNCHER%" Engine.ModSearchPaths="%MOD_SEARCH_PATHS%" Graphics.Mode=PseudoFullscreen Graphics.FullscreenSize=0,0 "%*"
+REM Desktop OpenGL first (the engine falls back to ANGLE where it's missing): on Windows the engine would pick ANGLE,
+REM whose texture readback can crash the game ("No Texture is bound", then "Framebuffer is incomplete").
+bin\OpenRA.exe Game.Mod=%MOD_ID% Engine.EngineDir=".." Engine.LaunchPath="%TEMPLATE_LAUNCHER%" Engine.ModSearchPaths="%MOD_SEARCH_PATHS%" Graphics.Mode=PseudoFullscreen Graphics.FullscreenSize=0,0 Graphics.GLProfile=Modern "%*"
 set ERROR=%errorlevel%
 cd %TEMPLATE_DIR%
 
