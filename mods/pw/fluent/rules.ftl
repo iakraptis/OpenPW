@@ -14,6 +14,13 @@ faction-tyrano =
     .description = Tyrano tribe
      Dinosaur riders and beasts that grow stronger by merging.
 
+## ai.yaml
+bot-normal =
+    .name = Normal AI
+
+bot-hard =
+    .name = Hard AI
+
 ## Primitive (names as in the original data)
 actor-primitive-buildman =
     .name = BuildMan

@@ -24,6 +24,7 @@ Rules:
 	pw|rules/mpspawn.yaml
 	pw|rules/palettes.yaml
 	pw|rules/player.yaml
+	pw|rules/ai.yaml
 	pw|rules/world.yaml
 
 Sequences:

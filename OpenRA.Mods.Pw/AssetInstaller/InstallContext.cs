@@ -48,7 +48,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			Written.Add(relative);
 		}
 
-		string OutputPath(string relative)
+		public string OutputPath(string relative)
 		{
 			var path = Path.Combine(Output, relative.Replace('/', Path.DirectorySeparatorChar));
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
