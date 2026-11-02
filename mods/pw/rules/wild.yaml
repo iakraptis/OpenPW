@@ -250,10 +250,6 @@ wild-pteranodon:
 		Speed: 224
 	RevealsShroud:
 		Range: 10c0
-	WithInfantryBody:
-		IdleSequences: walk
-		StandSequences: walk
-		DefaultAttackSequence: walk
 
 wild-rhamphorhynchus:
 	Inherits: ^WildFlyer
@@ -269,10 +265,6 @@ wild-rhamphorhynchus:
 		Speed: 192
 	RevealsShroud:
 		Range: 10c0
-	WithInfantryBody:
-		IdleSequences: walk
-		StandSequences: walk
-		DefaultAttackSequence: walk
 
 wild-plesiosaurs:
 	Inherits: ^WildSwimmer

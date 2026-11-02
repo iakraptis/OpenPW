@@ -9,6 +9,8 @@ player:
 	Inherits: ^baseplayer
 	DeveloperMode:
 	FrozenActorLayer:
+	# The minimap's terrain as the player has explored it: without it the radar painted no terrain at all (black).
+	PlayerRadarTerrain:
 	PlayerStatistics:
 	TechTree:
 	# Conditions on prerequisites and researched upgrades (the StoneTower's detection).

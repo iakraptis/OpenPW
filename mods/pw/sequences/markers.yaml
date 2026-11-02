@@ -1,0 +1,9 @@
+# The rally point marker (RallyPoint): the original's ring with the arrow pointing down (the cursor art,
+# cursors/cursors.png frames 92-99, also the enter cursor), at half size.
+rallypoint:
+	flag:
+		Filename: cursors/cursors.png
+		Start: 92
+		Length: 8
+		Tick: 100
+		Scale: 0.5
