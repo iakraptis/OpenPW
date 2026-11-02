@@ -391,20 +391,16 @@ editor:
 		history: 136, 51, 16, 16
 		erase: 50, 187, 16, 16
 
-# The Primitive interface bar (chrome/bar-primitive.png, written by the installer from JW2_02 Intfbg.spr), drawn by
-# InterfaceBarWidget: the pieces (the middle is kept whole, one beam section of each lower panel repeats to fill the
-# width), and areas that are not drawn but place the other widgets (minimap hole, panels, buttons). Coordinates in
-# the original 800 x 161 bar.
-bar-primitive:
-	Image: chrome/bar-primitive.png
+# The races' interface bars (chrome/bar-<race>.png, written by the installer from JW2_02 Intfbg.spr), drawn by
+# InterfaceBarWidget: the pieces (the middle is kept whole, one section of each lower panel repeats to fill the
+# width), and areas that are not drawn but place the other widgets (minimap hole, panels, buttons) or say where the
+# bar is solid (solid-sides, solid-middle: from their top edge down, the bar takes the clicks). Coordinates in the
+# original 800 x 161 bar. The original lays out every race's interface the same way (each bar's art is drawn
+# around the same hole, panels and buttons), so only the pieces and the solid edges differ; the repeated sections
+# are the ones whose ends join seamlessly.
+^bar:
 	Regions:
-		left-fixed: 0, 0, 77, 161
-		left-tile: 77, 0, 74, 161
-		left-join: 151, 0, 62, 161
 		center: 213, 0, 352, 161
-		right-join: 565, 0, 69, 161
-		right-tile: 634, 0, 75, 161
-		right-fixed: 709, 0, 91, 161
 		hole: 327, 25, 118, 127
 		left-panel: 16, 70, 294, 80
 		right-panel: 462, 70, 322, 80
@@ -412,7 +408,59 @@ bar-primitive:
 		allies: 465, 17, 37, 32
 		msg: 504, 17, 41, 32
 
-# The bar's buttons (chrome/bar-primitive-buttons.png: JW2_02 Menu, Allies, Msg; released and pressed).
+bar-primitive:
+	Inherits: ^bar
+	Image: chrome/bar-primitive.png
+	Regions:
+		left-fixed: 0, 0, 77, 161
+		left-tile: 77, 0, 74, 161
+		left-join: 151, 0, 62, 161
+		right-join: 565, 0, 69, 161
+		right-tile: 634, 0, 75, 161
+		right-fixed: 709, 0, 91, 161
+		solid-sides: 0, 56, 800, 105
+		solid-middle: 213, 12, 352, 149
+
+bar-tyrano:
+	Inherits: ^bar
+	Image: chrome/bar-tyrano.png
+	Regions:
+		left-fixed: 0, 0, 37, 161
+		left-tile: 37, 0, 108, 161
+		left-join: 145, 0, 68, 161
+		right-join: 565, 0, 1, 161
+		right-tile: 566, 0, 58, 161
+		right-fixed: 624, 0, 176, 161
+		solid-sides: 0, 68, 800, 93
+		solid-middle: 213, 36, 352, 125
+
+bar-elf:
+	Inherits: ^bar
+	Image: chrome/bar-elf.png
+	Regions:
+		left-fixed: 0, 0, 81, 161
+		left-tile: 81, 0, 80, 161
+		left-join: 161, 0, 52, 161
+		right-join: 565, 0, 6, 161
+		right-tile: 571, 0, 106, 161
+		right-fixed: 677, 0, 123, 161
+		solid-sides: 0, 56, 800, 105
+		solid-middle: 213, 20, 352, 141
+
+bar-demon:
+	Inherits: ^bar
+	Image: chrome/bar-demon.png
+	Regions:
+		left-fixed: 0, 0, 46, 161
+		left-tile: 46, 0, 59, 161
+		left-join: 105, 0, 108, 161
+		right-join: 565, 0, 60, 161
+		right-tile: 625, 0, 59, 161
+		right-fixed: 684, 0, 116, 161
+		solid-sides: 0, 30, 800, 131
+		solid-middle: 213, 7, 352, 154
+
+# The bars' buttons (chrome/bar-<race>-buttons.png: JW2_02 Menu, Allies, Msg; released and pressed).
 bar-primitive-buttons:
 	Image: chrome/bar-primitive-buttons.png
 	Regions:
@@ -422,6 +470,36 @@ bar-primitive-buttons:
 		allies-pressed: 204, 0, 37, 32
 		msg: 242, 0, 41, 32
 		msg-pressed: 284, 0, 41, 32
+
+bar-tyrano-buttons:
+	Image: chrome/bar-tyrano-buttons.png
+	Regions:
+		menu: 0, 0, 81, 28
+		menu-pressed: 82, 0, 81, 28
+		allies: 164, 0, 45, 28
+		allies-pressed: 210, 0, 45, 28
+		msg: 256, 0, 30, 28
+		msg-pressed: 287, 0, 30, 28
+
+bar-elf-buttons:
+	Image: chrome/bar-elf-buttons.png
+	Regions:
+		menu: 0, 0, 85, 31
+		menu-pressed: 86, 0, 85, 31
+		allies: 172, 0, 40, 31
+		allies-pressed: 213, 0, 40, 31
+		msg: 254, 0, 42, 31
+		msg-pressed: 297, 0, 42, 31
+
+bar-demon-buttons:
+	Image: chrome/bar-demon-buttons.png
+	Regions:
+		menu: 0, 0, 87, 27
+		menu-pressed: 88, 0, 87, 27
+		allies: 176, 0, 39, 27
+		allies-pressed: 216, 0, 39, 27
+		msg: 256, 0, 40, 27
+		msg-pressed: 297, 0, 40, 27
 
 # The resource icons (chrome/resources.png: JW2_02 Food, Water, Stone, House) beside the berries and population.
 resource-icons:

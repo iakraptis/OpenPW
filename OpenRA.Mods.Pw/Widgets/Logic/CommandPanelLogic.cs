@@ -83,12 +83,22 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				ShowShareMeat(free, eaters);
 		}
 
+		// A command button's icon: the "icon" sequence of the image, in the local player's race frame style when there
+		// is one (<image>-<race>: each race has its own button sheet, the art is the same).
+		Sprite CommandIcon(string image)
+		{
+			var sequences = world.Map.Sequences;
+			var raced = $"{image}-{world.LocalPlayer?.Faction.InternalName}";
+			if (sequences.HasSequence(raced, "icon"))
+				return sequences.GetSequence(raced, "icon").GetSprite(0);
+
+			return sequences.HasSequence(image, "icon") ? sequences.GetSequence(image, "icon").GetSprite(0) : null;
+		}
+
 		// The units meet and split the meat they carry evenly; the one with the most meat takes the order.
 		void ShowShareMeat(ButtonWidget slot, Actor[] eaters)
 		{
-			Sprite icon = null;
-			if (world.Map.Sequences.HasSequence("command-share-meat", "icon"))
-				icon = world.Map.Sequences.GetSequence("command-share-meat", "icon").GetSprite(0);
+			var icon = CommandIcon("command-share-meat");
 
 			var total = eaters.Sum(e => e.Trait<PwMeatEater>().Meat);
 			slot.Visible = true;
@@ -106,9 +116,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
 		void ShowHunt(ButtonWidget slot, Actor[] hunters)
 		{
-			Sprite icon = null;
-			if (world.Map.Sequences.HasSequence("command-hunt", "icon"))
-				icon = world.Map.Sequences.GetSequence("command-hunt", "icon").GetSprite(0);
+			var icon = CommandIcon("command-hunt");
 
 			bool AllHunting() => hunters.All(h => h.IsDead || h.Trait<PwHunter>().Hunting);
 			slot.Visible = true;

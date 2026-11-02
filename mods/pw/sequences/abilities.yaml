@@ -16,3 +16,34 @@ command-share-meat:
 	icon:
 		Filename: chrome/actions-primitive.png
 		Start: 35
+
+# The same buttons in the other races' frame styles (CommandPanelLogic picks <image>-<race> for the local player).
+command-hunt-tyrano:
+	icon:
+		Filename: chrome/actions-tyrano.png
+		Start: 13
+
+command-share-meat-tyrano:
+	icon:
+		Filename: chrome/actions-tyrano.png
+		Start: 35
+
+command-hunt-elf:
+	icon:
+		Filename: chrome/actions-elf.png
+		Start: 13
+
+command-share-meat-elf:
+	icon:
+		Filename: chrome/actions-elf.png
+		Start: 35
+
+command-hunt-demon:
+	icon:
+		Filename: chrome/actions-demon.png
+		Start: 13
+
+command-share-meat-demon:
+	icon:
+		Filename: chrome/actions-demon.png
+		Start: 35

@@ -305,7 +305,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					buttons.Add((ChrFile.ReadFrame(archive.Read(block + 2 + i), ref at), false));
 				}
 
-				c.WriteFile($"chrome/bar-{Races[race]}-buttons.png", Units.Sheet(buttons, colors));
+				c.WriteFile($"chrome/bar-{Races[race]}-buttons.png", Units.Sheet(buttons, colors, true));
 			}
 		}
 

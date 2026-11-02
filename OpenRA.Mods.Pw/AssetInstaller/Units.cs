@@ -286,8 +286,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return colors;
 		}
 
-		// Shelf-packed frames with a one pixel gap; Frame[i] = region;offset from the sprite centre.
-		public static byte[] Sheet(List<(ChrFile.Frame Frame, bool Mirrored)> frames, Color[] palette)
+		// Shelf-packed frames with a one pixel gap; Frame[i] = region;offset from the sprite centre. Chrome images need a
+		// power-of-two sheet (powerOfTwo pads the height; the width already is one).
+		public static byte[] Sheet(List<(ChrFile.Frame Frame, bool Mirrored)> frames, Color[] palette, bool powerOfTwo = false)
 		{
 			var regions = new List<Rectangle>();
 			int x = 0, y = 0, rowHeight = 0;
@@ -308,6 +309,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 
 			var height = Math.Max(1, y + rowHeight);
+			if (powerOfTwo)
+				height = 1 << (int)Math.Ceiling(Math.Log2(height));
+
 			var rgba = new byte[4 * SheetWidth * height];
 			var meta = new Dictionary<string, string>();
 			for (var i = 0; i < frames.Count; i++)

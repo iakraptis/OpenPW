@@ -78,8 +78,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			foreach (var (button, _, image) in buttons)
 			{
 				var b = button;
-				var art = b.Get<ImageWidget>("ART");
-				art.GetImageCollection = () => collection + "-buttons";
+				var art = b.Get<StretchedImageWidget>("ART");
+				art.ImageCollection = collection + "-buttons";
 				art.GetImageName = () => b.Depressed || b.IsHighlighted() ? image + "-pressed" : image;
 			}
 
@@ -144,10 +144,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			selection.Bounds = new WidgetBounds(left.X, left.Y, Math.Min(left.Width, (int)(SelectionWidth * bar.Scale)), left.Height);
 			commands.Bounds = Bounds(bar.Area("right-panel"));
 
-			foreach (var (button, area, _) in buttons)
+			// The buttons sit at the bar's button areas, each the size of its own art (it differs a little by race).
+			foreach (var (button, area, image) in buttons)
 			{
-				button.Bounds = Bounds(bar.Area(area));
-				button.Get<ImageWidget>("ART").Bounds = new WidgetBounds(0, 0, button.Bounds.Width, button.Bounds.Height);
+				var at = bar.Area(area);
+				var art = button.Get<StretchedImageWidget>("ART");
+				var artSize = ChromeProvider.TryGetImage(art.ImageCollection, image)?.Bounds.Size ?? new Size(at.Width, at.Height);
+				button.Bounds = new WidgetBounds(at.X, at.Y, (int)(artSize.Width * bar.Scale), (int)(artSize.Height * bar.Scale));
+				art.Bounds = new WidgetBounds(0, 0, button.Bounds.Width, button.Bounds.Height);
 			}
 
 			// The slots: two rows, as many columns as fit, each the original 38 px icon scaled with the bar.

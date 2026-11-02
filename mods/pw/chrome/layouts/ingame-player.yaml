@@ -53,7 +53,7 @@ Container@PLAYER_WIDGETS:
 			TooltipContainer: TOOLTIP_CONTAINER
 			TooltipTemplate: BUTTON_TOOLTIP
 			Children:
-				Image@ART:
+				StretchedImage@ART:
 					Width: 40
 					Height: 32
 		Button@ALLIES_BUTTON:
@@ -65,7 +65,7 @@ Container@PLAYER_WIDGETS:
 			TooltipContainer: TOOLTIP_CONTAINER
 			TooltipTemplate: BUTTON_TOOLTIP
 			Children:
-				Image@ART:
+				StretchedImage@ART:
 					Width: 40
 					Height: 32
 		Button@MSG_BUTTON:
@@ -77,7 +77,7 @@ Container@PLAYER_WIDGETS:
 			TooltipContainer: TOOLTIP_CONTAINER
 			TooltipTemplate: BUTTON_TOOLTIP
 			Children:
-				Image@ART:
+				StretchedImage@ART:
 					Width: 40
 					Height: 32
 		# What is selected (SelectionPanelLogic), on the bar's left panel.
