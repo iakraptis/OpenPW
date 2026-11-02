@@ -39,7 +39,7 @@ DilophosaurusSpit:
 	Projectile: Bullet
 		Image: weapon-poison-arrows
 		Sequences: flight
-		Speed: 480
+		Speed: 592
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 40
 	Report: weapon-poison-arrows-0.wav
