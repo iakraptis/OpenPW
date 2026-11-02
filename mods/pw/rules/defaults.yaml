@@ -93,6 +93,7 @@
 	Inherits: ^Infantry
 	Builder:
 	BerryGatherer:
+	GatherAtRallyPoint:
 	# One body at a time: gathering, carrying a basket of berries, or the plain infantry body.
 	WithInfantryBody:
 		RequiresCondition: !gathering && !carrying
@@ -155,6 +156,13 @@
 ^WildFlyer:
 	Inherits: ^Wild
 	PwTakeOff:
+	# The flight loops all the time, standing or moving, with no idle animation: hovering, an aircraft is idle and
+	# busy on alternate ticks, and each idle tick restarted the loop (the wings froze on the first frame).
+	-WithInfantryBody:
+	WithInfantryBody@FLIGHT:
+		StandSequences: walk
+		MoveSequence: walk
+		DefaultAttackSequence: walk
 	-Mobile:
 	-Targetable:
 	Targetable@AIR:
@@ -326,6 +334,11 @@
 	Inherits: ^Building
 	Production:
 		RequiresCondition: !constructing
+	# Rally point (after OpenSYW): select the building and right-click the ground; trained units walk there. A
+	# worker sent to a berry bush starts gathering there (GatherAtRallyPoint).
+	RallyPoint:
+		Cursor: move
+		CirclesSequence: flag
 	PwProductionQueue:
 		Group: Training
 		PopulationLimitTextNotification: notification-population-limit

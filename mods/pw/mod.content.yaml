@@ -39,6 +39,7 @@ Sequences:
 	pw|sequences/weapons.yaml
 	pw|sequences/spells.yaml
 	pw|sequences/abilities.yaml
+	pw|sequences/markers.yaml
 	pw|sequences/shroud.yaml
 	pw|sequences/mapeditor.yaml
 	pw|sequences/mpspawn.yaml
