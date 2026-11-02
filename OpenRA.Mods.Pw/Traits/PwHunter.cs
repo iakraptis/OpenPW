@@ -33,8 +33,8 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int GiveUpTicks = 500;
 
 		[GrantedConditionReference]
-		[Desc("Condition granted while hunting is on.")]
-		public readonly string HuntingCondition = "hunting";
+		[Desc("Condition granted while hunting is on (none by default).")]
+		public readonly string HuntingCondition = null;
 
 		[VoiceReference]
 		public readonly string Voice = "Action";

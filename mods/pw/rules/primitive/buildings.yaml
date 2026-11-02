@@ -310,6 +310,19 @@ primitive-stonetower:
 			BottomRight: 1024, 1024
 	RevealsShroud:
 		Range: 11c0
+	# Reveals hidden traps and invisible units around it; Improve StoneTower Detection (the Sanctuary's research)
+	# widens that. The ranges are not known from the original.
+	DetectCloaked:
+		Range: 5c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && !detection
+	GrantConditionOnPrerequisite@detection:
+		Condition: detection
+		Prerequisites: primitive-upgrade-stonetower-detection-1
+	DetectCloaked@UPGRADED:
+		Range: 8c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && detection
 	Armament:
 		Weapon: Stone
 		RequiresCondition: !constructing
@@ -355,6 +368,19 @@ primitive-trap:
 			BottomRight: 1024, 512
 	RevealsShroud:
 		Range: 7c0
+	# Reveals hidden traps and invisible units around it.
+	DetectCloaked:
+		Range: 5c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing
+	# Hidden from the other players once built (its owner and allies see it as usual), also when it snaps; their
+	# StoneTowers and Traps reveal it.
+	Cloak:
+		CloakStyle: None
+		DetectionTypes: Trap
+		InitialDelay: 0
+		UncloakOn: None
+		RequiresCondition: !constructing
 	Armament:
 		Weapon: TrapSnap
 		RequiresCondition: !constructing

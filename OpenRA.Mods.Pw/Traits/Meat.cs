@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Pw.Traits
 {
 	// Meat (docs/game/rules.md, Meat): a wild creature's kill leaves meat worth about its cost (Pw.exe FUN_00462ea6). It
 	// rots, losing 1 every 32 ticks (FUN_00462a30, item types 1-4: period 1). A living unit picks it up, carries it and
-	// eats it while hurt: 1 meat heals 1 HP each tick (FUN_0046089a).
+	// eats it while hurt: 1 meat heals 1 HP each 8 ticks (FUN_0046089a).
 	public class PwMeatAmountInit : ValueActorInit<int>, ISingleInstanceInit
 	{
 		public PwMeatAmountInit(int value)
@@ -110,7 +110,7 @@ namespace OpenRA.Mods.Pw.Traits
 		}
 	}
 
-	[Desc("A living unit that picks up meat and eats it while hurt (1 meat heals 1 HP per tick). Idle, it fetches meat ",
+	[Desc("A living unit that picks up meat and eats it while hurt (1 meat heals 1 HP every 8 ticks). Idle, it fetches meat ",
 		"lying within SearchRange on its own.")]
 	public class PwMeatEaterInfo : TraitInfo, Requires<IHealthInfo>
 	{
@@ -135,9 +135,13 @@ namespace OpenRA.Mods.Pw.Traits
 		// Ticks the members have to meet before the meat is shared among those who made it.
 		const int ShareTimeout = 400;
 
+		// Ticks per meat eaten (1 HP healed each).
+		const int HealingInterval = 8;
+
 		readonly PwMeatEaterInfo info;
 		readonly IHealth health;
 		int searchTicks;
+		int healingTicks;
 
 		public int Meat { get; private set; }
 
@@ -159,11 +163,18 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void ITick.Tick(Actor self)
 		{
-			if (Meat > 0 && health.HP < health.MaxHP)
+			if (Meat <= 0 || health.HP >= health.MaxHP)
 			{
-				Meat--;
-				self.InflictDamage(self, new Damage(-1));
+				healingTicks = 0;
+				return;
 			}
+
+			if (++healingTicks < HealingInterval)
+				return;
+
+			healingTicks = 0;
+			Meat--;
+			self.InflictDamage(self, new Damage(-1));
 		}
 
 		void INotifyIdle.TickIdle(Actor self)

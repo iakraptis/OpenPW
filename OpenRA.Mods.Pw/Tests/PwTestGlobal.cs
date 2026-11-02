@@ -146,6 +146,9 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Makes the units meet and share their meat, as the Share meat button does (the first takes the order).")]
 		public void ShareMeat(Actor[] units) => units[0].World.IssueOrder(PwMeatEater.Share(units));
 
+		[Desc("Whether the player can see the actor (fog and stealth: a hidden trap needs a detector near it).")]
+		public bool CanSee(Player player, Actor actor) => actor.CanBeViewedByPlayer(player);
+
 		[Desc("Whether a unit's hunting is on.")]
 		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
 	}

@@ -233,9 +233,13 @@
 	AttackFrontal:
 		FacingTolerance: 128
 	AutoTarget:
+		# Units scan 5 cells and go for enemies they see, as OpenSYW's infantry do.
+		ScanRadius: 5
+		InitialStance: AttackAnything
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
 		InvalidTargets: Wild
+		ValidRelationships: Enemy
 	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
 	PwHunter:
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
