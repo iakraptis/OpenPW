@@ -64,3 +64,53 @@ primitive-upgrade-primitive-air-machine-armor:
 	icon:
 		Filename: chrome/upgrades-primitive.png
 		Start: 10
+
+tyrano-upgrade-gathering-amount:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 20
+
+tyrano-upgrade-disguise:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 42
+
+tyrano-upgrade-level-up-exp:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 43
+
+tyrano-upgrade-ground-dinos-mutation-weapon:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 25
+
+tyrano-upgrade-ground-dino-mutation-armor:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 26
+
+tyrano-upgrade-air-dino-mutation-weapon:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 28
+
+tyrano-upgrade-air-dino-mutation-armor:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 29
+
+tyrano-upgrade-dilophos-movement:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 22
+
+tyrano-upgrade-trices-movement:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 45
+
+tyrano-upgrade-mutant-morphosis:
+	icon:
+		Filename: chrome/upgrades-tyrano.png
+		Start: 24

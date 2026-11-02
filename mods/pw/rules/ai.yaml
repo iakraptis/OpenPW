@@ -13,7 +13,7 @@
 # - PwHuntingBotModule: army units near the base hunt (the Hunt toggle): wild creatures around them, then the meat.
 # The stock SquadManagerBotModule attacks and defends; it takes type names, so a new faction adds its workers to
 # ExcludeFromSquadsTypes, its main building to ConstructionYardTypes, its air units to AirUnitsTypes and what it
-# defends to ProtectionTypes. The weights and limits below only tune Primitive; types not listed use the defaults.
+# defends to ProtectionTypes. The weights and limits below only tune them; types not listed use the defaults.
 player:
 	ModularBot@Normal:
 		Name: bot-normal.name
@@ -36,6 +36,7 @@ player:
 			primitive-powerhouse: 2
 			primitive-soldierhouse: 2
 			primitive-trap: 2
+			tyrano-eggnest: 2
 	PwGathererBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	PwUnitBuilderBotModule@normal:
@@ -49,8 +50,17 @@ player:
 			primitive-squadron: 6
 			primitive-flattop: 4
 			primitive-chief: 3
+			tyrano-masos: 15
+			tyrano-velocis: 20
+			tyrano-dilophos: 20
+			tyrano-trices: 12
+			tyrano-eggthrower: 8
+			tyrano-rhamphos: 8
+			tyrano-pteras: 6
+			tyrano-tyranos: 3
 		UnitLimits:
 			primitive-chief: 1
+			tyrano-tyranos: 1
 	PwTransportBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	PwAbilityBotModule@normal:
@@ -64,10 +74,10 @@ player:
 		SquadSize: 8
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
-		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
-		ConstructionYardTypes: primitive-sanctuary
-		AirUnitsTypes: primitive-squadron, primitive-flattop
-		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos
+		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest
+		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos
 
 	# ------------------------------------------------------------------ Hard: a bigger economy, building two at a
 	# time, quicker decisions and larger attack waves.
@@ -84,6 +94,8 @@ player:
 			primitive-soldierhouse: 2
 			primitive-stonetower: 4
 			primitive-trap: 3
+			tyrano-eggnest: 2
+			tyrano-ascomoid: 4
 	PwGathererBotModule@hard:
 		RequiresCondition: enable-hard-ai
 	PwUnitBuilderBotModule@hard:
@@ -100,8 +112,17 @@ player:
 			primitive-squadron: 6
 			primitive-flattop: 5
 			primitive-chief: 4
+			tyrano-masos: 15
+			tyrano-velocis: 20
+			tyrano-dilophos: 20
+			tyrano-trices: 14
+			tyrano-eggthrower: 10
+			tyrano-rhamphos: 8
+			tyrano-pteras: 6
+			tyrano-tyranos: 4
 		UnitLimits:
 			primitive-chief: 1
+			tyrano-tyranos: 1
 	PwTransportBotModule@hard:
 		RequiresCondition: enable-hard-ai
 		MinimumPassengers: 5
@@ -119,7 +140,7 @@ player:
 		SquadSizeRandomBonus: 6
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
-		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
-		ConstructionYardTypes: primitive-sanctuary
-		AirUnitsTypes: primitive-squadron, primitive-flattop
-		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos
+		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest
+		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos

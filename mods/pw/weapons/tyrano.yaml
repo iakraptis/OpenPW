@@ -1,0 +1,163 @@
+# Tyrano weapons (docs/game/tyrano.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack
+# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 710/576
+# (weapons/defaults.yaml).
+
+DinosHit:
+	Inherits: ^Melee
+	ReloadDelay: 31
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 11
+	Report: weapon-dinos-hit-0.wav
+
+MasosHit:
+	Inherits: ^Melee
+	ReloadDelay: 20
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 15
+	Report: weapon-masos-hit-0.wav
+
+VelocisHit:
+	Inherits: ^Melee
+	ReloadDelay: 29
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 35
+	Report: weapon-velocis-hit-0.wav
+
+# The same bite (weapon 19), stronger and slower (its own .chr record).
+TwinVelocisHit:
+	Inherits: VelocisHit
+	ReloadDelay: 40
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 55
+
+# Dilophos: spits poison at ground or air (18 px per tick).
+PoisonSpit:
+	Inherits: ^Arrow
+	ReloadDelay: 29
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-poison-arrows
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 25
+	Report: weapon-poison-arrows-0.wav
+
+RhamphosArrow:
+	Inherits: ^Arrow
+	ReloadDelay: 35
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-rhamphos-arrows
+		Sequences: flight
+		Speed: 789
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 27
+	Report: weapon-rhamphos-arrows-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-rhamphos-arrows
+		Explosions: impact
+
+PterasAxe:
+	Inherits: ^Arrow
+	ReloadDelay: 41
+	Range: 5c0
+	Projectile: Bullet
+		Image: weapon-pteras-axe
+		Sequences: flight
+		Speed: 592
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 30
+	Report: weapon-pteras-axe-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-pteras-axe
+		Explosions: impact
+
+# Trices: a boomerang (tumbling, not directional) at ground or air.
+CarrnosBoomerang:
+	Inherits: ^Arrow
+	ReloadDelay: 48
+	Range: 7c0
+	Projectile: Bullet
+		Image: weapon-carrnos-boomerang
+		Sequences: flight
+		Speed: 592
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 50
+	Report: weapon-carrnos-boomerang-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-carrnos-boomerang
+		Explosions: impact
+
+# EggThrower: a lobbed egg, ground only, splashing 48 px.
+EggThrow:
+	Inherits: ^Thrown
+	ReloadDelay: 70
+	Range: 13c0
+	Projectile: Bullet
+		Image: weapon-egg-throw
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 100
+		# Splash: full damage within the original radius (1c512).
+		Range: 0, 1c512, 1600
+		Falloff: 100, 100, 0
+	Report: weapon-egg-throw-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-egg-throw
+		Explosions: impact
+
+# Mutant: at ground or air, splashing 64 px.
+MutantArrow:
+	Inherits: ^Arrow
+	ReloadDelay: 64
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-mutant-arrows
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 100
+		# Splash: full damage within the original radius (2c0).
+		Range: 0, 2c0, 2112
+		Falloff: 100, 100, 0
+	Report: weapon-mutant-arrows-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-mutant-arrows
+		Explosions: impact
+
+# Tyranos: a bite that also reaches flyers (target mask 31).
+TyranosHit:
+	Inherits: ^Melee
+	ValidTargets: Ground, Air
+	ReloadDelay: 41
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground, Air
+		Damage: 200
+	Report: weapon-tyranos-hit-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		ImpactSounds: weapon-tyranos-hit-1.wav
+
+# Ascomoid: the Tyrano tower's spore shot at ground or air (20 px per tick).
+AscomoidShot:
+	Inherits: ^Arrow
+	ReloadDelay: 29
+	Range: 9c0
+	Projectile: Bullet
+		Image: weapon-ascomoid
+		Sequences: flight
+		Speed: 789
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 35
+	Report: weapon-ascomoid-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-ascomoid
+		Explosions: impact

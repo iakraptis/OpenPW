@@ -30,9 +30,10 @@ namespace OpenRA.Mods.Pw.Traits
 		// A drop-off for berries: the main building (Sanctuary), which the base is centred on.
 		public static bool IsDropOff(ActorInfo info) => info.HasTraitInfo<AcceptsBerriesInfo>();
 
-		// A building that only adds population (House): no training queue, no drop-off.
+		// A building that is there for population (House, Nest: 10): no training queue, no drop-off. Other buildings give
+		// 1 at most (the Tyrano Nisdos, which are tech).
 		public static bool IsHouse(ActorInfo info) =>
-			info.HasTraitInfo<ProvidesPopulationInfo>() && !info.HasTraitInfo<ProductionQueueInfo>() && !IsDropOff(info);
+			info.TraitInfos<ProvidesPopulationInfo>().Sum(p => p.Amount) > 1 && !info.HasTraitInfo<ProductionQueueInfo>() && !IsDropOff(info);
 
 		// A building that fights (tower, trap).
 		public static bool IsDefense(ActorInfo info) => IsBuilding(info) && info.HasTraitInfo<AttackBaseInfo>();

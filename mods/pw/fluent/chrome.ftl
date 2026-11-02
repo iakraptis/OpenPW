@@ -59,12 +59,21 @@ tooltip-hunt = While on, idle units hunt the wild creatures around them, the dan
 label-share-meat = Share meat
 tooltip-share-meat = The selected units meet and split their meat evenly: { $total } among { $units }, { $each } each.
 label-ability-fall-out-locked = Fall out: research Improve Fall out for Chief at the Sanctuary
+label-merge = Combine into { $name }
+tooltip-merge = { $parts } meet and become one { $name }.
+label-split = Split
+tooltip-split = Becomes { $parts } again.
+label-disguise = Disguise
+tooltip-disguise = Takes the form of a wild creature of its kind: enemies take it for one and leave it alone, but it cannot attack.
+tooltip-disguise-locked = Research Disguise at the TyranoNest.
+label-undisguise = Turn back
+tooltip-undisguise = Back to its own form.
 label-population = { $used } / { $limit }
-notification-population-limit = Population limit reached: build more Houses.
+notification-population-limit = Population limit reached: build more Houses or Nests.
 
 ## The interface bar
-tooltip-berries = Berries: gathered by Buildmen from bushes, spent on buildings, units and research.
-tooltip-population = Population in use / limit. Units take population; the Sanctuary, Houses and production buildings provide it.
+tooltip-berries = Berries: gathered by workers from bushes, spent on buildings, units and research.
+tooltip-population = Population in use / limit. Units take population; the main building, Houses or Nests and production buildings provide it.
 tooltip-slot = { $name } ({ $cost } berries)
 tooltip-build = Takes { $time } s. Click, then click where to build.
 tooltip-build-needs = Needs { $needs }.

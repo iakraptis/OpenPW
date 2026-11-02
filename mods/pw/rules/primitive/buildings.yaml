@@ -283,9 +283,9 @@ primitive-skyincreaser:
 	RevealsShroud:
 		Range: 8c0
 
-# Defences. They attack in every direction (AttackOmni) whatever is in range.
+# Defences (^Defense).
 primitive-stonetower:
-	Inherits: ^Building
+	Inherits: ^Defense
 	Inherits@race: ^Primitive
 	UnderConstruction:
 		Duration: 560
@@ -326,24 +326,11 @@ primitive-stonetower:
 	Armament:
 		Weapon: Stone
 		RequiresCondition: !constructing
-	AttackOmni:
-		RequiresCondition: !constructing
-	AutoTarget:
-	AutoTargetPriority@DEFAULT:
-		ValidTargets: Ground, Air
-		InvalidTargets: Wild
-	# An AI player's towers and traps also strike hostile wild creatures (rules/defaults.yaml ^Melee).
-	GrantConditionOnBotOwner@predators:
-		Condition: bot-owned
-		Bots: normal, hard
-	AutoTargetPriority@PREDATORS:
-		ValidTargets: Predator
-		RequiresCondition: bot-owned
 	WithAttackAnimation:
 		Sequence: attack
 
 primitive-trap:
-	Inherits: ^Building
+	Inherits: ^Defense
 	Inherits@race: ^Primitive
 	UnderConstruction:
 		Duration: 480
@@ -384,16 +371,6 @@ primitive-trap:
 	Armament:
 		Weapon: TrapSnap
 		RequiresCondition: !constructing
-	AttackOmni:
-		RequiresCondition: !constructing
-	AutoTarget:
+	# Only what walks beside it.
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
-		InvalidTargets: Wild
-	# An AI player's towers and traps also strike hostile wild creatures (rules/defaults.yaml ^Melee).
-	GrantConditionOnBotOwner@predators:
-		Condition: bot-owned
-		Bots: normal, hard
-	AutoTargetPriority@PREDATORS:
-		ValidTargets: Predator
-		RequiresCondition: bot-owned

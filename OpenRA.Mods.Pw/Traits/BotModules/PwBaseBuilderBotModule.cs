@@ -24,8 +24,8 @@ namespace OpenRA.Mods.Pw.Traits
 		"house when the population is nearly full, otherwise the building furthest below its share of the base; it",
 		"finds a site around the base centre (the drop-off, Sanctuary) and sends a worker with the PwBuildAt order the",
 		"build palette issues. What a worker can build comes from its Builder list and every type's role from its traits",
-		"(houses: ProvidesPopulation only; drop-offs: AcceptsBerries; defences: armed buildings, which guard the main",
-		"building, the berries and the base's edge), so it plays any faction;",
+		"(houses: more than 1 ProvidesPopulation and nothing else; drop-offs: AcceptsBerries; defences: armed buildings,",
+		"which guard the main building, the berries and the base's edge), so it plays any faction;",
 		"BuildingShares and BuildingLimits only tune it.")]
 	public class PwBaseBuilderBotModuleInfo : ConditionalTraitInfo
 	{

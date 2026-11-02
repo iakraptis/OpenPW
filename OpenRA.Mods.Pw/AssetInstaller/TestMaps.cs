@@ -23,10 +23,16 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// repository's test maps. run_tests.py finds them in the content folder.
 	public static class TestMaps
 	{
-		// bot-test: two Normal AIs (North, South) on (2) One vs One, each starting with a Sanctuary and four Buildmen.
+		// bot-test: two Normal AIs on (2) One vs One, North Primitive and South Tyrano, each starting as a player of its
+		// race does (rules/world.yaml StartingUnits): its main building and four workers.
 		const string BotTest = "bot-test";
 		const string BotTestBase = "2-one-vs-one";
 		static readonly string[] Bots = { "North", "South" };
+		static readonly (string Faction, string Main, string Worker)[] BotRaces =
+		{
+			("primitive", "primitive-sanctuary", "primitive-buildman"),
+			("tyrano", "tyrano-tyranonest", "tyrano-dinos"),
+		};
 
 		public static void Export(InstallContext c)
 		{
@@ -87,18 +93,19 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < Bots.Length; i++)
 			{
 				var enemies = Bots.Where(b => b != Bots[i]).Append("Creeps");
-				s.Append($"\tPlayerReference@{Bots[i]}:\n\t\tName: {Bots[i]}\n\t\tBot: normal\n\t\tFaction: primitive\n\t\tLockFaction: True\n");
+				s.Append($"\tPlayerReference@{Bots[i]}:\n\t\tName: {Bots[i]}\n\t\tBot: normal\n\t\tFaction: {BotRaces[i].Faction}\n\t\tLockFaction: True\n");
 				s.Append($"\t\tColor: {(i == 0 ? "E02020" : "2050E0")}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 
-			// Each bot's start: what StartingUnits@Primitive gives a player (rules/world.yaml), at its spawn point.
+			// Each bot's start: what StartingUnits gives a player of its race (rules/world.yaml), at its spawn point.
 			s.Append("\nActors:\n");
 			for (var i = 0; i < Bots.Length && i < starts.Count; i++)
 			{
 				var (x, y) = starts[i];
-				s.Append($"\t{Bots[i]}Sanctuary: primitive-sanctuary\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x},{y}\n");
+				var (_, main, worker) = BotRaces[i];
+				s.Append($"\t{Bots[i]}Main: {main}\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x},{y}\n");
 				for (var w = 0; w < 4; w++)
-					s.Append($"\t{Bots[i]}Worker{w}: primitive-buildman\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");
+					s.Append($"\t{Bots[i]}Worker{w}: {worker}\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");
 			}
 
 			// The spawn points stay: the watching player is given one (it gets no starting units, SpawnStartingUnits is off).

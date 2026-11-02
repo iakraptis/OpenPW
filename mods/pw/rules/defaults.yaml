@@ -198,6 +198,34 @@
 	Passenger:
 		CargoType: Ground
 
+# The Tyrano race's ground dinosaurs (not the wildlife): living beasts, not crushable, that carry and eat meat and ride
+# the Dsunguri (Cargo Ground; each sets its Weight, .chr 0x188).
+^Dinosaur:
+	Inherits: ^Beast
+	Passenger:
+		CargoType: Ground
+	PwMeatEater:
+
+# The Tyrano race's flyers (Rhamphos, Pteras, Mutant, the Dsunguri): living, eat meat. Their art has no standing
+# animation: the flight loops all the time (as ^WildFlyer's, an idle hover would restart it every other tick).
+^FlyingDinosaur:
+	Inherits: ^Unit
+	Inherits@move: ^AirMovement
+	PwMeatEater:
+	-WithInfantryBody:
+	PwTakeOff:
+	WithInfantryBody@FLIGHT:
+		StandSequences: walk
+		MoveSequence: walk
+		DefaultAttackSequence: attack
+
+# Low flight ("Fly" in the original's unit list, .chr 0x17c = 2: the Rhamphos): in the air, but low enough for ground
+# weapons to reach it as well.
+^LowFlight:
+	Targetable@AIR:
+		TargetTypes: Air, Ground, Beast
+		RequiresCondition: airborne
+
 # Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
 ^FootMovement:
 	Mobile:
@@ -343,6 +371,24 @@
 		Group: Training
 		PopulationLimitTextNotification: notification-population-limit
 
+# Towers and traps (StoneTower, Trap, Ascomoid): attack in every direction (AttackOmni) whatever enemy is in range,
+# once built; each sets its Armament (with RequiresCondition: !constructing). An AI player's also strike hostile wild
+# creatures (^Melee).
+^Defense:
+	Inherits: ^Building
+	AttackOmni:
+		RequiresCondition: !constructing
+	AutoTarget:
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
+		InvalidTargets: Wild
+	GrantConditionOnBotOwner@predators:
+		Condition: bot-owned
+		Bots: normal, hard
+	AutoTargetPriority@PREDATORS:
+		ValidTargets: Predator
+		RequiresCondition: bot-owned
+
 # Exit cells all around a footprint (corners included): a trained unit walks out to a random free cell along the
 # front (the bottom row, Priority 2), or to the sides and back when the front is blocked.
 ^Exits5x3:
@@ -393,6 +439,46 @@
 		ExitCell: 4,-1
 	Exit@19:
 		ExitCell: 5,-1
+
+^Exits4x2:
+	Exit@0:
+		ExitCell: -1,2
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,2
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,2
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,2
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,2
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,2
+		Priority: 2
+	Exit@6:
+		ExitCell: -1,1
+	Exit@7:
+		ExitCell: 4,1
+	Exit@8:
+		ExitCell: -1,0
+	Exit@9:
+		ExitCell: 4,0
+	Exit@10:
+		ExitCell: -1,-1
+	Exit@11:
+		ExitCell: 0,-1
+	Exit@12:
+		ExitCell: 1,-1
+	Exit@13:
+		ExitCell: 2,-1
+	Exit@14:
+		ExitCell: 3,-1
+	Exit@15:
+		ExitCell: 4,-1
 
 ^Exits6x4:
 	Exit@0:
@@ -522,6 +608,59 @@
 ^Primitive:
 
 ^Tyrano:
+
+# Tyrano disguise (PwDisguise; the help file's Special Abilities): once Disguise is researched, the unit can turn into
+# its "original form", a wild creature of its kind, and back. While "disguised" it is drawn as the creature (the unit
+# names its image in PwWithDisguiseBody@DISGUISE and the creature in Tooltip@DISGUISE's GenericName) instead of its own
+# body, its attacks are off, and it has the Wild target type, which nothing attacks on its own. Enemies see the
+# creature's name and the Creeps' colours. Only actors that disguise may use the condition (the lint checks it is
+# granted), so there is a mixin per body and attack: ^Disguisable (ground, armed), ^DisguisableFlyer (unarmed) and
+# ^DisguisableArmedFlyer.
+^DisguiseBase:
+	PwDisguise:
+		Prerequisites: tyrano-upgrade-disguise-1
+	Tooltip:
+		RequiresCondition: !disguised
+	Tooltip@DISGUISE:
+		GenericVisibility: Enemy, Neutral
+		ShowOwnerRow: false
+		RequiresCondition: disguised
+	Targetable@DISGUISE:
+		TargetTypes: Wild
+		RequiresCondition: disguised
+
+^Disguisable:
+	Inherits: ^DisguiseBase
+	WithInfantryBody:
+		RequiresCondition: !disguised
+	PwWithDisguiseBody@DISGUISE:
+		IdleSequences: stand
+		StandSequences: stand
+		MoveSequence: walk
+		DefaultAttackSequence: stand
+		RequiresCondition: disguised
+	AttackFrontal:
+		RequiresCondition: !disguised
+	AutoTarget:
+		RequiresCondition: !disguised
+
+# Flyers: the creature's art loops its flight, as theirs does (^FlyingDinosaur).
+^DisguisableFlyer:
+	Inherits: ^DisguiseBase
+	WithInfantryBody@FLIGHT:
+		RequiresCondition: !disguised
+	PwWithDisguiseBody@DISGUISE:
+		StandSequences: walk
+		MoveSequence: walk
+		DefaultAttackSequence: walk
+		RequiresCondition: disguised
+
+^DisguisableArmedFlyer:
+	Inherits: ^DisguisableFlyer
+	AttackAircraft:
+		RequiresCondition: !disguised
+	AutoTarget:
+		RequiresCondition: !disguised
 
 # Map decoration from the original maps (rules/objects.yaml, generated): drawn only, its cells are already blocked by
 # the terrain flags.

@@ -38,3 +38,33 @@ actor-primitive-upgrade-primitive-air-machine-weapon =
 
 actor-primitive-upgrade-primitive-air-machine-armor =
     .name = Improve Primitive Air Machine Armor
+
+actor-tyrano-upgrade-gathering-amount =
+    .name = Upgrade Gathering Amount
+
+actor-tyrano-upgrade-disguise =
+    .name = Disguise
+
+actor-tyrano-upgrade-level-up-exp =
+    .name = Reduce Level Up Exp.
+
+actor-tyrano-upgrade-ground-dinos-mutation-weapon =
+    .name = Upgrade Ground Dinos Mutation Weapon
+
+actor-tyrano-upgrade-ground-dino-mutation-armor =
+    .name = Upgrade Ground Dino Mutation Armor
+
+actor-tyrano-upgrade-air-dino-mutation-weapon =
+    .name = Upgrade Air Dino Mutation Weapon
+
+actor-tyrano-upgrade-air-dino-mutation-armor =
+    .name = Upgrade Air Dino Mutation Armor
+
+actor-tyrano-upgrade-dilophos-movement =
+    .name = Upgrade Dilophos Movement
+
+actor-tyrano-upgrade-trices-movement =
+    .name = Upgrade Trices Movement
+
+actor-tyrano-upgrade-mutant-morphosis =
+    .name = Upgrade Mutant Morphosis
