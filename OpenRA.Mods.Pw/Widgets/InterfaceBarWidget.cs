@@ -168,5 +168,12 @@ namespace OpenRA.Mods.Pw.Widgets
 		{
 			return OnBar(mi.Location);
 		}
+
+		// The widget covers the window (it lays the bar out from it), but only the bar is under the mouse: otherwise it
+		// becomes the widget under the mouse everywhere, and its plain cursor hides the world's (attack, gather, ...).
+		public override bool EventBoundsContains(int2 location)
+		{
+			return OnBar(location);
+		}
 	}
 }

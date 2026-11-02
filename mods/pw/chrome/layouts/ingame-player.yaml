@@ -44,6 +44,7 @@ Container@PLAYER_WIDGETS:
 			Height: 127
 			WorldInteractionController: INTERACTION_CONTROLLER
 		MenuButton@OPTIONS_BUTTON:
+			IgnoreChildMouseOver: true
 			Key: escape
 			Width: 40
 			Height: 32
@@ -56,6 +57,7 @@ Container@PLAYER_WIDGETS:
 					Width: 40
 					Height: 32
 		Button@ALLIES_BUTTON:
+			IgnoreChildMouseOver: true
 			Width: 40
 			Height: 32
 			Background:
@@ -67,6 +69,7 @@ Container@PLAYER_WIDGETS:
 					Width: 40
 					Height: 32
 		Button@MSG_BUTTON:
+			IgnoreChildMouseOver: true
 			Width: 40
 			Height: 32
 			Background:
@@ -144,6 +147,7 @@ Container@PLAYER_WIDGETS:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipTemplate: SIMPLE_TOOLTIP
 				Button@UNIT_0:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -158,6 +162,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_1:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -172,6 +177,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_2:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -186,6 +192,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_3:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -200,6 +207,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_4:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -214,6 +222,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_5:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -228,6 +237,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_6:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -242,6 +252,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_7:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -256,6 +267,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_8:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -270,6 +282,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_9:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -284,6 +297,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_10:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -298,6 +312,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_11:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -312,6 +327,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_12:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -326,6 +342,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_13:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -340,6 +357,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_14:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -354,6 +372,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_15:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -368,6 +387,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_16:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -382,6 +402,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_17:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -396,6 +417,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_18:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -410,6 +432,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_19:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -424,6 +447,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_20:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -438,6 +462,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_21:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -452,6 +477,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_22:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -466,6 +492,7 @@ Container@PLAYER_WIDGETS:
 							Height: 4
 							Color: 28C828
 				Button@UNIT_23:
+					IgnoreChildMouseOver: true
 					Width: 38
 					Height: 38
 					Visible: false
@@ -486,6 +513,7 @@ Container@PLAYER_WIDGETS:
 			Height: 80
 			Children:
 				Button@SLOT_0:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -494,6 +522,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -501,6 +534,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_1:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -509,6 +543,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -516,6 +555,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_2:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -524,6 +564,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -531,6 +576,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_3:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -539,6 +585,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -546,6 +597,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_4:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -554,6 +606,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -561,6 +618,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_5:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -569,6 +627,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -576,6 +639,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_6:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -584,6 +648,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -591,6 +660,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_7:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -599,6 +669,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -606,6 +681,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_8:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -614,6 +690,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -621,6 +702,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_9:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -629,6 +711,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -636,6 +723,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_10:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -644,6 +732,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -651,6 +744,7 @@ Container@PLAYER_WIDGETS:
 							Font: TinyBold
 							Contrast: true
 				Button@SLOT_11:
+					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
 					TooltipContainer: TOOLTIP_CONTAINER
@@ -659,6 +753,11 @@ Container@PLAYER_WIDGETS:
 						Sprite@ICON:
 							Width: 38
 							Height: 38
+						# Over the icon of what can't be built or trained yet (CommandPanelLogic).
+						ColorBlock@DIM:
+							Width: 38
+							Height: 38
+							Color: 000000A0
 						Label@PROGRESS:
 							Width: 40
 							Height: 14

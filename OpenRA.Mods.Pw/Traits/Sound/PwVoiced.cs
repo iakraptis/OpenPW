@@ -43,7 +43,8 @@ namespace OpenRA.Mods.Pw.Traits
 
 		bool IVoiced.PlayVoice(Actor self, string phrase, string variant)
 		{
-			if (phrase == null || voiceSet == null)
+			// The engine throws on a phrase the set doesn't have (a tower given an order has no Action voice).
+			if (phrase == null || !((IVoiced)this).HasVoice(self, phrase))
 				return false;
 
 			return Game.Sound.PlayPredefined(SoundType.World, self.World.Map.Rules, null, self, voiceSet, phrase, variant, true, WPos.Zero, info.Volume, true);
@@ -51,7 +52,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		bool IVoiced.PlayVoiceLocal(Actor self, string phrase, string variant, float volume)
 		{
-			if (phrase == null || voiceSet == null)
+			if (phrase == null || !((IVoiced)this).HasVoice(self, phrase))
 				return false;
 
 			return Game.Sound.PlayPredefined(SoundType.World, self.World.Map.Rules, null, self, voiceSet, phrase, variant, false, self.CenterPosition, volume, true);

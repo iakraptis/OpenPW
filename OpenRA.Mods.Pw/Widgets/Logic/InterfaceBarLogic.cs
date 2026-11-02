@@ -31,6 +31,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	{
 		const int SlotSize = 40;
 		const int SlotRows = 2;
+		const int SelectionWidth = 330;
 
 		readonly World world;
 		readonly InterfaceBarWidget bar;
@@ -133,7 +134,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
 
-			selection.Bounds = Bounds(bar.Area("left-panel"));
+			// The selection panel keeps about the original's width (the bar's left part stretches with the window).
+			var left = bar.Area("left-panel");
+			selection.Bounds = new WidgetBounds(left.X, left.Y, Math.Min(left.Width, (int)(SelectionWidth * bar.Scale)), left.Height);
 			commands.Bounds = Bounds(bar.Area("right-panel"));
 
 			foreach (var (button, area, _) in buttons)
@@ -151,6 +154,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				var slot = slots[i];
 				slot.Bounds = new WidgetBounds(gap + i % columns * (size + gap), gap + i / columns * (size + gap), size, size);
 				slot.Get<SpriteWidget>("ICON").Bounds = new WidgetBounds(1, 1, size - 2, size - 2);
+				slot.Get("DIM").Bounds = new WidgetBounds(1, 1, size - 2, size - 2);
 				slot.Get<LabelWidget>("PROGRESS").Bounds = new WidgetBounds(0, size - 16, size, 14);
 				if (i >= columns * SlotRows)
 					slot.Visible = false;

@@ -37,7 +37,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			this.world = world;
 			slots = widget.Children.OfType<ButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
-				slot.Visible = false;
+			{
+				var s = slot;
+				s.Visible = false;
+				s.Get("DIM").IsVisible = () => s.IsDisabled();
+			}
 		}
 
 		public override void Tick()
@@ -90,11 +94,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				var available = buildable == null || buildable.Prerequisites.Length == 0 || techTree.HasPrerequisites(buildable.Prerequisites);
 
 				Show(slot, actorInfo, cost, () => "");
-				var missing = buildable == null ? "" : string.Join(", ", buildable.Prerequisites.Where(p => !p.StartsWith('~'))
-					.Select(p => world.Map.Rules.Actors.TryGetValue(p.TrimStart('!'), out var a) ? ActorName(a) : p));
-				slot.GetTooltipDesc = () => available
-					? FluentProvider.GetMessage("tooltip-build", "time", Seconds(actorInfo))
-					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing);
+				var missing = Missing(buildable, techTree);
+				slot.GetTooltipDesc = () => !available
+					? FluentProvider.GetMessage("tooltip-build-needs", "needs", missing)
+					: resources.Cash + resources.Resources < cost
+					? FluentProvider.GetMessage("tooltip-not-enough-berries", "time", Seconds(actorInfo))
+					: FluentProvider.GetMessage("tooltip-build", "time", Seconds(actorInfo));
 				slot.IsDisabled = () => !available || resources.Cash + resources.Resources < cost;
 				slot.OnClick = () => world.OrderGenerator = new BuildAtCellOrderGenerator(world, builderActor, actorInfo.Name);
 			}
@@ -102,7 +107,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 		void ShowTraining(Actor producer, ProductionQueue queue)
 		{
-			var items = queue.BuildableItems().OrderBy(a => a.TraitInfoOrDefault<BuildableInfo>()?.BuildPaletteOrder ?? 9999).ToArray();
+			// Everything it trains, also what isn't available yet (greyed out, its tooltip says what it needs). Items with
+			// hidden prerequisites ("~": researched upgrades, ...) stay out of the list.
+			var techTree = producer.Owner.PlayerActor.Trait<TechTree>();
+			var items = queue.AllItems().OrderBy(a => a.TraitInfoOrDefault<BuildableInfo>()?.BuildPaletteOrder ?? 9999).ToArray();
 			for (var i = 0; i < slots.Length; i++)
 			{
 				var slot = slots[i];
@@ -127,8 +135,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					return queued.Count > 1 ? $"{percent}% ×{queued.Count}" : $"{percent}%";
 				});
 
-				slot.IsDisabled = () => false;
-				slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo));
+				var missing = Missing(actorInfo.TraitInfoOrDefault<BuildableInfo>(), techTree);
+				slot.IsDisabled = () => !queue.CanBuild(actorInfo);
+				slot.GetTooltipDesc = () => queue.CanBuild(actorInfo)
+					? FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo))
+					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing);
 
 				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
 				// alone: the button calls OnClick from it.
@@ -140,6 +151,17 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 						world.IssueOrder(Order.StartProduction(producer, name, 1));
 				};
 			}
+		}
+
+		// The buildings (or research) still missing for it, by name: the prerequisites the player doesn't meet yet.
+		string Missing(BuildableInfo buildable, TechTree techTree)
+		{
+			if (buildable == null)
+				return "";
+
+			return string.Join(", ", buildable.Prerequisites
+				.Where(p => !p.StartsWith('~') && !techTree.HasPrerequisites(new[] { p }))
+				.Select(p => world.Map.Rules.Actors.TryGetValue(p.TrimStart('!'), out var a) ? ActorName(a) : p));
 		}
 
 		static string ActorName(ActorInfo info)

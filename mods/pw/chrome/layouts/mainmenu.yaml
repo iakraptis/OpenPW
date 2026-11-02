@@ -34,6 +34,7 @@ Container@MAINMENU:
 			Height: WINDOW_HEIGHT
 			Children:
 				Button@SINGLEPLAYER_BUTTON:
+					IgnoreChildMouseOver: true
 					Background:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipText: label-singleplayer-title
@@ -41,6 +42,7 @@ Container@MAINMENU:
 						StretchedImage@ART:
 							ImageCollection: main-menu
 				Button@MULTIPLAYER_BUTTON:
+					IgnoreChildMouseOver: true
 					Background:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipText: label-multiplayer-title
@@ -48,6 +50,7 @@ Container@MAINMENU:
 						StretchedImage@ART:
 							ImageCollection: main-menu
 				Button@INTRO_BUTTON:
+					IgnoreChildMouseOver: true
 					Background:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipText: button-main-menu-intro
@@ -55,6 +58,7 @@ Container@MAINMENU:
 						StretchedImage@ART:
 							ImageCollection: main-menu
 				Button@MAIN_CREDITS_BUTTON:
+					IgnoreChildMouseOver: true
 					Background:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipText: label-credits-title
@@ -62,6 +66,7 @@ Container@MAINMENU:
 						StretchedImage@ART:
 							ImageCollection: main-menu
 				Button@QUIT_BUTTON:
+					IgnoreChildMouseOver: true
 					Background:
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipText: button-quit

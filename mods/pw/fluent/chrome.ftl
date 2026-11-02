@@ -63,6 +63,7 @@ tooltip-population = Population in use / limit. Units take population; the Sanct
 tooltip-slot = { $name } ({ $cost } berries)
 tooltip-build = Takes { $time } s. Click, then click where to build.
 tooltip-build-needs = Needs { $needs }.
+tooltip-not-enough-berries = Not enough berries. Takes { $time } s to build.
 tooltip-train = Takes { $time } s. Click to queue one, Shift+click to cancel one.
 button-bar-menu = Menu
 button-bar-allies = Players and objectives
