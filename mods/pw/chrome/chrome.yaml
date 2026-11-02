@@ -422,3 +422,12 @@ bar-primitive-buttons:
 		allies-pressed: 204, 0, 37, 32
 		msg: 242, 0, 41, 32
 		msg-pressed: 284, 0, 41, 32
+
+# The resource icons (chrome/resources.png: JW2_02 Food, Water, Stone, House) beside the berries and population.
+resource-icons:
+	Image: chrome/resources.png
+	Regions:
+		food: 0, 0, 14, 14
+		water: 16, 0, 14, 14
+		stone: 32, 0, 14, 14
+		house: 48, 0, 14, 14

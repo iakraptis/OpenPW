@@ -8,22 +8,32 @@ Container@PLAYER_WIDGETS:
 		InterfaceBar@INTERFACE_BAR:
 			Width: WINDOW_WIDTH
 			Height: WINDOW_HEIGHT
+		# The berries and population, at the top right: the original resource icons (Food, House) and the numbers.
+		# InterfaceBarLogic sizes the icons with the bar.
+		StretchedImage@CASH_ICON:
+			Width: 16
+			Height: 16
+			ImageCollection: resource-icons
+			ImageName: food
+			TooltipContainer: TOOLTIP_CONTAINER
+			TooltipTemplate: SIMPLE_TOOLTIP
 		LabelWithTooltip@CASH:
-			X: WINDOW_WIDTH - 210
-			Y: 8
-			Width: 200
+			Width: 120
 			Height: 20
-			Align: Right
 			Font: Bold
 			Contrast: true
 			TooltipContainer: TOOLTIP_CONTAINER
 			TooltipTemplate: SIMPLE_TOOLTIP
+		StretchedImage@POPULATION_ICON:
+			Width: 16
+			Height: 16
+			ImageCollection: resource-icons
+			ImageName: house
+			TooltipContainer: TOOLTIP_CONTAINER
+			TooltipTemplate: SIMPLE_TOOLTIP
 		LabelWithTooltip@POPULATION:
-			X: WINDOW_WIDTH - 210
-			Y: 28
-			Width: 200
+			Width: 120
 			Height: 20
-			Align: Right
 			Font: Bold
 			Contrast: true
 			TooltipContainer: TOOLTIP_CONTAINER

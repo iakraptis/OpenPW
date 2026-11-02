@@ -155,6 +155,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 
 			ExportInterfaceBars(c, archive);
+			ExportResourceIcons(c, archive);
 		}
 
 		// The in-game interface of each race (docs/formats/ui.md): the bottom bar Intfbg.spr (800 wide, its green
@@ -202,6 +203,34 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 				c.WriteFile($"chrome/bar-{Races[race]}-buttons.png", Units.Sheet(buttons, colors));
 			}
+		}
+
+		// The resource icons (JW2_02 Food, Water, Stone, House: 14x14 .spz, palette Misc.pnt at entry 256) side by side
+		// in chrome/resources.png, 16 px apart on a power-of-two sheet.
+		static void ExportResourceIcons(InstallContext c, TrcArchive archive)
+		{
+			const int Cell = 16;
+			var palette = Units.ConvertPalette(archive.Read(256), false);
+			var rgba = new byte[4 * 64 * Cell];
+			for (var i = 0; i < 4; i++)
+			{
+				var at = 0;
+				var frame = ChrFile.ReadFrame(archive.Read(289 + i), ref at);
+				for (var y = 0; y < frame.Height; y++)
+				{
+					for (var x = 0; x < frame.Width; x++)
+					{
+						var color = palette[frame.Pixels[y * frame.Width + x]];
+						var o = 4 * (y * 64 + i * Cell + x);
+						rgba[o] = color.R;
+						rgba[o + 1] = color.G;
+						rgba[o + 2] = color.B;
+						rgba[o + 3] = color.A;
+					}
+				}
+			}
+
+			c.WriteFile("chrome/resources.png", new Png(rgba, SpriteFrameType.Rgba32, 64, Cell).Save());
 		}
 
 		static int PowerOfTwo(int n)

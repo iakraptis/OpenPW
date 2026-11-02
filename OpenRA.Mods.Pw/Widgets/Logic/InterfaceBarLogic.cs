@@ -35,6 +35,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly World world;
 		readonly InterfaceBarWidget bar;
 		readonly RadarWidget radar;
+		readonly (Widget Icon, Widget Label)[] counters;
 		readonly Widget selection, commands;
 		Rectangle radarArea;
 		readonly ButtonWidget[] slots;
@@ -83,6 +84,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				return resources == null ? "" : FluentProvider.GetMessage("label-berries", "amount", resources.Cash + resources.Resources);
 			};
 			cash.GetTooltipText = () => FluentProvider.GetMessage("tooltip-berries");
+			var cashIcon = widget.Get<StretchedImageWidget>("CASH_ICON");
+			cashIcon.GetTooltipText = cash.GetTooltipText;
 
 			var population = widget.Get<LabelWithTooltipWidget>("POPULATION");
 			population.GetText = () =>
@@ -92,6 +95,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					"used", PwPopulation.Used(player), "limit", PwPopulation.Capacity(player));
 			};
 			population.GetTooltipText = () => FluentProvider.GetMessage("tooltip-population");
+			var populationIcon = widget.Get<StretchedImageWidget>("POPULATION_ICON");
+			populationIcon.GetTooltipText = population.GetTooltipText;
+			counters = new (Widget, Widget)[] { (cashIcon, cash), (populationIcon, population) };
 
 			worldRoot = Ui.Root.Get("WORLD_ROOT");
 			menuRoot = Ui.Root.Get("MENU_ROOT");
@@ -114,6 +120,17 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				radarArea = hole;
 				radar.Bounds = Bounds(hole);
 				RefreshRadar();
+			}
+
+			// The counters at the top right: icon (the original 14 px, scaled with the bar) then the number.
+			var iconSize = (int)(16 * bar.Scale);
+			var right = bar.Bounds.Width - 8;
+			for (var i = 0; i < counters.Length; i++)
+			{
+				var (icon, label) = counters[i];
+				var y = 8 + i * (iconSize + 6);
+				icon.Bounds = new WidgetBounds(right - 110 - iconSize - 6, y, iconSize, iconSize);
+				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
 
 			selection.Bounds = Bounds(bar.Area("left-panel"));

@@ -50,11 +50,11 @@ button-replay-player-maximum =
     .label = MAX
 
 ## Command panel
-label-berries = Berries: { $amount }
+label-berries = { $amount }
 label-ability-fall-out = Fall out ({ $cost } mana)
 tooltip-ability-fall-out = Click, then click an enemy: wears its life down to 1.
 label-ability-fall-out-locked = Fall out: research Improve Fall out for Chief at the Sanctuary
-label-population = Population: { $used } / { $limit }
+label-population = { $used } / { $limit }
 notification-population-limit = Population limit reached: build more Houses.
 
 ## The interface bar
