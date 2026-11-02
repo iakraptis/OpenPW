@@ -29,6 +29,14 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		const int Border = 1;
 		const int GridSize = 256;
 
+		// Balance: hostile creatures that start too close to a player's start, moved away on the converted map (and the
+		// test maps built on it): map, creature types, fewest cells from every start position.
+		static readonly Dictionary<string, (string[] Types, int Distance)> KeepAway = new()
+		{
+			// The velociraptors lay 19 to 29 cells from the bases and raided them early.
+			["2-one-vs-one"] = (new[] { "wild-velociraptor" }, 30),
+		};
+
 		public static void Export(InstallContext c)
 		{
 			var types = c.Game.Archive("Jw2_09.trc");
@@ -52,6 +60,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					c.Warnings.Add($"{Path.GetFileName(file)}: {e.Message}");
 				}
 			}
+
+			TestMaps.Export(c);
 		}
 
 		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)
@@ -72,6 +82,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var creatures = Creatures(jw2.Read("OBC"), image);
 
 			var slug = Regex.Replace(title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
+			if (KeepAway.TryGetValue(slug, out var keepAway))
+				creatures = MoveAway(creatures, keepAway.Types, keepAway.Distance, starts, objects, map1, width, height);
 			var folder = $"maps/{slug}";
 			var mapWidth = width + 2 * Border;
 			var mapHeight = height + 2 * Border;
@@ -180,6 +192,47 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 
 			return creatures;
+		}
+
+		// Each creature of the given types closer than distance cells to a start goes to the nearest walkable free cell
+		// that is at least that far from every start (and 3 cells from the other moved ones), or stays if there is none.
+		static List<(string Actor, int X, int Y, int Facing)> MoveAway(List<(string Actor, int X, int Y, int Facing)> creatures,
+			string[] types, int distance, List<(int X, int Y)> starts, List<(string Actor, int X, int Y)> objects, byte[] map1,
+			int width, int height)
+		{
+			static int Squared(int x, int y, (int X, int Y) p) => (x - p.X) * (x - p.X) + (y - p.Y) * (y - p.Y);
+			bool FarFromStarts(int x, int y) => starts.All(st => Squared(x, y, st) >= distance * distance);
+
+			var taken = objects.Select(o => (o.X, o.Y)).Concat(objects.Select(o => (o.X + 1, o.Y)))
+				.Concat(creatures.Select(c => (c.X, c.Y))).ToHashSet();
+			var moved = new List<(int X, int Y)>();
+			var result = new List<(string Actor, int X, int Y, int Facing)>();
+			foreach (var c in creatures)
+			{
+				if (!types.Contains(c.Actor) || FarFromStarts(c.X, c.Y))
+				{
+					result.Add(c);
+					continue;
+				}
+
+				var cell = Enumerable.Range(Border, width).SelectMany(x => Enumerable.Range(Border, height).Select(y => (X: x, Y: y)))
+					.Where(p => FarFromStarts(p.X, p.Y) && !taken.Contains(p) && moved.All(m => Squared(p.X, p.Y, m) >= 9)
+						&& MovementTemplate(BitConverter.ToUInt32(map1, 4 * ((p.Y - Border) * GridSize + p.X - Border))) is 1 or 2)
+					.OrderBy(p => Squared(p.X, p.Y, (c.X, c.Y)))
+					.Select(p => ((int X, int Y)?)p).FirstOrDefault();
+
+				if (cell == null)
+				{
+					result.Add(c);
+					continue;
+				}
+
+				moved.Add(cell.Value);
+				taken.Add(cell.Value);
+				result.Add((c.Actor, cell.Value.X, cell.Value.Y, c.Facing));
+			}
+
+			return result;
 		}
 
 		// P_PLAYE 0x2d4: (x, y) pixel pairs, ended by -1.

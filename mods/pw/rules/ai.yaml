@@ -1,0 +1,120 @@
+# The AI, after OpenSYW's (modelled on the C&C ModularBot setup). Our modules play any faction from its traits:
+# - PwBaseBuilderBotModule: workers (Builder) put up the base around the drop-off; houses (ProvidesPopulation only)
+#   when the population is nearly full; every other building by its share.
+# - PwGathererBotModule: idle workers (BerryGatherer) to the berry bushes.
+# - PwUnitBuilderBotModule: every training queue: workers, then research when rich, then a weighted army mix.
+# - PwTransportBotModule: transports (aircraft with Cargo) fly soldiers to enemy buildings out of walking reach, or
+#   raid the least defended one.
+# - PwAbilityBotModule: casters (the Chief's Fall out) strike the strongest enemy near them; the unlocking research
+#   comes first once the bot has a caster.
+# - PwDefenseBotModule: the nearest armed units answer any attack on the bot (wild creatures included), and hostile
+#   wild creatures near the base and its workers are attacked first. Its units also fight predators on their own
+#   (AutoTargetPriority@PREDATORS, rules/defaults.yaml).
+# The stock SquadManagerBotModule attacks and defends; it takes type names, so a new faction adds its workers to
+# ExcludeFromSquadsTypes, its main building to ConstructionYardTypes, its air units to AirUnitsTypes and what it
+# defends to ProtectionTypes. The weights and limits below only tune Primitive; types not listed use the defaults.
+player:
+	ModularBot@Normal:
+		Name: bot-normal.name
+		Type: normal
+	ModularBot@Hard:
+		Name: bot-hard.name
+		Type: hard
+	GrantConditionOnBotOwner@normal:
+		Condition: enable-normal-ai
+		Bots: normal
+	GrantConditionOnBotOwner@hard:
+		Condition: enable-hard-ai
+		Bots: hard
+
+	# ------------------------------------------------------------------ Normal
+
+	PwBaseBuilderBotModule@normal:
+		RequiresCondition: enable-normal-ai
+		BuildingLimits:
+			primitive-powerhouse: 2
+			primitive-soldierhouse: 2
+			primitive-trap: 2
+	PwGathererBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwUnitBuilderBotModule@normal:
+		RequiresCondition: enable-normal-ai
+		UnitWeights:
+			primitive-powerman: 20
+			primitive-soldier: 20
+			primitive-giant: 10
+			primitive-knight: 12
+			primitive-bowmachine: 8
+			primitive-squadron: 6
+			primitive-flattop: 4
+			primitive-chief: 3
+		UnitLimits:
+			primitive-chief: 1
+	PwTransportBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwAbilityBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwDefenseBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	SquadManagerBotModule@normal:
+		RequiresCondition: enable-normal-ai
+		SquadSize: 8
+		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
+		IgnoredEnemyTargetTypes: Wild
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
+		ConstructionYardTypes: primitive-sanctuary
+		AirUnitsTypes: primitive-squadron, primitive-flattop
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman
+
+	# ------------------------------------------------------------------ Hard: a bigger economy, building two at a
+	# time, quicker decisions and larger attack waves.
+
+	PwBaseBuilderBotModule@hard:
+		RequiresCondition: enable-hard-ai
+		DecisionInterval: 40
+		MaxConcurrentConstructions: 2
+		MinimumWorkers: 6
+		CashReserve: 100
+		PopulationMargin: 5
+		BuildingLimits:
+			primitive-powerhouse: 2
+			primitive-soldierhouse: 2
+			primitive-stonetower: 4
+			primitive-trap: 3
+	PwGathererBotModule@hard:
+		RequiresCondition: enable-hard-ai
+	PwUnitBuilderBotModule@hard:
+		RequiresCondition: enable-hard-ai
+		MinimumWorkers: 8
+		MaximumWorkers: 16
+		ResearchCash: 1000
+		UnitWeights:
+			primitive-powerman: 20
+			primitive-soldier: 20
+			primitive-giant: 12
+			primitive-knight: 14
+			primitive-bowmachine: 10
+			primitive-squadron: 6
+			primitive-flattop: 5
+			primitive-chief: 4
+		UnitLimits:
+			primitive-chief: 1
+	PwTransportBotModule@hard:
+		RequiresCondition: enable-hard-ai
+		MinimumPassengers: 5
+		RaidArmy: 12
+		Cooldown: 500
+	PwAbilityBotModule@hard:
+		RequiresCondition: enable-hard-ai
+	PwDefenseBotModule@hard:
+		RequiresCondition: enable-hard-ai
+	SquadManagerBotModule@hard:
+		RequiresCondition: enable-hard-ai
+		SquadSize: 12
+		SquadSizeRandomBonus: 6
+		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
+		IgnoredEnemyTargetTypes: Wild
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
+		ConstructionYardTypes: primitive-sanctuary
+		AirUnitsTypes: primitive-squadron, primitive-flattop
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman

@@ -142,6 +142,9 @@
 # Predators attack enemy (player) units within ScanRadius cells, a short range, so they only bite what passes by.
 ^WildPredator:
 	Inherits: ^Melee
+	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
+	Targetable@PREDATOR:
+		TargetTypes: Predator
 	AutoTarget:
 		InitialStance: AttackAnything
 		InitialStanceAI: AttackAnything
@@ -232,6 +235,13 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
 		InvalidTargets: Wild
+	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
+	GrantConditionOnBotOwner@predators:
+		Condition: bot-owned
+		Bots: normal, hard
+	AutoTargetPriority@PREDATORS:
+		ValidTargets: Predator
+		RequiresCondition: bot-owned
 
 # Ranged units also pick flying targets on their own, when their weapon reaches the air (arrows yes, bombs no).
 # Flying attackers: fire while hovering, at ground and air targets; they take off as soon as they appear.
@@ -244,6 +254,13 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
+	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
+	GrantConditionOnBotOwner@predators:
+		Condition: bot-owned
+		Bots: normal, hard
+	AutoTargetPriority@PREDATORS:
+		ValidTargets: Predator
+		RequiresCondition: bot-owned
 
 ^Ranged:
 	Inherits: ^Melee
