@@ -17,6 +17,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Test map scripts the asset installer writes on converted maps (AssetInstaller/TestMaps.cs). -->
+		<EmbeddedResource Include="AssetInstaller/MapTemplates/**/*" LogicalName="MapTemplates/%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="$(EngineRootPath)/AUTHORS">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

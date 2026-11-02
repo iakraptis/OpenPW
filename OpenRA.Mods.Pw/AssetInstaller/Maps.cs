@@ -52,6 +52,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					c.Warnings.Add($"{Path.GetFileName(file)}: {e.Message}");
 				}
 			}
+
+			TestMaps.Export(c);
 		}
 
 		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)

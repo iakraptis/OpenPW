@@ -35,7 +35,8 @@ MANUAL = set()
 EXPECTED_PASSES = {}
 
 DEFAULT_TIMEOUT = 180  # seconds of wall time, including game start-up
-TIMEOUTS = {}
+# The bot match plays 40000 ticks at 5x speed (about 9 minutes).
+TIMEOUTS = {'bot-test': 900}
 
 FAIL_PATTERN = re.compile(r'TEST FAIL|FAIL:|Fatal Lua Error')
 
