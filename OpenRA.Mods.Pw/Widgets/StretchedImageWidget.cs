@@ -17,7 +17,8 @@ using OpenRA.Widgets;
 namespace OpenRA.Mods.Pw.Widgets
 {
 	// Draws a chrome image stretched to fill the widget bounds (stock Image widgets draw at native size only), so the
-	// small original icons (the resource icons) scale with the interface bar. Shows a tooltip when given one.
+	// small original icons (the resource icons) scale with the interface bar, and the main menu with the window.
+	// GetImageName picks the image each frame (a button's state). Shows a tooltip when given one.
 	// Ported from OpenSYW.
 	public class StretchedImageWidget : Widget
 	{
@@ -26,6 +27,7 @@ namespace OpenRA.Mods.Pw.Widgets
 		public string TooltipTemplate;
 		public string TooltipContainer;
 		public Func<string> GetTooltipText;
+		public Func<string> GetImageName;
 
 		readonly Lazy<TooltipContainerWidget> tooltipContainer;
 
@@ -33,6 +35,7 @@ namespace OpenRA.Mods.Pw.Widgets
 		public StretchedImageWidget()
 		{
 			tooltipContainer = new Lazy<TooltipContainerWidget>(() => Ui.Root.Get<TooltipContainerWidget>(TooltipContainer));
+			GetImageName = () => ImageName;
 		}
 
 		protected StretchedImageWidget(StretchedImageWidget other)
@@ -43,6 +46,7 @@ namespace OpenRA.Mods.Pw.Widgets
 			TooltipTemplate = other.TooltipTemplate;
 			TooltipContainer = other.TooltipContainer;
 			GetTooltipText = other.GetTooltipText;
+			GetImageName = other.GetImageName;
 			tooltipContainer = new Lazy<TooltipContainerWidget>(() => Ui.Root.Get<TooltipContainerWidget>(TooltipContainer));
 		}
 
@@ -50,7 +54,7 @@ namespace OpenRA.Mods.Pw.Widgets
 
 		public override void Draw()
 		{
-			var sprite = ChromeProvider.GetImage(ImageCollection, ImageName);
+			var sprite = ChromeProvider.GetImage(ImageCollection, GetImageName());
 			if (sprite == null)
 				return;
 

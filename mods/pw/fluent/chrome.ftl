@@ -81,3 +81,7 @@ label-stat-mana = Mana { $mana }/{ $max }
 tooltip-stat-mana = Mana for abilities; it refills over time.
 label-stat-construction = Building { $percent }%
 tooltip-stat-construction = Under construction: a Buildman inside is building it.
+
+## The main menu
+button-main-menu-intro = Intro
+tooltip-main-menu-intro-unavailable = The intro is not available yet.

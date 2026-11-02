@@ -43,13 +43,18 @@ for the minimap.
 `T_`, `D_`) `game_menu`, `load_menu`, `save_menu`, `end_menu`, `yesno_menu`, `mission_menu`, `option_menu`,
 `allies_menu`, `message_menu`, `wait_menu`.
 
-- Header: `u32` widget count, `u32` (unknown), −1, 4.
-- Widget records: rectangles (`0, 0, 799, 599` for the background), a name at +0x9c (`bg`, `Continue`), and
-  more. The records vary in size and are not decoded; the mod uses OpenRA layouts instead.
+- Header: `u32` widget count, `u32` record count (the widgets with a record), −1, 4.
+- Widget records (in `Main.mnt` 0x2a4 bytes each from 0x10; the size varies between files): `i32` 6–9 the screen
+  rectangle x1, y1, x2, y2 (inclusive, on the 800x600 screen), `i32` 10–13 the frames of a button's states
+  (normal, hover, pressed, disabled; indexes into the frames of the chain, −1 when none), the name at +0x9c.
+  `Main.mnt`: `bg`, the buttons `single`, `multi`, `replay` (the Intro picture), `credit`, `quit`, an unnamed text
+  area at the bottom right (675, 578, 789, 598), and `bink`, where its video plays (68, 168, 738, 450).
+  The installer exports `Main.mnt` as `chrome/main-menu.png` and `mods/pw/chrome/main-menu.yaml` (Chrome.cs).
 - Resource chain, up to the end of the file: blocks of `u32` type, `u32` byte size, data.
   - 1: palette (1,024 bytes);
   - 2: one `.chr` frame (the background and every button state; English text is part of the images);
-  - 4: a Bink video (`BIKi`): the animated backgrounds of `Main.mnt` and `Single.mnt`.
+  - 4: a Bink video (`BIKi`): the animated backgrounds of `Main.mnt` and `Single.mnt`. `Main.mnt`'s is 668x277,
+    15 fps, 20 s: a slideshow of the races' artwork in the panel.
 
 `Credit.mnt` is a stub ("this is null data").
 
