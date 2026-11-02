@@ -10,3 +10,9 @@ command-hunt:
 	icon:
 		Filename: chrome/actions-primitive.png
 		Start: 13
+
+# Share meat: the original's meat-sharing button (Action.trt 35, a piece of meat with arrows outward).
+command-share-meat:
+	icon:
+		Filename: chrome/actions-primitive.png
+		Start: 35

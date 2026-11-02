@@ -10,6 +10,7 @@
 # - PwDefenseBotModule: the nearest armed units answer any attack on the bot (wild creatures included), and hostile
 #   wild creatures near the base and its workers are attacked first. Its units also fight predators on their own
 #   (AutoTargetPriority@PREDATORS, rules/defaults.yaml).
+# - PwHuntingBotModule: army units near the base hunt (the Hunt toggle): wild creatures around them, then the meat.
 # The stock SquadManagerBotModule attacks and defends; it takes type names, so a new faction adds its workers to
 # ExcludeFromSquadsTypes, its main building to ConstructionYardTypes, its air units to AirUnitsTypes and what it
 # defends to ProtectionTypes. The weights and limits below only tune Primitive; types not listed use the defaults.
@@ -55,6 +56,8 @@ player:
 	PwAbilityBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	PwDefenseBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwHuntingBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	SquadManagerBotModule@normal:
 		RequiresCondition: enable-normal-ai
@@ -107,6 +110,8 @@ player:
 	PwAbilityBotModule@hard:
 		RequiresCondition: enable-hard-ai
 	PwDefenseBotModule@hard:
+		RequiresCondition: enable-hard-ai
+	PwHuntingBotModule@hard:
 		RequiresCondition: enable-hard-ai
 	SquadManagerBotModule@hard:
 		RequiresCondition: enable-hard-ai

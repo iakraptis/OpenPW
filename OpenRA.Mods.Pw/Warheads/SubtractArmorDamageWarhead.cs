@@ -21,8 +21,9 @@ using OpenRA.Traits;
 namespace OpenRA.Mods.Pw.Warheads
 {
 	[Desc("Primitive Wars damage (Pw.exe 0x457cc4): the attack value, after firepower modifiers, minus the target's ",
-		"PwArmor, at least 1. Versus percentages still apply afterwards. Spread > 0 is the splash radius.")]
-	public class SubtractArmorDamageWarhead : TargetDamageWarhead
+		"PwArmor, at least 1. Versus percentages still apply afterwards. Area damage as the engine's SpreadDamage (after",
+		"OpenSYW): what the projectile lands near is hit, with the attack scaled by Falloff over distance before armour.")]
+	public class SubtractArmorDamageWarhead : SpreadDamageWarhead
 	{
 		protected override void InflictDamage(Actor victim, Actor firedBy, HitShape shape, WarheadArgs args)
 		{

@@ -2,6 +2,8 @@
 -- 1. A StoneTower stones an enemy in range on its own: 40 damage minus armour.
 -- 2. A Trap snaps at an enemy beside it: 80 damage.
 -- 3. A StoneTower still under construction doesn't shoot, and doesn't count as a prerequisite yet.
+-- 4. Stealth: a Trap is hidden from the other players (not from its owner). Their StoneTowers reveal it within 5
+--    cells, 8 with Improve StoneTower Detection; their Traps within 5.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Creeps")
@@ -10,7 +12,27 @@ WorldLoaded = function()
     Later(5, Tower)
     Later(5, Trap)
     Later(5, Unfinished)
+    Later(5, Stealth)
     FinishWhenDone("DEFENCE", 2000)
+end
+
+Stealth = function()
+    local hidden = Actor.Create("primitive-trap", true, { Owner = me, Location = CPos.New(14, 28) })
+    -- 7 cells away: beyond a tower's 5, within the upgraded 8.
+    Actor.Create("primitive-stonetower", true, { Owner = enemy, Location = CPos.New(21, 28) })
+    local spotted = Actor.Create("primitive-trap", true, { Owner = me, Location = CPos.New(4, 24) })
+    Later(5, function()
+        Check(not PwTest.CanSee(enemy, hidden), "a Trap is hidden from the other players")
+        Check(PwTest.CanSee(me, hidden), "its owner sees it")
+        Actor.Create("primitive-trap", true, { Owner = enemy, Location = CPos.New(8, 24) })
+        Later(5, function()
+            Check(PwTest.CanSee(enemy, spotted), "a Trap of theirs 4 cells away reveals it")
+            PwTest.CompleteUpgrade(enemy, "primitive-upgrade-stonetower-detection-1")
+            Later(5, function()
+                Check(PwTest.CanSee(enemy, hidden), "their StoneTower 7 cells away reveals it after Improve StoneTower Detection")
+            end)
+        end)
+    end)
 end
 
 FirstHit = function(label, target, damage, timeout)

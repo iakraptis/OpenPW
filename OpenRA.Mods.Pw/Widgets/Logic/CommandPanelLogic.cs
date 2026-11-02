@@ -24,7 +24,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// - a worker selected: its build list (Builder); a click enters placement mode;
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
 	// - the Chief: his ability (Fall out) with his mana;
-	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot.
+	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot;
+	// - two or more meat eaters with meat: Share meat (they meet and split it evenly), in the next.
 	// Icons are the original portraits (each image's "icon" sequence); every slot has a tooltip (name and cost; time, what is missing, how to use it). InterfaceBarLogic
 	// places the panel and the slots; SelectionPanelLogic shows what is selected.
 	public class CommandPanelLogic : ChromeLogic
@@ -74,6 +75,32 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var free = slots.FirstOrDefault(s => !s.Visible);
 			if (hunters.Length > 0 && queue == null && free != null)
 				ShowHunt(free, hunters);
+
+			// Share meat: two or more meat eaters, one of them carrying some.
+			var eaters = selected.Where(a => a.TraitOrDefault<PwMeatEater>() != null && a.TraitOrDefault<IMove>() != null).ToArray();
+			free = slots.FirstOrDefault(s => !s.Visible);
+			if (eaters.Length > 1 && eaters.Any(e => e.Trait<PwMeatEater>().Meat > 0) && queue == null && free != null)
+				ShowShareMeat(free, eaters);
+		}
+
+		// The units meet and split the meat they carry evenly; the one with the most meat takes the order.
+		void ShowShareMeat(ButtonWidget slot, Actor[] eaters)
+		{
+			Sprite icon = null;
+			if (world.Map.Sequences.HasSequence("command-share-meat", "icon"))
+				icon = world.Map.Sequences.GetSequence("command-share-meat", "icon").GetSprite(0);
+
+			var total = eaters.Sum(e => e.Trait<PwMeatEater>().Meat);
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsDisabled = () => false;
+			slot.IsHighlighted = () => false;
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-share-meat");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-share-meat", "total", total, "units", eaters.Length, "each", total / eaters.Length);
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () =>
+				world.IssueOrder(PwMeatEater.Share(eaters.Where(e => !e.IsDead).OrderByDescending(e => e.Trait<PwMeatEater>().Meat).ToArray()));
 		}
 
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).

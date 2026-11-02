@@ -1,22 +1,30 @@
 # Weapon templates (plan.md §3.3). Concrete weapons set damage (the unit's attack), range, reload and projectile
 # speed only. Original values convert as: pixels x 32 = WDist (32 px = 1c0), ticks = ticks.
+# Projectile speeds are the original's x 710/576 (about 1.23): the arrows fly at OpenSYW's arrow speed in real time
+# (400 per 40 ms tick = 710 per our 71 ms tick, about 9.8 cells a second; the original's 576 let moving targets walk
+# out of the way), and every other missile faster by the same share.
 # Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
 
-# Hits strike the target actor itself (TargetActorCenter); a projectile, which lands on a position, damages what it
-# lands on (Spread 0c64, the size of a hit point). Splash weapons set a larger Spread.
+# Hits strike the target actor itself (TargetActorCenter). A projectile flies to where the target was and damages what
+# it lands near, as OpenSYW's arrows do: full damage within 100 (a tenth of a cell) of a unit's body, then 37%, 14%
+# and 5% each 100 further (the engine's SpreadDamage falloff), so a target that moved on a little is still hit. Splash
+# weapons set Range and Falloff: full damage within the original's splash radius.
 ^PwWeapon:
 	ValidTargets: Ground
 	TargetActorCenter: true
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground
 		DamageTypes: DefaultDeath
-		Spread: 0c64
+		Spread: 100
 
 # Instant hits at touching range (the original's 32 px).
 ^Melee:
 	Inherits: ^PwWeapon
 	Range: 1c256
 	Projectile: InstantHit
+	# The blow lands on the target itself: no graze for whoever stands beside it.
+	Warhead@1Dam: SubtractArmorDamage
+		Spread: 16
 
 # Arrows and bolts: a straight missile; can hit flying units (target mask bit 3).
 ^Arrow:

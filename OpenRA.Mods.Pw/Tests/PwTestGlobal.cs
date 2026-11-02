@@ -137,6 +137,18 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Turns a unit's hunting on or off, as the Hunt button does.")]
 		public void Hunt(Actor actor, bool on) => actor.World.IssueOrder(PwHunter.Toggle(actor, on));
 
+		[Desc("Selects these actors (replacing the selection), as a drag box does.")]
+		public void SelectAll(Actor[] actors) => actors[0].World.Selection.Combine(actors[0].World, actors, false, false);
+
+		[Desc("Sets the meat a unit carries.")]
+		public void SetMeat(Actor actor, int amount) => actor.TraitOrDefault<PwMeatEater>()?.SetMeat(amount);
+
+		[Desc("Makes the units meet and share their meat, as the Share meat button does (the first takes the order).")]
+		public void ShareMeat(Actor[] units) => units[0].World.IssueOrder(PwMeatEater.Share(units));
+
+		[Desc("Whether the player can see the actor (fog and stealth: a hidden trap needs a detector near it).")]
+		public bool CanSee(Player player, Actor actor) => actor.CanBeViewedByPlayer(player);
+
 		[Desc("Whether a unit's hunting is on.")]
 		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
 	}
