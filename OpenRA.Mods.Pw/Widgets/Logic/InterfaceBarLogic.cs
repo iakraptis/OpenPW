@@ -30,6 +30,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	public class InterfaceBarLogic : ChromeLogic
 	{
 		const int SlotSize = 40;
+
+		// The camera zooms out this much past the default view (the engine stops there otherwise, as it does for
+		// players; spectators get 0.5).
+		const float ZoomOutScale = 0.75f;
 		const int SlotRows = 2;
 		const int SelectionWidth = 330;
 
@@ -45,9 +49,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		Widget openPanel;
 
 		[ObjectCreator.UseCtor]
-		public InterfaceBarLogic(Widget widget, World world)
+		public InterfaceBarLogic(Widget widget, World world, WorldRenderer worldRenderer)
 		{
 			this.world = world;
+			worldRenderer.Viewport.UnlockMinimumZoom(ZoomOutScale);
 			bar = widget.Get<InterfaceBarWidget>("INTERFACE_BAR");
 			var race = world.LocalPlayer?.Faction.InternalName;
 			var collection = race != null && ChromeProvider.Collections.ContainsKey($"bar-{race}") ? $"bar-{race}" : "bar-primitive";

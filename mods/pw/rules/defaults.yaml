@@ -142,6 +142,7 @@
 # Predators attack enemy (player) units within ScanRadius cells, a short range, so they only bite what passes by.
 ^WildPredator:
 	Inherits: ^Melee
+	-PwHunter:
 	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
 	Targetable@PREDATOR:
 		TargetTypes: Predator
@@ -235,6 +236,8 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
 		InvalidTargets: Wild
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	PwHunter:
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
@@ -254,6 +257,8 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	PwHunter:
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
