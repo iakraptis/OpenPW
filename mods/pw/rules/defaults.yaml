@@ -142,6 +142,7 @@
 # Predators attack enemy (player) units within ScanRadius cells, a short range, so they only bite what passes by.
 ^WildPredator:
 	Inherits: ^Melee
+	-PwHunter:
 	AutoTarget:
 		InitialStance: AttackAnything
 		InitialStanceAI: AttackAnything
@@ -232,6 +233,8 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
 		InvalidTargets: Wild
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	PwHunter:
 
 # Ranged units also pick flying targets on their own, when their weapon reaches the air (arrows yes, bombs no).
 # Flying attackers: fire while hovering, at ground and air targets; they take off as soon as they appear.
@@ -244,6 +247,8 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	PwHunter:
 
 ^Ranged:
 	Inherits: ^Melee

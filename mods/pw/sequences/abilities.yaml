@@ -1,5 +1,12 @@
-# Ability buttons (chrome/magic-<race>.png: JW2_02 Magic.trt, written by the installer's chrome stage).
+# Ability and command buttons (chrome/magic-<race>.png: JW2_02 Magic.trt; chrome/actions-<race>.png: Action.trt;
+# written by the installer's chrome stage).
 ability-fall-out:
 	icon:
 		Filename: chrome/magic-primitive.png
 		Start: 0
+
+# The Hunt toggle: the original's hunting button (Action.trt 13, crossed spear and pitchfork).
+command-hunt:
+	icon:
+		Filename: chrome/actions-primitive.png
+		Start: 13

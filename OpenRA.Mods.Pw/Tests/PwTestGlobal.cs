@@ -133,5 +133,11 @@ namespace OpenRA.Mods.Pw.Tests
 
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
+
+		[Desc("Turns a unit's hunting on or off, as the Hunt button does.")]
+		public void Hunt(Actor actor, bool on) => actor.World.IssueOrder(PwHunter.Toggle(actor, on));
+
+		[Desc("Whether a unit's hunting is on.")]
+		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
 	}
 }

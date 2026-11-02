@@ -23,7 +23,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
-	// - the Chief: his ability (Fall out) with his mana.
+	// - the Chief: his ability (Fall out) with his mana;
+	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot.
 	// Icons are the original portraits (each image's "icon" sequence); every slot has a tooltip (name and cost; time, what is missing, how to use it). InterfaceBarLogic
 	// places the panel and the slots; SelectionPanelLogic shows what is selected.
 	public class CommandPanelLogic : ChromeLogic
@@ -67,6 +68,36 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				if (fallOut != null)
 					ShowAbility(producer, fallOut);
 			}
+
+			// Hunting, for the selected units that can hunt: in the first free slot (after the build list or ability).
+			var hunters = selected.Where(a => a.TraitOrDefault<PwHunter>() is PwHunter h && !h.IsTraitDisabled).ToArray();
+			var free = slots.FirstOrDefault(s => !s.Visible);
+			if (hunters.Length > 0 && queue == null && free != null)
+				ShowHunt(free, hunters);
+		}
+
+		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
+		void ShowHunt(ButtonWidget slot, Actor[] hunters)
+		{
+			Sprite icon = null;
+			if (world.Map.Sequences.HasSequence("command-hunt", "icon"))
+				icon = world.Map.Sequences.GetSequence("command-hunt", "icon").GetSprite(0);
+
+			bool AllHunting() => hunters.All(h => h.IsDead || h.Trait<PwHunter>().Hunting);
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsDisabled = () => false;
+			slot.IsHighlighted = AllHunting;
+			slot.GetTooltipText = () => FluentProvider.GetMessage(AllHunting() ? "label-hunt-on" : "label-hunt-off");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-hunt");
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () =>
+			{
+				var on = !AllHunting();
+				foreach (var h in hunters.Where(h => !h.IsDead))
+					world.IssueOrder(PwHunter.Toggle(h, on));
+			};
 		}
 
 		void ShowBuildList(Actor builderActor)
@@ -188,6 +219,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-ability-fall-out", "cost", fallOut.Info.Cost);
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage(fallOut.IsUnlocked(caster) ? "tooltip-ability-fall-out" : "label-ability-fall-out-locked");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
@@ -206,6 +238,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
 			slot.GetTooltipText = () => FluentProvider.GetMessage("tooltip-slot", "name", name, "cost", cost);
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => portrait;
 			slot.Get<LabelWidget>("PROGRESS").GetText = progress;
