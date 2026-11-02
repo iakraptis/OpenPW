@@ -24,7 +24,8 @@ namespace OpenRA.Mods.Pw.Traits
 		"house when the population is nearly full, otherwise the building furthest below its share of the base; it",
 		"finds a site around the base centre (the drop-off, Sanctuary) and sends a worker with the PwBuildAt order the",
 		"build palette issues. What a worker can build comes from its Builder list and every type's role from its traits",
-		"(houses: ProvidesPopulation only; drop-offs: AcceptsBerries; defences: armed buildings), so it plays any faction;",
+		"(houses: ProvidesPopulation only; drop-offs: AcceptsBerries; defences: armed buildings, which guard the main",
+		"building, the berries and the base's edge), so it plays any faction;",
 		"BuildingShares and BuildingLimits only tune it.")]
 	public class PwBaseBuilderBotModuleInfo : ConditionalTraitInfo
 	{
@@ -55,6 +56,15 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly Dictionary<string, int> BuildingLimits = new();
 
 		public readonly int DefenseLimit = 3;
+
+		[Desc("Towers guard three spots: the main building, the berry bushes nearest the base and the base's edge toward",
+			"the nearest enemy. Once the bot has its workforce and a production building, a spot without a tower gets one",
+			"before anything but houses; further towers go to the least guarded spot. The tower is the defence (armed",
+			"building) with the longest reach. False: towers only by their share, around the base.")]
+		public readonly bool GuardSpots = true;
+
+		[Desc("A defence within this many cells of a spot guards it.")]
+		public readonly int GuardRadius = 5;
 
 		[Desc("Search annulus around the base centre, in cells.")]
 		public readonly int MinBaseRadius = 3;
@@ -133,7 +143,10 @@ namespace OpenRA.Mods.Pw.Traits
 				// A type with no room (a large building in a cramped base) mustn't block the others.
 				var worker = free.Where(b => b.Trait<Builder>().CanBuild(type))
 					.OrderBy(b => b.IsIdle ? 0 : 1).ThenBy(b => (b.Location - center).LengthSquared).FirstOrDefault();
-				var site = worker == null ? null : FindSite(worker, info, center);
+				var site = worker == null ? null
+					: PwBotUtils.IsDefense(info) && Info.GuardSpots ? GuardedSpots(owned, center).OrderBy(g => g.Towers)
+						.Select(g => FindSite(worker, info, g.Spot, 1, Info.GuardRadius)).FirstOrDefault(c => c != null)
+					: FindSite(worker, info, center, Info.MinBaseRadius, Info.MaxBaseRadius);
 				if (site == null)
 				{
 					AIUtils.BotDebug("{0}: no site for {1}.", player, type);
@@ -187,6 +200,12 @@ namespace OpenRA.Mods.Pw.Traits
 			if (owned.Count(a => PwBotUtils.IsWorker(a.Info)) < Info.MinimumWorkers)
 				yield break;
 
+			// A tower for every guard spot without one, once a production building stands (the first thing to defend).
+			var tower = buildable.Where(PwBotUtils.IsDefense).OrderByDescending(Reach).ThenBy(PwBotUtils.Cost).FirstOrDefault();
+			var producing = owned.Any(a => PwBotUtils.IsComplete(a) && a.Info.HasTraitInfo<ProductionQueueInfo>() && !PwBotUtils.IsDropOff(a.Info));
+			if (Info.GuardSpots && tower != null && producing && GuardedSpots(owned, BaseCenter(owned, free)).Any(g => g.Towers == 0))
+				yield return tower.Name;
+
 			// The type whose (count + 1) / share is smallest is furthest below its share.
 			var byShare = buildable
 				.Where(i => !PwBotUtils.IsHouse(i))
@@ -197,6 +216,40 @@ namespace OpenRA.Mods.Pw.Traits
 
 			foreach (var t in byShare)
 				yield return t.Info.Name;
+		}
+
+		// How far a defence strikes: its longest weapon.
+		int Reach(ActorInfo info) => info.TraitInfos<ArmamentInfo>()
+			.Select(a => world.Map.Rules.Weapons.TryGetValue(a.Weapon.ToLowerInvariant(), out var w) ? w.Range.Length : 0)
+			.DefaultIfEmpty(0).Max();
+
+		// The spots towers guard, each with the number of the bot's defences (finished or not) within GuardRadius: the
+		// main building, the berry bush nearest the base centre, and the base's edge toward the nearest enemy building
+		// (or the map centre while none is known).
+		List<(CPos Spot, int Towers)> GuardedSpots(List<Actor> owned, CPos center)
+		{
+			var spots = new List<CPos> { center };
+
+			var bush = world.ActorsHavingTrait<BerryBush>().Where(b => b.IsInWorld && !b.Trait<BerryBush>().IsEmpty)
+				.MinByOrDefault(b => (b.Location - center).LengthSquared);
+			if (bush != null && (bush.Location - center).LengthSquared <= Info.MaxBaseRadius * Info.MaxBaseRadius * 4)
+				spots.Add(bush.Location);
+
+			var enemy = world.ActorsHavingTrait<Building>()
+				.Where(a => !a.IsDead && a.IsInWorld && !a.Owner.NonCombatant && player.RelationshipWith(a.Owner) == PlayerRelationship.Enemy)
+				.MinByOrDefault(a => (a.Location - center).LengthSquared);
+			var bounds = world.Map.Bounds;
+			var toward = enemy?.Location ?? new CPos(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2);
+			var offset = toward - center;
+			var length = offset.Length;
+			if (length > 0)
+			{
+				var edge = Info.MaxBaseRadius * 2 / 3;
+				spots.Add(center + new CVec(offset.X * edge / length, offset.Y * edge / length));
+			}
+
+			var defences = owned.Where(a => PwBotUtils.IsDefense(a.Info)).Select(a => a.Location).ToList();
+			return spots.ConvertAll(s => (s, defences.Count(d => (d - s).LengthSquared <= Info.GuardRadius * Info.GuardRadius)));
 		}
 
 		int Share(ActorInfo info) =>
@@ -219,11 +272,11 @@ namespace OpenRA.Mods.Pw.Traits
 			return main.Location + new CVec(footprint.X / 2, footprint.Y / 2);
 		}
 
-		CPos? FindSite(Actor worker, ActorInfo info, CPos center)
+		CPos? FindSite(Actor worker, ActorInfo info, CPos center, int minRadius, int maxRadius)
 		{
 			var buildingInfo = info.TraitInfo<BuildingInfo>();
 			var valid = new List<CPos>();
-			foreach (var cell in world.Map.FindTilesInAnnulus(center, Info.MinBaseRadius, Info.MaxBaseRadius))
+			foreach (var cell in world.Map.FindTilesInAnnulus(center, minRadius, maxRadius))
 			{
 				if (!Builder.CanPlace(world, worker, info, buildingInfo, cell) || !Clear(buildingInfo, cell))
 					continue;

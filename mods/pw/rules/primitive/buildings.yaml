@@ -319,6 +319,13 @@ primitive-stonetower:
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
+	# An AI player's towers and traps also strike hostile wild creatures (rules/defaults.yaml ^Melee).
+	GrantConditionOnBotOwner@predators:
+		Condition: bot-owned
+		Bots: normal, hard
+	AutoTargetPriority@PREDATORS:
+		ValidTargets: Predator
+		RequiresCondition: bot-owned
 	WithAttackAnimation:
 		Sequence: attack
 
@@ -357,3 +364,10 @@ primitive-trap:
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground
 		InvalidTargets: Wild
+	# An AI player's towers and traps also strike hostile wild creatures (rules/defaults.yaml ^Melee).
+	GrantConditionOnBotOwner@predators:
+		Condition: bot-owned
+		Bots: normal, hard
+	AutoTargetPriority@PREDATORS:
+		ValidTargets: Predator
+		RequiresCondition: bot-owned

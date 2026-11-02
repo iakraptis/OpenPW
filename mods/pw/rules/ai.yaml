@@ -3,6 +3,13 @@
 #   when the population is nearly full; every other building by its share.
 # - PwGathererBotModule: idle workers (BerryGatherer) to the berry bushes.
 # - PwUnitBuilderBotModule: every training queue: workers, then research when rich, then a weighted army mix.
+# - PwTransportBotModule: transports (aircraft with Cargo) fly soldiers to enemy buildings out of walking reach, or
+#   raid the least defended one.
+# - PwAbilityBotModule: casters (the Chief's Fall out) strike the strongest enemy near them; the unlocking research
+#   comes first once the bot has a caster.
+# - PwDefenseBotModule: the nearest armed units answer any attack on the bot (wild creatures included), and hostile
+#   wild creatures near the base and its workers are attacked first. Its units also fight predators on their own
+#   (AutoTargetPriority@PREDATORS, rules/defaults.yaml).
 # The stock SquadManagerBotModule attacks and defends; it takes type names, so a new faction adds its workers to
 # ExcludeFromSquadsTypes, its main building to ConstructionYardTypes, its air units to AirUnitsTypes and what it
 # defends to ProtectionTypes. The weights and limits below only tune Primitive; types not listed use the defaults.
@@ -43,10 +50,16 @@ player:
 			primitive-chief: 3
 		UnitLimits:
 			primitive-chief: 1
+	PwTransportBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwAbilityBotModule@normal:
+		RequiresCondition: enable-normal-ai
+	PwDefenseBotModule@normal:
+		RequiresCondition: enable-normal-ai
 	SquadManagerBotModule@normal:
 		RequiresCondition: enable-normal-ai
 		SquadSize: 8
-		# Not the wild creatures: squads go for the other players (units still fight back when attacked).
+		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
 		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
 		ConstructionYardTypes: primitive-sanctuary
@@ -86,11 +99,20 @@ player:
 			primitive-chief: 4
 		UnitLimits:
 			primitive-chief: 1
+	PwTransportBotModule@hard:
+		RequiresCondition: enable-hard-ai
+		MinimumPassengers: 5
+		RaidArmy: 12
+		Cooldown: 500
+	PwAbilityBotModule@hard:
+		RequiresCondition: enable-hard-ai
+	PwDefenseBotModule@hard:
+		RequiresCondition: enable-hard-ai
 	SquadManagerBotModule@hard:
 		RequiresCondition: enable-hard-ai
 		SquadSize: 12
 		SquadSizeRandomBonus: 6
-		# Not the wild creatures: squads go for the other players (units still fight back when attacked).
+		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
 		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver
 		ConstructionYardTypes: primitive-sanctuary

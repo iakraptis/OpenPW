@@ -31,6 +31,9 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Bushes further than this from every drop-off are left alone, in cells.")]
 		public readonly int MaxBushDistance = 30;
 
+		[Desc("Bushes with a hostile wild creature (one that attacks) within this many cells are left alone.")]
+		public readonly int DangerRadius = 5;
+
 		public override object Create(ActorInitializer init) { return new PwGathererBotModule(init.Self, this); }
 	}
 
@@ -70,9 +73,15 @@ namespace OpenRA.Mods.Pw.Traits
 			if (dropOffs.Count == 0)
 				return;
 
+			// Where hostile wild creatures stand (PwDefenseBotModule clears those near the base).
+			var danger = WDist.FromCells(Info.DangerRadius).Length;
+			var predators = world.ActorsHavingTrait<AttackBase>()
+				.Where(a => !a.IsDead && a.IsInWorld && a.Owner.NonCombatant && player.RelationshipWith(a.Owner) == PlayerRelationship.Enemy)
+				.Select(a => a.CenterPosition).ToList();
+
 			var maxDistance = WDist.FromCells(Info.MaxBushDistance).Length;
 			var bushes = world.ActorsHavingTrait<BerryBush>()
-				.Where(b => b.IsInWorld && !b.Trait<BerryBush>().IsEmpty)
+				.Where(b => b.IsInWorld && !b.Trait<BerryBush>().IsEmpty && !predators.Any(p => (p - b.CenterPosition).Length <= danger))
 				.Select(b => (Bush: b, Distance: dropOffs.Min(d => (b.CenterPosition - d).Length)))
 				.Where(b => b.Distance <= maxDistance)
 				.ToList();
