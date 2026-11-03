@@ -1,0 +1,572 @@
+# Elf units (docs/game/elf.md). Speeds are the average walk step (px per tick) x 32; ranges, sight and speeds in
+# WDist (32 px = 1c0); armour is the original flat value; Passenger weights are .chr 0x188. Casters have mana
+# (PwMana, .chr stat 4) and cast PwSpell. A unit's spells are its .chr 0x1f0 bits; each spell's level (record 0x160,
+# counted from 0: the help file's from 1), research (0x15c), mana (0x1e4) and effect come from its JW2_11 record, and
+# its effect grows with spell power (PwLevels.SpellPower, Level.lvt row 2).
+
+# The worker. It gathers by magic (Berry fly): its cast animation while gathering, nothing in its hands after.
+elf-wizard:
+	Inherits: ^Worker
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 10
+		AttackGain: 18
+		ArmorGain: 9
+		AttackDelay: 23
+	UsesPopulation:
+		Amount: 1
+	Builder:
+		Types: elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-manalibrary, elf-skylibrary, elf-bubble
+	Buildable:
+		Queue: elf-heaven
+		BuildDuration: 160
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: elf-wizard
+	Tooltip:
+		Name: actor-elf-wizard.name
+	Valued:
+		Cost: 100
+	Health:
+		HP: 90
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 144
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		# Strikes on step 9 of its attack animation (.chr 0x247c).
+		FireDelay: 9
+		Weapon: WizardFirebolt
+	WithSpriteBody@GATHER:
+		Sequence: stand-carry-a
+	WithInfantryBody@CARRY:
+		IdleSequences: stand
+		StandSequences: stand
+		MoveSequence: walk
+
+# Thunder bolt from level 1.
+elf-redelf:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 12
+		AttackGain: 27
+		ArmorGain: 27
+		AttackDelay: 17
+		SpellPower: 0, 0, 12, 24, 36, 48, 60, 72, 84, 100
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: elf-redhall
+		BuildDuration: 224
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: elf-redelf
+	Tooltip:
+		Name: actor-elf-redelf.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 130
+	PwArmor:
+		Value: 2
+	Mobile:
+		Speed: 171
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: RedBolt
+	PwMana:
+		Max: 100
+	# Record 1: lightning on one enemy unit, 80 damage (on frame 4), 40 mana.
+	PwSpell@THUNDER-BOLT:
+		Name: thunder-bolt
+		Target: Unit
+		ManaCost: 40
+		MinLevel: 1
+		Damage: 80
+		Delay: 16
+		Image: spell-thunder-bolt
+		Icon: ability-thunder-bolt
+		Sound: spell-thunder-bolt-0.wav
+
+# Shield from level 1, Mass temper from level 3.
+elf-whiteelf:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 3
+	PwLevels:
+		XpPerLevel: 16
+		AttackGain: 27
+		ArmorGain: 27
+		AttackDelay: 18
+		SpellPower: 0, 0, 0, 0, 16, 32, 48, 64, 80, 100
+	UsesPopulation:
+		Amount: 3
+	Buildable:
+		Queue: elf-redhall
+		BuildDuration: 400
+		BuildPaletteOrder: 20
+		Prerequisites: elf-elflibrary
+	RenderSprites:
+		Image: elf-whiteelf
+	Tooltip:
+		Name: actor-elf-whiteelf.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 250
+	PwArmor:
+		Value: 3
+	Mobile:
+		Speed: 203
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		# Strikes on step 10 of its attack animation (.chr 0x247c).
+		FireDelay: 10
+		Weapon: WhiteBolt
+	PwMana:
+		Max: 100
+	# Record 2: a friendly unit's shield soaks up 480 damage (its 0x1e8; the shield pool of Pw.exe 0x478db8); 60 mana.
+	PwSpell@SHIELD:
+		Name: shield
+		Target: Unit
+		TargetRelationships: Ally
+		ManaCost: 60
+		MinLevel: 1
+		Shield: 480
+		Image: spell-shield
+		Icon: ability-shield
+	# Record 3: the friendly units within 56 px of the place get a 160 shield for 300 ticks; 50 mana.
+	PwSpell@MASS-TEMPER:
+		Name: mass-temper
+		Target: Ground
+		AffectsRelationships: Ally
+		ManaCost: 50
+		MinLevel: 3
+		Shield: 160
+		ShieldTicks: 300
+		Radius: 1c768
+		Image: spell-mass-temper
+		Icon: ability-mass-temper
+
+# Teleport from the start, Jump portal from level 3.
+elf-ranger:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 2
+	PwLevels:
+		XpPerLevel: 12
+		AttackGain: 18
+		ArmorGain: 18
+		AttackDelay: 19
+		SpellPower: 0, 0, 0, 18, 36, 48, 60, 72, 84, 100
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: elf-bluehall
+		BuildDuration: 224
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: elf-ranger
+	Tooltip:
+		Name: actor-elf-ranger.name
+	Valued:
+		Cost: 250
+	Health:
+		HP: 120
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 171
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 5 of its attack animation (.chr 0x247c).
+		FireDelay: 5
+		Weapon: RangerHit
+	PwMana:
+		Max: 100
+	# Record 4: to any explored place on the map; 65 mana.
+	PwSpell@TELEPORT:
+		Name: teleport
+		Target: Ground
+		ManaCost: 65
+		Range: 999c0
+		Teleport: true
+		Image: spell-teleport
+		Icon: ability-teleport
+		Sound: spell-teleport-0.wav
+	# Record 5: a portal of 48 px that throws the enemies walking into it away, open 216 ticks (its 54 frames of 4);
+	# 65 mana. Where they land is the mod's: 12 cells off.
+	PwSpell@JUMP-PORTAL:
+		Name: jump-portal
+		Target: Ground
+		ManaCost: 65
+		MinLevel: 3
+		PortalTicks: 216
+		Radius: 1c512
+		Image: spell-jump-portal
+		Icon: ability-jump-portal
+		Sound: spell-jump-portal-0.wav
+
+# Drop stone from level 1.
+elf-blueelf:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	Inherits@attack: ^Melee
+	-Crushable:
+	Passenger:
+		Weight: 4
+	PwLevels:
+		XpPerLevel: 16
+		AttackGain: 27
+		ArmorGain: 18
+		AttackDelay: 26
+		SpellPower: 0, 0, 12, 24, 36, 48, 60, 72, 84, 100
+	UsesPopulation:
+		Amount: 4
+	Buildable:
+		Queue: elf-bluehall
+		BuildDuration: 400
+		BuildPaletteOrder: 20
+		Prerequisites: elf-elflibrary
+	RenderSprites:
+		Image: elf-blueelf
+	Tooltip:
+		Name: actor-elf-blueelf.name
+	Valued:
+		Cost: 500
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 251
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		# Strikes on step 8 of its attack animation (.chr 0x247c).
+		FireDelay: 8
+		Weapon: BlueElfHit
+	PwMana:
+		Max: 100
+	# Record 6: a stone falls on the place, 200 damage within 64 px (on frame 3); 65 mana.
+	PwSpell@DROP-STONE:
+		Name: drop-stone
+		Target: Ground
+		ManaCost: 65
+		MinLevel: 1
+		Damage: 200
+		Delay: 12
+		Radius: 2c0
+		Image: spell-drop-stone
+		Icon: ability-drop-stone
+		Sound: spell-drop-stone-0.wav
+
+# The Unicorn heals (Cure) and, once researched, makes illusions (Fake). It doesn't fight and doesn't gain levels.
+elf-unicorn:
+	Inherits: ^Infantry
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Elf
+	-Crushable:
+	Passenger:
+		Weight: 1
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: elf-manahall
+		BuildDuration: 256
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: elf-unicorn
+	Tooltip:
+		Name: actor-elf-unicorn.name
+	Valued:
+		Cost: 250
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 162
+	RevealsShroud:
+		Range: 9c0
+	PwMana:
+		Max: 200
+	# Record 18: a friendly unit regains 2 HP a tick for 1 mana a tick, while it is hurt and the mana lasts.
+	PwSpell@CURE:
+		Name: cure
+		Target: Unit
+		TargetRelationships: Ally
+		Range: 3c0
+		ManaPerStep: 1
+		Heal: 2
+		Steps: 300
+		StepInterval: 1
+		Image: spell-cure
+		Icon: ability-cure
+		Sound: spell-cure-0.wav
+	# Record 8: a harmless copy of a unit appears, the Unicorn's own, for 960 ticks; 80 mana, after Study Fake.
+	PwSpell@FAKE:
+		Name: fake
+		Target: Unit
+		TargetRelationships: Ally, Enemy, Neutral
+		ManaCost: 80
+		Prerequisites: elf-upgrade-fake-unicorn-1
+		Illusion: true
+		Image: spell-fake
+		Icon: ability-fake
+		Sound: spell-fake-0.wav
+
+# The Pixie scouts: an unarmed flyer. It doesn't gain levels.
+elf-pixie:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Elf
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: elf-manahall
+		BuildDuration: 560
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: elf-pixie
+	Tooltip:
+		Name: actor-elf-pixie.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 100
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 176
+	RevealsShroud:
+		Range: 10c0
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
+# The ManaSpread flies low ("Fly"), unarmed: it refills the mana of the casters around it (PwManaAura) and, once
+# researched, gives itself up for Meteor. It doesn't gain levels.
+elf-manaspread:
+	Inherits: ^LivingFlyer
+	Inherits@flight: ^LowFlight
+	Inherits@race: ^Elf
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: elf-manahall
+		BuildDuration: 320
+		BuildPaletteOrder: 30
+		Prerequisites: elf-manalibrary
+	RenderSprites:
+		Image: elf-manaspread
+	Tooltip:
+		Name: actor-elf-manaspread.name
+	Valued:
+		Cost: 350
+	Health:
+		HP: 75
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 144
+	RevealsShroud:
+		Range: 6c0
+	PwMana:
+		Max: 200
+	PwManaAura:
+	# Record 9: 60 meteors over the place, each 30 damage within 64 px, falling within 80 px of it; the ManaSpread
+	# is gone. After Study Meteor.
+	PwSpell@METEOR:
+		Name: meteor
+		Target: Ground
+		Prerequisites: elf-upgrade-meteor-manaspread-1
+		Damage: 30
+		Steps: 60
+		StepInterval: 2
+		Delay: 24
+		Radius: 2c0
+		Scatter: 2c512
+		KillsCaster: true
+		Image: spell-meteo
+		Icon: ability-meteor
+		Sound: spell-meteo-0.wav
+
+# The ElfRing carries 8 (.chr 0x188 on a transport), landed to load. A magic ring, not living; no levels.
+elf-elfring:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Elf
+	-PwLiving:
+	-PwMeatEater:
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: elf-skyhall
+		BuildDuration: 400
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: elf-elfring
+	Tooltip:
+		Name: actor-elf-elfring.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 250
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 208
+		IdleBehavior: Land
+		LandableTerrainTypes: Clear, Ramp
+	RevealsShroud:
+		Range: 8c0
+	Cargo:
+		Types: Ground
+		MaxWeight: 8
+		UnloadVoice: Action
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
+# Fire at flyers only.
+elf-phoenix:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Elf
+	Inherits@attack: ^AirAttack
+	PwLevels:
+		XpPerLevel: 12
+		AttackGain: 45
+		ArmorGain: 27
+		AttackDelay: 25
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 4
+	Buildable:
+		Queue: elf-skyhall
+		BuildDuration: 480
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: elf-phoenix
+	Tooltip:
+		Name: actor-elf-phoenix.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 200
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 224
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		# Strikes on step 11 of its attack animation (.chr 0x247c).
+		FireDelay: 11
+		Weapon: PhoenixFire
+
+# Fire on the ground below.
+elf-dragon:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Elf
+	Inherits@attack: ^AirAttack
+	PwLevels:
+		XpPerLevel: 20
+		AttackGain: 45
+		ArmorGain: 36
+		AttackDelay: 38
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 6
+	Buildable:
+		Queue: elf-skyhall
+		BuildDuration: 800
+		BuildPaletteOrder: 30
+	RenderSprites:
+		Image: elf-dragon
+	Tooltip:
+		Name: actor-elf-dragon.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 160
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 12 of its attack animation (.chr 0x247c).
+		FireDelay: 12
+		Weapon: DragonFire
+
+# Resurrect from the start.
+elf-angelelf:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Elf
+	Inherits@attack: ^AirAttack
+	PwLevels:
+		XpPerLevel: 30
+		AttackGain: 54
+		ArmorGain: 18
+		AttackDelay: 26
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 30
+	Buildable:
+		Queue: elf-heaven
+		BuildDuration: 2880
+		BuildPaletteOrder: 70
+		Prerequisites: elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary
+	RenderSprites:
+		Image: elf-angelelf
+	Tooltip:
+		Name: actor-elf-angelelf.name
+	Valued:
+		Cost: 5000
+	Health:
+		HP: 700
+	PwArmor:
+		Value: 35
+	Aircraft:
+		Speed: 160
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 8 of its attack animation (.chr 0x247c).
+		FireDelay: 8
+		Weapon: AngelRing
+	PwMana:
+		Max: 100
+	# Record 10: the living units that died within 64 px of the place lately come back, the AngelElf's own, at half
+	# health (its 0x1e8 50); 80 mana. "This spell can be cast on both friendly and hostile units."
+	PwSpell@RESURRECT:
+		Name: resurrect
+		Target: Ground
+		ManaCost: 80
+		Resurrect: true
+		ResurrectHealth: 50
+		Radius: 2c0
+		Image: spell-resurrect
+		Icon: ability-resurrect
+		Sound: spell-resurrect-0.wav

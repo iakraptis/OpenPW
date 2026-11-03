@@ -16,7 +16,8 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
 {
-	[Desc("Mana for abilities (.chr stat 4: the Chief's 100), refilling over time.")]
+	[Desc("Mana for abilities and spells (.chr stat 4: the Chief's 100, an Elf's 100 or 200), refilling over time; ",
+		"researched mana (PwUpgrade.Mana: Study Mana Potion Secret) raises the most it holds.")]
 	public class PwManaInfo : TraitInfo
 	{
 		public readonly int Max = 100;
@@ -26,22 +27,26 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public readonly int RegenInterval = 8;
 
-		public override object Create(ActorInitializer init) { return new PwMana(this); }
+		public override object Create(ActorInitializer init) { return new PwMana(init.Self, this); }
 	}
 
 	public class PwMana : ITick
 	{
+		readonly Actor self;
 		readonly PwManaInfo info;
 		int ticks;
 
-		public PwMana(PwManaInfo info)
+		public PwMana(Actor self, PwManaInfo info)
 		{
+			this.self = self;
 			this.info = info;
 			Mana = info.Max;
 		}
 
 		public int Mana { get; private set; }
-		public int Max => info.Max;
+		public int Max => info.Max + PwUpgrades.Bonus(self, u => u.Mana);
+
+		public void Give(int amount) => Mana = Math.Min(Max, Mana + amount);
 
 		public bool Spend(int amount)
 		{
@@ -54,11 +59,46 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void ITick.Tick(Actor self)
 		{
-			if (Mana >= info.Max || ++ticks < info.RegenInterval)
+			if (Mana >= Max || ++ticks < info.RegenInterval)
 				return;
 
 			ticks = 0;
-			Mana = Math.Min(info.Max, Mana + info.RegenAmount);
+			Give(info.RegenAmount);
+		}
+	}
+
+	[Desc("Spreads mana (the ManaSpread: .chr 0x1f8 bit 0x4, and its name; the amounts are the mod's): every Interval ",
+		"ticks, allied units with mana (PwMana) within Range gain Amount.")]
+	public class PwManaAuraInfo : TraitInfo
+	{
+		public readonly WDist Range = WDist.FromCells(4);
+
+		public readonly int Amount = 1;
+
+		public readonly int Interval = 8;
+
+		public override object Create(ActorInitializer init) { return new PwManaAura(this); }
+	}
+
+	public class PwManaAura : ITick
+	{
+		readonly PwManaAuraInfo info;
+		int ticks;
+
+		public PwManaAura(PwManaAuraInfo info)
+		{
+			this.info = info;
+		}
+
+		void ITick.Tick(Actor self)
+		{
+			if (++ticks < info.Interval)
+				return;
+
+			ticks = 0;
+			foreach (var a in self.World.FindActorsInCircle(self.CenterPosition, info.Range))
+				if (a != self && !a.IsDead && a.Owner.IsAlliedWith(self.Owner))
+					a.TraitOrDefault<PwMana>()?.Give(info.Amount);
 		}
 	}
 

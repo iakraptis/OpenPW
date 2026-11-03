@@ -9,6 +9,7 @@
  */
 #endregion
 
+using System;
 using System.Linq;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Traits;
@@ -378,12 +379,15 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Visible = true;
 			slot.GetText = () => "";
 			slot.IsHighlighted = () => false;
-			slot.GetTooltipText = () => FluentProvider.GetMessage($"spell-{info.Name}", "cost", info.Cost);
+			var cost = info.Cost > 0 ? info.Cost : Math.Max(info.ManaCost, info.ManaPerStep);
+			slot.GetTooltipText = () => FluentProvider.GetMessage($"spell-{info.Name}", "cost", cost);
 			slot.GetTooltipDesc = () => spell.IsUnlocked(caster)
 				? FluentProvider.GetMessage($"spell-{info.Name}-desc")
+				: (spell.Info.Prerequisites.Length > 0 && (caster.TraitOrDefault<PwLevels>()?.Level ?? 0) >= info.MinLevel)
+				? FluentProvider.GetMessage($"spell-{info.Name}-locked")
 				: FluentProvider.GetMessage("label-spell-locked", "level", info.MinLevel);
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
-			slot.Get<LabelWidget>("PROGRESS").GetText = () => info.Cost > 0 ? $"{info.Cost}" : "";
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => cost > 0 ? $"{cost}" : "";
 			slot.IsDisabled = () => !spell.IsReady(caster);
 			slot.OnClick = () =>
 			{
@@ -392,7 +396,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				else if (info.Target == PwSpellTarget.Ground)
 					world.OrderGenerator = new AbilityOrderGenerator(caster, PwSpell.OrderID, info.Name);
 				else
-					world.OrderGenerator = new AbilityOrderGenerator(caster, PwSpell.OrderID, PwSpell.CanTarget, info.Name);
+					world.OrderGenerator = new AbilityOrderGenerator(caster, PwSpell.OrderID, spell.CanTarget, info.Name);
 			};
 		}
 

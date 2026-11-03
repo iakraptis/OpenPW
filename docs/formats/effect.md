@@ -40,6 +40,10 @@ The same record in `JW2_11`, with different fields in use (D):
 | Offset | Content |
 |---|---|
 | 0x14c | 1 = targets a place or unit and hits (Drop Stone, Meteo, Thunder bolt); 0 = self or buff |
+| 0x150 | Target: 3 a unit, 1 a place, 2 an area, 0 the caster, 4 a fallen unit (D) |
+| 0x158 | Hotkey (ASCII) |
+| 0x15c | Research needed (`Upgrade.upi` index, −1 none: Fake 15, Meteor 18) (C, `FUN_0046c3a5`) |
+| 0x160 | Level needed, counted from 0 (Thunder bolt 1, Mass temper 3) (C, same) |
 | 0x1e0 | Health cost: the Demon spells' kill points (Stone curse 85, Quake 150) (C, `FUN_00478cd5`) |
 | 0x1e4 | Mana cost (Fall out 80, Thunder bolt 40) (C, same) |
 | 0x1e8 | HP effect: negative = damage (Drop Stone −200, Thunder bolt −80, Meteo −30 per hit), positive = heal (Cure +2 per tick) |

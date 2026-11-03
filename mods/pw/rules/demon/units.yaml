@@ -485,7 +485,7 @@ demon-warlock:
 		StepInterval: 4
 		Radius: 3c512
 		LivingOnly: true
-		AffectsAllies: true
+		AffectsRelationships: Ally, Enemy, Neutral
 		Image: spell-noxious-gas
 		Icon: ability-noxious-gas
 		Sound: spell-noxious-gas-0.wav

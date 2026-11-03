@@ -38,7 +38,7 @@ namespace OpenRA.Mods.Pw.Activities
 				return true;
 
 			var onSelf = spell.Info.Target == PwSpellTarget.Self;
-			if (spell.Info.Target == PwSpellTarget.Unit && !PwSpell.CanTarget(self, target.Actor))
+			if (spell.Info.Target == PwSpellTarget.Unit && !spell.CanTarget(self, target.Actor))
 				return true;
 
 			if (!onSelf && !target.IsInRange(self.CenterPosition, spell.Info.Range))

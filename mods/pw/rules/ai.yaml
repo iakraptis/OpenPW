@@ -38,6 +38,7 @@ player:
 			primitive-trap: 2
 			tyrano-eggnest: 2
 			demon-deathden: 2
+			elf-redhall: 2
 	PwGathererBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	PwUnitBuilderBotModule@normal:
@@ -66,10 +67,18 @@ player:
 			demon-darkbat: 8
 			demon-gargoyle: 6
 			demon-devil: 3
+			elf-redelf: 20
+			elf-whiteelf: 14
+			elf-ranger: 15
+			elf-blueelf: 12
+			elf-phoenix: 6
+			elf-dragon: 6
+			elf-angelelf: 3
 		UnitLimits:
 			primitive-chief: 1
 			tyrano-tyranos: 1
 			demon-devil: 1
+			elf-angelelf: 1
 	PwTransportBotModule@normal:
 		RequiresCondition: enable-normal-ai
 	PwAbilityBotModule@normal:
@@ -83,10 +92,10 @@ player:
 		SquadSize: 8
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
-		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye
-		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden
-		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle
-		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye, elf-wizard, elf-elfring, elf-pixie
+		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden, elf-heaven
+		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle, elf-phoenix, elf-dragon, elf-angelelf
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect, elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary, elf-bubble, elf-wizard
 
 	# ------------------------------------------------------------------ Hard: a bigger economy, building two at a
 	# time, quicker decisions and larger attack waves.
@@ -107,6 +116,8 @@ player:
 			tyrano-ascomoid: 4
 			demon-deathden: 2
 			demon-volcano: 4
+			elf-redhall: 2
+			elf-bubble: 4
 	PwGathererBotModule@hard:
 		RequiresCondition: enable-hard-ai
 	PwUnitBuilderBotModule@hard:
@@ -138,10 +149,18 @@ player:
 			demon-darkbat: 8
 			demon-gargoyle: 6
 			demon-devil: 4
+			elf-redelf: 20
+			elf-whiteelf: 14
+			elf-ranger: 15
+			elf-blueelf: 14
+			elf-phoenix: 6
+			elf-dragon: 8
+			elf-angelelf: 4
 		UnitLimits:
 			primitive-chief: 1
 			tyrano-tyranos: 1
 			demon-devil: 1
+			elf-angelelf: 1
 	PwTransportBotModule@hard:
 		RequiresCondition: enable-hard-ai
 		MinimumPassengers: 5
@@ -159,7 +178,7 @@ player:
 		SquadSizeRandomBonus: 6
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
-		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye
-		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden
-		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle
-		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect
+		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye, elf-wizard, elf-elfring, elf-pixie
+		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden, elf-heaven
+		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-rhamphos, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle, elf-phoenix, elf-dragon, elf-angelelf
+		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect, elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary, elf-bubble, elf-wizard

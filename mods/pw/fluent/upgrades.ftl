@@ -69,6 +69,42 @@ actor-tyrano-upgrade-trices-movement =
 actor-tyrano-upgrade-mutant-morphosis =
     .name = Upgrade Mutant Morphosis
 
+actor-elf-upgrade-gathering-amount =
+    .name = Study Gathering Amount
+
+actor-elf-upgrade-bubble-detection-secret =
+    .name = Study Bubble Detection Secret
+
+actor-elf-upgrade-level-up-exp =
+    .name = Reduce Level Up Exp.
+
+actor-elf-upgrade-elf-weapon-secret =
+    .name = Study Elf Weapon Secret
+
+actor-elf-upgrade-elf-armor-secret =
+    .name = Study Elf Armor Secret
+
+actor-elf-upgrade-blueelf-movement-secret =
+    .name = Study BlueElf Movement Secret
+
+actor-elf-upgrade-elfring-movement-secret =
+    .name = Study ElfRing Movement Secret
+
+actor-elf-upgrade-divine-being-s-weapon-secret =
+    .name = Study Divine being's Weapon Secret
+
+actor-elf-upgrade-divine-being-s-armor-secret =
+    .name = Study Divine being's Armor Secret
+
+actor-elf-upgrade-fake-unicorn =
+    .name = Study Fake (Unicorn)
+
+actor-elf-upgrade-meteor-manaspread =
+    .name = Study Meteor (ManaSpread)
+
+actor-elf-upgrade-mana-potion-secret-all-of-elf =
+    .name = Study Mana Potion Secret (All of Elf)
+
 actor-demon-upgrade-gathering-amount-skill =
     .name = Learn Gathering Amount Skill
 

@@ -115,6 +115,66 @@ tyrano-upgrade-mutant-morphosis:
 		Filename: chrome/upgrades-tyrano.png
 		Start: 24
 
+elf-upgrade-gathering-amount:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 11
+
+elf-upgrade-bubble-detection-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 12
+
+elf-upgrade-level-up-exp:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 43
+
+elf-upgrade-elf-weapon-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 13
+
+elf-upgrade-elf-armor-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 14
+
+elf-upgrade-blueelf-movement-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 16
+
+elf-upgrade-elfring-movement-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 19
+
+elf-upgrade-divine-being-s-weapon-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 46
+
+elf-upgrade-divine-being-s-armor-secret:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 47
+
+elf-upgrade-fake-unicorn:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 15
+
+elf-upgrade-meteor-manaspread:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 18
+
+elf-upgrade-mana-potion-secret-all-of-elf:
+	icon:
+		Filename: chrome/upgrades-elf.png
+		Start: 17
+
 demon-upgrade-gathering-amount-skill:
 	icon:
 		Filename: chrome/upgrades-demon.png

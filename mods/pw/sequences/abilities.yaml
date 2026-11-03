@@ -101,3 +101,56 @@ ability-rise-death:
 	icon:
 		Filename: chrome/magic-demon.png
 		Start: 15
+
+# The Elf spells (chrome/magic-elf.png, one icon per JW2_11 record; Magic.trt has 16, so Cure, record 18, has none of
+# its own: it takes the unused Vanishing's soft light, 7).
+
+ability-thunder-bolt:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 1
+
+ability-shield:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 2
+
+ability-mass-temper:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 3
+
+ability-teleport:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 4
+
+ability-jump-portal:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 5
+
+ability-drop-stone:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 6
+
+ability-cure:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 7
+
+ability-fake:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 8
+
+ability-meteor:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 9
+
+ability-resurrect:
+	icon:
+		Filename: chrome/magic-elf.png
+		Start: 10

@@ -3,6 +3,8 @@
 	# Soft-edged shroud and fog (sequences/shroud.yaml).
 	# Brings dead wild creatures back after a long while.
 	PwRespawner:
+	# The units that died lately, for Resurrect (an AngelElf's spell).
+	PwGraveyard:
 	ShroudRenderer:
 		ShroudVariants: shroud
 		FogVariants: fog
@@ -16,7 +18,7 @@
 	Faction@Random:
 		InternalName: Random
 		Name: faction-random.name
-		RandomFactionMembers: primitive, tyrano, demon
+		RandomFactionMembers: primitive, tyrano, demon, elf
 		Description: faction-random.description
 	Faction@primitive:
 		InternalName: primitive
@@ -26,6 +28,10 @@
 		InternalName: tyrano
 		Name: faction-tyrano.name
 		Description: faction-tyrano.description
+	Faction@elf:
+		InternalName: elf
+		Name: faction-elf.name
+		Description: faction-elf.description
 	Faction@demon:
 		InternalName: demon
 		Name: faction-demon.name
@@ -85,6 +91,11 @@ world:
 		BaseActor: tyrano-tyranonest
 		SupportActors: tyrano-dinos, tyrano-dinos, tyrano-dinos, tyrano-dinos
 		Factions: tyrano
+		ClassName: options-starting-units.unlabeled
+	StartingUnits@Elf:
+		BaseActor: elf-heaven
+		SupportActors: elf-wizard, elf-wizard, elf-wizard, elf-wizard
+		Factions: elf
 		ClassName: options-starting-units.unlabeled
 	StartingUnits@Demon:
 		BaseActor: demon-demonden
