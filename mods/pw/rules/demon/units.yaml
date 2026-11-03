@@ -84,11 +84,13 @@ demon-skeleton:
 		FireDelay: 7
 		Weapon: SkeletonArrow
 
+# Invisible (.chr 0x1f8 bit 0x2, ^Invisible).
 demon-mudman:
 	Inherits: ^Fiend
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Demon
 	Inherits@attack: ^Melee
+	Inherits@stealth: ^Invisible
 	Passenger:
 		Weight: 2
 	# Level.lvt has a row 5 bonus for it, which no code reads (docs/game/rules.md).
@@ -309,10 +311,23 @@ demon-risezombie2:
 	Mobile:
 		Speed: 160
 
-# Flyers. The DeathEye scouts (unarmed; Learn DeathEye Sight adds 128 px). It doesn't gain levels.
+# Flyers. The DeathEye scouts: unarmed, invisible and a detector (.chr 0x1f8 0x3: ^Invisible), seeing invisible units
+# over its sight, which Learn DeathEye Sight widens by 128 px. It doesn't gain levels.
 demon-deatheye:
 	Inherits: ^FlyingFiend
 	Inherits@race: ^Demon
+	Inherits@stealth: ^Invisible
+	DetectCloaked:
+		Range: 10c0
+		DetectionTypes: Invisible
+		RequiresCondition: !sight
+	GrantConditionOnPrerequisite@sight:
+		Condition: sight
+		Prerequisites: demon-upgrade-deatheye-sight-1
+	DetectCloaked@SIGHT:
+		Range: 14c0
+		DetectionTypes: Invisible
+		RequiresCondition: sight
 	UsesPopulation:
 		Amount: 1
 	Buildable:

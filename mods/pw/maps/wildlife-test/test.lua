@@ -82,13 +82,14 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Hunting: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Hunting: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local WorldLoaded, brawler, brawlerStart, deaths, farGrazer, flyer, grazer, hunter, me, raptor, spareGrazer
+    local Together, WorldLoaded, brawler, brawlerStart, deaths, farGrazer, flyer, grazer, hunter, me, raptor, spareGrazer
     -- Hunting (PwHunter, the Hunt toggle). A new design, not the original's.
     -- 1. A hunting Knight goes for the wild creatures around it, the aggressive one first: the Velociraptor (6 cells away)
     --    dies before the Galimimus (2 cells away).
     -- 2. It picks up their meat.
     -- 3. A Galimimus outside its radius is left alone, and so is one beside a Knight whose hunting is off.
     -- 4. A unit only hunts what it can strike: a hunting Powerman (melee) leaves a flying Pteranodon alone.
+    -- 5. Two hunters can hunt the same creature together: both strike a Stegosaurus beside them.
     WorldLoaded = function()
         me = Player.GetPlayer("Hunting")
         hunter = Map.NamedActor("HuntingHunter")
@@ -125,7 +126,28 @@ do
                 Check((brawler.Location - brawlerStart).Length <= 3, "the Powerman doesn't chase what it can't strike")
             end)
         end)
+        Later(2, Together)
         FinishWhenDone("HUNTING", 5000)
+    end
+
+    Together = function()
+        -- A slow Stegosaurus (it doesn't run far and lead them to the others' creatures) beside two hunting Powermen.
+        local prey = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 17) })
+        local a = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(24, 17) })
+        local b = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(28, 17) })
+        local struck = { }
+        Trigger.OnDamaged(prey, function(_, attacker)
+            if attacker == a then struck.a = true elseif attacker == b then struck.b = true end
+        end)
+        Later(2, function()
+            PwTest.Hunt(a, true)
+            PwTest.Hunt(b, true)
+        end)
+        WaitFor("two hunters kill the Stegosaurus", 2500, function() return prey.IsDead end, function(ok)
+            if ok then
+                Check(struck.a and struck.b, "both of them struck it")
+            end
+        end)
     end
     Sections[#Sections + 1] = WorldLoaded
 end

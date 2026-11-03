@@ -47,6 +47,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				var s = slot;
 				s.Visible = false;
 				s.Get("DIM").IsVisible = () => s.IsDisabled();
+				s.Get("OUTLINE").IsVisible = () => s.IsHighlighted();
 			}
 		}
 

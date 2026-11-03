@@ -44,6 +44,18 @@ Damage per hit (C, `0x457cc4`):
 - Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
 - The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 
+## Invisibility and detection
+
+- Units whose type has `.chr` 0x1f8 bit 0x2 are invisible from the start (unit flag 0x40, set when the unit is made
+  or comes out of a transport; C, `0x460118`, `0x4573d6`): the Primitive Trap, the Elf Pixie, the Demon MudMan and
+  DeathEye. The Vanishing spell (record 7) would do the same for a while, but no unit has it.
+- An invisible unit is seen by its owner and allies, and by any other player only where one of that player's
+  detectors covers its cell (C, `0x4682e0`). Attacking doesn't reveal it.
+- Detectors mark their whole sight for this (C, `0x46832b`): the types with 0x1f8 bit 0x1 (Primitive Revolver and
+  Trap, Tyrano TwinRhamphos and Ascomoid, Elf Pixie, Demon DeathEye), and the units whose detection research their
+  owner has (Improve StoneTower Detection, Study Bubble Detection Secret, Learn Volcano Detection: the towers detect
+  nothing before). Buildings detect once finished.
+
 ## Meat and healing
 
 - A wild creature (owner 8, type kind 1) killed leaves meat worth its cost (`.chr` 0x190), with a random part, as a

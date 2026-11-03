@@ -431,16 +431,23 @@ Left for Elf and Demon: the spell mana costs.
   - Attacks wait a few ticks so the hit lands with the animation (as OpenSYW); explosions drawn at half size.
 - [x] **Hunting and meat sharing** (2026-11-02, branches `hunting`, `bot2`), a new design, not the original's:
   - `PwHunter`: a per-unit toggle (command panel, the original's Action.trt icon 13). While on, an idle unit picks
-    up meat within 8 cells, else attacks a wild creature within 8 cells its weapons can hit, aggressive ones first.
+    up meat within 8 cells, else attacks a wild creature within 8 cells its weapons can hit, aggressive ones first,
+    then the nearest; several hunters can hunt the same creature.
+    While on, a gold H at the bottom left of the unit's selection box (the original's H mark), and the Hunt button
+    has a gold frame (`OutlineWidget`, on any command slot that is on).
   - Share meat (`ShareMeat` activity, icon 35): the selected meat eaters meet and split their meat evenly.
   - Tests: `hunting-test`, `share-meat-test`.
 - [x] **Rally points** (2026-11-02, branch `features`): stock `RallyPoint` on every production building (right-click
       the ground with the building selected); the marker is the original ring cursor (frames 92-99) at half size
       (`sequences/markers.yaml`). `GatherAtRallyPoint`: a worker sent to a berry bush starts gathering there.
       `rally-test`.
-- [x] **Stealth** (2026-11-02): Traps are cloaked once built (`Cloak`, detection type `Trap`). StoneTowers and Traps
-      detect `Trap` and `Invisible` within 5 cells; Improve StoneTower Detection widens the tower's to 8. Needs
-      `GrantConditionOnPrerequisiteManager` on the player (it crashed without). Checked in `defence-test`.
+- [x] **Stealth** (2026-11-02; as the original since 2026-11-03, branch `invisible`): invisible units (`.chr`
+      0x1f8 bit 0x2: Trap, Pixie, MudMan, DeathEye; `^Invisible`, `Cloak` type `Invisible`) are seen only by their
+      owner, allies and detectors, and attacking doesn't reveal them. Detectors (0x1f8 bit 0x1: Revolver,
+      TwinRhamphos, Pixie, DeathEye, Trap, Ascomoid; StoneTower, Bubble and Volcano once their detection is
+      researched) see them over their whole sight (C, Pw.exe 0x4682e0, 0x46832b). Needs
+      `GrantConditionOnPrerequisiteManager` on the player (it crashed without). Checked in `combat-test` (Defence)
+      and `demon-test`.
 - [x] **Combat tuning** (2026-11-02):
   - `SubtractArmorDamage` is area damage like the engine's `SpreadDamage` (as OpenSYW's arrows): projectiles hurt
     what they land near, full within 100, then 37/14/5%. Melee keeps a near-zero spread; splash weapons keep full

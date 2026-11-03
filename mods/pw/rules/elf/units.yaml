@@ -343,10 +343,15 @@ elf-unicorn:
 		Icon: ability-fake
 		Sound: spell-fake-0.wav
 
-# The Pixie scouts: an unarmed flyer. It doesn't gain levels.
+# The Pixie scouts: an unarmed flyer, invisible and a detector (.chr 0x1f8 0x3: ^Invisible), seeing invisible units
+# over its sight. It doesn't gain levels.
 elf-pixie:
 	Inherits: ^LivingFlyer
 	Inherits@race: ^Elf
+	Inherits@stealth: ^Invisible
+	DetectCloaked:
+		Range: 10c0
+		DetectionTypes: Invisible
 	UsesPopulation:
 		Amount: 1
 	Buildable:

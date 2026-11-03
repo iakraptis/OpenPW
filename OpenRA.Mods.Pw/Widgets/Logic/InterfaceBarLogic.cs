@@ -164,6 +164,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				slot.Bounds = new WidgetBounds(gap + i % columns * (size + gap), gap + i / columns * (size + gap), size, size);
 				slot.Get<SpriteWidget>("ICON").Bounds = new WidgetBounds(1, 1, size - 2, size - 2);
 				slot.Get("DIM").Bounds = new WidgetBounds(1, 1, size - 2, size - 2);
+				slot.Get("OUTLINE").Bounds = new WidgetBounds(0, 0, size, size);
 				slot.Get<LabelWidget>("PROGRESS").Bounds = new WidgetBounds(0, size - 16, size, 14);
 				if (i >= columns * SlotRows)
 					slot.Visible = false;

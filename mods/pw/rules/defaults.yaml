@@ -170,6 +170,7 @@
 ^WildPredator:
 	Inherits: ^Melee
 	-PwHunter:
+	-WithTextDecoration@HUNTING:
 	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
 	Targetable@PREDATOR:
 		TargetTypes: Predator
@@ -319,8 +320,16 @@
 		ValidTargets: Ground
 		InvalidTargets: Wild
 		ValidRelationships: Enemy
-	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat. While on, an H
+	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
+		HuntingCondition: hunting
+	WithTextDecoration@HUNTING:
+		Text: H
+		Font: TinyBold
+		Color: FFD700
+		Position: BottomLeft
+		RequiresCondition: hunting
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
@@ -341,8 +350,16 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
-	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat.
+	# Hunting, toggled with the command panel's Hunt button: wild creatures around it, then their meat. While on, an H
+	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
+		HuntingCondition: hunting
+	WithTextDecoration@HUNTING:
+		Text: H
+		Font: TinyBold
+		Color: FFD700
+		Position: BottomLeft
+		RequiresCondition: hunting
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
@@ -789,6 +806,21 @@
 	PwArmorMultiplier@MORALE:
 		Modifier: 110
 		RequiresCondition: morale
+
+# Invisibility (Pw.exe: .chr 0x1f8 bit 0x2 makes a unit invisible from the start, unit flag 0x40; the check is
+# 0x4682e0): the Trap, Pixie, MudMan and DeathEye. Its owner and allies see it, see-through (as the original's shaded
+# look); anyone else only where one of their detectors is near (DetectCloaked, type Invisible). Attacking doesn't
+# reveal it.
+# Detectors (.chr 0x1f8 bit 0x1: Revolver, TwinRhamphos, Pixie, DeathEye, Trap, Ascomoid; and the StoneTower, Bubble
+# and Volcano once their detection is researched, 0x46832b) detect over their whole sight: each sets DetectCloaked
+# with its sight range.
+^Invisible:
+	Cloak:
+		CloakStyle: Alpha
+		CloakedAlpha: 0.55
+		DetectionTypes: Invisible
+		InitialDelay: 0
+		UncloakOn: None
 
 # Race mixins (§3.1.2): the race layer (production queue, voices) is filled in with production.
 ^Primitive:
