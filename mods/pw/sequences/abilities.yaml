@@ -154,3 +154,10 @@ ability-resurrect:
 	icon:
 		Filename: chrome/magic-elf.png
 		Start: 10
+
+# Berries flying to the main building (BerryGatherer.FliesBerries: the Elf Wizard's Berry fly, JW2_11 record 16): its
+# 16 flight frames, not directional.
+berry-fly:
+	flight:
+		Filename: effects/spell-berry-fly.png
+		Length: 16

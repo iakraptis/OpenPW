@@ -527,7 +527,9 @@ dead.
 - [x] **Elf** (2026-11-03, branch `elf`): playable, in the lobby and in Random; all four races are in.
   - Rules: `rules/elf/` (units, buildings, upgrades from `upgrade_rules.py`, which now also writes mana) and
     `weapons/elf.yaml` ([docs/game/elf.md](docs/game/elf.md)). A Heaven and four Wizards to start.
-  - Wizards gather by magic: their cast animation plays while gathering, and nothing shows in their hands after.
+  - Wizards gather by magic (Berry fly, JW2_11 record 16): they stay at the bush casting, and each trip's berries
+    fly to the Heaven on their own (`BerryGatherer.FliesBerries`, `BerryFlight`; 4 px a tick × 710/576), lost if
+    it falls meanwhile.
     Elf buildings are conjured: they have no construction stages, so the finished building shows, tinted, while it
     appears (`^ElfBuilding`).
   - Spells (`PwSpell`, now general): which spells a unit has, their level and their research come from the original

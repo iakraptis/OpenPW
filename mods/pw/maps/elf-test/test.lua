@@ -10,6 +10,8 @@
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
 -- 10. Mass temper (WhiteElf, level 3): the friendly units around the place get a 160 shield.
 -- 11. Jump portal (Ranger, level 3): an enemy standing in the portal is thrown away.
+-- 12. Berry fly: a Wizard stays at the bush, and the berries fly to the Heaven by themselves (here the Enemy player's,
+--     whose cash nothing else touches).
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -28,6 +30,7 @@ WorldLoaded = function()
     Later(5, ManaPotion)
     Later(5, MassTemper)
     Later(5, JumpPortal)
+    Later(5, BerryFly)
     FinishWhenDone("ELF", 4000)
 end
 
@@ -224,5 +227,26 @@ JumpPortal = function()
         PwTest.GiveExperience(ranger, 12 * 3)
         PwTest.CastAt(ranger, "jump-portal", CPos.New(8, 20))
         WaitFor("the portal throws the PowerMan away", 100, function() return (foe.Location - CPos.New(8, 20)).Length > 6 end)
+    end)
+end
+
+BerryFly = function()
+    enemy.Cash = 0
+    Actor.Create("elf-heaven", true, { Owner = enemy, Location = CPos.New(12, 8) })
+    local bush = Actor.Create("berry-bush-0", true, { Owner = Player.GetPlayer("Neutral"), Location = CPos.New(21, 9) })
+    local wizard = Actor.Create("elf-wizard", true, { Owner = enemy, Location = CPos.New(20, 11) })
+    wizard.Stance = "HoldFire"
+    local strayed = false
+    Later(2, function()
+        PwTest.Gather(wizard, bush)
+        WaitFor("berries from the Wizard's bush reach the Heaven", 400, function()
+            if (wizard.Location - CPos.New(21, 9)).Length > 2 then strayed = true end
+            return enemy.Cash >= 12
+        end, function(ok)
+            if ok then
+                Check(not strayed, "the Wizard stays at the bush meanwhile")
+                Check(PwTest.Carried(wizard) == 0, "it carries nothing")
+            end
+        end)
     end)
 end

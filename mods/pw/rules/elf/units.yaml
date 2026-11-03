@@ -4,7 +4,8 @@
 # counted from 0: the help file's from 1), research (0x15c), mana (0x1e4) and effect come from its JW2_11 record, and
 # its effect grows with spell power (PwLevels.SpellPower, Level.lvt row 2).
 
-# The worker. It gathers by magic (Berry fly): its cast animation while gathering, nothing in its hands after.
+# The worker. It gathers by magic (Berry fly, JW2_11 record 16): it stays at the bush casting, and the berries fly to
+# the Heaven on their own.
 elf-wizard:
 	Inherits: ^Worker
 	Inherits@move: ^FootMovement
@@ -43,8 +44,11 @@ elf-wizard:
 		# Strikes on step 9 of its attack animation (.chr 0x247c).
 		FireDelay: 9
 		Weapon: WizardFirebolt
+	BerryGatherer:
+		FliesBerries: true
 	WithSpriteBody@GATHER:
 		Sequence: stand-carry-a
+	# It never carries (^Worker's carrying body needs art it hasn't got).
 	WithInfantryBody@CARRY:
 		IdleSequences: stand
 		StandSequences: stand
