@@ -16,6 +16,7 @@ using OpenRA.Mods.Common.Traits.Render;
 using OpenRA.Mods.Common.Widgets;
 using OpenRA.Mods.Pw.Orders;
 using OpenRA.Mods.Pw.Traits;
+using OpenRA.Traits;
 using OpenRA.Widgets;
 
 namespace OpenRA.Mods.Pw.Widgets.Logic
@@ -70,6 +71,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				var fallOut = producer?.TraitOrDefault<PwFallOut>();
 				if (fallOut != null)
 					ShowAbility(producer, fallOut);
+
+				// A Demon's spells: each with its kill point cost, usable from its level on.
+				if (producer != null)
+					foreach (var spell in producer.TraitsImplementing<PwSpell>())
+						if (slots.FirstOrDefault(s => !s.Visible) is ButtonWidget slot)
+							ShowSpell(slot, producer, spell);
 			}
 
 			// Hunting, for the selected units that can hunt: in the first free slot (after the build list or ability).
@@ -362,6 +369,31 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => $"{mana.Mana}/{mana.Max}";
 			slot.IsDisabled = () => !fallOut.IsReady(caster);
 			slot.OnClick = () => world.OrderGenerator = new AbilityOrderGenerator(caster, PwFallOut.OrderID, PwFallOut.CanTarget);
+		}
+
+		void ShowSpell(ButtonWidget slot, Actor caster, PwSpell spell)
+		{
+			var info = spell.Info;
+			var icon = info.Icon != null ? CommandIcon(info.Icon) : null;
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
+			slot.GetTooltipText = () => FluentProvider.GetMessage($"spell-{info.Name}", "cost", info.Cost);
+			slot.GetTooltipDesc = () => spell.IsUnlocked(caster)
+				? FluentProvider.GetMessage($"spell-{info.Name}-desc")
+				: FluentProvider.GetMessage("label-spell-locked", "level", info.MinLevel);
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => info.Cost > 0 ? $"{info.Cost}" : "";
+			slot.IsDisabled = () => !spell.IsReady(caster);
+			slot.OnClick = () =>
+			{
+				if (info.Target == PwSpellTarget.Self)
+					world.IssueOrder(PwSpell.Cast(caster, info.Name, Target.FromActor(caster)));
+				else if (info.Target == PwSpellTarget.Ground)
+					world.OrderGenerator = new AbilityOrderGenerator(caster, PwSpell.OrderID, info.Name);
+				else
+					world.OrderGenerator = new AbilityOrderGenerator(caster, PwSpell.OrderID, PwSpell.CanTarget, info.Name);
+			};
 		}
 
 		void Show(ButtonWidget slot, ActorInfo actorInfo, int cost, System.Func<string> progress)

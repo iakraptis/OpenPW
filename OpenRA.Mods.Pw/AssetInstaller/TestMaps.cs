@@ -23,15 +23,19 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// repository's test maps. run_tests.py finds them in the content folder.
 	public static class TestMaps
 	{
-		// bot-test: two Normal AIs on (2) One vs One, North Primitive and South Tyrano, each starting as a player of its
-		// race does (rules/world.yaml StartingUnits): its main building and four workers.
-		const string BotTest = "bot-test";
+		// Two Normal AIs on (2) One vs One, North and South, each starting as a player of its race does
+		// (rules/world.yaml StartingUnits): its main building and four workers. bot-test: Primitive against Tyrano;
+		// bot-demon-test: Demon against Primitive. Both play the same script (MapTemplates/bot-test).
 		const string BotTestBase = "2-one-vs-one";
+		const string BotTemplate = "bot-test";
 		static readonly string[] Bots = { "North", "South" };
-		static readonly (string Faction, string Main, string Worker)[] BotRaces =
+		static readonly (string Faction, string Main, string Worker) Primitive = ("primitive", "primitive-sanctuary", "primitive-buildman");
+		static readonly (string Faction, string Main, string Worker) Tyrano = ("tyrano", "tyrano-tyranonest", "tyrano-dinos");
+		static readonly (string Faction, string Main, string Worker) Demon = ("demon", "demon-demonden", "demon-insect");
+		static readonly (string Name, (string Faction, string Main, string Worker)[] Races)[] BotTests =
 		{
-			("primitive", "primitive-sanctuary", "primitive-buildman"),
-			("tyrano", "tyrano-tyranonest", "tyrano-dinos"),
+			("bot-test", new[] { Primitive, Tyrano }),
+			("bot-demon-test", new[] { Demon, Primitive }),
 		};
 
 		public static void Export(InstallContext c)
@@ -39,16 +43,20 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var baseFolder = c.OutputPath($"maps/{BotTestBase}");
 			if (!File.Exists(Path.Combine(baseFolder, "map.yaml")))
 			{
-				c.Warnings.Add($"{BotTest}: no converted map {BotTestBase}");
+				c.Warnings.Add($"{BotTemplate}: no converted map {BotTestBase}");
 				return;
 			}
 
-			foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
-				c.WriteFile($"maps/{BotTest}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
+			foreach (var (name, races) in BotTests)
+			{
+				foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
+					c.WriteFile($"maps/{name}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
 
-			c.WriteFile($"maps/{BotTest}/test.lua", Template($"MapTemplates/{BotTest}/test.lua"));
-			c.WriteFile($"maps/{BotTest}/testlib.lua", File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/gathering-test/testlib.lua")));
-			c.WriteText($"maps/{BotTest}/map.yaml", BotTestYaml(File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n")));
+				c.WriteFile($"maps/{name}/test.lua", Template($"MapTemplates/{BotTemplate}/test.lua"));
+				c.WriteFile($"maps/{name}/testlib.lua", File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/gathering-test/testlib.lua")));
+				var title = string.Join(" against ", races.Select(r => r.Faction));
+				c.WriteText($"maps/{name}/map.yaml", BotTestYaml(File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n"), races, title));
+			}
 		}
 
 		static byte[] Template(string name)
@@ -63,7 +71,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return memory.ToArray();
 		}
 
-		static string BotTestYaml(string source)
+		static string BotTestYaml(string source, (string Faction, string Main, string Worker)[] races, string title)
 		{
 			var lines = source.Split('\n');
 			string Field(string name) => lines.First(l => l.StartsWith(name + ":", System.StringComparison.Ordinal));
@@ -82,7 +90,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					actors.Add(lines[++i]);
 			}
 
-			var s = new StringBuilder("MapFormat: 12\n\nRequiresMod: pw\n\nTitle: Test: Bots\n\nAuthor: OpenPW\n\n");
+			var s = new StringBuilder($"MapFormat: 12\n\nRequiresMod: pw\n\nTitle: Test: Bots, {title}\n\nAuthor: OpenPW\n\n");
 			s.Append($"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
@@ -93,7 +101,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < Bots.Length; i++)
 			{
 				var enemies = Bots.Where(b => b != Bots[i]).Append("Creeps");
-				s.Append($"\tPlayerReference@{Bots[i]}:\n\t\tName: {Bots[i]}\n\t\tBot: normal\n\t\tFaction: {BotRaces[i].Faction}\n\t\tLockFaction: True\n");
+				s.Append($"\tPlayerReference@{Bots[i]}:\n\t\tName: {Bots[i]}\n\t\tBot: normal\n\t\tFaction: {races[i].Faction}\n\t\tLockFaction: True\n");
 				s.Append($"\t\tColor: {(i == 0 ? "E02020" : "2050E0")}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 
@@ -102,7 +110,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < Bots.Length && i < starts.Count; i++)
 			{
 				var (x, y) = starts[i];
-				var (_, main, worker) = BotRaces[i];
+				var (_, main, worker) = races[i];
 				s.Append($"\t{Bots[i]}Main: {main}\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x},{y}\n");
 				for (var w = 0; w < 4; w++)
 					s.Append($"\t{Bots[i]}Worker{w}: {worker}\n\t\tOwner: {Bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");

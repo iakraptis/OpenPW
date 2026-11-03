@@ -25,8 +25,9 @@ namespace OpenRA.Mods.Pw.Traits
 	}
 
 	[Desc("Levels 0-9 (docs/game/rules.md, Pw.exe FUN_00458adc): a kill gives experience, every XpPerLevel experience is a ",
-		"level. Attack and armour grow evenly to their caps by level 9; Level.lvt adds a shorter attack delay and range.")]
-	public class PwLevelsInfo : TraitInfo, Requires<ArmamentInfo>
+		"level. Attack and armour grow evenly to their caps by level 9; Level.lvt adds a shorter attack delay, range and ",
+		"spell power.")]
+	public class PwLevelsInfo : TraitInfo
 	{
 		[Desc("Experience per level (.chr 0x1e8).")]
 		public readonly int XpPerLevel = 10;
@@ -47,6 +48,9 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Per level 0-9: attack range bonus in pixels (Level.lvt row 1).")]
 		public readonly int[] RangeBonus = Array.Empty<int>();
+
+		[Desc("Per level 0-9: % added to the effect of its spells (Level.lvt row 2; C, Pw.exe 0x478db8).")]
+		public readonly int[] SpellPower = Array.Empty<int>();
 
 		public override object Create(ActorInitializer init) { return new PwLevels(init, this); }
 	}
@@ -83,6 +87,9 @@ namespace OpenRA.Mods.Pw.Traits
 		int Share(int total) => total * Level / info.MaxLevel;
 
 		public int AttackBonus => Share(info.AttackGain);
+
+		// Percent added to its spells' effect at its level.
+		public int SpellPower => At(info.SpellPower, Level);
 		public int ArmorBonus => Share(info.ArmorGain);
 
 		static int At(int[] table, int level) => level < table.Length ? table[level] : 0;

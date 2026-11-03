@@ -73,6 +73,13 @@
 		DeathSequence: die
 		UseDeathTypeSuffix: false
 		CrushedSequence: die
+	# Stone curse (a Kelpa's spell, PwSpell) turns it to stone for a while: grey, it can't move or attack (the
+	# movement and attack mixins pause on "petrified").
+	ExternalCondition@PETRIFIED:
+		Condition: petrified
+	WithColoredOverlay@PETRIFIED:
+		Color: A0808080
+		RequiresCondition: petrified
 	MapEditorData:
 		Categories: Units
 
@@ -86,6 +93,8 @@
 	Crushable:
 	# Living units carry meat they pick up and eat it while hurt (machines don't).
 	PwMeatEater:
+	# Its death feeds a Demon's kill points.
+	PwLiving:
 
 # Workers build (Builder, the build list on the concrete worker: they go inside the site until it is finished) and
 # gather berries.
@@ -113,6 +122,7 @@
 	Inherits: ^Unit
 	Targetable:
 		TargetTypes: Ground, Beast
+	PwLiving:
 
 # Wild creatures (rules/wild.yaml, generated): placed by the maps, owned by Creeps. They wander around where they
 # were placed. Plant-eaters never fight; predators (^WildPredator) attack player units that come close and fight
@@ -206,12 +216,14 @@
 		CargoType: Ground
 	PwMeatEater:
 
-# The Tyrano race's flyers (Rhamphos, Pteras, Mutant, the Dsunguri): living, eat meat. Their art has no standing
-# animation: the flight loops all the time (as ^WildFlyer's, an idle hover would restart it every other tick).
-^FlyingDinosaur:
+# Living flyers (Tyrano: Rhamphos, Pteras, Mutant, the Dsunguri; Demon: Gargoyle, Darkbat, ...): they eat meat. Their
+# art has no standing animation: the flight loops all the time (as ^WildFlyer's, an idle hover would restart it
+# every other tick).
+^LivingFlyer:
 	Inherits: ^Unit
 	Inherits@move: ^AirMovement
 	PwMeatEater:
+	PwLiving:
 	-WithInfantryBody:
 	PwTakeOff:
 	WithInfantryBody@FLIGHT:
@@ -226,21 +238,34 @@
 		TargetTypes: Air, Ground, Beast
 		RequiresCondition: airborne
 
+# The Demon race's bodies: their health is their kill points (PwKillPoints), lost to damage and to their spells,
+# regained from kills. ^Fiend walks (people-sized, ^Infantry); flying Demons are ^LivingFlyer with PwKillPoints.
+^Fiend:
+	Inherits: ^Infantry
+	PwKillPoints:
+
+^FlyingFiend:
+	Inherits: ^LivingFlyer
+	PwKillPoints:
+
 # Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
 ^FootMovement:
 	Mobile:
 		Locomotor: foot
 		AlwaysTurnInPlace: true
+		PauseOnCondition: petrified
 
 ^HeavyMovement:
 	Mobile:
 		Locomotor: heavy
 		AlwaysTurnInPlace: true
+		PauseOnCondition: petrified
 
 ^WheeledMovement:
 	Mobile:
 		Locomotor: wheeled
 		AlwaysTurnInPlace: true
+		PauseOnCondition: petrified
 
 # Flying machines (Revolver, Squadron, Flattop): hover over any terrain; only the Revolver lands (to load). In the air only weapons
 # that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
@@ -259,6 +284,7 @@
 		VTOL: true
 		TurnSpeed: 64
 		AirborneCondition: airborne
+		PauseOnCondition: petrified
 	HiddenUnderFog:
 		Type: CenterPosition
 	RevealsShroud:
@@ -268,6 +294,7 @@
 ^Melee:
 	AttackFrontal:
 		FacingTolerance: 128
+		PauseOnCondition: petrified
 	AutoTarget:
 		# Units scan 5 cells and go for enemies they see, as OpenSYW's infantry do.
 		ScanRadius: 5
@@ -293,6 +320,7 @@
 	AttackAircraft:
 		AttackType: Hover
 		FacingTolerance: 128
+		PauseOnCondition: petrified
 	AutoTarget:
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
@@ -480,6 +508,104 @@
 	Exit@15:
 		ExitCell: 4,-1
 
+^Exits5x2:
+	Exit@0:
+		ExitCell: -1,2
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,2
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,2
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,2
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,2
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,2
+		Priority: 2
+	Exit@6:
+		ExitCell: 5,2
+		Priority: 2
+	Exit@7:
+		ExitCell: -1,1
+	Exit@8:
+		ExitCell: 5,1
+	Exit@9:
+		ExitCell: -1,0
+	Exit@10:
+		ExitCell: 5,0
+	Exit@11:
+		ExitCell: -1,-1
+	Exit@12:
+		ExitCell: 0,-1
+	Exit@13:
+		ExitCell: 1,-1
+	Exit@14:
+		ExitCell: 2,-1
+	Exit@15:
+		ExitCell: 3,-1
+	Exit@16:
+		ExitCell: 4,-1
+	Exit@17:
+		ExitCell: 5,-1
+
+^Exits5x4:
+	Exit@0:
+		ExitCell: -1,4
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,4
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,4
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,4
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,4
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,4
+		Priority: 2
+	Exit@6:
+		ExitCell: 5,4
+		Priority: 2
+	Exit@7:
+		ExitCell: -1,3
+	Exit@8:
+		ExitCell: 5,3
+	Exit@9:
+		ExitCell: -1,2
+	Exit@10:
+		ExitCell: 5,2
+	Exit@11:
+		ExitCell: -1,1
+	Exit@12:
+		ExitCell: 5,1
+	Exit@13:
+		ExitCell: -1,0
+	Exit@14:
+		ExitCell: 5,0
+	Exit@15:
+		ExitCell: -1,-1
+	Exit@16:
+		ExitCell: 0,-1
+	Exit@17:
+		ExitCell: 1,-1
+	Exit@18:
+		ExitCell: 2,-1
+	Exit@19:
+		ExitCell: 3,-1
+	Exit@20:
+		ExitCell: 4,-1
+	Exit@21:
+		ExitCell: 5,-1
+
 ^Exits6x4:
 	Exit@0:
 		ExitCell: -1,4
@@ -609,6 +735,8 @@
 
 ^Tyrano:
 
+^Demon:
+
 # Tyrano disguise (PwDisguise; the help file's Special Abilities): once Disguise is researched, the unit can turn into
 # its "original form", a wild creature of its kind, and back. While "disguised" it is drawn as the creature (the unit
 # names its image in PwWithDisguiseBody@DISGUISE and the creature in Tooltip@DISGUISE's GenericName) instead of its own
@@ -644,7 +772,7 @@
 	AutoTarget:
 		RequiresCondition: !disguised
 
-# Flyers: the creature's art loops its flight, as theirs does (^FlyingDinosaur).
+# Flyers: the creature's art loops its flight, as theirs does (^LivingFlyer).
 ^DisguisableFlyer:
 	Inherits: ^DisguiseBase
 	WithInfantryBody@FLIGHT:

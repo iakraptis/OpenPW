@@ -167,7 +167,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			// The numbers, two columns of three lines under the health bar.
 			var entries = new List<(string Text, string Tooltip)>();
 			if (health != null)
-				entries.Add((FluentProvider.GetMessage("label-stat-hp", "hp", health.HP, "max", health.MaxHP), FluentProvider.GetMessage("tooltip-stat-hp")));
+			{
+				// A Demon's health is its kill points.
+				var kp = actor.Info.HasTraitInfo<PwKillPointsInfo>();
+				entries.Add((FluentProvider.GetMessage(kp ? "label-stat-kp" : "label-stat-hp", "hp", health.HP, "max", health.MaxHP),
+					FluentProvider.GetMessage(kp ? "tooltip-stat-kp" : "tooltip-stat-hp")));
+			}
 
 			var levels = actor.TraitOrDefault<PwLevels>();
 			if (levels != null)

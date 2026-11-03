@@ -1,0 +1,517 @@
+# Demon units (docs/game/demon.md). Speeds are the average walk step (px per tick) x 32; ranges, sight and speeds in
+# WDist (32 px = 1c0); armour is the original flat value; Passenger weights are .chr 0x188. Their health is their kill
+# points (^Fiend, PwKillPoints). Spells (PwSpell; JW2_11 records, docs/game/rules.md) cost kill points and grow with
+# the caster's level (PwLevels.SpellPower, Level.lvt row 2); the help file's spell levels count from 1, ours from 0.
+
+# The worker. It flies low ("Fly"): it walks over the ground like the others, but air weapons reach it too.
+demon-insect:
+	Inherits: ^Worker
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Melee
+	PwKillPoints:
+	Targetable@FLY:
+		TargetTypes: Air
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 10
+		AttackGain: 18
+		ArmorGain: 11
+		AttackDelay: 12
+	UsesPopulation:
+		Amount: 1
+	Builder:
+		Types: demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano
+	Buildable:
+		Queue: demon-demonden
+		BuildDuration: 160
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: demon-insect
+	Tooltip:
+		Name: actor-demon-insect.name
+	Valued:
+		Cost: 100
+	Health:
+		HP: 90
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 160
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 4
+		Weapon: InsectHit
+
+demon-skeleton:
+	Inherits: ^Fiend
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 27
+		ArmorGain: 19
+		AttackDelay: 19
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: demon-deathden
+		BuildDuration: 224
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: demon-skeleton
+	Tooltip:
+		Name: actor-demon-skeleton.name
+	Valued:
+		Cost: 150
+	Health:
+		HP: 90
+	PwArmor:
+		Value: 2
+	Mobile:
+		Speed: 176
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: SkeletonArrow
+
+demon-mudman:
+	Inherits: ^Fiend
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 2
+	# Level.lvt has a row 5 bonus for it, which no code reads (docs/game/rules.md).
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 27
+		ArmorGain: 18
+		AttackDelay: 31
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: demon-deathden
+		BuildDuration: 400
+		BuildPaletteOrder: 20
+		Prerequisites: demon-dirtyportal
+	RenderSprites:
+		Image: demon-mudman
+	Tooltip:
+		Name: actor-demon-mudman.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 200
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 192
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		# Strikes on step 5 of its attack animation (.chr 0x247c).
+		FireDelay: 5
+		Weapon: MudManHit
+
+# Stone curse from level 1 (the help file's level 2).
+demon-kelpa:
+	Inherits: ^Fiend
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Melee
+	-Crushable:
+	Passenger:
+		Weight: 4
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 27
+		ArmorGain: 18
+		AttackDelay: 28
+		DelayReduction: 0, 5, 10, 15, 20, 25, 30, 35, 40, 50
+		SpellPower: 0, 0, 5, 10, 15, 20, 25, 30, 35, 50
+	UsesPopulation:
+		Amount: 4
+	Buildable:
+		Queue: demon-magicden
+		BuildDuration: 320
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: demon-kelpa
+	Tooltip:
+		Name: actor-demon-kelpa.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 250
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 284
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
+		Weapon: CelberosFire
+	# Turns an enemy unit to stone: it can't move or attack. Record 11: 85 kill points; its 66 read as 66 frames of
+	# 4 ticks (D).
+	PwSpell@STONE-CURSE:
+		Name: stone-curse
+		Target: Unit
+		Cost: 85
+		MinLevel: 1
+		PetrifyTicks: 264
+		Image: spell-stone-curse
+		Icon: ability-stone-curse
+		Sound: spell-stone-curse-0.wav
+
+demon-kingdemon:
+	Inherits: ^Fiend
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Melee
+	-Crushable:
+	Passenger:
+		Weight: 6
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 35
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 6
+	Buildable:
+		Queue: demon-hell
+		BuildDuration: 560
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: demon-kingdemon
+	Tooltip:
+		Name: actor-demon-kingdemon.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 400
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 178
+	RevealsShroud:
+		Range: 11c0
+	Armament:
+		# Strikes on step 9 of its attack animation (.chr 0x247c).
+		FireDelay: 9
+		Weapon: KingDemonFire
+
+# Rise death from the start (the help file's level 1).
+demon-devil:
+	Inherits: ^Fiend
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Ranged
+	-Crushable:
+	Passenger:
+		Weight: 12
+	PwLevels:
+		XpPerLevel: 30
+		AttackGain: 45
+		ArmorGain: 18
+		AttackDelay: 16
+		DelayReduction: 0, 3, 6, 9, 12, 15, 18, 21, 24, 30
+		RangeBonus: 0, 7, 14, 21, 28, 35, 42, 49, 56, 64
+	UsesPopulation:
+		Amount: 30
+	Buildable:
+		Queue: demon-demonden
+		BuildDuration: 2880
+		BuildPaletteOrder: 70
+		Prerequisites: demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal
+	RenderSprites:
+		Image: demon-devil
+	Tooltip:
+		Name: actor-demon-devil.name
+	Valued:
+		Cost: 4500
+	Health:
+		HP: 900
+	PwArmor:
+		Value: 35
+	Mobile:
+		Speed: 192
+	RevealsShroud:
+		Range: 11c0
+	Armament:
+		# Strikes on step 18 of its attack animation (.chr 0x247c).
+		FireDelay: 18
+		Weapon: Apocalypse
+	# Raises three zombies around it (record 15: 100 kill points, 0x1ec 3).
+	PwSpell@RISE-DEATH:
+		Name: rise-death
+		Target: Self
+		Cost: 100
+		Summon: demon-risezombie1, demon-risezombie2
+		SummonCount: 3
+		Image: spell-rise-death
+		Icon: ability-rise-death
+		Sound: spell-rise-death-0.wav
+
+# Raised by the Devil's Rise death, never trained. Undead: their deaths feed no kill points (.chr 0x1f4 bit 0x10
+# clear), they don't level and take no population. They crumble after a while (not from the original: about two and
+# a half minutes, so the zombies don't pile up).
+^Zombie:
+	Inherits: ^Fiend
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Demon
+	Inherits@attack: ^Melee
+	-Buildable:
+	-PwLiving:
+	-PwMeatEater:
+	Passenger:
+		Weight: 1
+	Tooltip:
+		Name: actor-demon-risezombie.name
+	Valued:
+		Cost: 0
+	Health:
+		HP: 99
+	PwArmor:
+		Value: 5
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 4
+		Weapon: ZombieHit
+	KillsSelf:
+		Delay: 2100
+
+demon-risezombie1:
+	Inherits: ^Zombie
+	RenderSprites:
+		Image: demon-risezombie1
+	Mobile:
+		Speed: 128
+
+demon-risezombie2:
+	Inherits: ^Zombie
+	RenderSprites:
+		Image: demon-risezombie2
+	Mobile:
+		Speed: 160
+
+# Flyers. The DeathEye scouts (unarmed; Learn DeathEye Sight adds 128 px). It doesn't gain levels.
+demon-deatheye:
+	Inherits: ^FlyingFiend
+	Inherits@race: ^Demon
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: demon-flyden
+		BuildDuration: 560
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: demon-deatheye
+	Tooltip:
+		Name: actor-demon-deatheye.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 100
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 176
+	RevealsShroud:
+		Range: 10c0
+	# No attack animation (it has no attack).
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
+# The Phantom carries 12 (.chr 0x188 on a transport), landed to load. It doesn't gain levels.
+demon-phantom:
+	Inherits: ^FlyingFiend
+	Inherits@race: ^Demon
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: demon-flyden
+		BuildDuration: 480
+		BuildPaletteOrder: 20
+		Prerequisites: demon-magicden
+	RenderSprites:
+		Image: demon-phantom
+	Tooltip:
+		Name: actor-demon-phantom.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 208
+		IdleBehavior: Land
+		LandableTerrainTypes: Clear, Ramp
+	RevealsShroud:
+		Range: 11c0
+	Cargo:
+		Types: Ground
+		MaxWeight: 12
+		UnloadVoice: Action
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
+demon-darkbat:
+	Inherits: ^FlyingFiend
+	Inherits@race: ^Demon
+	Inherits@attack: ^AirAttack
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 27
+		ArmorGain: 27
+		AttackDelay: 28
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 3
+	Buildable:
+		Queue: demon-flyden
+		BuildDuration: 480
+		BuildPaletteOrder: 30
+		Prerequisites: demon-dirtyportal
+	RenderSprites:
+		Image: demon-darkbat
+	Tooltip:
+		Name: actor-demon-darkbat.name
+	Valued:
+		Cost: 350
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 240
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 8 of its attack animation (.chr 0x247c).
+		FireDelay: 8
+		Weapon: NoiseWave
+
+demon-gargoyle:
+	Inherits: ^FlyingFiend
+	Inherits@race: ^Demon
+	Inherits@attack: ^AirAttack
+	# Level.lvt has a row 5 bonus for it, which no code reads (docs/game/rules.md).
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 36
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 6
+	Buildable:
+		Queue: demon-hell
+		BuildDuration: 960
+		BuildPaletteOrder: 20
+		Prerequisites: demon-highportal
+	RenderSprites:
+		Image: demon-gargoyle
+	Tooltip:
+		Name: actor-demon-gargoyle.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 144
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
+		Weapon: RedEye
+
+# The Warlock flies low ("Fly"); it has no weapon, only its spells: Noxious gas and Suicide from the start, Quake from
+# level 1 (the help file's levels 1 and 2).
+demon-warlock:
+	Inherits: ^FlyingFiend
+	Inherits@flight: ^LowFlight
+	Inherits@race: ^Demon
+	PwLevels:
+		XpPerLevel: 18
+		SpellPower: 0, 0, 10, 20, 30, 40, 50, 60, 70, 80
+	UsesPopulation:
+		Amount: 3
+	Buildable:
+		Queue: demon-magicden
+		BuildDuration: 480
+		BuildPaletteOrder: 20
+		Prerequisites: demon-highportal
+	RenderSprites:
+		Image: demon-warlock
+	Tooltip:
+		Name: actor-demon-warlock.name
+	Valued:
+		Cost: 650
+	Health:
+		HP: 200
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 168
+	RevealsShroud:
+		Range: 7c0
+	# Record 13: a poisonous cloud, 3 damage to every living thing within 112 px each frame (4 ticks) for 144 ticks;
+	# 120 kill points.
+	PwSpell@NOXIOUS-GAS:
+		Name: noxious-gas
+		Target: Ground
+		Cost: 120
+		Damage: 3
+		Steps: 36
+		StepInterval: 4
+		Radius: 3c512
+		LivingOnly: true
+		AffectsAllies: true
+		Image: spell-noxious-gas
+		Icon: ability-noxious-gas
+		Sound: spell-noxious-gas-0.wav
+	# Record 12: 150 damage to the enemies within 160 px, and the Warlock dies.
+	PwSpell@SUICIDE:
+		Name: suicide
+		Target: Self
+		Damage: 150
+		Radius: 5c0
+		KillsCaster: true
+		Image: spell-suicide
+		Icon: ability-suicide
+		Sound: spell-suicide-0.wav
+	# Record 14: the ground shakes, 12 damage to the enemies within 144 px (buildings too) on each of its 31 frames;
+	# 150 kill points.
+	PwSpell@QUAKE:
+		Name: quake
+		Target: Ground
+		Cost: 150
+		MinLevel: 1
+		Damage: 12
+		Steps: 31
+		StepInterval: 4
+		Radius: 4c512
+		Image: spell-quake
+		Icon: ability-quake
+		Sound: spell-quake-0.wav

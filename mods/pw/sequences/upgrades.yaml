@@ -114,3 +114,53 @@ tyrano-upgrade-mutant-morphosis:
 	icon:
 		Filename: chrome/upgrades-tyrano.png
 		Start: 24
+
+demon-upgrade-gathering-amount-skill:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 31
+
+demon-upgrade-volcano-detection:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 32
+
+demon-upgrade-level-up-exp:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 43
+
+demon-upgrade-ground-demon-weapon-skill:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 33
+
+demon-upgrade-ground-demon-armor-skill:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 34
+
+demon-upgrade-air-demon-weapon-skill:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 35
+
+demon-upgrade-air-demon-armor-skill:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 36
+
+demon-upgrade-skeleton-attack-range:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 37
+
+demon-upgrade-deatheye-sight:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 38
+
+demon-upgrade-phantom-movement:
+	icon:
+		Filename: chrome/upgrades-demon.png
+		Start: 39

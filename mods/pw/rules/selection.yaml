@@ -136,6 +136,71 @@ tyrano-mutant:
 		Bounds: 3136, 3872, 32, -1168
 		DecorationBounds: 3136, 3872, 32, -1168
 
+demon-insect:
+	Selectable:
+		Bounds: 1216, 960, 32, 0
+		DecorationBounds: 1216, 960, 32, 0
+
+demon-skeleton:
+	Selectable:
+		Bounds: 1248, 1632, 240, -336
+		DecorationBounds: 1248, 1632, 240, -336
+
+demon-mudman:
+	Selectable:
+		Bounds: 2176, 2048, 224, -320
+		DecorationBounds: 2176, 2048, 224, -320
+
+demon-kelpa:
+	Selectable:
+		Bounds: 2144, 2752, 48, -608
+		DecorationBounds: 2144, 2752, 48, -608
+
+demon-kingdemon:
+	Selectable:
+		Bounds: 2176, 3328, 32, -800
+		DecorationBounds: 2176, 3328, 32, -800
+
+demon-devil:
+	Selectable:
+		Bounds: 2272, 3744, 80, -1040
+		DecorationBounds: 2272, 3744, 80, -1040
+
+demon-risezombie1:
+	Selectable:
+		Bounds: 544, 1248, 80, -144
+		DecorationBounds: 544, 1248, 80, -144
+
+demon-risezombie2:
+	Selectable:
+		Bounds: 576, 1344, 64, -192
+		DecorationBounds: 576, 1344, 64, -192
+
+demon-deatheye:
+	Selectable:
+		Bounds: 992, 1408, 16, 160
+		DecorationBounds: 992, 1408, 16, 160
+
+demon-phantom:
+	Selectable:
+		Bounds: 3616, 2208, 240, 16
+		DecorationBounds: 3616, 2208, 240, 16
+
+demon-darkbat:
+	Selectable:
+		Bounds: 1888, 2208, 80, 816
+		DecorationBounds: 1888, 2208, 80, 816
+
+demon-gargoyle:
+	Selectable:
+		Bounds: 2176, 2432, 224, -320
+		DecorationBounds: 2176, 2432, 224, -320
+
+demon-warlock:
+	Selectable:
+		Bounds: 1280, 1952, 64, -304
+		DecorationBounds: 1280, 1952, 64, -304
+
 wild-tyranosaurus:
 	Selectable:
 		Bounds: 6176, 5120, 80, -1440

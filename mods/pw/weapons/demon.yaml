@@ -1,0 +1,140 @@
+# Demon weapons (docs/game/demon.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack
+# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 710/576
+# (weapons/defaults.yaml). Weapons with no flight frames strike at once (InstantHit) and show their impact art.
+
+InsectHit:
+	Inherits: ^Melee
+	ReloadDelay: 26
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 10
+
+SkeletonArrow:
+	Inherits: ^Arrow
+	ReloadDelay: 32
+	Range: 5c0
+	Projectile: Bullet
+		Image: weapon-skeleton-arrows
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 22
+	Report: weapon-skeleton-arrows-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-skeleton-arrows
+		Explosions: impact
+
+MudManHit:
+	Inherits: ^Melee
+	ReloadDelay: 37
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 70
+	Report: weapon-mudman-hit-0.wav
+
+# Gargoyle: its red eye strikes at once, at ground or air, splashing 60 px.
+RedEye:
+	Inherits: ^Arrow
+	ReloadDelay: 44
+	Range: 10c0
+	Projectile: InstantHit
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 50
+		# Splash: full damage within the original radius (1c896).
+		Range: 0, 1c896, 1984
+		Falloff: 100, 100, 0
+	Report: weapon-red-eye-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-red-eye
+		Explosions: impact
+
+# Kelpa: breathes fire on the ground before it, splashing 48 px.
+CelberosFire:
+	Inherits: ^PwWeapon
+	ReloadDelay: 40
+	Range: 5c0
+	Projectile: InstantHit
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 40
+		# Splash: full damage within the original radius (1c512).
+		Range: 0, 1c512, 1600
+		Falloff: 100, 100, 0
+	Report: weapon-celberos-fire-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground
+		Image: weapon-celberos-fire
+		Explosions: impact
+
+# KingDemon: a fireball at ground units (target mask 23).
+KingDemonFire:
+	Inherits: ^PwWeapon
+	ReloadDelay: 47
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-kingdemon-fire
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 60
+	Report: weapon-kingdemon-fire-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground
+		ImpactSounds: weapon-kingdemon-fire-1.wav
+
+# Darkbat: a sound wave at ground or air.
+NoiseWave:
+	Inherits: ^Arrow
+	ReloadDelay: 44
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-noise-wave
+		Sequences: flight
+		Speed: 789
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 26
+	Report: weapon-noise-wave-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-noise-wave
+		Explosions: impact
+		ImpactSounds: weapon-noise-wave-1.wav
+
+# Devil: the apocalypse strikes its target at once, ground or air.
+Apocalypse:
+	Inherits: ^Arrow
+	ReloadDelay: 41
+	Range: 7c0
+	Projectile: InstantHit
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 150
+	Report: weapon-apocalypse-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-apocalypse
+		Explosions: impact
+
+# The zombies Rise death raises.
+ZombieHit:
+	Inherits: ^Melee
+	ReloadDelay: 29
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 30
+
+# Volcano: the Demon tower's lava shot at ground or air (20 px per tick).
+VolcanoShot:
+	Inherits: ^Thrown
+	ValidTargets: Ground, Air
+	ReloadDelay: 24
+	Range: 9c0
+	Projectile: Bullet
+		Image: weapon-volcano
+		Sequences: flight
+		Speed: 789
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Ground, Air
+		Damage: 40
+	Report: weapon-volcano-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-volcano
+		Explosions: impact

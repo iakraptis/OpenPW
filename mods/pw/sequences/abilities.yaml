@@ -74,3 +74,30 @@ command-undisguise:
 	icon:
 		Filename: chrome/actions-tyrano.png
 		Start: 0
+
+# The Demon spells (chrome/magic-demon.png: Magic.trt, one icon per JW2_11 record).
+
+ability-stone-curse:
+	icon:
+		Filename: chrome/magic-demon.png
+		Start: 11
+
+ability-suicide:
+	icon:
+		Filename: chrome/magic-demon.png
+		Start: 12
+
+ability-noxious-gas:
+	icon:
+		Filename: chrome/magic-demon.png
+		Start: 13
+
+ability-quake:
+	icon:
+		Filename: chrome/magic-demon.png
+		Start: 14
+
+ability-rise-death:
+	icon:
+		Filename: chrome/magic-demon.png
+		Start: 15
