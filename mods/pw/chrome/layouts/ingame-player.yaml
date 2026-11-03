@@ -527,6 +527,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -548,6 +553,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -569,6 +579,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -590,6 +605,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -611,6 +631,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -632,6 +657,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -653,6 +683,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -674,6 +709,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -695,6 +735,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -716,6 +761,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -737,6 +787,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
@@ -758,6 +813,11 @@ Container@PLAYER_WIDGETS:
 							Width: 38
 							Height: 38
 							Color: 000000A0
+						# A gold frame while it is on (a toggle such as Hunt: CommandPanelLogic).
+						Outline@OUTLINE:
+							Width: 40
+							Height: 40
+							Color: FFD700
 						Label@PROGRESS:
 							Width: 40
 							Height: 14
