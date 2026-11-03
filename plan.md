@@ -432,7 +432,7 @@ Left for Elf and Demon: the spell mana costs.
 - [x] **Hunting and meat sharing** (2026-11-02, branches `hunting`, `bot2`), a new design, not the original's:
   - `PwHunter`: a per-unit toggle (command panel, the original's Action.trt icon 13). While on, an idle unit picks
     up meat within 8 cells, else attacks a wild creature within 8 cells its weapons can hit, aggressive ones first,
-    then one an allied hunter around is already after (hunters close together hunt together), then the nearest.
+    then the nearest; several hunters can hunt the same creature.
     While on, a gold H at the bottom left of the unit's selection box (the original's H mark), and the Hunt button
     has a gold frame (`OutlineWidget`, on any command slot that is on).
   - Share meat (`ShareMeat` activity, icon 35): the selected meat eaters meet and split their meat evenly.

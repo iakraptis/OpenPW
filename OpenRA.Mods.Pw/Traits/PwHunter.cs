@@ -19,8 +19,7 @@ namespace OpenRA.Mods.Pw.Traits
 {
 	[Desc("Hunting, toggled per unit (the command panel's Hunt button, order PwHunt). While on, the unit, whenever it is",
 		"idle, picks up meat lying within Radius, else attacks the wild creature within Radius it can hit: aggressive",
-		"ones (armed) first, then one that an allied hunter around is already hunting (so hunters close together hunt",
-		"together), then the nearest. After a kill it is idle again, so it takes the meat and goes for the next.",
+		"ones (armed) first, then the nearest. After a kill it is idle again, so it takes the meat and goes for the next.",
 		"Other orders still work; hunting carries on when the unit is idle again. A new design, not the original's.")]
 	public class PwHunterInfo : ConditionalTraitInfo, Requires<AttackBaseInfo>
 	{
@@ -55,9 +54,6 @@ namespace OpenRA.Mods.Pw.Traits
 			: base(info) { }
 
 		public bool Hunting { get; private set; }
-
-		// The creature it went for last (while it lives and is hunted).
-		public Actor Prey => Hunting && prey != null && !prey.IsDead ? prey : null;
 
 		// The order the Hunt button sends: ExtraData 1 turns hunting on, 0 off.
 		public static Order Toggle(Actor self, bool on) => new(OrderID, self, false) { ExtraData = on ? 1u : 0u };
@@ -112,19 +108,11 @@ namespace OpenRA.Mods.Pw.Traits
 				}
 			}
 
-			// What the allied hunters around are after.
-			var hunted = around
-				.Where(a => a != self && a.Owner.IsAlliedWith(self.Owner))
-				.Select(a => a.TraitOrDefault<PwHunter>()?.Prey)
-				.Where(p => p != null)
-				.ToHashSet();
-
 			var attacks = self.TraitsImplementing<AttackBase>().Where(a => !a.IsTraitDisabled).ToList();
 			var next = around
 				.Where(a => IsPrey(self, a) && !givenUp.ContainsKey(a) && a.CanBeViewedByPlayer(self.Owner)
 					&& attacks.Any(ab => ab.HasAnyValidWeapons(Target.FromActor(a))))
 				.OrderBy(a => a.Info.HasTraitInfo<AttackBaseInfo>() ? 0 : 1)
-				.ThenBy(a => hunted.Contains(a) ? 0 : 1)
 				.ThenBy(a => (a.CenterPosition - self.CenterPosition).LengthSquared)
 				.FirstOrDefault();
 			if (next == null)
