@@ -1,7 +1,8 @@
 -- Two Normal AIs on (2) One vs One at 5x speed, each from its main building and four workers: bot-test Primitive
 -- (North) against Tyrano (South), bot-demon-test Demon against Primitive. Both must grow their workforce, build a
 -- base and an army, and guard it with towers (by the main building, by the berries and on the edge); they must fight
--- early, and one must destroy a building.
+-- early, and one must destroy a building, all within MaxTicks (a hard cap: the battle stops there).
+MaxTicks = 25000
 -- Written by the asset installer (OpenRA.Mods.Pw/AssetInstaller/MapTemplates/bot-test) on the converted map.
 Races = {
     primitive = {
@@ -50,8 +51,8 @@ WorldLoaded = function()
         end)
     end
     WaitFor("the bots fight (a kill within 15000 ticks)", 15000, function() return kills > 0 end)
-    WaitFor("a bot destroys a building of the other", 40000, function() return buildingKills > 0 end)
-    FinishWhenDone("BOT", 40500)
+    WaitFor("a bot destroys a building of the other", MaxTicks, function() return buildingKills > 0 end)
+    FinishWhenDone("BOT", MaxTicks)
 end
 
 watched = { }

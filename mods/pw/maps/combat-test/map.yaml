@@ -8,9 +8,9 @@ Author: OpenPW
 
 Tileset: TEST
 
-MapSize: 34,34
+MapSize: 88,88
 
-Bounds: 1,1,32,32
+Bounds: 1,1,86,86
 
 Visibility: MissionSelector
 
@@ -26,18 +26,33 @@ Players:
 		Name: Creeps
 		NonCombatant: True
 		Faction: Random
-		Enemies: Multi0
+		Enemies: Combat, Defence, Levels
 	PlayerReference@Multi0:
 		Name: Multi0
 		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@Combat:
+		Name: Combat
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+	PlayerReference@Defence:
+		Name: Defence
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+	PlayerReference@Levels:
+		Name: Levels
 		LockFaction: True
 		Faction: primitive
 		Enemies: Creeps
 
 Actors:
 	Spawn0: mpspawn
-		Owner: Multi0
-		Location: 28,28
+		Owner: Neutral
+		Location: 2,2
 
 Rules:
 	player:

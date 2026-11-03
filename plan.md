@@ -461,6 +461,14 @@ Left for Elf and Demon: the spell mana costs.
 - Test map: the converted original maps work directly.
 - Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in
   `OpenRA.Mods.Pw/Tests`), run by `python run_tests.py`. Each fix gets a check that fails without it.
+  - Merged by theme on 2026-11-03 (`research/tools/merge_tests.py`; every check kept): `economy-test` (gathering,
+    population, rally), `combat-test` (combat, defence, levels), `primitive-test` (items, upgrades, chief, air),
+    `wildlife-test` (wild, hunting, meat, share meat), `bot-modules-test` (the AI's ability, defence, hunting and
+    transport modules), plus `tyrano-test`, `demon-test` and the installer's bot battles. The older map names in
+    this plan are now sections of these. Each section is a 34×34 area of the map, 54 cells from the next, with its
+    own players; its script has `At(x, y)` for its cells, and its checks carry its name. New checks go into the
+    section of their theme.
+  - The bot battles stop at 25,000 ticks. Once Elf is done, the duels give way to one map with all four races.
 - Port the OpenSYW traits as needed: `Builder` / `UnderConstruction` (if the original uses worker construction),
   per-building production queues, sidebar logic.
 - Lua test maps + `run_tests.py`, as in OpenSYW.
@@ -586,8 +594,8 @@ dead.
 - Before trusting `--check-yaml`, read OpenSY `Plan.md` §8.2: several missing world/player traits crash only at
   runtime (here so far: `GrantConditionOnPrerequisiteManager`, `PlayerRadarTerrain`).
 - Run only the test maps a change touches (`python run_tests.py --no-build --only a-test,b-test`); the whole suite
-  (with the 7-minute `bot-test`) only when asked or before a merge. `make.cmd check` (style) and `make.cmd test`
-  (YAML lint) before every commit.
+  (with the bot battles, up to 25,000 ticks each) only when asked or before a merge. `make.cmd check` (style) and
+  `make.cmd test` (YAML lint) before every commit.
 - `research/tools/shot.ps1` screenshots the game; call it from PowerShell as `& ./research/tools/shot.ps1 ...`
   (with `powershell -File` array arguments break): `-Map <map|menu>`, `-Clicks`, `-Hover`, `-Wheel`, `-Burst`,
   `-DragSelect`, `-Extra`. The game saves its command-line settings: afterwards remove `ViewportEdgeScroll: False`

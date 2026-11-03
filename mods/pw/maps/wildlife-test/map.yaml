@@ -1,0 +1,125 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Wildlife
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,88
+
+Bounds: 1,1,86,86
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: Random
+		Enemies: Wild, Hunting, Meat, ShareMeat
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@Wild:
+		Name: Wild
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+	PlayerReference@Hunting:
+		Name: Hunting
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+	PlayerReference@Meat:
+		Name: Meat
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+	PlayerReference@ShareMeat:
+		Name: ShareMeat
+		LockFaction: True
+		Faction: primitive
+		Enemies: Creeps
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 2,2
+	HuntingHunter: primitive-knight
+		Owner: Hunting
+		Location: 62,8
+	HuntingGrazer: wild-galimimus
+		Owner: Creeps
+		Location: 64,8
+	HuntingRaptor: wild-velociraptor
+		Owner: Creeps
+		Location: 68,8
+	HuntingFarGrazer: wild-galimimus
+		Owner: Creeps
+		Location: 58,28
+	HuntingIdle: primitive-knight
+		Owner: Hunting
+		Location: 68,28
+	HuntingSpareGrazer: wild-galimimus
+		Owner: Creeps
+		Location: 70,28
+	HuntingBrawler: primitive-powerman
+		Owner: Hunting
+		Location: 82,4
+	HuntingFlyer: wild-pteranodon
+		Owner: Creeps
+		Location: 83,6
+	ShareMeatCarrier: primitive-powerman
+		Owner: ShareMeat
+		Location: 60,60
+	ShareMeatSecond: primitive-soldier
+		Owner: ShareMeat
+		Location: 70,62
+	ShareMeatThird: primitive-powerman
+		Owner: ShareMeat
+		Location: 64,72
+	ShareMeatMachine: primitive-bowmachine
+		Owner: ShareMeat
+		Location: 76,70
+	ShareMeatLeaver: primitive-powerman
+		Owner: ShareMeat
+		Location: 62,78
+
+Rules:
+	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		# Scripted actors appear after the first victory check.
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true
+	# The Meat section's Galimimus comes back quickly, to test it (the Hunting section's keep the usual delay).
+	wild-galimimus-quick:
+		Inherits: wild-galimimus
+		RenderSprites:
+			Image: wild-galimimus
+		PwRespawns:
+			Delay: 100

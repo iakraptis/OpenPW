@@ -53,7 +53,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					c.WriteFile($"maps/{name}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
 
 				c.WriteFile($"maps/{name}/test.lua", Template($"MapTemplates/{BotTemplate}/test.lua"));
-				c.WriteFile($"maps/{name}/testlib.lua", File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/gathering-test/testlib.lua")));
+				c.WriteFile($"maps/{name}/testlib.lua", File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/economy-test/testlib.lua")));
 				var title = string.Join(" against ", races.Select(r => r.Faction));
 				c.WriteText($"maps/{name}/map.yaml", BotTestYaml(File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n"), races, title));
 			}

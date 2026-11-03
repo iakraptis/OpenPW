@@ -1,0 +1,172 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Bot modules
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,88
+
+Bounds: 1,1,86,86
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: Random
+		Enemies: BotAbilityRaider, BotAbilityTarget, BotDefenceRaider, BotDefenceTarget, BotHuntingRaider, BotHuntingTarget, BotTransportRaider, BotTransportTarget
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@BotAbilityRaider:
+		Name: BotAbilityRaider
+		Bot: normal
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotAbilityTarget, Creeps
+	PlayerReference@BotAbilityTarget:
+		Name: BotAbilityTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotAbilityRaider, Creeps
+	PlayerReference@BotDefenceRaider:
+		Name: BotDefenceRaider
+		Bot: normal
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotDefenceTarget, Creeps
+	PlayerReference@BotDefenceTarget:
+		Name: BotDefenceTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotDefenceRaider, Creeps
+	PlayerReference@BotHuntingRaider:
+		Name: BotHuntingRaider
+		Bot: normal
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotHuntingTarget, Creeps
+	PlayerReference@BotHuntingTarget:
+		Name: BotHuntingTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotHuntingRaider, Creeps
+	PlayerReference@BotTransportRaider:
+		Name: BotTransportRaider
+		Bot: normal
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotTransportTarget, Creeps
+	PlayerReference@BotTransportTarget:
+		Name: BotTransportTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotTransportRaider, Creeps
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 2,2
+	BotAbilityRaiderSanctuary: primitive-sanctuary
+		Owner: BotAbilityRaider
+		Location: 2,2
+	BotAbilityChief: primitive-chief
+		Owner: BotAbilityRaider
+		Location: 10,16
+	BotAbilityEnemy: primitive-powerman
+		Owner: BotAbilityTarget
+		Location: 16,16
+	BotDefenceRaiderSanctuary: primitive-sanctuary
+		Owner: BotDefenceRaider
+		Location: 56,2
+	BotDefenceMan0: primitive-powerman
+		Owner: BotDefenceRaider
+		Location: 68,12
+	BotDefenceMan1: primitive-powerman
+		Owner: BotDefenceRaider
+		Location: 69,12
+	BotDefenceMan2: primitive-powerman
+		Owner: BotDefenceRaider
+		Location: 70,12
+	BotDefenceMan3: primitive-powerman
+		Owner: BotDefenceRaider
+		Location: 71,12
+	BotDefenceRaptor: wild-velociraptor
+		Owner: Creeps
+		Location: 63,8
+	BotHuntingRaiderSanctuary: primitive-sanctuary
+		Owner: BotHuntingRaider
+		Location: 2,56
+	BotHuntingKnight0: primitive-knight
+		Owner: BotHuntingRaider
+		Location: 9,64
+	BotHuntingKnight1: primitive-knight
+		Owner: BotHuntingRaider
+		Location: 10,64
+	BotHuntingGrazer: wild-galimimus
+		Owner: Creeps
+		Location: 14,65
+	BotHuntingFarGrazer: wild-galimimus
+		Owner: Creeps
+		Location: 28,82
+	BotTransportRaiderSanctuary: primitive-sanctuary
+		Owner: BotTransportRaider
+		Location: 56,56
+	BotTransportRevolver: primitive-revolver
+		Owner: BotTransportRaider
+		Location: 61,66
+	BotTransportMan0: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 57,68
+	BotTransportMan1: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 58,68
+	BotTransportMan2: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 59,68
+	BotTransportMan3: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 57,69
+	BotTransportMan4: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 58,69
+	BotTransportMan5: primitive-powerman
+		Owner: BotTransportRaider
+		Location: 59,69
+	BotTransportTargetHouse: primitive-house
+		Owner: BotTransportTarget
+		Location: 81,80
+
+Rules:
+	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		# Scripted actors appear after the first victory check.
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true
