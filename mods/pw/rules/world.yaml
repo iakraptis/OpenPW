@@ -16,7 +16,7 @@
 	Faction@Random:
 		InternalName: Random
 		Name: faction-random.name
-		RandomFactionMembers: primitive, tyrano
+		RandomFactionMembers: primitive, tyrano, demon
 		Description: faction-random.description
 	Faction@primitive:
 		InternalName: primitive
@@ -26,6 +26,10 @@
 		InternalName: tyrano
 		Name: faction-tyrano.name
 		Description: faction-tyrano.description
+	Faction@demon:
+		InternalName: demon
+		Name: faction-demon.name
+		Description: faction-demon.description
 	LoadWidgetAtGameStart:
 	MusicPlaylist:
 	ScreenMap:
@@ -81,6 +85,11 @@ world:
 		BaseActor: tyrano-tyranonest
 		SupportActors: tyrano-dinos, tyrano-dinos, tyrano-dinos, tyrano-dinos
 		Factions: tyrano
+		ClassName: options-starting-units.unlabeled
+	StartingUnits@Demon:
+		BaseActor: demon-demonden
+		SupportActors: demon-insect, demon-insect, demon-insect, demon-insect
+		Factions: demon
 		ClassName: options-starting-units.unlabeled
 
 editorworld:

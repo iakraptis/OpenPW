@@ -338,7 +338,7 @@ tyrano-tyranos:
 
 # Flyers. The Rhamphos flies low ("Fly"): ground weapons reach it too.
 tyrano-rhamphos:
-	Inherits: ^FlyingDinosaur
+	Inherits: ^LivingFlyer
 	Inherits@flight: ^LowFlight
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^AirAttack
@@ -385,7 +385,7 @@ tyrano-rhamphos:
 
 # The "Sky Rhamphos" that scouts (help file): unarmed, high, far-sighted. It doesn't gain levels (.chr 0x1f4).
 tyrano-twinrhamphos:
-	Inherits: ^FlyingDinosaur
+	Inherits: ^LivingFlyer
 	Inherits@race: ^Tyrano
 	Inherits@disguise: ^DisguisableFlyer
 	-Buildable:
@@ -417,7 +417,7 @@ tyrano-twinrhamphos:
 		GenericName: actor-wild-pteranodon.name
 
 tyrano-pteras:
-	Inherits: ^FlyingDinosaur
+	Inherits: ^LivingFlyer
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^AirAttack
 	Inherits@disguise: ^DisguisableArmedFlyer
@@ -463,7 +463,7 @@ tyrano-pteras:
 
 # The Dsunguri carries 12 (.chr 0x188 on a transport), landed to load. It doesn't gain levels.
 tyrano-dsunguri:
-	Inherits: ^FlyingDinosaur
+	Inherits: ^LivingFlyer
 	Inherits@race: ^Tyrano
 	UsesPopulation:
 		Amount: 2
@@ -498,7 +498,7 @@ tyrano-dsunguri:
 
 # Made of a Dilophos, a Pteras and a Trices, once Mutant Morphosis is researched; "as powerful as Tyranos".
 tyrano-mutant:
-	Inherits: ^FlyingDinosaur
+	Inherits: ^LivingFlyer
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^AirAttack
 	-Buildable:

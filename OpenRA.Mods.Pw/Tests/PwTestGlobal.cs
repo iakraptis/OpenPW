@@ -152,6 +152,18 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Whether a unit's hunting is on.")]
 		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
 
+		[Desc("Demon: cast a spell (PwSpell Name) on a unit, as the spell button and a click would.")]
+		public void CastOn(Actor caster, string spell, Actor target) =>
+			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromActor(target)));
+
+		[Desc("Demon: cast a spell on a place.")]
+		public void CastAt(Actor caster, string spell, CPos cell) =>
+			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromCell(caster.World, cell)));
+
+		[Desc("Demon: cast a spell on the caster itself.")]
+		public void CastSelf(Actor caster, string spell) =>
+			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromActor(caster)));
+
 		[Desc("Tyrano: the units meet and merge, as the merge button does (the first takes the order).")]
 		public void Merge(Actor[] units) => Resolve(units[0], PwMerge.Merge(units));
 

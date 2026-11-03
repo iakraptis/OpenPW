@@ -1,0 +1,335 @@
+# Demon buildings (docs/game/demon.md): build time, prerequisites and the units they train from the original tech
+# tree (.chr 0x18c, 0x1fc, 0x284). Footprints are the original ones in 32 px cells (.chr 0x330/0x334). The Tombs
+# provide population as Houses do; the DirtyPortal and HighPortal only research.
+
+demon-demonden:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	Inherits@exits: ^Exits6x4
+	ProvidesPopulation:
+		Amount: 9
+		RequiresCondition: !constructing
+	AcceptsBerries:
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 10
+	Production:
+		Produces: demon-demonden
+	PwProductionQueue:
+		Type: demon-demonden
+	RenderSprites:
+		Image: demon-demonden
+	Tooltip:
+		Name: actor-demon-demonden.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 4500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxxx xxxxxx xxxxxx xxxxxx
+		Dimensions: 6,4
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -3072, -2048
+			BottomRight: 3072, 2048
+	RevealsShroud:
+		Range: 12c0
+
+demon-tomb:
+	Inherits: ^Building
+	Inherits@race: ^Demon
+	ProvidesPopulation:
+		Amount: 10
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 320
+	Buildable:
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: demon-tomb
+	Tooltip:
+		Name: actor-demon-tomb.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 1000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxx xxx
+		Dimensions: 3,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1536, -1024
+			BottomRight: 1536, 1024
+	RevealsShroud:
+		Range: 8c0
+
+demon-deathden:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	Inherits@exits: ^Exits5x2
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 880
+	Buildable:
+		BuildPaletteOrder: 30
+		Prerequisites: demon-demonden
+	Production:
+		Produces: demon-deathden
+	PwProductionQueue:
+		Type: demon-deathden
+	RenderSprites:
+		Image: demon-deathden
+	Tooltip:
+		Name: actor-demon-deathden.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx
+		Dimensions: 5,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1024
+			BottomRight: 2560, 1024
+	RevealsShroud:
+		Range: 8c0
+
+demon-flyden:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	Inherits@exits: ^Exits5x4
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 40
+		Prerequisites: demon-deathden
+	Production:
+		Produces: demon-flyden
+	PwProductionQueue:
+		Type: demon-flyden
+	RenderSprites:
+		Image: demon-flyden
+	Tooltip:
+		Name: actor-demon-flyden.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx xxxxx
+		Dimensions: 5,4
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -2048
+			BottomRight: 2560, 2048
+	RevealsShroud:
+		Range: 8c0
+
+demon-magicden:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	Inherits@exits: ^Exits5x2
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 50
+		Prerequisites: demon-deathden
+	Production:
+		Produces: demon-magicden
+	PwProductionQueue:
+		Type: demon-magicden
+	RenderSprites:
+		Image: demon-magicden
+	Tooltip:
+		Name: actor-demon-magicden.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx
+		Dimensions: 5,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1024
+			BottomRight: 2560, 1024
+	RevealsShroud:
+		Range: 8c0
+
+demon-hell:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 60
+		Prerequisites: demon-magicden
+	Production:
+		Produces: demon-hell
+	PwProductionQueue:
+		Type: demon-hell
+	RenderSprites:
+		Image: demon-hell
+	Tooltip:
+		Name: actor-demon-hell.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 3500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+demon-dirtyportal:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	UnderConstruction:
+		Duration: 1280
+	Buildable:
+		BuildPaletteOrder: 70
+		Prerequisites: demon-deathden
+	Production:
+		Produces: demon-dirtyportal
+	PwProductionQueue:
+		Type: demon-dirtyportal
+	RenderSprites:
+		Image: demon-dirtyportal
+	Tooltip:
+		Name: actor-demon-dirtyportal.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 10c0
+
+demon-highportal:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Demon
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 80
+		Prerequisites: demon-magicden
+	Production:
+		Produces: demon-highportal
+	PwProductionQueue:
+		Type: demon-highportal
+	RenderSprites:
+		Image: demon-highportal
+	Tooltip:
+		Name: actor-demon-highportal.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 8c0
+
+# The Volcano, the Demon defence: lava at ground and air in every direction (attack 40, range 288 px, the record's own
+# stats). It reveals hidden traps and invisible units near it; Learn Volcano Detection (the DemonDen's research)
+# widens that. The ranges are not known from the original (as the StoneTower's).
+demon-volcano:
+	Inherits: ^Defense
+	Inherits@race: ^Demon
+	UnderConstruction:
+		Duration: 560
+	Buildable:
+		BuildPaletteOrder: 35
+		Prerequisites: demon-deathden
+	RenderSprites:
+		Image: demon-volcano
+	Tooltip:
+		Name: actor-demon-volcano.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xx
+		Dimensions: 2,1
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -512
+			BottomRight: 1024, 512
+	RevealsShroud:
+		Range: 11c0
+	DetectCloaked:
+		Range: 5c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && !detection
+	GrantConditionOnPrerequisite@detection:
+		Condition: detection
+		Prerequisites: demon-upgrade-volcano-detection-1
+	DetectCloaked@UPGRADED:
+		Range: 8c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && detection
+	Armament:
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 4
+		Weapon: VolcanoShot
+		RequiresCondition: !constructing
+	WithAttackAnimation:
+		Sequence: attack

@@ -18,20 +18,35 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Orders
 {
-	// Targeting mode after an ability button (the Chief's Fall out): a left click on a valid unit gives the order to the
-	// caster; a right click cancels.
+	// Targeting mode after an ability button (the Chief's Fall out, a Demon spell): a left click on a valid unit (or,
+	// for a spell on a place, on explored ground) gives the order to the caster; a right click cancels.
 	public class AbilityOrderGenerator : IOrderGenerator
 	{
 		readonly Actor caster;
 		readonly string order;
 		readonly Func<Actor, Actor, bool> canTarget;
+		readonly bool onGround;
+		readonly string targetString;
 
-		public AbilityOrderGenerator(Actor caster, string order, Func<Actor, Actor, bool> canTarget)
+		public AbilityOrderGenerator(Actor caster, string order, Func<Actor, Actor, bool> canTarget, string targetString = null)
 		{
 			this.caster = caster;
 			this.order = order;
 			this.canTarget = canTarget;
+			this.targetString = targetString;
 		}
+
+		// Aimed at a place.
+		public AbilityOrderGenerator(Actor caster, string order, string targetString)
+		{
+			this.caster = caster;
+			this.order = order;
+			this.targetString = targetString;
+			canTarget = (_, _) => false;
+			onGround = true;
+		}
+
+		bool GroundTarget(World world, CPos cell) => onGround && world.Map.Contains(cell) && caster.Owner.Shroud.IsExplored(cell);
 
 		bool CasterGone => caster.IsDead || caster.Disposed || !caster.IsInWorld;
 
@@ -49,12 +64,23 @@ namespace OpenRA.Mods.Pw.Orders
 			if (mi.Button != MouseButton.Left || mi.Event != MouseInputEvent.Down || CasterGone)
 				yield break;
 
+			var queued = mi.Modifiers.HasModifier(Modifiers.Shift);
+			if (onGround)
+			{
+				if (!GroundTarget(world, cell))
+					yield break;
+
+				world.CancelInputMode();
+				yield return new Order(order, caster, Target.FromCell(world, cell), queued) { TargetString = targetString };
+				yield break;
+			}
+
 			var target = TargetAt(world, mi);
 			if (target == null)
 				yield break;
 
 			world.CancelInputMode();
-			yield return new Order(order, caster, Target.FromActor(target), mi.Modifiers.HasModifier(Modifiers.Shift));
+			yield return new Order(order, caster, Target.FromActor(target), queued) { TargetString = targetString };
 		}
 
 		void IOrderGenerator.Tick(World world)
@@ -73,7 +99,7 @@ namespace OpenRA.Mods.Pw.Orders
 
 		string IOrderGenerator.GetCursor(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			return TargetAt(world, mi) != null ? "ability" : "generic-blocked";
+			return (onGround ? GroundTarget(world, cell) : TargetAt(world, mi) != null) ? "ability" : "generic-blocked";
 		}
 
 		bool IOrderGenerator.HandleKeyPress(KeyInput e) { return false; }

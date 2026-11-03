@@ -86,7 +86,7 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
   `FUN_00459527`):
   - row 0: % reduction of the value at `.chr` 0x13cc, which is the attack delay (D);
   - row 1: attack range bonus in pixels, also against air;
-  - row 2: % mana cost reduction (casters);
+  - row 2: spell power: the spell's effect is raised by this % (C, `0x478db8` reads the table at `0xe5e0b8` + 0x50);
   - rows 4 and 5 (Dilophos; MudMan and Gargoyle): no code reads them, so they have no effect.
 
 ## Upgrades (`Upgrade.upi`)
@@ -165,10 +165,39 @@ experience. Disguised, it cannot attack; enemies see the creature's name and the
 it on its own (it has the Wild target type), though it can still be attacked by order. The original's stats in
 disguise are not known.
 
+## Spells (`JW2_11`)
+
+A spell record's costs (C, `FUN_00478cd5` checks them, `FUN_00478db8` pays them): 0x1e4 mana (Primitive and Elf:
+Fall out 80, Thunder bolt 40, …) and 0x1e0 health (Demon: Stone curse 85, Noxious gas 120, Quake 150, Rise death
+100, Suicide 1). The caster needs more health than the cost. The effect (0x1e8, negative = damage) is raised by the
+caster's spell power. Area effects hit within the radius (0x1f8) on the effect frames listed at 0x8bc (count 0x8b8),
+one frame every 0x21c ticks (4), until the effect ends: Noxious gas on every frame for its duration (0x1f4, 144
+ticks), Quake on each of its 31 frames, Suicide once. Stone curse sets the target's petrified flag (unit flags 0x20)
+on its hit frame; where the flag is cleared was not found.
+
+## Kill points (Demon)
+
+The help file (Special Abilities): "Demons, who were conceived from evil, gain KP (Kill Points) by destroying living
+creatures. KP are the source of strength in a Demon, and serve as HP and MP. Being damaged or casting spells will
+reduce KP. … Any units killed, even friendly units, will replenish KP."
+
+- KP is the unit's health; spells cost health (above).
+- A kill gives the killer a quarter of the victim's full health, up to its own, when the killer's type has
+  `.chr` 0x1f8 bit 0x20 (every Demon unit but the DeathEye and the Imp) and the victim's has 0x1f4 bit 0x10 (living:
+  not machines, buildings or the raised zombies) (C, `FUN_004578a9`, called on the killing blow).
+- Healing follows 0x1c8/0x1cc as for the others (C, `FUN_0046089a`): Demon units with 0x1cc = 1 don't heal over time
+  and heal by eating meat.
+
+In the mod (`PwKillPoints`, `PwLiving`, `PwSpell`): as above. Stone curse lasts 264 ticks (its 66 read as frames of 4
+ticks, D), raised by spell power; the spell levels of the help file (Kelpa Stone curse at level 2, Warlock Quake at 2)
+count from 1, ours from 0. The raised zombies stay until killed: the only timed units in the original are the Fake
+spell's illusions (unit flag 0x10 and a lifetime from Fake's 0x1ec, counted down every 32 ticks; C, `0x4792c2`,
+`FUN_0046089a`).
+
 ## Open
 
-None of these affect Primitive or Tyrano:
+None of these affect Primitive, Tyrano or Demon:
 
-- the spell mana costs (a run-time table; for Elf and Demon);
+- the Elf spells' details;
 - `.chr` 0x13d0 and 0x2410;
 - the two unused upgrade stat blocks.

@@ -38,6 +38,12 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Walk speed added, pixels per tick.")]
 		public readonly int Speed = 0;
 
+		[Desc("Attack range added, pixels.")]
+		public readonly int Range = 0;
+
+		[Desc("Sight added, pixels.")]
+		public readonly int Sight = 0;
+
 		[Desc("Berries added to each trip.")]
 		public readonly int Gathering = 0;
 
@@ -111,15 +117,16 @@ namespace OpenRA.Mods.Pw.Traits
 			actor.Owner.PlayerActor.TraitOrDefault<PwUpgrades>()?.Bonus(actor.Info, bonus) ?? 0;
 	}
 
-	[Desc("The researched upgrades' attack, armour and speed for this unit (PwUpgrades on its owner).")]
+	[Desc("The researched upgrades' attack, armour, speed, range and sight for this unit (PwUpgrades on its owner).")]
 	public class PwUpgradeBonusInfo : TraitInfo
 	{
 		public override object Create(ActorInitializer init) { return new PwUpgradeBonus(init.Self); }
 	}
 
-	public class PwUpgradeBonus : IPwStatBonus, ISpeedModifier
+	public class PwUpgradeBonus : IPwStatBonus, ISpeedModifier, IRangeModifier, IRevealsShroudModifier
 	{
 		readonly Actor self;
+		Armament[] armaments;
 
 		public PwUpgradeBonus(Actor self)
 		{
@@ -129,11 +136,20 @@ namespace OpenRA.Mods.Pw.Traits
 		public int AttackBonus => PwUpgrades.Bonus(self, u => u.Attack);
 		public int ArmorBonus => PwUpgrades.Bonus(self, u => u.Armor);
 
-		int ISpeedModifier.GetSpeedModifier()
+		// Bonuses in original pixels, as a share of the base value (WDist: 32 per pixel).
+		static int Percent(int bonus, int value) => bonus == 0 || value <= 0 ? 100 : (value + bonus * 32) * 100 / value;
+
+		int ISpeedModifier.GetSpeedModifier() =>
+			Percent(PwUpgrades.Bonus(self, u => u.Speed),
+				self.Info.TraitInfoOrDefault<MobileInfo>()?.Speed ?? self.Info.TraitInfoOrDefault<AircraftInfo>()?.Speed ?? 0);
+
+		int IRangeModifier.GetRangeModifier()
 		{
-			var bonus = PwUpgrades.Bonus(self, u => u.Speed);
-			var speed = self.Info.TraitInfoOrDefault<MobileInfo>()?.Speed ?? 0;
-			return bonus == 0 || speed <= 0 ? 100 : (speed + bonus * 32) * 100 / speed;
+			armaments ??= self.TraitsImplementing<Armament>().ToArray();
+			return Percent(PwUpgrades.Bonus(self, u => u.Range), armaments.FirstOrDefault()?.Weapon.Range.Length ?? 0);
 		}
+
+		int IRevealsShroudModifier.GetRevealsShroudModifier() =>
+			Percent(PwUpgrades.Bonus(self, u => u.Sight), self.Info.TraitInfos<RevealsShroudInfo>().FirstOrDefault()?.Range.Length ?? 0);
 	}
 }

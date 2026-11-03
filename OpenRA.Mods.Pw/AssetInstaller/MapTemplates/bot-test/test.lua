@@ -1,6 +1,7 @@
--- Two Normal AIs on (2) One vs One at 5x speed: North Primitive (a Sanctuary and four Buildmen), South Tyrano (a
--- TyranoNest and four Dinos). Both must grow their workforce, build a base and an army, and guard it with towers (by
--- the main building, by the berries and on the edge); they must fight early, and one must destroy a building.
+-- Two Normal AIs on (2) One vs One at 5x speed, each from its main building and four workers: bot-test Primitive
+-- (North) against Tyrano (South), bot-demon-test Demon against Primitive. Both must grow their workforce, build a
+-- base and an army, and guard it with towers (by the main building, by the berries and on the edge); they must fight
+-- early, and one must destroy a building.
 -- Written by the asset installer (OpenRA.Mods.Pw/AssetInstaller/MapTemplates/bot-test) on the converted map.
 Races = {
     primitive = {
@@ -20,6 +21,15 @@ Races = {
         Army = { "tyrano-masos", "tyrano-velocis", "tyrano-twinvelocis", "tyrano-dilophos", "tyrano-trices",
             "tyrano-eggthrower", "tyrano-tyranos", "tyrano-rhamphos", "tyrano-pteras", "tyrano-mutant" },
         Towers = { "tyrano-ascomoid" },
+    },
+    demon = {
+        Workers = { "demon-insect" },
+        Main = "demon-demonden",
+        Base = { "demon-tomb", "demon-deathden", "demon-flyden", "demon-magicden", "demon-hell", "demon-dirtyportal",
+            "demon-highportal", "demon-volcano" },
+        Army = { "demon-skeleton", "demon-mudman", "demon-kelpa", "demon-kingdemon", "demon-devil", "demon-darkbat",
+            "demon-gargoyle" },
+        Towers = { "demon-volcano" },
     },
 }
 

@@ -40,13 +40,17 @@ The same record in `JW2_11`, with different fields in use (D):
 | Offset | Content |
 |---|---|
 | 0x14c | 1 = targets a place or unit and hits (Drop Stone, Meteo, Thunder bolt); 0 = self or buff |
+| 0x1e0 | Health cost: the Demon spells' kill points (Stone curse 85, Quake 150) (C, `FUN_00478cd5`) |
+| 0x1e4 | Mana cost (Fall out 80, Thunder bolt 40) (C, same) |
 | 0x1e8 | HP effect: negative = damage (Drop Stone −200, Thunder bolt −80, Meteo −30 per hit), positive = heal (Cure +2 per tick) |
+| 0x1ec | A count: Rise death's zombies (3) (D) |
 | 0x1f4 | Duration (Mass temper 300, Meteo 160, Noxious gas 144) |
 | 0x1f8 | Radius in pixels (Quake 144, Suicide 160, Noxious gas 112) |
+| 0x21c | Ticks per effect frame (4) |
 | 0x220 | Lifetime in ticks |
+| 0x8b8, 0x8bc | Number and list of the effect frames that hit (Noxious gas and Quake: every frame) (C, `0x478c1a`) |
 
-The mana cost is read through a run-time offset table (`0xe9c678`), so it is not located statically; Elf and
-Demon spells come later.
+The records are reached through a run-time offset table (`0xe9c678`, record *n* at `0xe9c798 + n × 0xadc`).
 
 ## Confirmed by
 

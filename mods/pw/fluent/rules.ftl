@@ -14,6 +14,11 @@ faction-tyrano =
     .description = Tyrano tribe
      Mutated dinosaurs: some combine into stronger creatures, some can pass for wild ones.
 
+faction-demon =
+    .name = Demon
+    .description = Demon tribe
+     Born of evil: their life is their kill points, spent on dark spells and won back by killing.
+
 ## ai.yaml
 bot-normal =
     .name = Normal AI
@@ -178,6 +183,70 @@ actor-tyrano-pteras-disguised =
 
 actor-tyrano-trices-disguised =
     .name = Trices (disguised)
+
+## Demon (names as in the original data)
+actor-demon-insect =
+    .name = Insect
+
+actor-demon-skeleton =
+    .name = Skeleton
+
+actor-demon-mudman =
+    .name = MudMan
+
+actor-demon-deatheye =
+    .name = DeathEye
+
+actor-demon-phantom =
+    .name = Phantom
+
+actor-demon-gargoyle =
+    .name = Gargoyle
+
+actor-demon-kelpa =
+    .name = Kelpa
+
+actor-demon-warlock =
+    .name = Warlock
+
+actor-demon-kingdemon =
+    .name = KingDemon
+
+actor-demon-darkbat =
+    .name = Darkbat
+
+actor-demon-devil =
+    .name = Devil
+
+actor-demon-risezombie =
+    .name = Zombie
+
+actor-demon-demonden =
+    .name = DemonDen
+
+actor-demon-tomb =
+    .name = Tomb
+
+actor-demon-volcano =
+    .name = Volcano
+
+actor-demon-deathden =
+    .name = DeathDen
+
+actor-demon-flyden =
+    .name = FlyDen
+
+actor-demon-magicden =
+    .name = MagicDen
+
+actor-demon-hell =
+    .name = Hell
+
+actor-demon-dirtyportal =
+    .name = DirtyPortal
+
+actor-demon-highportal =
+    .name = HighPortal
 
 ## Map objects
 actor-meat =

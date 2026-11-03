@@ -68,3 +68,33 @@ actor-tyrano-upgrade-trices-movement =
 
 actor-tyrano-upgrade-mutant-morphosis =
     .name = Upgrade Mutant Morphosis
+
+actor-demon-upgrade-gathering-amount-skill =
+    .name = Learn Gathering Amount Skill
+
+actor-demon-upgrade-volcano-detection =
+    .name = Learn Volcano Detection
+
+actor-demon-upgrade-level-up-exp =
+    .name = Reduce Level Up Exp.
+
+actor-demon-upgrade-ground-demon-weapon-skill =
+    .name = Learn Ground Demon Weapon Skill
+
+actor-demon-upgrade-ground-demon-armor-skill =
+    .name = Learn Ground Demon Armor Skill
+
+actor-demon-upgrade-air-demon-weapon-skill =
+    .name = Learn Air Demon Weapon Skill
+
+actor-demon-upgrade-air-demon-armor-skill =
+    .name = Learn Air Demon Armor Skill
+
+actor-demon-upgrade-skeleton-attack-range =
+    .name = Learn Skeleton Attack Range
+
+actor-demon-upgrade-deatheye-sight =
+    .name = Learn DeathEye Sight
+
+actor-demon-upgrade-phantom-movement =
+    .name = Learn Phantom Movement
