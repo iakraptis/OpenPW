@@ -12,7 +12,7 @@ faction-primitive =
 faction-tyrano =
     .name = Tyrano
     .description = Tyrano tribe
-     Dinosaur riders and beasts that grow stronger by merging.
+     Mutated dinosaurs: some combine into stronger creatures, some can pass for wild ones.
 
 ## ai.yaml
 bot-normal =
@@ -89,6 +89,95 @@ actor-primitive-landincreaser =
 actor-primitive-skyincreaser =
     .name = SkyIncreaser
 
+
+## Tyrano (names as in the original data)
+actor-tyrano-dinos =
+    .name = Dinos
+
+actor-tyrano-masos =
+    .name = Masos
+
+actor-tyrano-velocis =
+    .name = Velocis
+
+actor-tyrano-twinvelocis =
+    .name = TwinVelocis
+
+actor-tyrano-dilophos =
+    .name = Dilophos
+
+actor-tyrano-rhamphos =
+    .name = Rhamphos
+
+actor-tyrano-twinrhamphos =
+    .name = TwinRhamphos
+
+actor-tyrano-pteras =
+    .name = Pteras
+
+actor-tyrano-trices =
+    .name = Trices
+
+actor-tyrano-dsunguri =
+    .name = Dsunguri
+
+actor-tyrano-eggthrower =
+    .name = EggThrower
+
+actor-tyrano-mutant =
+    .name = Mutant
+
+actor-tyrano-tyranos =
+    .name = Tyranos
+
+actor-tyrano-tyranonest =
+    .name = TyranoNest
+
+actor-tyrano-nest =
+    .name = Nest
+
+actor-tyrano-ascomoid =
+    .name = Ascomoid
+
+actor-tyrano-eggnest =
+    .name = EggNest
+
+actor-tyrano-landnest =
+    .name = LandNest
+
+actor-tyrano-skynest =
+    .name = SkyNest
+
+actor-tyrano-thrownest =
+    .name = ThrowNest
+
+actor-tyrano-upgradenest =
+    .name = UpgradeNest
+
+actor-tyrano-landnisdos =
+    .name = LandNisdos
+
+actor-tyrano-skynisdos =
+    .name = SkyNisdos
+
+## Tyrano units in disguise, as their owner sees them (enemies see the wild creature)
+actor-tyrano-velocis-disguised =
+    .name = Velocis (disguised)
+
+actor-tyrano-dilophos-disguised =
+    .name = Dilophos (disguised)
+
+actor-tyrano-rhamphos-disguised =
+    .name = Rhamphos (disguised)
+
+actor-tyrano-twinrhamphos-disguised =
+    .name = TwinRhamphos (disguised)
+
+actor-tyrano-pteras-disguised =
+    .name = Pteras (disguised)
+
+actor-tyrano-trices-disguised =
+    .name = Trices (disguised)
 
 ## Map objects
 actor-meat =

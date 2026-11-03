@@ -151,5 +151,24 @@ namespace OpenRA.Mods.Pw.Tests
 
 		[Desc("Whether a unit's hunting is on.")]
 		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
+
+		[Desc("Tyrano: the units meet and merge, as the merge button does (the first takes the order).")]
+		public void Merge(Actor[] units) => Resolve(units[0], PwMerge.Merge(units));
+
+		[Desc("Tyrano: a merged unit lets its parts go again (the Split button).")]
+		public void Split(Actor merged) => Resolve(merged, PwMerged.Split(merged));
+
+		[Desc("How many units a merged unit holds (-1 if it isn't one).")]
+		public int MergedParts(Actor merged) => merged.TraitOrDefault<PwMerged>()?.Parts.Count ?? -1;
+
+		[Desc("Tyrano: disguise a unit as its wild creature, or turn it back (the Disguise button).")]
+		public void Disguise(Actor actor, bool on) => Resolve(actor, PwDisguise.Toggle(actor, on));
+
+		[Desc("Whether a unit is disguised.")]
+		public bool Disguised(Actor actor) => actor.TraitOrDefault<PwDisguise>()?.Disguised ?? false;
+
+		[Desc("The internal name of the player the actor appears to belong to (a disguised unit: the Creeps).")]
+		public string AppearsOwnedBy(Actor actor) =>
+			actor.EffectiveOwner != null && actor.EffectiveOwner.Disguised ? actor.EffectiveOwner.Owner.InternalName : actor.Owner.InternalName;
 	}
 }

@@ -1,0 +1,534 @@
+# Tyrano units (docs/game/tyrano.md). Speeds are the average walk step (px per tick) x 32; ranges, sight and speeds
+# in WDist (32 px = 1c0); armour is the original flat value; Passenger weights are .chr 0x188. Merged units
+# (TwinVelocis, TwinRhamphos, Mutant) are never trained: PwMerge on their parts names them, PwMerged lists the parts.
+# Disguise (the Disguise research) is for the units of its upgrade record: Velocis, Dilophos, Rhamphos, TwinRhamphos,
+# Pteras, Trices; each turns into the wild creature of its kind.
+
+tyrano-dinos:
+	Inherits: ^Worker
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 10
+		AttackGain: 18
+		ArmorGain: 18
+		AttackDelay: 23
+	UsesPopulation:
+		Amount: 1
+	Builder:
+		Types: tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid
+	Buildable:
+		Queue: tyrano-tyranonest
+		BuildDuration: 160
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: tyrano-dinos
+	Tooltip:
+		Name: actor-tyrano-dinos.name
+	Valued:
+		Cost: 100
+	Health:
+		HP: 100
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 160
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: DinosHit
+
+tyrano-masos:
+	Inherits: ^Dinosaur
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Melee
+	Passenger:
+		Weight: 1
+	PwLevels:
+		XpPerLevel: 8
+		AttackGain: 18
+		ArmorGain: 9
+		AttackDelay: 12
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
+	UsesPopulation:
+		Amount: 1
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 160
+		BuildPaletteOrder: 10
+	RenderSprites:
+		Image: tyrano-masos
+	Tooltip:
+		Name: actor-tyrano-masos.name
+	Valued:
+		Cost: 100
+	Health:
+		HP: 70
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 242
+	RevealsShroud:
+		Range: 7c0
+	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
+		Weapon: MasosHit
+
+tyrano-velocis:
+	Inherits: ^Dinosaur
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Melee
+	Inherits@disguise: ^Disguisable
+	Passenger:
+		Weight: 2
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 45
+		ArmorGain: 27
+		AttackDelay: 20
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 224
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: tyrano-velocis
+	Tooltip:
+		Name: actor-tyrano-velocis.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 200
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 174
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
+		Weapon: VelocisHit
+	# Two combine into a TwinVelocis.
+	PwMerge:
+		Into: tyrano-twinvelocis
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-velociraptor
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-velocis-disguised.name
+		GenericName: actor-wild-velociraptor.name
+
+tyrano-twinvelocis:
+	Inherits: ^Dinosaur
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Melee
+	-Buildable:
+	Passenger:
+		Weight: 4
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 27
+		ArmorGain: 18
+		AttackDelay: 28
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
+	UsesPopulation:
+		Amount: 4
+	RenderSprites:
+		Image: tyrano-twinvelocis
+	Tooltip:
+		Name: actor-tyrano-twinvelocis.name
+	Valued:
+		Cost: 0
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 261
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		# Strikes on step 10 of its attack animation (.chr 0x247c).
+		FireDelay: 10
+		Weapon: TwinVelocisHit
+	# Made of two Velocis; needs a LandNest (.chr 0x1fc).
+	PwMerged:
+		From: tyrano-velocis, tyrano-velocis
+		Prerequisites: tyrano-landnest
+
+tyrano-dilophos:
+	Inherits: ^Dinosaur
+	Inherits@move: ^FootMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Ranged
+	Inherits@disguise: ^Disguisable
+	Passenger:
+		Weight: 2
+	# Level.lvt has a row 4 bonus for it, which no code reads (docs/game/rules.md).
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 45
+		ArmorGain: 27
+		AttackDelay: 19
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 256
+		BuildPaletteOrder: 30
+		Prerequisites: tyrano-landnest
+	RenderSprites:
+		Image: tyrano-dilophos
+	Tooltip:
+		Name: actor-tyrano-dilophos.name
+	Valued:
+		Cost: 250
+	Health:
+		HP: 150
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 171
+	RevealsShroud:
+		Range: 8c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: PoisonSpit
+	# With a Pteras and a Trices it mutates into a Mutant.
+	PwMerge:
+		Into: tyrano-mutant
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-dilophosaurus
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-dilophos-disguised.name
+		GenericName: actor-wild-dilophosaurus.name
+
+tyrano-trices:
+	Inherits: ^Dinosaur
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Ranged
+	Inherits@disguise: ^Disguisable
+	Passenger:
+		Weight: 5
+	PwLevels:
+		XpPerLevel: 18
+		AttackGain: 36
+		ArmorGain: 36
+		AttackDelay: 31
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 5
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 400
+		BuildPaletteOrder: 40
+		Prerequisites: tyrano-landnisdos
+	RenderSprites:
+		Image: tyrano-trices
+	Tooltip:
+		Name: actor-tyrano-trices.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 160
+	RevealsShroud:
+		Range: 9c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: CarrnosBoomerang
+	# With a Dilophos and a Pteras it mutates into a Mutant.
+	PwMerge:
+		Into: tyrano-mutant
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-triceratops
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-trices-disguised.name
+		GenericName: actor-wild-triceratops.name
+
+tyrano-eggthrower:
+	Inherits: ^Dinosaur
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 4
+	UsesPopulation:
+		Amount: 4
+	Buildable:
+		Queue: tyrano-thrownest
+		BuildDuration: 480
+		BuildPaletteOrder: 20
+		Prerequisites: tyrano-landnest
+	RenderSprites:
+		Image: tyrano-eggthrower
+	Tooltip:
+		Name: actor-tyrano-eggthrower.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 0
+	Mobile:
+		Speed: 100
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 15 of its attack animation (.chr 0x247c).
+		FireDelay: 15
+		Weapon: EggThrow
+
+# Its bite reaches flyers too (the weapon's target mask), so it picks them as targets like a ranged unit.
+tyrano-tyranos:
+	Inherits: ^Dinosaur
+	Inherits@move: ^HeavyMovement
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^Ranged
+	Passenger:
+		Weight: 12
+	PwLevels:
+		XpPerLevel: 30
+		AttackGain: 54
+		ArmorGain: 18
+		AttackDelay: 31
+		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
+	UsesPopulation:
+		Amount: 30
+	Buildable:
+		Queue: tyrano-tyranonest
+		BuildDuration: 2880
+		BuildPaletteOrder: 70
+		Prerequisites: tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos
+	RenderSprites:
+		Image: tyrano-tyranos
+	Tooltip:
+		Name: actor-tyrano-tyranos.name
+	Valued:
+		Cost: 5000
+	Health:
+		HP: 1200
+	PwArmor:
+		Value: 35
+	Mobile:
+		Speed: 264
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 7 of its attack animation (.chr 0x247c).
+		FireDelay: 7
+		Weapon: TyranosHit
+
+# Flyers. The Rhamphos flies low ("Fly"): ground weapons reach it too.
+tyrano-rhamphos:
+	Inherits: ^FlyingDinosaur
+	Inherits@flight: ^LowFlight
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^AirAttack
+	Inherits@disguise: ^DisguisableArmedFlyer
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 27
+		ArmorGain: 27
+		AttackDelay: 26
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 288
+		BuildPaletteOrder: 50
+		Prerequisites: tyrano-skynest
+	RenderSprites:
+		Image: tyrano-rhamphos
+	Tooltip:
+		Name: actor-tyrano-rhamphos.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 120
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 224
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		# Strikes on step 6 of its attack animation (.chr 0x247c).
+		FireDelay: 6
+		Weapon: RhamphosArrow
+	# Two combine into a TwinRhamphos.
+	PwMerge:
+		Into: tyrano-twinrhamphos
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-rhamphorhynchus
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-rhamphos-disguised.name
+		GenericName: actor-wild-rhamphorhynchus.name
+
+# The "Sky Rhamphos" that scouts (help file): unarmed, high, far-sighted. It doesn't gain levels (.chr 0x1f4).
+tyrano-twinrhamphos:
+	Inherits: ^FlyingDinosaur
+	Inherits@race: ^Tyrano
+	Inherits@disguise: ^DisguisableFlyer
+	-Buildable:
+	UsesPopulation:
+		Amount: 2
+	RenderSprites:
+		Image: tyrano-twinrhamphos
+	Tooltip:
+		Name: actor-tyrano-twinrhamphos.name
+	Valued:
+		Cost: 0
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 256
+	RevealsShroud:
+		Range: 10c0
+	PwMerged:
+		From: tyrano-rhamphos, tyrano-rhamphos
+	# No attack animation (it has no attack).
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-pteranodon
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-twinrhamphos-disguised.name
+		GenericName: actor-wild-pteranodon.name
+
+tyrano-pteras:
+	Inherits: ^FlyingDinosaur
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^AirAttack
+	Inherits@disguise: ^DisguisableArmedFlyer
+	PwLevels:
+		XpPerLevel: 14
+		AttackGain: 36
+		ArmorGain: 27
+		AttackDelay: 29
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 4
+	Buildable:
+		Queue: tyrano-eggnest
+		BuildDuration: 480
+		BuildPaletteOrder: 60
+		Prerequisites: tyrano-skynisdos
+	RenderSprites:
+		Image: tyrano-pteras
+	Tooltip:
+		Name: actor-tyrano-pteras.name
+	Valued:
+		Cost: 450
+	Health:
+		HP: 230
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 224
+	RevealsShroud:
+		Range: 11c0
+	Armament:
+		# Strikes on step 9 of its attack animation (.chr 0x247c).
+		FireDelay: 9
+		Weapon: PterasAxe
+	# With a Dilophos and a Trices it mutates into a Mutant.
+	PwMerge:
+		Into: tyrano-mutant
+	PwWithDisguiseBody@DISGUISE:
+		Image: wild-pteranodon
+	Tooltip@DISGUISE:
+		Name: actor-tyrano-pteras-disguised.name
+		GenericName: actor-wild-pteranodon.name
+
+# The Dsunguri carries 12 (.chr 0x188 on a transport), landed to load. It doesn't gain levels.
+tyrano-dsunguri:
+	Inherits: ^FlyingDinosaur
+	Inherits@race: ^Tyrano
+	UsesPopulation:
+		Amount: 2
+	Buildable:
+		Queue: tyrano-thrownest
+		BuildDuration: 480
+		BuildPaletteOrder: 10
+		Prerequisites: tyrano-skynest
+	RenderSprites:
+		Image: tyrano-dsunguri
+	Tooltip:
+		Name: actor-tyrano-dsunguri.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 300
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 224
+		IdleBehavior: Land
+		LandableTerrainTypes: Clear, Ramp
+	RevealsShroud:
+		Range: 10c0
+	Cargo:
+		Types: Ground
+		MaxWeight: 12
+		UnloadVoice: Action
+	# No attack animation (it has no attack).
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
+# Made of a Dilophos, a Pteras and a Trices, once Mutant Morphosis is researched; "as powerful as Tyranos".
+tyrano-mutant:
+	Inherits: ^FlyingDinosaur
+	Inherits@race: ^Tyrano
+	Inherits@attack: ^AirAttack
+	-Buildable:
+	PwLevels:
+		XpPerLevel: 30
+		AttackGain: 36
+		ArmorGain: 36
+		AttackDelay: 48
+		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
+	UsesPopulation:
+		Amount: 11
+	RenderSprites:
+		Image: tyrano-mutant
+	Tooltip:
+		Name: actor-tyrano-mutant.name
+	Valued:
+		Cost: 0
+	Health:
+		HP: 550
+	PwArmor:
+		Value: 0
+	Aircraft:
+		Speed: 184
+	RevealsShroud:
+		Range: 12c0
+	Armament:
+		# Strikes on step 8 of its attack animation (.chr 0x247c).
+		FireDelay: 8
+		Weapon: MutantArrow
+	PwMerged:
+		From: tyrano-dilophos, tyrano-pteras, tyrano-trices
+		Prerequisites: tyrano-upgrade-mutant-morphosis-1
+		Image: command-mutate

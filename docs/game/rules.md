@@ -146,6 +146,25 @@ Each recipe also passes an availability check (`FUN_0047259e`), where the result
 TwinVelocis needs a LandNest, and Mutant needs the "Mutant Morphosis" upgrade (D). The merged unit keeps the
 originals and releases them when it changes back (C, `0x45ff60`). Units carry flag 0x800 when they can merge.
 
+In the mod (`PwMerge` on the parts, `PwMerged` on the result): the parts meet at the one nearest their middle and
+become the merged unit there, with their mean health and their lowest level. Split, they come back with the merged
+unit's health share and their own levels. If one of them is lost, ordered elsewhere, or doesn't arrive within 400
+ticks, nothing happens. The population adds up (TwinVelocis 4 = 2 + 2, Mutant 11 = 2 + 4 + 5); a TwinRhamphos takes 2
+of its parts' 4.
+
+## Disguise (Tyrano)
+
+The help file (Special Abilities): "Tyranos are mutated dinosaurs. They have the ability to revert to their original
+forms. They often use this ability to sneak past sentries as hunting game … it has a disadvantage of not being able
+to attack." The Disguise research (`Upgrade.upi` 42, at the TyranoNest) lists Velocis, Dilophos, Rhamphos,
+TwinRhamphos, Pteras and Trices.
+
+In the mod (`PwDisguise`): the unit takes the look of the wild creature of its kind (Velociraptor, Dilophosaurus,
+Rhamphorhynchus, Pteranodon for both pterosaurs, Triceratops) and back, keeping its own health, speed, level and
+experience. Disguised, it cannot attack; enemies see the creature's name and the Creeps' colours, and nothing attacks
+it on its own (it has the Wild target type), though it can still be attacked by order. The original's stats in
+disguise are not known.
+
 ## Open
 
 None of these affect Primitive or Tyrano:

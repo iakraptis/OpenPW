@@ -16,8 +16,7 @@
 	Faction@Random:
 		InternalName: Random
 		Name: faction-random.name
-		# Tyrano joins when its actors exist (Phase 5).
-		RandomFactionMembers: primitive
+		RandomFactionMembers: primitive, tyrano
 		Description: faction-random.description
 	Faction@primitive:
 		InternalName: primitive
@@ -27,7 +26,6 @@
 		InternalName: tyrano
 		Name: faction-tyrano.name
 		Description: faction-tyrano.description
-		Selectable: false
 	LoadWidgetAtGameStart:
 	MusicPlaylist:
 	ScreenMap:
@@ -80,7 +78,8 @@ world:
 		Factions: primitive
 		ClassName: options-starting-units.unlabeled
 	StartingUnits@Tyrano:
-		BaseActor: placeholder
+		BaseActor: tyrano-tyranonest
+		SupportActors: tyrano-dinos, tyrano-dinos, tyrano-dinos, tyrano-dinos
 		Factions: tyrano
 		ClassName: options-starting-units.unlabeled
 

@@ -71,6 +71,71 @@ primitive-flattop:
 		Bounds: 3808, 3328, 16, -608
 		DecorationBounds: 3808, 3328, 16, -608
 
+tyrano-dinos:
+	Selectable:
+		Bounds: 960, 1120, 32, -240
+		DecorationBounds: 960, 1120, 32, -240
+
+tyrano-masos:
+	Selectable:
+		Bounds: 1248, 1184, 16, -112
+		DecorationBounds: 1248, 1184, 16, -112
+
+tyrano-velocis:
+	Selectable:
+		Bounds: 1600, 1408, 32, -192
+		DecorationBounds: 1600, 1408, 32, -192
+
+tyrano-twinvelocis:
+	Selectable:
+		Bounds: 1728, 1984, 96, -480
+		DecorationBounds: 1728, 1984, 96, -480
+
+tyrano-dilophos:
+	Selectable:
+		Bounds: 1952, 1536, 16, -256
+		DecorationBounds: 1952, 1536, 16, -256
+
+tyrano-trices:
+	Selectable:
+		Bounds: 2016, 2624, 112, -704
+		DecorationBounds: 2016, 2624, 112, -704
+
+tyrano-eggthrower:
+	Selectable:
+		Bounds: 3680, 2400, 16, 176
+		DecorationBounds: 3680, 2400, 16, 176
+
+tyrano-tyranos:
+	Selectable:
+		Bounds: 6720, 5568, 96, -1472
+		DecorationBounds: 6720, 5568, 96, -1472
+
+tyrano-rhamphos:
+	Selectable:
+		Bounds: 1536, 1472, 64, -320
+		DecorationBounds: 1536, 1472, 64, -320
+
+tyrano-twinrhamphos:
+	Selectable:
+		Bounds: 2208, 2560, 208, 288
+		DecorationBounds: 2208, 2560, 208, 288
+
+tyrano-pteras:
+	Selectable:
+		Bounds: 2464, 3648, 112, 128
+		DecorationBounds: 2464, 3648, 112, 128
+
+tyrano-dsunguri:
+	Selectable:
+		Bounds: 4512, 3072, 336, 96
+		DecorationBounds: 4512, 3072, 336, 96
+
+tyrano-mutant:
+	Selectable:
+		Bounds: 3136, 3872, 32, -1168
+		DecorationBounds: 3136, 3872, 32, -1168
+
 wild-tyranosaurus:
 	Selectable:
 		Bounds: 6176, 5120, 80, -1440

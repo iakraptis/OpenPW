@@ -19,9 +19,10 @@ namespace OpenRA.Mods.Pw.Widgets
 	// The race's bottom interface bar (JW2_02 Intfbg.spr, chrome/bar-<race>.png), fitted to any window: drawn at a
 	// scale that makes it HeightShare of the window height (never smaller than the original, never wider than the
 	// window), its middle (raised blocks and the minimap hole) centred and kept whole, its two lower panels widened by
-	// repeating one beam section. The chrome collection bar-<race> holds the pieces and, as regions that are not
-	// drawn, the areas the other widgets go in (hole, left-panel, right-panel, menu, allies, msg); Area() gives them
-	// on screen. Clicks on the bar don't reach the world.
+	// repeating one section. The chrome collection bar-<race> holds the pieces and, as regions that are not drawn,
+	// the areas the other widgets go in (hole, left-panel, right-panel, menu, allies, msg) and the top edges of its
+	// solid part (solid-sides, solid-middle); Area() gives the areas on screen. Clicks on the bar don't reach the
+	// world.
 	public class InterfaceBarWidget : Widget
 	{
 		public string Collection = "bar-primitive";
@@ -32,6 +33,7 @@ namespace OpenRA.Mods.Pw.Widgets
 
 		// Bar coordinates of the pieces' edges, from the collection (all relative to the original 800-wide bar).
 		Sprite leftFixed, leftTile, leftJoin, center, rightJoin, rightTile, rightFixed;
+		int solidSidesTop, solidMiddleTop;
 		string loaded;
 
 		public float Scale { get; private set; } = 1f;
@@ -71,6 +73,8 @@ namespace OpenRA.Mods.Pw.Widgets
 			rightJoin = ChromeProvider.TryGetImage(collection, "right-join");
 			rightTile = ChromeProvider.TryGetImage(collection, "right-tile");
 			rightFixed = ChromeProvider.TryGetImage(collection, "right-fixed");
+			solidSidesTop = ChromeProvider.TryGetImage(collection, "solid-sides")?.Bounds.Y ?? 0;
+			solidMiddleTop = ChromeProvider.TryGetImage(collection, "solid-middle")?.Bounds.Y ?? 0;
 			return center != null;
 		}
 
@@ -153,14 +157,15 @@ namespace OpenRA.Mods.Pw.Widgets
 			renderer.DrawSprite(rightFixed, new float3(b.Right - rightFixed.Bounds.Width * Scale, Top, 0), scale);
 		}
 
-		// The bar's solid part: the lower panels from their top edge (56 in the original), the middle from its top.
+		// The bar's solid part: the lower panels from their top edge (region solid-sides), the middle from its own
+		// (solid-middle).
 		bool OnBar(int2 pos)
 		{
 			if (center == null || pos.Y < Top)
 				return false;
 
-			var panelTop = Top + (int)(56 * Scale);
-			var middleTop = Top + (int)(12 * Scale);
+			var panelTop = Top + (int)(solidSidesTop * Scale);
+			var middleTop = Top + (int)(solidMiddleTop * Scale);
 			return pos.Y >= panelTop || (pos.X >= centerLeft && pos.X < centerLeft + center.Bounds.Width * Scale && pos.Y >= middleTop);
 		}
 

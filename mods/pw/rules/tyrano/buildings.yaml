@@ -1,0 +1,353 @@
+# Tyrano buildings (docs/game/tyrano.md): build time, prerequisites and the units they train from the original tech
+# tree (.chr 0x18c, 0x1fc, 0x284). Footprints are the original ones in 32 px cells (.chr 0x330/0x334). The Nests
+# provide population as Houses do; LandNest, SkyNest and UpgradeNest only research, the Nisdos are only requirements.
+
+tyrano-tyranonest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	Inherits@exits: ^Exits6x4
+	ProvidesPopulation:
+		Amount: 9
+		RequiresCondition: !constructing
+	AcceptsBerries:
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 10
+	Production:
+		Produces: tyrano-tyranonest
+	PwProductionQueue:
+		Type: tyrano-tyranonest
+	RenderSprites:
+		Image: tyrano-tyranonest
+	Tooltip:
+		Name: actor-tyrano-tyranonest.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 3500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxxx xxxxxx xxxxxx xxxxxx
+		Dimensions: 6,4
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -3072, -2048
+			BottomRight: 3072, 2048
+	RevealsShroud:
+		Range: 12c0
+
+tyrano-nest:
+	Inherits: ^Building
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 10
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 320
+	Buildable:
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: tyrano-nest
+	Tooltip:
+		Name: actor-tyrano-nest.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 1000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxx xxx
+		Dimensions: 3,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1536, -1024
+			BottomRight: 1536, 1024
+	RevealsShroud:
+		Range: 8c0
+
+tyrano-eggnest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	Inherits@exits: ^Exits4x2
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 960
+	Buildable:
+		BuildPaletteOrder: 30
+	Production:
+		Produces: tyrano-eggnest
+	PwProductionQueue:
+		Type: tyrano-eggnest
+	RenderSprites:
+		Image: tyrano-eggnest
+	Tooltip:
+		Name: actor-tyrano-eggnest.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx
+		Dimensions: 4,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1024
+			BottomRight: 2048, 1024
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-landnest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 40
+		Prerequisites: tyrano-eggnest
+	Production:
+		Produces: tyrano-landnest
+	PwProductionQueue:
+		Type: tyrano-landnest
+	RenderSprites:
+		Image: tyrano-landnest
+	Tooltip:
+		Name: actor-tyrano-landnest.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 2000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-skynest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 50
+		Prerequisites: tyrano-eggnest
+	Production:
+		Produces: tyrano-skynest
+	PwProductionQueue:
+		Type: tyrano-skynest
+	RenderSprites:
+		Image: tyrano-skynest
+	Tooltip:
+		Name: actor-tyrano-skynest.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 2000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-thrownest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	Inherits@exits: ^Exits5x3
+	UnderConstruction:
+		Duration: 960
+	Buildable:
+		BuildPaletteOrder: 60
+		Prerequisites: tyrano-eggnest
+	Production:
+		Produces: tyrano-thrownest
+	PwProductionQueue:
+		Type: tyrano-thrownest
+	RenderSprites:
+		Image: tyrano-thrownest
+	Tooltip:
+		Name: actor-tyrano-thrownest.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-upgradenest:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 960
+	Buildable:
+		BuildPaletteOrder: 70
+		Prerequisites: tyrano-eggnest
+	Production:
+		Produces: tyrano-upgradenest
+	PwProductionQueue:
+		Type: tyrano-upgradenest
+	RenderSprites:
+		Image: tyrano-upgradenest
+	Tooltip:
+		Name: actor-tyrano-upgradenest.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-landnisdos:
+	Inherits: ^Building
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1760
+	Buildable:
+		BuildPaletteOrder: 80
+		Prerequisites: tyrano-landnest, tyrano-upgradenest
+	RenderSprites:
+		Image: tyrano-landnisdos
+	Tooltip:
+		Name: actor-tyrano-landnisdos.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 10c0
+
+tyrano-skynisdos:
+	Inherits: ^Building
+	Inherits@race: ^Tyrano
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1760
+	Buildable:
+		BuildPaletteOrder: 90
+		Prerequisites: tyrano-skynest, tyrano-upgradenest
+	RenderSprites:
+		Image: tyrano-skynisdos
+	Tooltip:
+		Name: actor-tyrano-skynisdos.name
+	Valued:
+		Cost: 700
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 10c0
+
+# The Ascomoid, the Tyrano defence: shoots spores at ground and air in every direction (attack 35, range 288 px, the
+# record's own stats). Like the StoneTower it reveals hidden traps and invisible units near it (not from the original).
+tyrano-ascomoid:
+	Inherits: ^Defense
+	Inherits@race: ^Tyrano
+	UnderConstruction:
+		Duration: 560
+	Buildable:
+		BuildPaletteOrder: 35
+		Prerequisites: tyrano-eggnest
+	RenderSprites:
+		Image: tyrano-ascomoid
+	Tooltip:
+		Name: actor-tyrano-ascomoid.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 400
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xx xx
+		Dimensions: 2,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -1024
+			BottomRight: 1024, 1024
+	RevealsShroud:
+		Range: 11c0
+	DetectCloaked:
+		Range: 5c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing
+	Armament:
+		Weapon: AscomoidShot
+		RequiresCondition: !constructing
+	WithAttackAnimation:
+		Sequence: attack

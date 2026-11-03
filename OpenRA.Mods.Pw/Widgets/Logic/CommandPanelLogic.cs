@@ -25,7 +25,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
 	// - the Chief: his ability (Fall out) with his mana;
 	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot;
-	// - two or more meat eaters with meat: Share meat (they meet and split it evenly), in the next.
+	// - two or more meat eaters with meat: Share meat (they meet and split it evenly), in the next;
+	// - Tyrano units: a merge per recipe the selection makes up (PwMerge), Split for merged units (PwMerged), and the
+	//   Disguise toggle (PwDisguise), in the slots after those.
 	// Icons are the original portraits (each image's "icon" sequence); every slot has a tooltip (name and cost; time, what is missing, how to use it). InterfaceBarLogic
 	// places the panel and the slots; SelectionPanelLogic shows what is selected.
 	public class CommandPanelLogic : ChromeLogic
@@ -81,14 +83,123 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			free = slots.FirstOrDefault(s => !s.Visible);
 			if (eaters.Length > 1 && eaters.Any(e => e.Trait<PwMeatEater>().Meat > 0) && queue == null && free != null)
 				ShowShareMeat(free, eaters);
+
+			if (queue != null || builder != null)
+				return;
+
+			// Tyrano: each merge the selected units make up, splitting merged ones, and the Disguise toggle.
+			var undisguised = selected.Where(a => a.TraitOrDefault<PwDisguise>()?.Disguised != true).ToArray();
+			foreach (var into in undisguised.Select(a => a.Info.TraitInfoOrDefault<PwMergeInfo>()?.Into).Where(i => i != null).Distinct())
+			{
+				var recipe = world.Map.Rules.Actors[into].TraitInfo<PwMergedInfo>();
+				var parts = PwMerge.Pick(undisguised, into, recipe);
+				free = slots.FirstOrDefault(s => !s.Visible);
+				if (parts != null && free != null)
+					ShowMerge(free, into, recipe, parts);
+			}
+
+			var merged = selected.Where(a => a.TraitOrDefault<PwMerged>()?.Parts.Count > 0).ToArray();
+			free = slots.FirstOrDefault(s => !s.Visible);
+			if (merged.Length > 0 && free != null)
+				ShowSplit(free, merged);
+
+			var disguisers = selected.Where(a => a.TraitOrDefault<PwDisguise>() != null).ToArray();
+			free = slots.FirstOrDefault(s => !s.Visible);
+			if (disguisers.Length > 0 && free != null)
+				ShowDisguise(free, disguisers);
+		}
+
+		// Combine (TwinVelocis, TwinRhamphos) or mutate (Mutant): the parts meet and become one; locked until the merged
+		// type's requirements are met.
+		void ShowMerge(ButtonWidget slot, string into, PwMergedInfo recipe, Actor[] parts)
+		{
+			var info = world.Map.Rules.Actors[into];
+			var icon = CommandIcon(recipe.Image);
+			var name = ActorName(info);
+			var partNames = string.Join(", ", parts.Select(p => ActorName(p.Info)));
+			var techTree = parts[0].Owner.PlayerActor.Trait<TechTree>();
+			var missing = string.Join(", ", recipe.Prerequisites
+				.Where(p => !techTree.HasPrerequisites(new[] { p }))
+				.Select(p => world.Map.Rules.Actors.TryGetValue(p, out var a) ? ActorName(a) : p));
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
+			slot.IsDisabled = () => !PwMerge.CanMerge(parts[0].Owner, recipe);
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-merge", "name", name);
+			slot.GetTooltipDesc = () => PwMerge.CanMerge(parts[0].Owner, recipe)
+				? FluentProvider.GetMessage("tooltip-merge", "parts", partNames, "name", name)
+				: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing);
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () => world.IssueOrder(PwMerge.Merge(parts));
+		}
+
+		// Merged units become the units they were made from again.
+		void ShowSplit(ButtonWidget slot, Actor[] merged)
+		{
+			var icon = CommandIcon("command-split");
+			var partNames = string.Join(", ", merged[0].Info.TraitInfo<PwMergedInfo>().From
+				.Select(t => ActorName(world.Map.Rules.Actors[t])));
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
+			slot.IsDisabled = () => false;
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-split");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-split", "parts", partNames);
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () =>
+			{
+				foreach (var m in merged.Where(m => !m.IsDead))
+					world.IssueOrder(PwMerged.Split(m));
+			};
+		}
+
+		// A toggle: disguises the selected units that can (turns them back when all of them are disguised).
+		void ShowDisguise(ButtonWidget slot, Actor[] units)
+		{
+			bool AllDisguised() => units.All(u => u.IsDead || u.Trait<PwDisguise>().Disguised);
+			bool Available() => units.Any(u => !u.IsDead && u.Trait<PwDisguise>().IsAvailable(u));
+			var disguise = CommandIcon("command-disguise");
+			var turnBack = CommandIcon("command-undisguise");
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsHighlighted = () => false;
+			slot.IsDisabled = () => !AllDisguised() && !Available();
+			slot.GetTooltipText = () => FluentProvider.GetMessage(AllDisguised() ? "label-undisguise" : "label-disguise");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage(AllDisguised() ? "tooltip-undisguise"
+				: Available() ? "tooltip-disguise" : "tooltip-disguise-locked");
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => AllDisguised() ? turnBack : disguise;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () =>
+			{
+				var on = !AllDisguised();
+				foreach (var u in units.Where(u => !u.IsDead))
+					world.IssueOrder(PwDisguise.Toggle(u, on));
+			};
+		}
+
+		// A command button's icon: the "icon" sequence of the image, in the local player's race frame style when there
+		// is one (<image>-<race>: each race has its own button sheet, the art is the same).
+		Sprite CommandIcon(string image)
+		{
+			// HasSequence throws for an image with no sequences at all.
+			var sequences = world.Map.Sequences;
+			bool Has(string name) => sequences.Images.Contains(name) && sequences.HasSequence(name, "icon");
+			var raced = $"{image}-{world.LocalPlayer?.Faction.InternalName}";
+			if (Has(raced))
+				return sequences.GetSequence(raced, "icon").GetSprite(0);
+
+			return Has(image) ? sequences.GetSequence(image, "icon").GetSprite(0) : null;
 		}
 
 		// The units meet and split the meat they carry evenly; the one with the most meat takes the order.
 		void ShowShareMeat(ButtonWidget slot, Actor[] eaters)
 		{
-			Sprite icon = null;
-			if (world.Map.Sequences.HasSequence("command-share-meat", "icon"))
-				icon = world.Map.Sequences.GetSequence("command-share-meat", "icon").GetSprite(0);
+			var icon = CommandIcon("command-share-meat");
 
 			var total = eaters.Sum(e => e.Trait<PwMeatEater>().Meat);
 			slot.Visible = true;
@@ -106,9 +217,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
 		void ShowHunt(ButtonWidget slot, Actor[] hunters)
 		{
-			Sprite icon = null;
-			if (world.Map.Sequences.HasSequence("command-hunt", "icon"))
-				icon = world.Map.Sequences.GetSequence("command-hunt", "icon").GetSprite(0);
+			var icon = CommandIcon("command-hunt");
 
 			bool AllHunting() => hunters.All(h => h.IsDead || h.Trait<PwHunter>().Hunting);
 			slot.Visible = true;
