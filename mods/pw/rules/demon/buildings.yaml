@@ -285,8 +285,7 @@ demon-highportal:
 		Range: 8c0
 
 # The Volcano, the Demon defence: lava at ground and air in every direction (attack 40, range 288 px, the record's own
-# stats). It reveals hidden traps and invisible units near it; Learn Volcano Detection (the DemonDen's research)
-# widens that. The ranges are not known from the original (as the StoneTower's).
+# stats). Learn Volcano Detection (the DemonDen's research) lets it see invisible units.
 demon-volcano:
 	Inherits: ^Defense
 	Inherits@race: ^Demon
@@ -315,16 +314,13 @@ demon-volcano:
 			BottomRight: 1024, 512
 	RevealsShroud:
 		Range: 11c0
-	DetectCloaked:
-		Range: 5c0
-		DetectionTypes: Trap, Invisible
-		RequiresCondition: !constructing && !detection
+	# Once its detection is researched it sees invisible units over its sight (^Invisible; Pw.exe 0x46832b).
 	GrantConditionOnPrerequisite@detection:
 		Condition: detection
 		Prerequisites: demon-upgrade-volcano-detection-1
-	DetectCloaked@UPGRADED:
-		Range: 8c0
-		DetectionTypes: Trap, Invisible
+	DetectCloaked:
+		Range: 11c0
+		DetectionTypes: Invisible
 		RequiresCondition: !constructing && detection
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).

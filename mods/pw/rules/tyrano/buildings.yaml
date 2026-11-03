@@ -313,7 +313,7 @@ tyrano-skynisdos:
 		Range: 10c0
 
 # The Ascomoid, the Tyrano defence: shoots spores at ground and air in every direction (attack 35, range 288 px, the
-# record's own stats). Like the StoneTower it reveals hidden traps and invisible units near it (not from the original).
+# record's own stats). It sees invisible units (a detector from the start).
 tyrano-ascomoid:
 	Inherits: ^Defense
 	Inherits@race: ^Tyrano
@@ -342,9 +342,10 @@ tyrano-ascomoid:
 			BottomRight: 1024, 1024
 	RevealsShroud:
 		Range: 11c0
+	# A detector (.chr 0x1f8 bit 0x1): it sees invisible units over its sight (^Invisible).
 	DetectCloaked:
-		Range: 5c0
-		DetectionTypes: Trap, Invisible
+		Range: 11c0
+		DetectionTypes: Invisible
 		RequiresCondition: !constructing
 	Armament:
 		Weapon: AscomoidShot

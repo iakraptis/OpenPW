@@ -70,8 +70,8 @@ do
     -- 1. A StoneTower stones an enemy in range on its own: 40 damage minus armour.
     -- 2. A Trap snaps at an enemy beside it: 80 damage.
     -- 3. A StoneTower still under construction doesn't shoot, and doesn't count as a prerequisite yet.
-    -- 4. Stealth: a Trap is hidden from the other players (not from its owner). Their StoneTowers reveal it within 5
-    --    cells, 8 with Improve StoneTower Detection; their Traps within 5.
+    -- 4. Stealth: a Trap is invisible to the other players (not to its owner). Their Traps see it (over their sight,
+    --    7 cells); their StoneTowers only once Improve StoneTower Detection is researched (then over 11 cells).
     WorldLoaded = function()
         me = Player.GetPlayer("Defence")
         enemy = Player.GetPlayer("Creeps")
@@ -86,7 +86,7 @@ do
 
     Stealth = function()
         local hidden = Actor.Create("primitive-trap", true, { Owner = me, Location = At(14, 28) })
-        -- 7 cells away: beyond a tower's 5, within the upgraded 8.
+        -- 7 cells away: within the tower's sight, but it doesn't detect before the research.
         Actor.Create("primitive-stonetower", true, { Owner = enemy, Location = At(21, 28) })
         local spotted = Actor.Create("primitive-trap", true, { Owner = me, Location = At(4, 24) })
         Later(5, function()

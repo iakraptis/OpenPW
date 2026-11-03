@@ -383,11 +383,15 @@ tyrano-rhamphos:
 		Name: actor-tyrano-rhamphos-disguised.name
 		GenericName: actor-wild-rhamphorhynchus.name
 
-# The "Sky Rhamphos" that scouts (help file): unarmed, high, far-sighted. It doesn't gain levels (.chr 0x1f4).
+# The "Sky Rhamphos" that scouts (help file): unarmed, high, far-sighted, and a detector (.chr 0x1f8 bit 0x1:
+# ^Invisible), seeing invisible units over its sight. It doesn't gain levels (.chr 0x1f4).
 tyrano-twinrhamphos:
 	Inherits: ^LivingFlyer
 	Inherits@race: ^Tyrano
 	Inherits@disguise: ^DisguisableFlyer
+	DetectCloaked:
+		Range: 10c0
+		DetectionTypes: Invisible
 	-Buildable:
 	UsesPopulation:
 		Amount: 2

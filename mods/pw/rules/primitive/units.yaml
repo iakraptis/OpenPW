@@ -420,6 +420,10 @@ primitive-revolver:
 		LandableTerrainTypes: Clear, Ramp
 	RevealsShroud:
 		Range: 12c0
+	# A detector (.chr 0x1f8 bit 0x1): it sees invisible units over its sight (^Invisible).
+	DetectCloaked:
+		Range: 12c0
+		DetectionTypes: Invisible
 	# Room for 10 (.chr 0x188 on a transport, deduced), 18 with Improve Revolver Transportation (+8); passengers
 	# weigh their transport size. Landed to load.
 	Cargo:

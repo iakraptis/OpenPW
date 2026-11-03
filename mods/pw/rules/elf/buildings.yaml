@@ -328,8 +328,7 @@ elf-skylibrary:
 		Range: 8c0
 
 # The Bubble, the Elf defence: bubbles at ground and air in every direction (attack 25, range 288 px, the record's own
-# stats). It reveals hidden traps and invisible units near it; Study Bubble Detection Secret (the Heaven's research)
-# widens that. The ranges are not known from the original (as the StoneTower's).
+# stats). Study Bubble Detection Secret (the Heaven's research) lets it see invisible units.
 elf-bubble:
 	Inherits: ^Defense
 	Inherits@race: ^Elf
@@ -359,16 +358,13 @@ elf-bubble:
 			BottomRight: 1024, 512
 	RevealsShroud:
 		Range: 10c0
-	DetectCloaked:
-		Range: 5c0
-		DetectionTypes: Trap, Invisible
-		RequiresCondition: !constructing && !detection
+	# Once its detection is researched it sees invisible units over its sight (^Invisible; Pw.exe 0x46832b).
 	GrantConditionOnPrerequisite@detection:
 		Condition: detection
 		Prerequisites: elf-upgrade-bubble-detection-secret-1
-	DetectCloaked@UPGRADED:
-		Range: 8c0
-		DetectionTypes: Trap, Invisible
+	DetectCloaked:
+		Range: 10c0
+		DetectionTypes: Invisible
 		RequiresCondition: !constructing && detection
 	Armament:
 		# Strikes on step 5 of its attack animation (.chr 0x247c).

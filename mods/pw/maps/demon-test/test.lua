@@ -7,6 +7,8 @@
 -- 5. Quake (Warlock, level 1): costs 150 KP; hurts enemy buildings.
 -- 6. Suicide (Warlock): the Warlock dies, and the enemy beside it takes 150.
 -- 7. Rise death (Devil): costs 100 KP; three zombies rise.
+-- 8. Invisibility: the MudMan and the Pixie are invisible to the other players; attacking doesn't reveal the MudMan;
+--    an enemy Revolver (a detector) sees it.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -21,6 +23,7 @@ WorldLoaded = function()
     Later(5, Quake)
     Later(5, Suicide)
     Later(5, RiseDeath)
+    Later(5, Invisible)
     FinishWhenDone("DEMON", 4000)
 end
 
@@ -152,5 +155,25 @@ RiseDeath = function()
         if ok then
             Check(devil.Health == 800, "Rise death costs 100 KP (" .. devil.Health .. ")")
         end
+    end)
+end
+
+Invisible = function()
+    local mud = Actor.Create("demon-mudman", true, { Owner = me, Location = CPos.New(26, 27) })
+    local pixie = Actor.Create("elf-pixie", true, { Owner = me, Location = CPos.New(30, 24) })
+    local victim = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = CPos.New(28, 27) })
+    victim.Stance = "HoldFire"
+    Later(5, function()
+        Check(not PwTest.CanSee(enemy, mud) and PwTest.CanSee(me, mud), "a MudMan is invisible to the other players, not to its owner")
+        Check(not PwTest.CanSee(enemy, pixie), "so is a Pixie")
+        mud.Attack(victim)
+        WaitFor("the MudMan attacks", 200, function() return victim.IsDead or victim.Health < victim.MaxHealth end, function(ok)
+            if not ok then return end
+            Check(not PwTest.CanSee(enemy, mud), "attacking doesn't reveal it")
+            local revolver = Actor.Create("primitive-revolver", true, { Owner = enemy, Location = CPos.New(30, 31) })
+            Later(5, function()
+                Check(PwTest.CanSee(enemy, mud), "an enemy Revolver, a detector, sees it")
+            end)
+        end)
     end)
 end
