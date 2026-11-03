@@ -1,0 +1,142 @@
+# Elf weapons (docs/game/elf.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack delay
+# (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 710/576
+# (weapons/defaults.yaml).
+
+# The Wizard (the worker) shoots a little firebolt.
+WizardFirebolt:
+	Inherits: ^Arrow
+	ReloadDelay: 34
+	Range: 4c0
+	Projectile: Bullet
+		Image: weapon-wizard-firebolt
+		Sequences: flight
+		Speed: 434
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 9
+	Report: weapon-wizard-firebolt-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-wizard-firebolt
+		Explosions: impact
+
+RedBolt:
+	Inherits: ^Arrow
+	ReloadDelay: 27
+	Range: 6c0
+	Projectile: Bullet
+		Image: weapon-redbolt
+		Sequences: flight
+		Speed: 513
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 20
+	Report: weapon-redbolt-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-redbolt
+		Explosions: impact
+
+WhiteBolt:
+	Inherits: ^Arrow
+	ReloadDelay: 30
+	Range: 7c0
+	Projectile: Bullet
+		Image: weapon-whitebolt
+		Sequences: flight
+		Speed: 592
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 30
+	Report: weapon-whitebolt-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-whitebolt
+		Explosions: impact
+
+RangerHit:
+	Inherits: ^Melee
+	ReloadDelay: 25
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 30
+	Report: weapon-ranger-hit-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground
+		Image: weapon-ranger-hit
+		Explosions: impact
+
+BlueElfHit:
+	Inherits: ^Melee
+	ReloadDelay: 38
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 45
+	Report: weapon-blueelf-hit-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground
+		Image: weapon-blueelf-hit
+		Explosions: impact
+
+# Dragon: fire on the ground below, splashing 64 px.
+DragonFire:
+	Inherits: ^PwWeapon
+	ReloadDelay: 54
+	Range: 10c0
+	Projectile: Bullet
+		Image: weapon-dragonfire
+		Sequences: flight
+		Speed: 710
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 70
+		# Splash: full damage within the original radius (2c0).
+		Range: 0, 2c0, 2112
+		Falloff: 100, 100, 0
+	Report: weapon-dragonfire-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground
+		Image: weapon-dragonfire
+		Explosions: impact
+
+# Phoenix: fire at flyers only (target mask 8; its range against air, 224 px, .chr 0x1b4).
+PhoenixFire:
+	Inherits: ^PwWeapon
+	ValidTargets: Air
+	ReloadDelay: 41
+	Range: 7c0
+	Projectile: Bullet
+		Image: weapon-phonixfire
+		Sequences: flight
+		Speed: 592
+	Warhead@1Dam: SubtractArmorDamage
+		ValidTargets: Air
+		Damage: 30
+	Report: weapon-phonixfire-0.wav
+
+AngelRing:
+	Inherits: ^Arrow
+	ReloadDelay: 38
+	Range: 7c0
+	Projectile: Bullet
+		Image: weapon-angelring
+		Sequences: flight
+		Speed: 592
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 140
+	Report: weapon-angelring-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-angelring
+		Explosions: impact
+
+# Bubble: the Elf tower's bubble at ground or air (20 px per tick).
+BubbleShot:
+	Inherits: ^Arrow
+	ReloadDelay: 26
+	Range: 9c0
+	Projectile: Bullet
+		Image: weapon-bubble
+		Sequences: flight
+		Speed: 789
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 25
+	Report: weapon-bubble-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-bubble
+		Explosions: impact

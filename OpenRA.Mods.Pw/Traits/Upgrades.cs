@@ -29,6 +29,9 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Unit types it improves. Empty for player-wide upgrades.")]
 		public readonly HashSet<string> Units = new();
 
+		[Desc("Most mana added (PwMana).")]
+		public readonly int Mana = 0;
+
 		[Desc("Attack added (flat, like the original).")]
 		public readonly int Attack = 0;
 

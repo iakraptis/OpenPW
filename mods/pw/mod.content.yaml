@@ -20,6 +20,9 @@ Rules:
 	pw|rules/tyrano/units.yaml
 	pw|rules/tyrano/buildings.yaml
 	pw|rules/tyrano/upgrades.yaml
+	pw|rules/elf/units.yaml
+	pw|rules/elf/buildings.yaml
+	pw|rules/elf/upgrades.yaml
 	pw|rules/demon/units.yaml
 	pw|rules/demon/buildings.yaml
 	pw|rules/demon/upgrades.yaml
@@ -64,5 +67,6 @@ Weapons:
 	pw|weapons/defaults.yaml
 	pw|weapons/primitive.yaml
 	pw|weapons/tyrano.yaml
+	pw|weapons/elf.yaml
 	pw|weapons/demon.yaml
 	pw|weapons/wild.yaml

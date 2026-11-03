@@ -16,13 +16,16 @@ using OpenRA.Traits;
 namespace OpenRA.Mods.Pw.Traits
 {
 	[Desc("A living creature (.chr 0x1f4 bit 0x10: people, beasts, demons; not machines or buildings). Killing it ",
-		"feeds the killer's kill points (PwKillPoints), whoever owned it.")]
+		"feeds the killer's kill points (PwKillPoints), whoever owned it, and its death is kept for Resurrect (PwGraveyard).")]
 	public class PwLivingInfo : TraitInfo<PwLiving>, Requires<IHealthInfo> { }
 
 	public class PwLiving : INotifyKilled
 	{
 		void INotifyKilled.Killed(Actor self, AttackInfo e)
 		{
+			// Resurrect (PwSpell) may bring it back.
+			self.World.WorldActor.TraitOrDefault<PwGraveyard>()?.Bury(self);
+
 			var killer = e.Attacker;
 			if (killer == null || killer.Disposed || killer.IsDead || killer == self)
 				return;

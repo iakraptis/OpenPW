@@ -1,8 +1,9 @@
--- Two Normal AIs on (2) One vs One at 5x speed, each from its main building and four workers: bot-test Primitive
--- (North) against Tyrano (South), bot-demon-test Demon against Primitive. Both must grow their workforce, build a
--- base and an army, and guard it with towers (by the main building, by the berries and on the edge); they must fight
--- early, and one must destroy a building, all within MaxTicks (a hard cap: the battle stops there).
+-- Four Normal AIs, one of each race, all against all on (4) The X Cross at 5x speed, each from its main building
+-- and four workers; each is named after its race. Every one must grow its workforce, build a base and an army, and
+-- guard it early with towers (by the main building and by the berries); they must fight early, and some bot must
+-- destroy a building of another, all within MaxTicks (a hard cap: the battle stops there).
 MaxTicks = 25000
+Bots = { "Primitive", "Tyrano", "Demon", "Elf" }
 -- Written by the asset installer (OpenRA.Mods.Pw/AssetInstaller/MapTemplates/bot-test) on the converted map.
 Races = {
     primitive = {
@@ -32,33 +33,46 @@ Races = {
             "demon-gargoyle" },
         Towers = { "demon-volcano" },
     },
+    elf = {
+        Workers = { "elf-wizard" },
+        Main = "elf-heaven",
+        Base = { "elf-elftree", "elf-redhall", "elf-bluehall", "elf-manahall", "elf-skyhall", "elf-elflibrary",
+            "elf-skylibrary", "elf-manalibrary", "elf-bubble" },
+        Army = { "elf-redelf", "elf-whiteelf", "elf-ranger", "elf-blueelf", "elf-phoenix", "elf-dragon", "elf-angelelf" },
+        Towers = { "elf-bubble" },
+    },
 }
 
 WorldLoaded = function()
-    north = Player.GetPlayer("North")
-    south = Player.GetPlayer("South")
-    peak = { North = { workers = 0, base = 0, army = 0, towers = 0 }, South = { workers = 0, base = 0, army = 0, towers = 0 } }
-    guard = { North = { }, South = { } }
+    players, isBot, peak, guard, nextReport = { }, { }, { }, { }, { }
+    for _, name in ipairs(Bots) do
+        local p = Player.GetPlayer(name)
+        players[#players + 1] = p
+        isBot[name] = true
+        peak[name] = { workers = 0, base = 0, army = 0, towers = 0 }
+        guard[name] = { }
+        nextReport[name] = 0
+    end
     kills = 0
     buildingKills = 0
     Watch()
-    for _, p in ipairs({ "North", "South" }) do
+    for _, p in ipairs(Bots) do
         WaitFor(p .. " trains workers (6+)", 6000, function() return peak[p].workers >= 6 end)
         WaitFor(p .. " builds a base (3+ buildings besides the main one)", 15000, function() return peak[p].base >= 3 end)
         WaitFor(p .. " trains an army (4+ units)", 20000, function() return peak[p].army >= 4 end)
-        WaitFor(p .. " guards its base with towers: 3+, one by the main building, one by berry bushes", 25000, function()
-            return peak[p].towers >= 3 and guard[p].hq and guard[p].berries
+        -- Early, while every bot still stands (in a four-way battle the weakest may be wiped out later).
+        WaitFor(p .. " guards its base with towers: 2+, one by the main building, one by berry bushes", 15000, function()
+            return peak[p].towers >= 2 and guard[p].hq and guard[p].berries
         end)
     end
     WaitFor("the bots fight (a kill within 15000 ticks)", 15000, function() return kills > 0 end)
-    WaitFor("a bot destroys a building of the other", MaxTicks, function() return buildingKills > 0 end)
+    WaitFor("a bot destroys a building of another", MaxTicks, function() return buildingKills > 0 end)
     FinishWhenDone("BOT", MaxTicks)
 end
 
 watched = { }
-nextReport = { North = 0, South = 0 }
 Watch = function()
-    for _, p in ipairs({ north, south }) do
+    for _, p in ipairs(players) do
         local name = p.InternalName
         local race = Races[p.Faction]
         local workers = #p.GetActorsByTypes(race.Workers)
@@ -81,7 +95,7 @@ Watch = function()
             if not watched[key] and a.HasProperty("Health") then
                 watched[key] = true
                 Trigger.OnKilled(a, function(self, killer)
-                    if killer and killer.Owner ~= self.Owner and (killer.Owner == north or killer.Owner == south) then
+                    if killer and killer.Owner ~= self.Owner and isBot[killer.Owner.InternalName] then
                         kills = kills + 1
                         local victim = Races[self.Owner.Faction]
                         if Contains(victim.Base, self.Type) or self.Type == victim.Main then

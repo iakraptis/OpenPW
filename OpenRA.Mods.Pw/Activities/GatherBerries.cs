@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenRA.Activities;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Mods.Pw.Effects;
 using OpenRA.Mods.Pw.Traits;
 using OpenRA.Traits;
 
@@ -106,7 +107,21 @@ namespace OpenRA.Mods.Pw.Activities
 				return false;
 
 			StopGathering(self);
-			gatherer.Load(self, bush.Trait<BerryBush>().Take(gatherer.TripAmount(self)));
+			var taken = bush.Trait<BerryBush>().Take(gatherer.TripAmount(self));
+
+			// Berry fly: the berries go to the main building on their own, and the worker gathers on.
+			if (gatherer.Info.FliesBerries)
+			{
+				var dropOff = gatherer.NearestDropOff(self);
+				var info = gatherer.Info;
+				if (dropOff != null && taken > 0)
+					self.World.AddFrameEndTask(w => w.Add(new BerryFlight(w, bush.CenterPosition, dropOff, self.Owner, taken,
+						info.FlightImage, info.FlightSequence, info.FlightPalette, info.FlightSpeed)));
+
+				return false;
+			}
+
+			gatherer.Load(self, taken);
 			return false;
 		}
 

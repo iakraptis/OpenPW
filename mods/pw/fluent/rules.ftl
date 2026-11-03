@@ -14,6 +14,11 @@ faction-tyrano =
     .description = Tyrano tribe
      Mutated dinosaurs: some combine into stronger creatures, some can pass for wild ones.
 
+faction-elf =
+    .name = Elf
+    .description = Elf tribe
+     Masters of magic: weak at close quarters, they strike from afar with their spells.
+
 faction-demon =
     .name = Demon
     .description = Demon tribe
@@ -183,6 +188,73 @@ actor-tyrano-pteras-disguised =
 
 actor-tyrano-trices-disguised =
     .name = Trices (disguised)
+
+## Elf (names as in the original data)
+actor-elf-wizard =
+    .name = Wizard
+
+actor-elf-redelf =
+    .name = RedElf
+
+actor-elf-whiteelf =
+    .name = WhiteElf
+
+actor-elf-ranger =
+    .name = Ranger
+
+actor-elf-blueelf =
+    .name = BlueElf
+
+actor-elf-unicorn =
+    .name = Unicorn
+
+actor-elf-pixie =
+    .name = Pixie
+
+actor-elf-manaspread =
+    .name = ManaSpread
+
+actor-elf-elfring =
+    .name = ElfRing
+
+actor-elf-dragon =
+    .name = Dragon
+
+actor-elf-phoenix =
+    .name = Phoenix
+
+actor-elf-angelelf =
+    .name = AngelElf
+
+actor-elf-heaven =
+    .name = Heaven
+
+actor-elf-elftree =
+    .name = ElfTree
+
+actor-elf-bubble =
+    .name = Bubble
+
+actor-elf-redhall =
+    .name = RedHall
+
+actor-elf-bluehall =
+    .name = BlueHall
+
+actor-elf-manahall =
+    .name = ManaHall
+
+actor-elf-skyhall =
+    .name = SkyHall
+
+actor-elf-elflibrary =
+    .name = ElfLibrary
+
+actor-elf-skylibrary =
+    .name = SkyLibrary
+
+actor-elf-manalibrary =
+    .name = ManaLibrary
 
 ## Demon (names as in the original data)
 actor-demon-insect =

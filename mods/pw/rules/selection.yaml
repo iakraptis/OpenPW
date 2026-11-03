@@ -201,6 +201,66 @@ demon-warlock:
 		Bounds: 1280, 1952, 64, -304
 		DecorationBounds: 1280, 1952, 64, -304
 
+elf-wizard:
+	Selectable:
+		Bounds: 768, 1280, 64, -160
+		DecorationBounds: 768, 1280, 64, -160
+
+elf-redelf:
+	Selectable:
+		Bounds: 960, 1760, 64, -336
+		DecorationBounds: 960, 1760, 64, -336
+
+elf-whiteelf:
+	Selectable:
+		Bounds: 1056, 1760, 112, -400
+		DecorationBounds: 1056, 1760, 112, -400
+
+elf-ranger:
+	Selectable:
+		Bounds: 832, 1504, 0, -304
+		DecorationBounds: 832, 1504, 0, -304
+
+elf-blueelf:
+	Selectable:
+		Bounds: 1632, 2144, 144, -464
+		DecorationBounds: 1632, 2144, 144, -464
+
+elf-unicorn:
+	Selectable:
+		Bounds: 1664, 1824, 32, -304
+		DecorationBounds: 1664, 1824, 32, -304
+
+elf-pixie:
+	Selectable:
+		Bounds: 608, 1440, 16, -464
+		DecorationBounds: 608, 1440, 16, -464
+
+elf-manaspread:
+	Selectable:
+		Bounds: 2016, 2080, 16, -464
+		DecorationBounds: 2016, 2080, 16, -464
+
+elf-elfring:
+	Selectable:
+		Bounds: 1568, 1984, -48, -352
+		DecorationBounds: 1568, 1984, -48, -352
+
+elf-phoenix:
+	Selectable:
+		Bounds: 2208, 1312, 144, -80
+		DecorationBounds: 2208, 1312, 144, -80
+
+elf-dragon:
+	Selectable:
+		Bounds: 2944, 3168, 160, 528
+		DecorationBounds: 2944, 3168, 160, 528
+
+elf-angelelf:
+	Selectable:
+		Bounds: 1984, 2240, 352, -480
+		DecorationBounds: 1984, 2240, 352, -480
+
 wild-tyranosaurus:
 	Selectable:
 		Bounds: 6176, 5120, 80, -1440

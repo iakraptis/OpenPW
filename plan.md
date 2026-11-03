@@ -464,11 +464,12 @@ Left for Elf and Demon: the spell mana costs.
   - Merged by theme on 2026-11-03 (`research/tools/merge_tests.py`; every check kept): `economy-test` (gathering,
     population, rally), `combat-test` (combat, defence, levels), `primitive-test` (items, upgrades, chief, air),
     `wildlife-test` (wild, hunting, meat, share meat), `bot-modules-test` (the AI's ability, defence, hunting and
-    transport modules), plus `tyrano-test`, `demon-test` and the installer's bot battles. The older map names in
-    this plan are now sections of these. Each section is a 34×34 area of the map, 54 cells from the next, with its
-    own players; its script has `At(x, y)` for its cells, and its checks carry its name. New checks go into the
-    section of their theme.
-  - The bot battles stop at 25,000 ticks. Once Elf is done, the duels give way to one map with all four races.
+    transport modules), plus `tyrano-test`, `demon-test`, `elf-test` and the installer's `bot-test`. The older map
+    names in this plan are now sections of these. Each section is a 34×34 area of the map, 54 cells from the next,
+    with its own players; its script has `At(x, y)` for its cells, and its checks carry its name. New checks go into
+    the section of their theme.
+  - `bot-test` (written by the installer's `TestMaps.cs`) is one battle of the four races' Normal AIs on (4) The X
+    Cross, all against all, stopped at 25,000 ticks.
 - Port the OpenSYW traits as needed: `Builder` / `UnderConstruction` (if the original uses worker construction),
   per-building production queues, sidebar logic.
 - Lua test maps + `run_tests.py`, as in OpenSYW.
@@ -486,7 +487,7 @@ byte for byte.
 
 ### Phase 5: More races
 One race at a time, the same way: art → rules (on the shared templates) → test map → playtest.
-Order: **Primitive → Tyrano → Demon**, then Elf. Adding a race should mean a new mixin and concrete
+Order: **Primitive → Tyrano → Demon → Elf** (all four done). Adding a race should mean a new mixin and concrete
 actors only; a needed change to a shared template is a sign the tree is wrong and gets fixed there.
 Mechanics that need new traits as they come up: mana and spells (24), unit levels, Primitive items (Blacksmith
 makes them, units equip them permanently), Tyrano merging, flying units, traps and egg mines, resurrection/raise
@@ -523,6 +524,26 @@ dead.
   - `demon-test`, `bot-demon-test` (Demon against Primitive, written by the installer like `bot-test`).
   - Not done: the AI doesn't cast the spells (only Fall out) and doesn't train Warlocks (unarmed). The curse's
     length is a mod choice; the zombies stay until killed, as in the original.
+- [x] **Elf** (2026-11-03, branch `elf`): playable, in the lobby and in Random; all four races are in.
+  - Rules: `rules/elf/` (units, buildings, upgrades from `upgrade_rules.py`, which now also writes mana) and
+    `weapons/elf.yaml` ([docs/game/elf.md](docs/game/elf.md)). A Heaven and four Wizards to start.
+  - Wizards gather by magic (Berry fly, JW2_11 record 16): they stay at the bush casting, and each trip's berries
+    fly to the Heaven on their own (`BerryGatherer.FliesBerries`, `BerryFlight`; 4 px a tick × 710/576), lost if
+    it falls meanwhile.
+    Elf buildings are conjured: they have no construction stages, so the finished building shows, tinted, while it
+    appears (`^ElfBuilding`).
+  - Spells (`PwSpell`, now general): which spells a unit has, their level and their research come from the original
+    (`.chr` 0x1f0, record 0x160 and 0x15c; C, `FUN_0046c3a5`), with mana costs. Shield and Mass temper use
+    `PwShield`, Resurrect uses the world's `PwGraveyard` (living deaths), and Fake makes a timed, harmless copy
+    (`ExternalCondition@ILLUSION` on `^Unit`). The ManaSpread refills casters' mana (`PwManaAura`), and Study Mana
+    Potion Secret raises mana by 50.
+  - Data fixes: the second "Study Divine being's Weapon Secret" (record 47) raises armour and is named so. The
+    first one's level 3 takes 3,360 ticks, not 1,200.
+  - `elf-test`. `bot-test` is now one four-way battle (each race's Normal AI, all against all, on (4) The X Cross),
+    replacing the two duels.
+  - Not done: the AI casts none of the Elf spells and doesn't train the unarmed Elves (Unicorn, Pixie, ManaSpread).
+    Cure has no icon of its own in the original. Pixie and DeathEye may detect (their `.chr` 0x1f8 bit 0x2), which
+    is untested.
 
 ### Phase 6: Maps
 - Converter for all 17 multiplayer maps (`Maps/`, `Maps/Rank/`), all 3 tilesets, doodads, neutral creatures,
@@ -566,9 +587,9 @@ dead.
     attack, wild creatures included), `PwHuntingBotModule` (army near the base hunts).
   - AI units also auto-target predators (`AutoTargetPriority@PREDATORS`, target type `Predator`, condition
     `bot-owned`); players' units don't.
-  - Tests: `bot-test` and `bot-demon-test` (two Normal AIs on the converted One vs One, Primitive against Tyrano and
-    Demon against Primitive, written by the installer's `TestMaps.cs`, about 5 minutes each), `bot-transport-test`,
-    `bot-ability-test`, `bot-defence-test`, `bot-hunting-test`.
+  - Tests: `bot-test` (the four races' Normal AIs, all against all, on the converted (4) The X Cross, written by
+    the installer's `TestMaps.cs`, stopped at 25,000 ticks) and `bot-modules-test` (the ability, defence, hunting
+    and transport modules).
   - Tyrano (2026-11-03): the modules play it from its traits. `IsHouse` now needs more than 1 population, because
     the Nisdos (1 population, no queue) counted as houses and were never built as tech. The squad manager lists and
     the weights include it.
@@ -582,7 +603,6 @@ dead.
 ### Out of scope for now
 - Campaign: ~48 scenarios in Jw2_06 (maps, briefings, dialogue, scripts in `P_SCRIP`). The archive reader should
   still list them, so they can be converted later.
-- The Elf race, for now.
 
 ---
 
@@ -594,7 +614,7 @@ dead.
 - Before trusting `--check-yaml`, read OpenSY `Plan.md` §8.2: several missing world/player traits crash only at
   runtime (here so far: `GrantConditionOnPrerequisiteManager`, `PlayerRadarTerrain`).
 - Run only the test maps a change touches (`python run_tests.py --no-build --only a-test,b-test`); the whole suite
-  (with the bot battles, up to 25,000 ticks each) only when asked or before a merge. `make.cmd check` (style) and
+  (with the bot battle, up to 25,000 ticks) only when asked or before a merge. `make.cmd check` (style) and
   `make.cmd test` (YAML lint) before every commit.
 - `research/tools/shot.ps1` screenshots the game; call it from PowerShell as `& ./research/tools/shot.ps1 ...`
   (with `powershell -File` array arguments break): `-Map <map|menu>`, `-Clicks`, `-Hover`, `-Wheel`, `-Burst`,

@@ -131,6 +131,12 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("A unit's mana, or -1 without any.")]
 		public int Mana(Actor actor) => actor.TraitOrDefault<PwMana>()?.Mana ?? -1;
 
+		[Desc("The most mana a unit can hold (-1 if it has none).")]
+		public int MaxMana(Actor actor) => actor.TraitOrDefault<PwMana>()?.Max ?? -1;
+
+		[Desc("What is left of a unit's shield (PwShield).")]
+		public int Shield(Actor actor) => actor.TraitOrDefault<PwShield>()?.Pool ?? 0;
+
 		[Desc("Whether the building has finished construction.")]
 		public bool Finished(Actor actor) => actor.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 

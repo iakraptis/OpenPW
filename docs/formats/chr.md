@@ -41,7 +41,9 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x01b0, 0x01b4 | `i32` | Attack range, pixels (32 melee) | D | |
 | 0x0188 | `i32` | Transport size (1 workers, 2 soldiers) | C | subtracted from a transport's space, `0x45f334` |
 | 0x01e8 | `i32` | Experience per level | C | `FUN_00458b2c` |
-| 0x01f4 | `u32` | Flags; bit 2 = gains levels | C | `FUN_00458b2c` |
+| 0x01f0 | `u32` | Spells: bit *n* = JW2_11 record *n* (RedElf 0x2 Thunder bolt, Warlock 0x7000) | C | copied to unit +0xf0, `0x460108`; tested in `FUN_0046c3a5` |
+| 0x01f4 | `u32` | Flags; bit 2 = gains levels; bit 0x10 = living (kills feed Demon kill points) | C | `FUN_00458b2c`, `FUN_004578a9` |
+| 0x01f8 | `u32` | Flags; bit 0x20 = gains kill points from kills (Demon); 0x4 ManaSpread, 0x8 Chief, 0x10 Unicorn (D) | C/D | `FUN_004578a9` |
 | 0x01fc, 0x0200 | `i32`, `i32[]` | Number and list of required buildings | D | Knight needs Blacksmith; Chief needs all six |
 | 0x0240, 0x0244 | `i32`, `i32[]` | Workers: buildings they can build | D | Buildman: the 10 Primitive buildings |
 | 0x0284, 0x0288 | `i32`, `i32[]` | Buildings: units they train | D | PowerHouse: Powerman, Giant |

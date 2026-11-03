@@ -40,6 +40,22 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Condition granted while carrying berries (the carrying animations).")]
 		public readonly string CarryingCondition = "carrying";
 
+		[Desc("The worker stays at the bush and its berries fly to the main building (the Elf Wizard's Berry fly, JW2_11 ",
+			"record 16) instead of being carried there.")]
+		public readonly bool FliesBerries = false;
+
+		[Desc("Art of the flying berries (image and sequence).")]
+		public readonly string FlightImage = "berry-fly";
+
+		[SequenceReference(nameof(FlightImage))]
+		public readonly string FlightSequence = "flight";
+
+		[PaletteReference]
+		public readonly string FlightPalette = "effect";
+
+		[Desc("Speed of the flying berries: the record's 4 px per tick, x 710/576 as every missile (weapons/defaults.yaml).")]
+		public readonly int FlightSpeed = 158;
+
 		[VoiceReference]
 		public readonly string Voice = "Action";
 

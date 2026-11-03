@@ -1,0 +1,379 @@
+# Elf buildings (docs/game/elf.md): build time, prerequisites and the units they train from the original tech tree
+# (.chr 0x18c, 0x1fc, 0x284). Footprints are the original ones in 32 px cells (.chr 0x330/0x334). They are conjured
+# (^ElfBuilding: no construction stages). The ElfTrees provide population as Houses do; the Libraries only
+# research.
+
+elf-heaven:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	Inherits@exits: ^Exits6x4
+	ProvidesPopulation:
+		Amount: 9
+		RequiresCondition: !constructing
+	AcceptsBerries:
+	UnderConstruction:
+		Duration: 1440
+	Buildable:
+		BuildPaletteOrder: 10
+	Production:
+		Produces: elf-heaven
+	PwProductionQueue:
+		Type: elf-heaven
+	RenderSprites:
+		Image: elf-heaven
+	Tooltip:
+		Name: actor-elf-heaven.name
+	Valued:
+		Cost: 1000
+	Health:
+		HP: 4000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxxx xxxxxx xxxxxx xxxxxx
+		Dimensions: 6,4
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -3072, -2048
+			BottomRight: 3072, 2048
+	RevealsShroud:
+		Range: 12c0
+
+elf-elftree:
+	Inherits: ^Building
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	ProvidesPopulation:
+		Amount: 10
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 320
+	Buildable:
+		BuildPaletteOrder: 20
+	RenderSprites:
+		Image: elf-elftree
+	Tooltip:
+		Name: actor-elf-elftree.name
+	Valued:
+		Cost: 200
+	Health:
+		HP: 1000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xx xx
+		Dimensions: 2,2
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -1024
+			BottomRight: 1024, 1024
+	RevealsShroud:
+		Range: 8c0
+
+elf-redhall:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 880
+	Buildable:
+		BuildPaletteOrder: 30
+		Prerequisites: elf-heaven
+	Production:
+		Produces: elf-redhall
+	PwProductionQueue:
+		Type: elf-redhall
+	RenderSprites:
+		Image: elf-redhall
+	Tooltip:
+		Name: actor-elf-redhall.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-bluehall:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 880
+	Buildable:
+		BuildPaletteOrder: 40
+		Prerequisites: elf-heaven
+	Production:
+		Produces: elf-bluehall
+	PwProductionQueue:
+		Type: elf-bluehall
+	RenderSprites:
+		Image: elf-bluehall
+	Tooltip:
+		Name: actor-elf-bluehall.name
+	Valued:
+		Cost: 400
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-manahall:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	Inherits@exits: ^Exits5x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 960
+	Buildable:
+		BuildPaletteOrder: 50
+		Prerequisites: elf-redhall, elf-bluehall
+	Production:
+		Produces: elf-manahall
+	PwProductionQueue:
+		Type: elf-manahall
+	RenderSprites:
+		Image: elf-manahall
+	Tooltip:
+		Name: actor-elf-manahall.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxxx xxxxx xxxxx
+		Dimensions: 5,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2560, -1536
+			BottomRight: 2560, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-skyhall:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	Inherits@exits: ^Exits4x3
+	ProvidesPopulation:
+		Amount: 1
+		RequiresCondition: !constructing
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 60
+		Prerequisites: elf-manahall
+	Production:
+		Produces: elf-skyhall
+	PwProductionQueue:
+		Type: elf-skyhall
+	RenderSprites:
+		Image: elf-skyhall
+	Tooltip:
+		Name: actor-elf-skyhall.name
+	Valued:
+		Cost: 800
+	Health:
+		HP: 3000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-elflibrary:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 70
+		Prerequisites: elf-redhall, elf-bluehall
+	Production:
+		Produces: elf-elflibrary
+	PwProductionQueue:
+		Type: elf-elflibrary
+	RenderSprites:
+		Image: elf-elflibrary
+	Tooltip:
+		Name: actor-elf-elflibrary.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 2000
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-manalibrary:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 80
+		Prerequisites: elf-manahall
+	Production:
+		Produces: elf-manalibrary
+	PwProductionQueue:
+		Type: elf-manalibrary
+	RenderSprites:
+		Image: elf-manalibrary
+	Tooltip:
+		Name: actor-elf-manalibrary.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 8c0
+
+elf-skylibrary:
+	Inherits: ^ProductionBuilding
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	UnderConstruction:
+		Duration: 1120
+	Buildable:
+		BuildPaletteOrder: 90
+		Prerequisites: elf-skyhall
+	Production:
+		Produces: elf-skylibrary
+	PwProductionQueue:
+		Type: elf-skylibrary
+	RenderSprites:
+		Image: elf-skylibrary
+	Tooltip:
+		Name: actor-elf-skylibrary.name
+	Valued:
+		Cost: 600
+	Health:
+		HP: 2500
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xxxx xxxx xxxx
+		Dimensions: 4,3
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -2048, -1536
+			BottomRight: 2048, 1536
+	RevealsShroud:
+		Range: 8c0
+
+# The Bubble, the Elf defence: bubbles at ground and air in every direction (attack 25, range 288 px, the record's own
+# stats). It reveals hidden traps and invisible units near it; Study Bubble Detection Secret (the Heaven's research)
+# widens that. The ranges are not known from the original (as the StoneTower's).
+elf-bubble:
+	Inherits: ^Defense
+	Inherits@race: ^Elf
+	Inherits@conjured: ^ElfBuilding
+	UnderConstruction:
+		Duration: 480
+	Buildable:
+		BuildPaletteOrder: 35
+		Prerequisites: elf-elftree
+	RenderSprites:
+		Image: elf-bubble
+	Tooltip:
+		Name: actor-elf-bubble.name
+	Valued:
+		Cost: 300
+	Health:
+		HP: 350
+	PwArmor:
+		Value: 0
+	Building:
+		Footprint: xx
+		Dimensions: 2,1
+	HitShape:
+		TargetableOffsets: 0,0,0
+		Type: Rectangle
+			TopLeft: -1024, -512
+			BottomRight: 1024, 512
+	RevealsShroud:
+		Range: 10c0
+	DetectCloaked:
+		Range: 5c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && !detection
+	GrantConditionOnPrerequisite@detection:
+		Condition: detection
+		Prerequisites: elf-upgrade-bubble-detection-secret-1
+	DetectCloaked@UPGRADED:
+		Range: 8c0
+		DetectionTypes: Trap, Invisible
+		RequiresCondition: !constructing && detection
+	Armament:
+		# Strikes on step 5 of its attack animation (.chr 0x247c).
+		FireDelay: 5
+		Weapon: BubbleShot
+		RequiresCondition: !constructing
+	WithAttackAnimation:
+		Sequence: attack

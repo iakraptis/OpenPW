@@ -80,6 +80,22 @@
 	WithColoredOverlay@PETRIFIED:
 		Color: A0808080
 		RequiresCondition: petrified
+	# Shield and Mass temper (Elf spells, PwSpell) give it a shield that soaks up damage, shown meanwhile.
+	PwShield:
+	WithIdleOverlay@SHIELD:
+		Image: spell-shield
+		Sequence: effect
+		RequiresCondition: shielded
+	# Fake (the Unicorn's spell) makes a copy of it, which can't hurt and vanishes after 960 ticks (Fake's 30 x 32,
+	# the original's timer for summoned units: Pw.exe 0x4792c2, FUN_0046089a).
+	ExternalCondition@ILLUSION:
+		Condition: illusion
+	FirepowerMultiplier@ILLUSION:
+		Modifier: 0
+		RequiresCondition: illusion
+	KillsSelf@ILLUSION:
+		Delay: 960
+		RequiresCondition: illusion
 	MapEditorData:
 		Categories: Units
 
@@ -508,6 +524,50 @@
 	Exit@15:
 		ExitCell: 4,-1
 
+^Exits4x3:
+	Exit@0:
+		ExitCell: -1,3
+		Priority: 2
+	Exit@1:
+		ExitCell: 0,3
+		Priority: 2
+	Exit@2:
+		ExitCell: 1,3
+		Priority: 2
+	Exit@3:
+		ExitCell: 2,3
+		Priority: 2
+	Exit@4:
+		ExitCell: 3,3
+		Priority: 2
+	Exit@5:
+		ExitCell: 4,3
+		Priority: 2
+	Exit@6:
+		ExitCell: -1,2
+	Exit@7:
+		ExitCell: 4,2
+	Exit@8:
+		ExitCell: -1,1
+	Exit@9:
+		ExitCell: 4,1
+	Exit@10:
+		ExitCell: -1,0
+	Exit@11:
+		ExitCell: 4,0
+	Exit@12:
+		ExitCell: -1,-1
+	Exit@13:
+		ExitCell: 0,-1
+	Exit@14:
+		ExitCell: 1,-1
+	Exit@15:
+		ExitCell: 2,-1
+	Exit@16:
+		ExitCell: 3,-1
+	Exit@17:
+		ExitCell: 4,-1
+
 ^Exits5x2:
 	Exit@0:
 		ExitCell: -1,2
@@ -736,6 +796,17 @@
 ^Tyrano:
 
 ^Demon:
+
+^Elf:
+
+# Elf buildings are conjured (the Wizard's Elf Build, JW2_11 record 17): they have no construction stages, so the
+# finished building is shown, shining while it appears.
+^ElfBuilding:
+	WithConstructionStages:
+		Sequence: idle
+	WithColoredOverlay@CONJURE:
+		Color: 60FFFFFF
+		RequiresCondition: constructing
 
 # Tyrano disguise (PwDisguise; the help file's Special Abilities): once Disguise is researched, the unit can turn into
 # its "original form", a wild creature of its kind, and back. While "disguised" it is drawn as the creature (the unit
