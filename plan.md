@@ -513,8 +513,8 @@ dead.
   - The Insect (worker) and the Warlock fly low: the Insect walks but air weapons reach it, and the Warlock is a
     `^LowFlight` flyer. The Phantom carries 12; the Volcano is the tower (detection upgrade as the StoneTower's).
   - `demon-test`, `bot-demon-test` (Demon against Primitive, written by the installer like `bot-test`).
-  - Not done: the AI doesn't cast the spells (only Fall out) and doesn't train Warlocks (unarmed); the zombies'
-    crumbling and the curse's length are mod choices.
+  - Not done: the AI doesn't cast the spells (only Fall out) and doesn't train Warlocks (unarmed). The curse's
+    length is a mod choice; the zombies stay until killed, as in the original.
 
 ### Phase 6: Maps
 - Converter for all 17 multiplayer maps (`Maps/`, `Maps/Rank/`), all 3 tilesets, doodads, neutral creatures,

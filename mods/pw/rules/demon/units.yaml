@@ -268,8 +268,8 @@ demon-devil:
 		Sound: spell-rise-death-0.wav
 
 # Raised by the Devil's Rise death, never trained. Undead: their deaths feed no kill points (.chr 0x1f4 bit 0x10
-# clear), they don't level and take no population. They crumble after a while (not from the original: about two and
-# a half minutes, so the zombies don't pile up).
+# clear), they don't level and take no population. They stay until killed: the original times only the Fake spell's
+# illusions (unit flag 0x10, set at Pw.exe 0x4792c2), not the raised dead.
 ^Zombie:
 	Inherits: ^Fiend
 	Inherits@move: ^FootMovement
@@ -294,8 +294,6 @@ demon-devil:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
 		FireDelay: 4
 		Weapon: ZombieHit
-	KillsSelf:
-		Delay: 2100
 
 demon-risezombie1:
 	Inherits: ^Zombie

@@ -190,7 +190,9 @@ reduce KP. … Any units killed, even friendly units, will replenish KP."
 
 In the mod (`PwKillPoints`, `PwLiving`, `PwSpell`): as above. Stone curse lasts 264 ticks (its 66 read as frames of 4
 ticks, D), raised by spell power; the spell levels of the help file (Kelpa Stone curse at level 2, Warlock Quake at 2)
-count from 1, ours from 0. The raised zombies crumble after 2,100 ticks (a mod choice).
+count from 1, ours from 0. The raised zombies stay until killed: the only timed units in the original are the Fake
+spell's illusions (unit flag 0x10 and a lifetime from Fake's 0x1ec, counted down every 32 ticks; C, `0x4792c2`,
+`FUN_0046089a`).
 
 ## Open
 
