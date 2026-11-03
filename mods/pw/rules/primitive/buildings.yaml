@@ -358,7 +358,8 @@ primitive-trap:
 		DetectionTypes: Invisible
 		RequiresCondition: !constructing
 	Cloak:
-		CloakStyle: None
+		CloakStyle: Alpha
+		CloakedAlpha: 0.55
 		DetectionTypes: Invisible
 		InitialDelay: 0
 		UncloakOn: None

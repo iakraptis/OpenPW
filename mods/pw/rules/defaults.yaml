@@ -791,14 +791,16 @@
 		RequiresCondition: morale
 
 # Invisibility (Pw.exe: .chr 0x1f8 bit 0x2 makes a unit invisible from the start, unit flag 0x40; the check is
-# 0x4682e0): the Trap, Pixie, MudMan and DeathEye. Its owner and allies see it as usual; anyone else only where one
-# of their detectors is near (DetectCloaked, type Invisible). Attacking doesn't reveal it.
+# 0x4682e0): the Trap, Pixie, MudMan and DeathEye. Its owner and allies see it, see-through (as the original's shaded
+# look); anyone else only where one of their detectors is near (DetectCloaked, type Invisible). Attacking doesn't
+# reveal it.
 # Detectors (.chr 0x1f8 bit 0x1: Revolver, TwinRhamphos, Pixie, DeathEye, Trap, Ascomoid; and the StoneTower, Bubble
 # and Volcano once their detection is researched, 0x46832b) detect over their whole sight: each sets DetectCloaked
 # with its sight range.
 ^Invisible:
 	Cloak:
-		CloakStyle: None
+		CloakStyle: Alpha
+		CloakedAlpha: 0.55
 		DetectionTypes: Invisible
 		InitialDelay: 0
 		UncloakOn: None
