@@ -4,19 +4,23 @@ A restoration of **Primitive Wars** (Legend of the Land, Wizard Soft, 2001) on t
 engine, built with the OpenRA Mod SDK (engine `release-20250330`).
 
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
-converts them from your own copy of the game (the terrain and maps so far; the art and sounds are next).
+converts the art, sounds, terrain and maps from your own copy of the game.
 
 ## Status
 
-Early work. The original file formats are decoded and documented in [docs/formats/](docs/formats/):
+Skirmish is playable with all four races, against other players or the AI:
 
-- `.trc` archives;
-- `.chr` units and buildings, with their stats, animations and sounds;
-- `.trt` terrain;
-- `.jw2` maps;
-- `.doo` doodads.
+- **Primitive**, **Tyrano**, **Demon** and **Elf**, each with its units, buildings, research and the race's own
+  mechanics: the Primitive Blacksmith's items and the Chief, Tyrano merging and disguise, Demon kill points, and
+  the Elves' and Demons' spells;
+- the 17 original multiplayer maps, with their terrain, berry bushes and wild dinosaurs;
+- levels, invisibility and detection as in the original, plus hunting and meat as new mechanics;
+- each race's original interface bar and the original main menu;
+- Normal and Hard AI.
 
-The mod itself is still an empty skeleton. See [plan.md](plan.md) for the roadmap.
+Not yet: music, the campaign, and an installer screen inside the game (the conversion runs from the command line).
+The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
+original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
 
 ## Building and running
 

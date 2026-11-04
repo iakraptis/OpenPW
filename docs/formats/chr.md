@@ -100,7 +100,7 @@ Every row decodes to exactly `width` pixels.
 |---|---|
 | 0 | Never drawn (transparency is a skip run) |
 | 1 | Shadow (`255, 0, 255`); drawn translucent by the game |
-| 245–254 | Player colour ramp (bright green in the files), seen in the Primitive units and buildings. To confirm for the other races |
+| 245–254 | Player colour ramp (bright green in the files), the same for all four races (seen in game) |
 
 The game draws to a 16-bit screen: each type's palette is converted once, index 1 halves the pixel under it, and
 the others are copied (`FUN_0045ac5b`).
