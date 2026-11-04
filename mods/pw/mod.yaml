@@ -13,6 +13,8 @@ FileSystem: DefaultFileSystem
 		~^SupportDir|Content/pw/: content
 		# Sounds (weapons, voices) are referred to by file name.
 		~content|sounds
+		# The music (music/pw.yaml) likewise.
+		~content|music
 
 MapFolders:
 	pw|maps: System
@@ -21,7 +23,7 @@ MapFolders:
 Assemblies: OpenRA.Mods.Common.dll, OpenRA.Mods.Pw.dll
 
 AssetBrowser:
-	AudioExtensions: .wav
+	AudioExtensions: .wav, .mp3
 	SpriteExtensions: .png
 	VideoExtensions:
 
@@ -42,7 +44,7 @@ MapGrid:
 
 SpriteFormats: PngSheet
 
-SoundFormats: Wav
+SoundFormats: Wav, Mp3
 
 TerrainFormat: DefaultTerrain
 

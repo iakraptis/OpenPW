@@ -600,8 +600,9 @@ dead.
   - Not done: Blacksmith items, a second main building near far bushes, Tyrano merging and disguise, the Demon and
     Elf spells (`PwAbilityBotModule` only casts Fall out), training the unarmed casters and scouts (Warlock,
     Unicorn, Pixie, ManaSpread). In the four-way `bot-test`, Primitive's AI clearly beats the others.
-- Sound effects and voices: the original's are in (Phase 3). Not done: music (JW2_15 holds 19 MP3 tracks; the
-  engine's `Mp3Loader` can play them, the mod lists only `SoundFormats: Wav`).
+- Sound effects, voices and music: the original's are in. The music (JW2_15, 19 MP3s) plays as `Pw.exe` plays it:
+  the title in the menus, the player's race start tune and battle tracks in a game, victory and defeat at the end
+  (docs/game/rules.md, Music). Four tracks the skirmish game never plays (6, 9, 12, 18) are installed by number.
 
 ### Phase 8: Release
 - Windows installer and portable zip (OpenSYW `packaging/`, GitHub release workflow). Only files that git tracks

@@ -37,7 +37,12 @@
 		Name: faction-demon.name
 		Description: faction-demon.description
 	LoadWidgetAtGameStart:
+	# The music the way Pw.exe plays it (docs/game/rules.md, Music): the player's race start tune, then the race's two
+	# battle tracks in turn (PwRaceMusic on world); victory and defeat tunes at the end. The menu plays the title
+	# (maps/shellmap).
 	MusicPlaylist:
+		VictoryMusic: victory
+		DefeatMusic: defeat
 	ScreenMap:
 	Selection:
 	PwTerrainRenderer:
@@ -69,6 +74,18 @@
 
 world:
 	Inherits: ^baseworld
+	# The player's race music (MusicPlaylist in ^baseworld).
+	PwRaceMusic:
+		Start:
+			primitive: primitive-start
+			elf: elf-start
+			tyrano: tyrano-start
+			demon: demon-start
+		Battle:
+			primitive: primitive-1, primitive-2
+			elf: elf-1, elf-2
+			tyrano: tyrano-1, tyrano-2
+			demon: demon-1, demon-2
 	ColorPickerManager:
 		PreviewActor: placeholder.colorpicker
 	CreateMapPlayers:
