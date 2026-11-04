@@ -1,0 +1,90 @@
+
+
+# The original music (JW2_15), written by the installer's music stage as music/<name>.mp3 (AssetInstaller/Music.cs).
+# The race tracks and track 18 are in the music player's playlist; the menu, start, victory and defeat tunes and
+# the tracks the game never plays are hidden.
+title:
+	Title: Primitive Wars
+	Extension: mp3
+	Hidden: true
+
+primitive-1:
+	Title: Primitive I
+	Extension: mp3
+
+primitive-2:
+	Title: Primitive II
+	Extension: mp3
+
+victory:
+	Title: Victory
+	Extension: mp3
+	Hidden: true
+
+elf-1:
+	Title: Elf I
+	Extension: mp3
+
+elf-2:
+	Title: Elf II
+	Extension: mp3
+
+track-06:
+	Title: Track 6
+	Extension: mp3
+	Hidden: true
+
+tyrano-1:
+	Title: Tyrano I
+	Extension: mp3
+
+tyrano-2:
+	Title: Tyrano II
+	Extension: mp3
+
+track-09:
+	Title: Track 9
+	Extension: mp3
+	Hidden: true
+
+demon-1:
+	Title: Demon I
+	Extension: mp3
+
+demon-2:
+	Title: Demon II
+	Extension: mp3
+
+track-12:
+	Title: Track 12
+	Extension: mp3
+	Hidden: true
+
+primitive-start:
+	Title: Primitive Start
+	Extension: mp3
+	Hidden: true
+
+elf-start:
+	Title: Elf Start
+	Extension: mp3
+	Hidden: true
+
+tyrano-start:
+	Title: Tyrano Start
+	Extension: mp3
+	Hidden: true
+
+demon-start:
+	Title: Demon Start
+	Extension: mp3
+	Hidden: true
+
+defeat:
+	Title: Defeat
+	Extension: mp3
+	Hidden: true
+
+track-18:
+	Title: Track 18
+	Extension: mp3

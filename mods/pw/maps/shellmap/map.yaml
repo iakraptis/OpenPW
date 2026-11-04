@@ -28,3 +28,9 @@ Players:
 		Faction: Random
 
 Actors:
+
+Rules:
+	world:
+		MusicPlaylist:
+			BackgroundMusic: title
+			AllowMuteBackgroundMusic: true

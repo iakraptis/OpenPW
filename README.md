@@ -16,9 +16,10 @@ Skirmish is playable with all four races, against other players or the AI:
 - the 17 original multiplayer maps, with their terrain, berry bushes and wild dinosaurs;
 - levels, invisibility and detection as in the original, plus hunting and meat as new mechanics;
 - each race's original interface bar and the original main menu;
+- the original music, by race;
 - Normal and Hard AI.
 
-Not yet: music, the campaign, and an installer screen inside the game (the conversion runs from the command line).
+Not yet: the campaign, and an installer screen inside the game (the conversion runs from the command line).
 The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
 original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
 

@@ -224,6 +224,27 @@ count from 1, ours from 0. The raised zombies stay until killed: the only timed 
 spell's illusions (unit flag 0x10 and a lifetime from Fake's 0x1ec, counted down every 32 ticks; C, `0x4792c2`,
 `FUN_0046089a`).
 
+## Music (`JW2_15`)
+
+`JW2_15` holds 19 MP3s (128 kbps, 44.1 kHz). Most of the names are masked; the named ones are `01af01`,
+`02af02`, `04elf01`, `05elf02`, `07ty01`, `08ty02`. `Pw.exe` plays them by entry number through Miles
+(`mss32.dll`, `Mp3dec.asi`), or CD audio track number + 2 when the MP3 decoder is missing (C, `FUN_00403b90`,
+`FUN_004621fa`). Races are numbered Primitive 0, Elf 1, Tyrano 2, Demon 3.
+
+| Entry | Length | Played |
+|---|---|---|
+| 0 | 59 s | the menus and the start of the program (C, `0x403e22`, `0x46883c`, `0x46a158`) |
+| 3 × race + 1, + 2 | 3-6 min | the battle: the two tracks of the player's race in turn, each time one ends (C, `FUN_00462150`) |
+| 13 + race | 40-106 s | the start of a game and the race choice (C, `FUN_004665f0`) |
+| 17 | 57 s | the score screen after a defeat (C, `FUN_00412230`, outcomes 1 and 3) |
+| 3 | 53 s | the score screen after a victory: the code plays `4 × race + 3`, which is 3 for Primitive but a battle track for the others, so the mod plays 3 for every race (D) |
+| 6, 9, 12, 18 | 21-175 s | not played by the skirmish game; perhaps the campaign |
+
+In the mod (`MusicPlaylist`, `PwRaceMusic`, `music/pw.yaml`): the installer writes them as `music/<name>.mp3`
+(`AssetInstaller/Music.cs`). The menu plays track 0; a game plays the race's start tune and then its battle
+tracks, and the victory or defeat tune at the end. The battle tracks and track 18 are in the music player; the
+others are hidden. Observers hear the plain playlist.
+
 ## Open
 
 None of these affect the races' play:
