@@ -452,9 +452,9 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
   - `SubtractArmorDamage` is area damage like the engine's `SpreadDamage` (as OpenSYW's arrows): projectiles hurt
     what they land near, full within 100, then 37/14/5%. Melee keeps a near-zero spread; splash weapons keep full
     damage within the original radius (`Range: 0, r, r+64`, `Falloff: 100, 100, 0`).
-  - Every projectile flies 710/576 (about 1.23x) faster than the original: arrows at OpenSYW's arrow speed in real
-    time. Bullets still don't follow their target: a fast creature (Galimimus, 2.6 cells/s) still dodges about
-    half the arrows. Homing projectiles are the open option.
+  - Every projectile flies twice as fast as in the original (2026-11-04; before, 710/576 faster: OpenSYW's arrow
+    speed). Bullets still don't follow their target, so fast creatures dodge some; homing projectiles are the open
+    option.
   - Units scan 5 cells and attack enemies on their own (`AttackAnything`), as OpenSYW's infantry.
   - The Squadron's shot has no impact effect (only its two spears).
 - [x] **Effects** (2026-11-02): glowing art (fire, sparks, magic) is painted on black; drawn opaque it showed black
@@ -476,7 +476,7 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
     with its own players; its script has `At(x, y)` for its cells, and its checks carry its name. New checks go into
     the section of their theme.
   - `bot-test` (written by the installer's `TestMaps.cs`) is one battle of the four races' Normal AIs on (4) The X
-    Cross, all against all, stopped at 25,000 ticks.
+    Cross, all against all, played out to 40,000 ticks at most.
 
 ### Phase 4: Asset installer
 Started 2026-10-31: `install-assets.cmd` / `.sh` run `utility pw --install-assets [GAME_FOLDER] [--out] [--only]
@@ -592,12 +592,15 @@ dead.
   - AI units also auto-target predators (`AutoTargetPriority@PREDATORS`, target type `Predator`, condition
     `bot-owned`); players' units don't.
   - Tests: `bot-test` (the four races' Normal AIs, all against all, on the converted (4) The X Cross, written by
-    the installer's `TestMaps.cs`, stopped at 25,000 ticks) and `bot-modules-test` (the ability, defence, hunting
-    and transport modules).
+    the installer's `TestMaps.cs`, played out to 40,000 ticks at most, then the standings) and `bot-modules-test`
+    (the ability, defence, hunting, transport and merge modules).
   - Tyrano (2026-11-03): the modules play it from its traits. `IsHouse` now needs more than 1 population, because
     the Nisdos (1 population, no queue) counted as houses and were never built as tech. The squad manager lists and
     the weights include it.
-  - Not done: Blacksmith items, a second main building near far bushes, Tyrano merging and disguise, the Demon and
+  - Tyrano merging (2026-11-04, `PwMergeBotModule`): units waiting at the base merge into TwinVelocis and Mutants
+    (and one TwinRhamphos), the Mutant Morphosis research first; merged units have more health than in the original. The
+    ground mutations (armour, weapon) are researched before more units (`PriorityResearch`).
+  - Not done: Blacksmith items, a second main building near far bushes, Tyrano disguise, the Demon and
     Elf spells (`PwAbilityBotModule` only casts Fall out), training the unarmed casters and scouts (Warlock,
     Unicorn, Pixie, ManaSpread). In the four-way `bot-test`, Primitive's AI clearly beats the others.
 - Sound effects, voices and music: the original's are in. The music (JW2_15, 19 MP3s) plays as `Pw.exe` plays it:
@@ -622,7 +625,7 @@ dead.
 - Before trusting `--check-yaml`, read OpenSY `Plan.md` §8.2: several missing world/player traits crash only at
   runtime (here so far: `GrantConditionOnPrerequisiteManager`, `PlayerRadarTerrain`).
 - Run only the test maps a change touches (`python run_tests.py --no-build --only a-test,b-test`); the whole suite
-  (with the bot battle, up to 25,000 ticks) only when asked or before a merge. `make.cmd check` (style) and
+  (with the bot battle, up to 40,000 ticks) only when asked or before a merge. `make.cmd check` (style) and
   `make.cmd test` (YAML lint) before every commit.
 - `research/tools/shot.ps1` screenshots the game; call it from PowerShell as `& ./research/tools/shot.ps1 ...`
   (with `powershell -File` array arguments break): `-Map <map|menu>`, `-Clicks`, `-Hover`, `-Wheel`, `-Burst`,
@@ -646,7 +649,7 @@ dead.
 1. Being **faithful to the original is not required**: it is the reference, and balance or feel changes are welcome
    (bushes regrow, faster missiles, hunting and meat sharing are new designs).
 2. The tick stays the original's **71 ms**, so rule values stay in original ticks; speed changes are made in real
-   time (e.g. missiles x 710/576).
+   time (e.g. missiles x 2).
 3. The launcher asks for **desktop OpenGL** (`Graphics.GLProfile=Modern`): on Windows the engine otherwise picks
    ANGLE, whose texture readback crashed the game at start.
 4. Bots are **trait-driven**, so they play future factions without code changes.

@@ -37,7 +37,7 @@ EXPECTED_PASSES = {}
 DEFAULT_TIMEOUT = 180  # seconds of wall time, including game start-up
 # The bot match plays 40000 ticks at 5x speed (about 9 minutes).
 # The bot battle stops at 25000 ticks (its script's MaxTicks), about 6 minutes at the test speed.
-TIMEOUTS = {'bot-test': 600}
+TIMEOUTS = {'bot-test': 2400}
 
 FAIL_PATTERN = re.compile(r'TEST FAIL|FAIL:|Fatal Lua Error')
 

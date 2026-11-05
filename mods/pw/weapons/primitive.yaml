@@ -26,7 +26,7 @@ ThrowBomb:
 	Projectile: Bullet
 		Image: weapon-throw-bomb
 		Sequences: flight
-		Speed: 592
+		Speed: 960
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 45
 		# Splash: full damage within the original radius (1c512).
@@ -46,7 +46,7 @@ SoldierArrow:
 	Projectile: Bullet
 		Image: weapon-soldier-arrows
 		Sequences: flight
-		Speed: 710
+		Speed: 1152
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-soldier-arrows-0.wav
@@ -91,7 +91,7 @@ ShootSword:
 	Projectile: Bullet
 		Image: weapon-shoot-sword-sprit
 		Sequences: flight
-		Speed: 710
+		Speed: 1152
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground
 		Damage: 45
@@ -117,7 +117,7 @@ BowMachineArrow:
 	Projectile: Bullet
 		Image: weapon-bow-machine-arrows
 		Sequences: flight
-		Speed: 710
+		Speed: 1152
 		LaunchAngle: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
@@ -149,7 +149,7 @@ Stone:
 	Projectile: Bullet
 		Image: weapon-stone
 		Sequences: flight
-		Speed: 789
+		Speed: 1280
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40
@@ -180,7 +180,7 @@ SquadronShot:
 	Projectile: Bullet
 		Image: weapon-squadron-shoot
 		Sequences: flight
-		Speed: 868
+		Speed: 1408
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-squadron-shoot-0.wav
@@ -194,7 +194,7 @@ PhantomFire:
 	Projectile: Bullet
 		Image: weapon-phantom-fire
 		Sequences: flight
-		Speed: 631
+		Speed: 1024
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 75
 		# Splash: full damage within the original radius (1c512).

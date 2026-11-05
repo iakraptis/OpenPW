@@ -1,8 +1,7 @@
 # Weapon templates (plan.md §3.3). Concrete weapons set damage (the unit's attack), range, reload and projectile
 # speed only. Original values convert as: pixels x 32 = WDist (32 px = 1c0), ticks = ticks.
-# Projectile speeds are the original's x 710/576 (about 1.23): the arrows fly at OpenSYW's arrow speed in real time
-# (400 per 40 ms tick = 710 per our 71 ms tick, about 9.8 cells a second; the original's 576 let moving targets walk
-# out of the way), and every other missile faster by the same share.
+# Projectile speeds are twice the original's (the mod's): an arrow of 18 px a tick flies 1152 (about 16 cells a
+# second); at the original's speed moving targets walked out of the way.
 # Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
 
 # Hits strike the target actor itself (TargetActorCenter). A projectile flies to where the target was and damages what

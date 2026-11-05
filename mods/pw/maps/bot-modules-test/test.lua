@@ -1,4 +1,4 @@
--- Test: Bot modules. Merged from bot-ability-test, bot-defence-test, bot-hunting-test, bot-transport-test (research/tools/merge_tests.py): each is a section of
+-- Test: Bot modules. Merged from bot-ability-test, bot-defence-test, bot-hunting-test, bot-transport-test (research/tools/merge_tests.py), plus bot-merge-test: each is a section of
 -- this map, 54 cells from the next, with its own players; At(x, y) is a cell of the section. A
 -- section's checks carry its name.
 local BaseCheck, BaseWaitFor, BaseFinish = Check, WaitFor, FinishWhenDone
@@ -138,6 +138,37 @@ do
     Watch = function()
         if not revolver.IsDead and revolver.PassengerCount > aboard then aboard = revolver.PassengerCount end
         if not finished then Trigger.AfterDelay(10, Watch) end
+    end
+    Sections[#Sections + 1] = WorldLoaded
+end
+
+-- bot-merge-test
+do
+    local function At(x, y) return CPos.New(x + 0, y + 108) end
+    local function Check(ok, message) return BaseCheck(ok, "BotMerge: " .. message) end
+    local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotMerge: " .. message, timeout, cond, andThen) end
+    local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
+    local WorldLoaded, raider
+    -- The AI merges Tyrano units (PwMergeBotModule). Raider, a Normal Tyrano AI, has a TyranoNest, a LandNest, an
+    -- UpgradeNest and a SkyNisdos, with two Velocis and a Dilophos, a Pteras and a Trices waiting by them. Its
+    -- population is over the cap, so it trains nothing; it has berries for research.
+    -- 1. The bot merges the two Velocis into a TwinVelocis (the LandNest allows it).
+    -- 2. It researches Mutant Morphosis, which the Mutant needs.
+    -- 3. It merges the Dilophos, the Pteras and the Trices into a Mutant.
+    WorldLoaded = function()
+        raider = Player.GetPlayer("BotMergeRaider")
+        raider.Cash = 5000
+
+        WaitFor("the bot merges its two Velocis into a TwinVelocis", 3000, function()
+            return #raider.GetActorsByType("tyrano-twinvelocis") == 1 and #raider.GetActorsByType("tyrano-velocis") == 0
+        end)
+        WaitFor("the bot researches Mutant Morphosis", 10000, function()
+            return PwTest.Researched(raider, "tyrano-upgrade-mutant-morphosis-1")
+        end)
+        WaitFor("the bot merges the Dilophos, Pteras and Trices into a Mutant", 12000, function()
+            return #raider.GetActorsByType("tyrano-mutant") == 1 and #raider.GetActorsByType("tyrano-pteras") == 0
+        end)
+        FinishWhenDone("BOT MERGE", 12500)
     end
     Sections[#Sections + 1] = WorldLoaded
 end

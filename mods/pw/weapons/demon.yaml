@@ -1,5 +1,5 @@
 # Demon weapons (docs/game/demon.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack
-# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 710/576
+# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 2
 # (weapons/defaults.yaml). Weapons with no flight frames strike at once (InstantHit) and show their impact art.
 
 InsectHit:
@@ -15,7 +15,7 @@ SkeletonArrow:
 	Projectile: Bullet
 		Image: weapon-skeleton-arrows
 		Sequences: flight
-		Speed: 710
+		Speed: 1152
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 22
 	Report: weapon-skeleton-arrows-0.wav
@@ -73,7 +73,7 @@ KingDemonFire:
 	Projectile: Bullet
 		Image: weapon-kingdemon-fire
 		Sequences: flight
-		Speed: 710
+		Speed: 1152
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 	Report: weapon-kingdemon-fire-0.wav
@@ -89,7 +89,7 @@ NoiseWave:
 	Projectile: Bullet
 		Image: weapon-noise-wave
 		Sequences: flight
-		Speed: 789
+		Speed: 1280
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 26
 	Report: weapon-noise-wave-0.wav
@@ -129,7 +129,7 @@ VolcanoShot:
 	Projectile: Bullet
 		Image: weapon-volcano
 		Sequences: flight
-		Speed: 789
+		Speed: 1280
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40

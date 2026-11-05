@@ -11,7 +11,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
 {
@@ -55,6 +57,27 @@ namespace OpenRA.Mods.Pw.Traits
 		{
 			var resources = player.PlayerActor.Trait<PlayerResources>();
 			return resources.Cash + resources.Resources;
+		}
+
+		// Starts a research the bot needs (to unlock an ability or a merge), from whichever of its queues offers it,
+		// queued behind whatever the queue is making (the unit builder only adds to idle queues).
+		public static void Research(World world, Player player, IBot bot, string upgrade, string reason)
+		{
+			var queues = world.ActorsWithTrait<ProductionQueue>()
+				.Where(q => q.Actor.Owner == player && !q.Actor.IsDead && q.Trait.Enabled && IsComplete(q.Actor)).ToList();
+			if (queues.Any(q => q.Trait.AllQueued().Any(i => i.Item == upgrade)))
+				return;
+
+			foreach (var q in queues)
+			{
+				var item = q.Trait.BuildableItems().FirstOrDefault(i => i.Name == upgrade);
+				if (item != null && Cash(player) >= Cost(item))
+				{
+					AIUtils.BotDebug("{0}: researching {1} for {2}.", player, upgrade, reason);
+					bot.QueueOrder(Order.StartProduction(q.Actor, upgrade, 1));
+					return;
+				}
+			}
 		}
 	}
 }

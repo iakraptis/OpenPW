@@ -166,6 +166,18 @@ unit's health share and their own levels. If one of them is lost, ordered elsewh
 ticks, nothing happens. The population adds up (TwinVelocis 4 = 2 + 2, Mutant 11 = 2 + 4 + 5); a TwinRhamphos takes 2
 of its parts' 4.
 
+The original's merged units are weaker than their parts together: two Velocis have 400 HP and deal 35 every 29
+ticks each, a TwinVelocis 350 HP and 55 every 40; the Mutant's 550 HP and 100 every 64 (with splash) are below its
+three parts' 730 HP and their three weapons. The mod evens it out: TwinVelocis 400 HP and 60 damage, Mutant 900 HP.
+The TwinRhamphos has no attack (`.chr` attack 0 and no weapon; the help file lists it with no ground or sky attack):
+it is a scout, and a detector.
+
+The AI (`PwMergeBotModule`) merges the Tyrano units waiting at its base that aren't in an attack or defence squad:
+every TwinVelocis and Mutant it can, the closest parts together, and one TwinRhamphos to see invisible units. With a
+part of the Mutant and no Mutant Morphosis, it researches it. Its Ground Dino Mutation Armor and Weapon research come
+before more units once it has four (`PwUnitBuilderBotModule.PriorityResearch`): Tyrano units have no armour of their
+own.
+
 ## Disguise (Tyrano)
 
 The help file (Special Abilities): "Tyranos are mutated dinosaurs. They have the ability to revert to their original
