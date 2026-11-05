@@ -93,11 +93,11 @@ weapon-wizard-firebolt:
 	flight:
 		Facings: -8
 		Length: 1
-		Frames: 7, 0, 1, 2, 3, 4, 5, 6
+		Frames: 27, 20, 21, 22, 23, 24, 25, 26
 		Tick: 160
 		BlendMode: Screen
 	impact:
-		Start: 8
+		Start: 28
 		Length: 10
 		Scale: 0.5
 		Tick: 160
@@ -107,11 +107,12 @@ weapon-redbolt:
 	Defaults:
 		Filename: effects/weapon-redbolt.png
 	flight:
+		Start: 10
 		Length: 10
 		Tick: 160
 		BlendMode: Screen
 	impact:
-		Start: 10
+		Start: 20
 		Length: 11
 		Scale: 0.5
 		Tick: 160
@@ -121,11 +122,12 @@ weapon-whitebolt:
 	Defaults:
 		Filename: effects/weapon-whitebolt.png
 	flight:
+		Start: 11
 		Length: 10
 		Tick: 160
 		BlendMode: Screen
 	impact:
-		Start: 10
+		Start: 21
 		Length: 10
 		Scale: 0.5
 		Tick: 160
@@ -179,11 +181,11 @@ weapon-angelring:
 	flight:
 		Facings: -8
 		Length: 3
-		Frames: 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+		Frames: 30, 31, 32, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
 		Tick: 160
 		BlendMode: Screen
 	impact:
-		Start: 24
+		Start: 33
 		Length: 16
 		Scale: 0.5
 		Tick: 160
@@ -364,7 +366,7 @@ weapon-bubble:
 	impact:
 		Start: 3
 		Length: 36
-		Scale: 0.5
+		Scale: 0.25
 		Tick: 80
 
 weapon-ascomoid:

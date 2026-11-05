@@ -64,8 +64,11 @@ weapon one's name).
 ## Look
 
 Elf buildings are conjured: being built, the finished building fades in while the Elf Build sparks play over it;
-destroyed, it fades out under the same sparks (`PwConjured`). The Wizard gathering at a bush shows its blue glow
-(Berry fly's caster frames) while the berries fly to the Heaven.
+destroyed, it fades out under the same sparks (`PwConjured`). The Wizard starts its attack animation at a bush, holds
+the middle casting pose while gathering, then keeps casting toward the berry as it flies to the Heaven. It watches the
+berry until it arrives before starting the next gathering cycle. During gathering the Wizard channels a lightning beam
+to the bush; during building it stays beside the site and channels a beam into it instead of entering it. The gathering
+beam stops while the berry flies. The Bubble Tower's water impact is drawn at half its previous size.
 
 ## AI
 

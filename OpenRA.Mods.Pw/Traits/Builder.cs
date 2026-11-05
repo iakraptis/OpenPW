@@ -30,6 +30,13 @@ namespace OpenRA.Mods.Pw.Traits
 		[VoiceReference]
 		public readonly string Voice = "Action";
 
+		[Desc("The worker remains in the world and builds from EnterRange instead of entering the building.")]
+		public readonly bool WorksFromRange = false;
+
+		[GrantedConditionReference]
+		[Desc("Condition granted while working from range.")]
+		public readonly string WorkCondition = "building";
+
 		public override object Create(ActorInitializer init) { return new Builder(this); }
 	}
 
@@ -82,7 +89,7 @@ namespace OpenRA.Mods.Pw.Traits
 			if (order.OrderString == ResumeOrderID)
 			{
 				if (order.Target.Type == TargetType.Actor && CanResume(self, order.Target.Actor))
-					self.QueueActivity(order.Queued, new ConstructBuilding(order.Target.Actor));
+					self.QueueActivity(order.Queued, new ConstructBuilding(order.Target.Actor, this));
 
 				return;
 			}
@@ -120,7 +127,7 @@ namespace OpenRA.Mods.Pw.Traits
 					new UnderConstructionInit(),
 				});
 
-				self.QueueActivity(false, new ConstructBuilding(site));
+				self.QueueActivity(false, new ConstructBuilding(site, this));
 			});
 		}
 

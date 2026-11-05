@@ -452,9 +452,9 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
   - `SubtractArmorDamage` is area damage like the engine's `SpreadDamage` (as OpenSYW's arrows): projectiles hurt
     what they land near, full within 100, then 37/14/5%. Melee keeps a near-zero spread; splash weapons keep full
     damage within the original radius (`Range: 0, r, r+64`, `Falloff: 100, 100, 0`).
-  - Every projectile flies twice as fast as in the original (2026-11-04; before, 710/576 faster: OpenSYW's arrow
-    speed). Bullets still don't follow their target, so fast creatures dodge some; homing projectiles are the open
-    option.
+  - Projectile speeds were raised by 50% from their previous values on 2026-11-05 (listed missiles now fly three
+    times as fast as in the original). Bullets still don't follow their target, so fast creatures dodge some; homing
+    projectiles are the open option.
   - Units scan 5 cells and attack enemies on their own (`AttackAnything`), as OpenSYW's infantry.
   - The Squadron's shot has no impact effect (only its two spears).
 - [x] **Effects** (2026-11-02): glowing art (fire, sparks, magic) is painted on black; drawn opaque it showed black

@@ -29,6 +29,9 @@ namespace OpenRA.Mods.Pw.Effects
 		readonly Animation anim;
 		WPos pos;
 
+		public WPos Position => pos;
+		public bool IsComplete { get; private set; }
+
 		public BerryFlight(World world, WPos from, Actor dropOff, Player owner, int amount, string image, string sequence, string palette, int speed)
 		{
 			this.world = world;
@@ -66,7 +69,14 @@ namespace OpenRA.Mods.Pw.Effects
 			world.ScreenMap.Update(this, pos, anim.Image);
 		}
 
-		void Remove() => world.AddFrameEndTask(w => { w.Remove(this); w.ScreenMap.Remove(this); });
+		void Remove()
+		{
+			if (IsComplete)
+				return;
+
+			IsComplete = true;
+			world.AddFrameEndTask(w => { w.Remove(this); w.ScreenMap.Remove(this); });
+		}
 
 		public IEnumerable<IRenderable> Render(WorldRenderer wr)
 		{

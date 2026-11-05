@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Berries per trip (12 in the original; the gathering upgrade adds 4).")]
 		public readonly int Amount = 12;
 
-		[Desc("Ticks of gathering per trip: the length of the worker's gather animation (.chr group 4 sequence).")]
+		[Desc("Ticks of gathering per trip (default 48; the worker's gathering animation plays for this long).")]
 		public readonly int GatherTicks = 48;
 
 		[Desc("How far to look for another bush when one is empty.")]
@@ -39,6 +39,10 @@ namespace OpenRA.Mods.Pw.Traits
 		[GrantedConditionReference]
 		[Desc("Condition granted while carrying berries (the carrying animations).")]
 		public readonly string CarryingCondition = "carrying";
+
+		[GrantedConditionReference]
+		[Desc("Condition granted while berries fly to the drop-off.")]
+		public readonly string FlightCondition = "berry-flight";
 
 		[Desc("The worker stays at the bush and its berries fly to the main building (the Elf Wizard's Berry fly, JW2_11 ",
 			"record 16) instead of being carried there.")]
