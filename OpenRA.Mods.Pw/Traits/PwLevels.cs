@@ -11,6 +11,7 @@
 
 using System;
 using System.Linq;
+using OpenRA.Mods.Common.Effects;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Primitives;
 using OpenRA.Traits;
@@ -99,12 +100,19 @@ namespace OpenRA.Mods.Pw.Traits
 			if (amount <= 0 || Level >= info.MaxLevel)
 				return;
 
+			var previousLevel = Level;
 			Experience += amount;
 			while (Level < info.MaxLevel && Experience >= ExperiencePerLevel)
 			{
 				Experience -= ExperiencePerLevel;
 				Level++;
 			}
+
+			if (Level == previousLevel)
+				return;
+
+			Game.Sound.Play(SoundType.World, "spell-level-up-0.wav", self.CenterPosition);
+			self.World.AddFrameEndTask(w => w.Add(new SpriteEffect(self, w, "spell-level-up", "effect", "effect")));
 		}
 
 		Armament[] Armaments => armaments ??= self.TraitsImplementing<Armament>().ToArray();
