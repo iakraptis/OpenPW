@@ -550,6 +550,9 @@ namespace OpenRA.Mods.Pw.Traits
 				graves.RemoveAt(0);
 		}
 
+		// The graves dug no earlier than the tick (the AI looks where to raise the dead).
+		public IEnumerable<Grave> Recent(int since) => graves.Where(g => g.Tick >= since);
+
 		// The graves within the radius of the place, dug no earlier than the tick; they are emptied.
 		public List<Grave> Take(WPos pos, WDist radius, int since)
 		{

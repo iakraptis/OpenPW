@@ -593,16 +593,21 @@ dead.
     `bot-owned`); players' units don't.
   - Tests: `bot-test` (the four races' Normal AIs, all against all, on the converted (4) The X Cross, written by
     the installer's `TestMaps.cs`, played out to 40,000 ticks at most, then the standings) and `bot-modules-test`
-    (the ability, defence, hunting, transport and merge modules).
+    (the ability, defence, hunting, transport, merge and spell modules).
   - Tyrano (2026-11-03): the modules play it from its traits. `IsHouse` now needs more than 1 population, because
     the Nisdos (1 population, no queue) counted as houses and were never built as tech. The squad manager lists and
     the weights include it.
   - Tyrano merging (2026-11-04, `PwMergeBotModule`): units waiting at the base merge into TwinVelocis and Mutants
     (and one TwinRhamphos), the Mutant Morphosis research first; merged units have more health than in the original. The
     ground mutations (armour, weapon) are researched before more units (`PriorityResearch`).
-  - Not done: Blacksmith items, a second main building near far bushes, Tyrano disguise, the Demon and
-    Elf spells (`PwAbilityBotModule` only casts Fall out), training the unarmed casters and scouts (Warlock,
-    Unicorn, Pixie, ManaSpread). In the four-way `bot-test`, Primitive's AI clearly beats the others.
+  - Elf spells (2026-11-05, `PwSpellBotModule`): casters cast by what a spell does (blow on a unit, the one it
+    kills or the dearest; area blow or portal where 3+ enemies stand, Meteor 6+; Cure under 60% health; Shield on an
+    ally under fire, Mass temper over 3+; Fake near a fight; Resurrect where 2+ fell; Teleport home under 35%
+    health). Research that unlocks a spell comes first. The Unicorn and ManaSpread are trained (weights) and follow
+    the main group. `Spells` lists the Elf spells; the Demon spells use the same module once listed.
+  - Not done: Blacksmith items, a second main building near far bushes, Tyrano disguise, the Demon spells,
+    training the unarmed scouts and the Warlock (Pixie; Warlock once Demon spells are on). In the four-way
+    `bot-test`, Primitive's AI clearly beats the others.
 - Sound effects, voices and music: the original's are in. The music (JW2_15, 19 MP3s) plays as `Pw.exe` plays it:
   the title in the menus, the player's race start tune and battle tracks in a game, victory and defeat at the end
   (docs/game/rules.md, Music). Four tracks the skirmish game never plays (6, 9, 12, 18) are installed by number.

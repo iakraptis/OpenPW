@@ -78,7 +78,7 @@
 	ExternalCondition@PETRIFIED:
 		Condition: petrified
 	WithColoredOverlay@PETRIFIED:
-		Color: A0808080
+		Color: 808080A0
 		RequiresCondition: petrified
 	# Poison (weapons with ^Poison: the Dilophos's spit, the Venom arrow) stuns it for a moment: tinted green, it
 	# can't move or attack.
@@ -839,12 +839,15 @@
 ^Elf:
 
 # Elf buildings are conjured (the Wizard's Elf Build, JW2_11 record 17): they have no construction stages, so the
-# finished building is shown, shining while it appears.
+# finished building fades in while the Elf Build sparks play over it. Destroyed, it fades out under the same sparks.
 ^ElfBuilding:
 	WithConstructionStages:
 		Sequence: idle
-	WithColoredOverlay@CONJURE:
-		Color: 60FFFFFF
+	PwConjured:
+	WithIdleOverlay@CONJURE:
+		Image: spell-elf-build
+		Sequence: effect
+		Palette: effect
 		RequiresCondition: constructing
 
 # Tyrano disguise (PwDisguise; the help file's Special Abilities): once Disguise is researched, the unit can turn into

@@ -1,4 +1,4 @@
--- Test: Bot modules. Merged from bot-ability-test, bot-defence-test, bot-hunting-test, bot-transport-test (research/tools/merge_tests.py), plus bot-merge-test: each is a section of
+-- Test: Bot modules. Merged from bot-ability-test, bot-defence-test, bot-hunting-test, bot-transport-test (research/tools/merge_tests.py), plus bot-merge-test and bot-spell-test: each is a section of
 -- this map, 54 cells from the next, with its own players; At(x, y) is a cell of the section. A
 -- section's checks carry its name.
 local BaseCheck, BaseWaitFor, BaseFinish = Check, WaitFor, FinishWhenDone
@@ -169,6 +169,47 @@ do
             return #raider.GetActorsByType("tyrano-mutant") == 1 and #raider.GetActorsByType("tyrano-pteras") == 0
         end)
         FinishWhenDone("BOT MERGE", 12500)
+    end
+    Sections[#Sections + 1] = WorldLoaded
+end
+
+-- bot-spell-test
+do
+    local function At(x, y) return CPos.New(x + 54, y + 108) end
+    local function Check(ok, message) return BaseCheck(ok, "BotSpell: " .. message) end
+    local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotSpell: " .. message, timeout, cond, andThen) end
+    local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
+    local WorldLoaded, blue, enemies, raider, red, unicorn, white
+    -- The AI casts the Elves' spells (PwSpellBotModule). Raider, a Normal Elf AI, has a Heaven, a RedElf and a
+    -- BlueElf (both raised to level 1, which their spells need) and, far from the fight, a Unicorn beside a hurt
+    -- WhiteElf. Four enemy Powermen stand together 7 cells from the elves, holding fire.
+    -- 1. The RedElf casts Thunder bolt on a Powerman (its mana goes down).
+    -- 2. The BlueElf casts Drop stone on the group of Powermen.
+    -- 3. The Unicorn casts Cure on the hurt WhiteElf, which heals.
+    WorldLoaded = function()
+        raider = Player.GetPlayer("BotSpellRaider")
+        raider.Cash = 0
+        red = Map.NamedActor("BotSpellRedElf")
+        blue = Map.NamedActor("BotSpellBlueElf")
+        unicorn = Map.NamedActor("BotSpellUnicorn")
+        white = Map.NamedActor("BotSpellWhiteElf")
+        enemies = { }
+        for i = 0, 3 do enemies[#enemies + 1] = Map.NamedActor("BotSpellEnemy" .. i) end
+        PwTest.GiveExperience(red, 100)
+        PwTest.GiveExperience(blue, 100)
+        white.Health = white.MaxHealth / 4
+        local hurt = white.Health
+        Later(1, function()
+            for _, e in ipairs(enemies) do e.Stance = "HoldFire" end
+            white.Stance = "HoldFire"
+        end)
+
+        WaitFor("the RedElf casts Thunder bolt", 1500, function() return PwTest.Mana(red) < PwTest.MaxMana(red) end)
+        WaitFor("the BlueElf casts Drop stone on the Powermen", 1500, function() return PwTest.Mana(blue) < PwTest.MaxMana(blue) end)
+        WaitFor("the Unicorn casts Cure on the hurt WhiteElf", 1500, function()
+            return PwTest.Mana(unicorn) < PwTest.MaxMana(unicorn) and white.Health > hurt
+        end)
+        FinishWhenDone("BOT SPELL", 2000)
     end
     Sections[#Sections + 1] = WorldLoaded
 end

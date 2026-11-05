@@ -50,9 +50,18 @@ The same record in `JW2_11`, with different fields in use (D):
 | 0x1ec | A count: Rise death's zombies (3) (D) |
 | 0x1f4 | Duration (Mass temper 300, Meteo 160, Noxious gas 144) |
 | 0x1f8 | Radius in pixels (Quake 144, Suicide 160, Noxious gas 112) |
+| 0x208 | Flight frames (Berry fly 16: the berries; Resurrect 16) |
+| 0x20c | Effect frames, at the target |
+| 0x210, 0x22c | 0x22c = 1: the effect frames are three variants of 0x210 frames each (Shield 3 × 13, Meteo 3 × 21, Cure 3 × 15) |
+| 0x214, 0x218 | Ticks per caster frame, per flight frame (Berry fly's flight 9) |
 | 0x21c | Ticks per effect frame (4) |
 | 0x220 | Lifetime in ticks |
 | 0x8b8, 0x8bc | Number and list of the effect frames that hit (Noxious gas and Quake: every frame) (C, `0x478c1a`) |
+
+A spell's frames are, in order: the caster's (the frame count less the flight and effect frames: the Wizard's glow
+in its hands, 8 directions × 5 frames, in Berry fly and Elf Build; the ManaSpread's swirl in Meteo), the flight
+frames, then the effect frames (D, from the previews: each part is one animation). Most of the art is light painted on
+black, drawn with Screen blending in the mod; the berries, the dropped stone and the gas cloud are solid.
 
 The records are reached through a run-time offset table (`0xe9c678`, record *n* at `0xe9c798 + n × 0xadc`).
 

@@ -45,7 +45,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly bool FliesBerries = false;
 
 		[Desc("Art of the flying berries (image and sequence).")]
-		public readonly string FlightImage = "berry-fly";
+		public readonly string FlightImage = "spell-berry-fly";
 
 		[SequenceReference(nameof(FlightImage))]
 		public readonly string FlightSequence = "flight";

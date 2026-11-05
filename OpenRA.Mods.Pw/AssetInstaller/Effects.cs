@@ -21,7 +21,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// Weapon effects (JW2_12 .wpn, docs/formats/effect.md): each weapon's art becomes image weapon-<name> in
 	// effects/<image>.png with a "flight" sequence (the projectile: 8 facings x flight/8 frames when directional,
 	// otherwise a tumbling loop) and an "impact" sequence; its sounds become sounds/<image>-<n>.wav. The weapons in
-	// weapons/*.yaml reference them. The spells and abilities (JW2_11) become spell-<name>, all frames as "effect".
+	// weapons/*.yaml reference them. The spells and abilities (JW2_11) become spell-<name>, in parts (SpellSequences).
 	public static class Effects
 	{
 		const int Record = 0xadc;
@@ -119,10 +119,64 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					continue;
 
 				c.WriteFile($"effects/{image}.png", Units.Sheet(frames, palette));
-				spells.Append($"{image}:\n\teffect:\n\t\tFilename: effects/{image}.png\n\t\tLength: {frames.Count}\n\n");
+				spells.Append(SpellSequences(image, data, frames.Count));
 			}
 
 			c.RepoYaml("sequences/spells.yaml", spells.ToString());
+		}
+
+		// Spell art that is solid, not glowing light on black: the flying berries, the dropped stone, the gas cloud.
+		static readonly HashSet<string> SolidSpellParts = new()
+		{
+			"spell-berry-fly/flight", "spell-drop-stone/effect", "spell-noxious-gas/effect"
+		};
+
+		// Caster frames drawn in 8 directions.
+		static readonly HashSet<string> DirectionalCasts = new() { "spell-berry-fly", "spell-elf-build" };
+
+		// A spell record's frames are, in order: the caster's (the Wizard's glow while it works its magic, the
+		// ManaSpread's swirl), 0x208 flight frames, and 0x20c effect frames at the target, which are three variants of
+		// 0x210 frames each when 0x22c is 1 (docs/formats/effect.md). Each part plays at its own pace (0x214, 0x218,
+		// 0x21c ticks per frame); the glowing ones with Screen blending.
+		static string SpellSequences(string image, byte[] data, int count)
+		{
+			var flight = Math.Max(0, BitConverter.ToInt32(data, 0x208));
+			var impact = Math.Max(0, BitConverter.ToInt32(data, 0x20c));
+			var cast = Math.Max(0, count - flight - impact);
+			var variant = BitConverter.ToInt32(data, 0x22c) == 1 ? BitConverter.ToInt32(data, 0x210) : 0;
+			var variants = variant > 0 && impact == 3 * variant ? 3 : 1;
+			var part = variants == 3 ? variant : impact;
+
+			var yaml = new StringBuilder($"{image}:\n\tDefaults:\n\t\tFilename: effects/{image}.png\n");
+			void Part(string name, int start, int length, int tickOffset, string solidKey)
+			{
+				if (length <= 0)
+					return;
+
+				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {FrameTicks(data, tickOffset)}\n");
+				if (!SolidSpellParts.Contains($"{image}/{solidKey}"))
+					yaml.Append(Glow);
+			}
+
+			// The Wizard's glow (Berry fly, Elf Build): 8 directions of cast / 8 frames, ordered as the weapons' flights.
+			if (DirectionalCasts.Contains(image) && cast % 8 == 0)
+			{
+				var n = cast / 8;
+				var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n));
+				yaml.Append($"\tcast:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
+					$"\t\tTick: {FrameTicks(data, 0x214)}\n{Glow}");
+			}
+			else
+				Part("cast", 0, cast, 0x214, "cast");
+			Part("flight", cast, flight, 0x218, "flight");
+			for (var v = 0; v < variants; v++)
+				Part(v == 0 ? "effect" : $"effect-{v + 1}", cast + flight + v * part, part, 0x21c, "effect");
+
+			// Art that is all caster frames (Level up): its whole as the effect.
+			if (impact == 0 && flight == 0)
+				Part("effect", 0, cast, 0x214, "effect");
+
+			return yaml.Append('\n').ToString();
 		}
 
 		static IEnumerable<byte[]> Records(TrcArchive archive) =>

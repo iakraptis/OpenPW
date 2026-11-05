@@ -26,7 +26,7 @@ Players:
 		Name: Creeps
 		NonCombatant: True
 		Faction: Random
-		Enemies: BotAbilityRaider, BotAbilityTarget, BotDefenceRaider, BotDefenceTarget, BotHuntingRaider, BotHuntingTarget, BotTransportRaider, BotTransportTarget, BotMergeRaider
+		Enemies: BotAbilityRaider, BotAbilityTarget, BotDefenceRaider, BotDefenceTarget, BotHuntingRaider, BotHuntingTarget, BotTransportRaider, BotTransportTarget, BotMergeRaider, BotSpellRaider, BotSpellTarget
 	PlayerReference@Multi0:
 		Name: Multi0
 		Playable: True
@@ -77,6 +77,17 @@ Players:
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotTransportRaider, Creeps
+	PlayerReference@BotSpellRaider:
+		Name: BotSpellRaider
+		Bot: normal
+		Faction: elf
+		LockFaction: True
+		Enemies: BotSpellTarget, Creeps
+	PlayerReference@BotSpellTarget:
+		Name: BotSpellTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: BotSpellRaider, Creeps
 	PlayerReference@BotMergeRaider:
 		Name: BotMergeRaider
 		Bot: normal
@@ -184,6 +195,33 @@ Actors:
 	BotMergeTrices: tyrano-trices
 		Owner: BotMergeRaider
 		Location: 13,127
+	BotSpellRaiderHeaven: elf-heaven
+		Owner: BotSpellRaider
+		Location: 57,111
+	BotSpellRedElf: elf-redelf
+		Owner: BotSpellRaider
+		Location: 64,122
+	BotSpellBlueElf: elf-blueelf
+		Owner: BotSpellRaider
+		Location: 64,124
+	BotSpellUnicorn: elf-unicorn
+		Owner: BotSpellRaider
+		Location: 58,132
+	BotSpellWhiteElf: elf-whiteelf
+		Owner: BotSpellRaider
+		Location: 59,132
+	BotSpellEnemy0: primitive-powerman
+		Owner: BotSpellTarget
+		Location: 71,122
+	BotSpellEnemy1: primitive-powerman
+		Owner: BotSpellTarget
+		Location: 71,123
+	BotSpellEnemy2: primitive-powerman
+		Owner: BotSpellTarget
+		Location: 72,122
+	BotSpellEnemy3: primitive-powerman
+		Owner: BotSpellTarget
+		Location: 72,123
 
 Rules:
 	player:

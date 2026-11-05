@@ -60,3 +60,28 @@ weapon one's name).
 | 43 | Reduce Level Up Exp. | Heaven | 3 | 300/400/500 | 68 s/91 s/102 s | ability 2/2/2 | – | –/–/– |
 | 46 | Study Divine being's Weapon Secret | SkyLibrary | 3 | 300/500/800 | 170 s/204 s/85 s | attack 5/5/5 | Dragon, phoenix | –/–/– |
 | 47 | Study Divine being's Weapon Secret | SkyLibrary | 3 | 300/500/800 | 170 s/204 s/239 s | armour 5/5/5 | Dragon, phoenix | –/–/– |
+
+## Look
+
+Elf buildings are conjured: being built, the finished building fades in while the Elf Build sparks play over it;
+destroyed, it fades out under the same sparks (`PwConjured`). The Wizard gathering at a bush shows its blue glow
+(Berry fly's caster frames) while the berries fly to the Heaven.
+
+## AI
+
+The bots cast the Elf spells with `PwSpellBotModule` (rules/ai.yaml). They choose by what a spell does:
+
+| Spell | When |
+|---|---|
+| Thunder bolt | on the enemy unit it kills, otherwise the most expensive one |
+| Drop stone, Jump portal | where 3 or more enemy units stand within the radius |
+| Meteor (kills the ManaSpread) | where 6 or more enemy units stand |
+| Cure | on the most hurt ally under 60% health |
+| Shield | on an army unit under fire, without a shield |
+| Mass temper | over 3 or more unshielded army units, in a fight |
+| Fake | on the most expensive unit nearby, in a fight |
+| Resurrect | where 2 or more units fell lately |
+| Teleport | the Ranger flees home below 35% health, with enemies near |
+
+The research a spell needs (Study Fake, Study Meteor) is started once the bot has the caster. The unarmed casters
+(Unicorn, ManaSpread) are trained by weight, stay out of the attack squads, and follow the bot's main group.
