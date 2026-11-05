@@ -14,17 +14,19 @@ using System.Linq;
 using System.Reflection;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Mods.Common.Traits.Render;
 using OpenRA.Mods.Common.Widgets;
 using OpenRA.Mods.Common.Widgets.Logic;
 using OpenRA.Mods.Pw.Traits;
 using OpenRA.Primitives;
+using OpenRA.Traits;
 using OpenRA.Widgets;
 
 namespace OpenRA.Mods.Pw.Widgets.Logic
 {
 	// Puts the in-game interface on the race's bar (InterfaceBarWidget) every tick, so it follows any window size: the
-	// minimap in the hole, the selection panel on the left, the command panel's slots (two rows, scaled with the bar)
-	// on the right, and the bar's Menu, Allies and Msg buttons on the raised blocks with the original button art.
+	// minimap in the hole, the selection and unit-training panels on the left, the command panel's slots (two rows,
+	// scaled with the bar) on the right, and the bar's Menu, Allies and Msg buttons on the raised blocks with original art.
 	// Menu opens the game menu (OPTIONS_BUTTON, MenuButtonsChromeLogic); Allies the game info, Msg the chat. Also the
 	// berries (CASH) and population (POPULATION) counters at the top right.
 	public class InterfaceBarLogic : ChromeLogic
@@ -35,13 +37,17 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		// players; spectators get 0.5).
 		const float ZoomOutScale = 0.75f;
 		const int SlotRows = 2;
-		const int SelectionWidth = 330;
+		const int TrainingWidth = 48;
+		const int PanelGap = 6;
 
 		readonly World world;
 		readonly InterfaceBarWidget bar;
 		readonly RadarWidget radar;
 		readonly (Widget Icon, Widget Label)[] counters;
-		readonly Widget selection, commands;
+		readonly Widget selection, training, commands;
+		readonly SpriteWidget trainingIcon;
+		readonly ColorBlockWidget trainingProgressBack, trainingProgressFill;
+		float trainingProgress;
 		Rectangle radarArea;
 		readonly ButtonWidget[] slots;
 		readonly (ButtonWidget Button, string Area, string Image)[] buttons;
@@ -60,6 +66,16 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			radar = widget.Get<RadarWidget>("RADAR");
 			selection = widget.Get("SELECTION_PANEL");
+			training = widget.Get("TRAINING_PANEL");
+			trainingIcon = training.Get<SpriteWidget>("ICON");
+			trainingProgressBack = training.Get<ColorBlockWidget>("PROGRESS_BACK");
+			trainingProgressFill = training.Get<ColorBlockWidget>("PROGRESS_FILL");
+			training.Visible = true;
+			trainingIcon.Visible = false;
+			trainingProgressBack.Visible = false;
+			trainingProgressFill.Visible = false;
+			trainingIcon.GetScale = () => bar.Scale;
+			trainingIcon.GetSprite = () => null;
 			commands = widget.Get("COMMAND_PANEL");
 			slots = commands.Children.OfType<ButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
@@ -113,7 +129,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			Layout();
 		}
 
-		public override void Tick() => Layout();
+		public override void Tick()
+		{
+			UpdateTraining();
+			Layout();
+		}
 
 		static WidgetBounds Bounds(Rectangle r) => new(r.X, r.Y, r.Width, r.Height);
 
@@ -139,9 +159,23 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
 
-			// The selection panel keeps about the original's width (the bar's left part stretches with the window).
+			// Keep a fixed selection area and reserve the training column at the far right.
 			var left = bar.Area("left-panel");
-			selection.Bounds = new WidgetBounds(left.X, left.Y, Math.Min(left.Width, (int)(SelectionWidth * bar.Scale)), left.Height);
+			var panelGap = (int)(PanelGap * bar.Scale);
+			var trainingWidth = Math.Min((int)(TrainingWidth * bar.Scale), Math.Max(0, left.Width));
+			var selectionWidth = Math.Max(0, left.Width - trainingWidth - panelGap);
+			selection.Bounds = new WidgetBounds(left.X, left.Y, selectionWidth, left.Height);
+			training.Bounds = new WidgetBounds(left.Right - trainingWidth, left.Y, trainingWidth, left.Height);
+			var trainingIconSize = Math.Min((int)(38 * bar.Scale), Math.Max(0, trainingWidth - (int)(4 * bar.Scale)));
+			trainingIcon.Bounds = new WidgetBounds((trainingWidth - trainingIconSize) / 2,
+				(left.Height - trainingIconSize) / 2 - (int)(3 * bar.Scale), trainingIconSize, trainingIconSize);
+			var progressWidth = Math.Min((int)(42 * bar.Scale), trainingWidth);
+			var progressHeight = Math.Max(3, (int)(4 * bar.Scale));
+			var progressX = (trainingWidth - progressWidth) / 2;
+			var progressY = trainingIcon.Bounds.Y + trainingIcon.Bounds.Height + (int)(2 * bar.Scale);
+			trainingProgressBack.Bounds = new WidgetBounds(progressX, progressY, progressWidth, progressHeight);
+			trainingProgressFill.Bounds = new WidgetBounds(progressX, progressY,
+				(int)(progressWidth * trainingProgress), progressHeight);
 			commands.Bounds = Bounds(bar.Area("right-panel"));
 
 			// The buttons sit at the bar's button areas, each the size of its own art (it differs a little by race).
@@ -169,6 +203,70 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				if (i >= columns * SlotRows)
 					slot.Visible = false;
 			}
+		}
+
+		void UpdateTraining()
+		{
+			var player = world.LocalPlayer;
+			if (player == null)
+			{
+				HideTraining();
+				trainingProgress = 0f;
+				return;
+			}
+
+			var selectedBuildings = world.Selection.Actors
+				.Where(a => a.IsInWorld && !a.IsDead && a.Owner == player && a.Info.HasTraitInfo<BuildingInfo>());
+			var item = selectedBuildings
+				.SelectMany(a => a.TraitsImplementing<ProductionQueue>())
+				.Where(q => q.Enabled)
+				.Select(q => q.CurrentItem())
+				.FirstOrDefault(i =>
+				{
+					if (i == null)
+						return false;
+
+					var info = world.Map.Rules.Actors[i.Item];
+					return info.HasTraitInfo<PwUpgradeInfo>()
+						|| (info.HasTraitInfo<IHealthInfo>()
+							&& !info.HasTraitInfo<BuildingInfo>()
+							&& !info.HasTraitInfo<PwItemInfo>());
+				});
+			if (item == null)
+			{
+				HideTraining();
+				trainingProgress = 0f;
+				return;
+			}
+
+			var actorInfo = world.Map.Rules.Actors[item.Item];
+			var image = actorInfo.TraitInfoOrDefault<RenderSpritesInfo>()?.Image ?? actorInfo.Name;
+			var iconSequence = actorInfo.TraitInfo<BuildableInfo>().Icon;
+			var sprite = world.Map.Sequences.HasSequence(image, iconSequence)
+				? world.Map.Sequences.GetSequence(image, iconSequence).GetSprite(0)
+				: null;
+			if (sprite == null)
+			{
+				HideTraining();
+				trainingProgress = 0f;
+				return;
+			}
+
+			trainingIcon.Visible = true;
+			trainingProgressBack.Visible = true;
+			trainingProgressFill.Visible = true;
+			trainingIcon.GetSprite = () => sprite;
+			trainingProgress = item.Done ? 1f : item.Started && item.TotalTime > 0
+				? (float)(item.TotalTime - item.RemainingTime) / item.TotalTime
+				: 0f;
+			trainingProgress = trainingProgress.Clamp(0f, 1f);
+		}
+
+		void HideTraining()
+		{
+			trainingIcon.Visible = false;
+			trainingProgressBack.Visible = false;
+			trainingProgressFill.Visible = false;
 		}
 
 		// The engine's radar works out where it draws (and takes clicks) when it starts, from where it was then; after

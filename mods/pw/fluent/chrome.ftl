@@ -126,6 +126,7 @@ tooltip-stat-attack = Damage per hit before the target's armour (with level, upg
 label-stat-armor = Armour { $armor }
 tooltip-stat-armor = Taken off every hit it receives (each hit does at least 1).
 label-stat-meat = Meat { $meat }
+label-stat-meat-amount = { $meat }
 tooltip-stat-meat = Meat carried: eaten while hurt, 1 HP per meat.
 label-stat-mana = Mana { $mana }/{ $max }
 tooltip-stat-mana = Mana for abilities; it refills over time.
