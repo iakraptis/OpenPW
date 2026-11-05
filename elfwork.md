@@ -50,6 +50,8 @@ The original game behavior described below reflects the user's observations; the
   beam between the Wizard and the building.
 - During berry gathering, a similar beam links the Wizard to the bush. It stops at the end of gathering and is absent
   while the berry flies home.
+- Widened the connecting beam. The Berry Fly and Elf Build caster glows remain over the Wizard during gathering and
+  construction, respectively; the Elf Build target sparks already play over unfinished buildings.
 - Added checks to `elf-test` for the worker remaining in the world and for the beam's construction, gathering, and
   flight phases. Updated `docs/game/elf.md`.
 

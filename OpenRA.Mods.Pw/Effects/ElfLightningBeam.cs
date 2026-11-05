@@ -79,8 +79,8 @@ namespace OpenRA.Mods.Pw.Effects
 
 			return new IRenderable[]
 			{
-				new LightningBeamRenderable(points, Color.FromArgb(150, 40, 100, 255), 3),
-				new LightningBeamRenderable(points, Color.FromArgb(240, 210, 245, 255), 1)
+				new LightningBeamRenderable(points, Color.FromArgb(150, 40, 100, 255), 6),
+				new LightningBeamRenderable(points, Color.FromArgb(240, 210, 245, 255), 2)
 			};
 		}
 
@@ -116,13 +116,10 @@ namespace OpenRA.Mods.Pw.Effects
 
 			public void Render(WorldRenderer wr)
 			{
-				var previous = wr.Viewport.WorldToViewPx(wr.Screen3DPosition(points[0]));
-				foreach (var point in points.Skip(1))
-				{
-					var current = wr.Viewport.WorldToViewPx(wr.Screen3DPosition(point));
-					Game.Renderer.RgbaColorRenderer.DrawLine(previous, current, width, color);
-					previous = current;
-				}
+				var projectedPoints = points.Select(wr.Screen3DPosition).ToArray();
+				var worldWidth = Math.Max(1, width * wr.TileScale / wr.TileSize.Width);
+				var screenWidth = wr.ScreenVector(new WVec(worldWidth, 0, 0))[0];
+				Game.Renderer.WorldRgbaColorRenderer.DrawLine(projectedPoints, screenWidth, color);
 			}
 
 			public void RenderDebugGeometry(WorldRenderer wr) { }

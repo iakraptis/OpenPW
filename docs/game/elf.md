@@ -68,7 +68,8 @@ destroyed, it fades out under the same sparks (`PwConjured`). The Wizard starts 
 the middle casting pose while gathering, then keeps casting toward the berry as it flies to the Heaven. It watches the
 berry until it arrives before starting the next gathering cycle. During gathering the Wizard channels a lightning beam
 to the bush; during building it stays beside the site and channels a beam into it instead of entering it. The gathering
-beam stops while the berry flies. The Bubble Tower's water impact is drawn at half its previous size.
+beam stops while the berry flies. The Wizard's blue spell glows are drawn over it while gathering and building; the
+Elf Build sparks play over the unfinished building. The Bubble Tower's water impact is drawn at half its previous size.
 
 ## AI
 
