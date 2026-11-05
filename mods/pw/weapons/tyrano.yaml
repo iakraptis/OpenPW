@@ -34,6 +34,7 @@ TwinVelocisHit:
 # Dilophos: spits poison at ground or air (18 px per tick).
 PoisonSpit:
 	Inherits: ^Arrow
+	Inherits@poison: ^Poison
 	ReloadDelay: 29
 	Range: 6c0
 	Projectile: Bullet

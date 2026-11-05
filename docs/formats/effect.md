@@ -17,7 +17,7 @@ Known record fields:
 |---|---|
 | 0x148 | Own index: the number units use for their weapon ([chr.md](chr.md) 0x1a0; 37 = `Stone`) |
 | 0x14c | 1 = fires a projectile, 0 = instant hit (melee) |
-| 0x150 | 2 for most; 0 for fire and poison arrows and the trap (damage kind, D) |
+| 0x150 | Draw style: picks the effect's draw routine (C, `FUN_0047a8e0`); 2 for most, 0 for the fire and poison arrows and the trap |
 | 0x154 | Target mask, tested bit by bit (C, `0x457c6d`); bit 3 (8) = air: melee and the egg thrower have 23 (no air), arrows 31, `PhonixFire` 8 (air only) |
 | 0x190 | Projectile kind: 2 most missiles, 4 some fire, 0 none (D) |
 | 0x194 | Projectile speed, pixels per tick (arrows 18, `Stone` 20, `Wizard firebolt` 11) (D) |

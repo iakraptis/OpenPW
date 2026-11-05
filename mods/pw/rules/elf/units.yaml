@@ -46,7 +46,7 @@ elf-wizard:
 		Weapon: WizardFirebolt
 	BerryGatherer:
 		FliesBerries: true
-	WithSpriteBody@GATHER:
+	WithFacingSpriteBody@GATHER:
 		Sequence: stand-carry-a
 	# It never carries (^Worker's carrying body needs art it hasn't got).
 	WithInfantryBody@CARRY:

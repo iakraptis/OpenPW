@@ -34,6 +34,7 @@ PachycephalosaurusBite:
 
 DilophosaurusSpit:
 	Inherits: ^Arrow
+	Inherits@poison: ^Poison
 	ReloadDelay: 36
 	Range: 4c0
 	Projectile: Bullet

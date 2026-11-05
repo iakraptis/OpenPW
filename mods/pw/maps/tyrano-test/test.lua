@@ -6,6 +6,7 @@
 -- 4. Disguise (PwDisguise): only once researched. A disguised Velocis passes for a wild creature (the Creeps'): an
 --    enemy StoneTower leaves it alone while it stones a Masos beside it, and it doesn't attack an enemy next to it.
 --    Turned back, it is the owner's again and the tower stones it.
+-- 5. The Dilophos's poison spit stuns: an enemy Powerman it hits is frozen for a moment, then free again.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -17,6 +18,7 @@ WorldLoaded = function()
     Later(5, Merging)
     Later(5, Mutation)
     Later(5, Disguise)
+    Later(5, Stun)
     FinishWhenDone("TYRANO", 4000)
 end
 
@@ -128,5 +130,21 @@ Disguise = function()
             WaitFor("turned back, the tower stones it", 300, function()
                 return velocis.IsDead or velocis.Health < velocis.MaxHealth
             end)
+        end)
+end
+
+Stun = function()
+    -- A Dilophos and an enemy Powerman 4 cells apart, the Powerman holding fire.
+    local dilophos = Actor.Create("tyrano-dilophos", true, { Owner = me, Location = CPos.New(22, 6) })
+    local powerman = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = CPos.New(26, 6) })
+    powerman.Stance = "HoldFire"
+    dilophos.Attack(powerman)
+    WaitFor("the Dilophos's spit stuns the Powerman", 300, function() return PwTest.Tinted(powerman, "stunned") end,
+        function(ok)
+            if not ok then return end
+            Check(powerman.Health < powerman.MaxHealth, "the spit hurt it")
+            dilophos.Stop()
+            dilophos.Stance = "HoldFire"
+            WaitFor("the stun wears off", 60, function() return powerman.IsDead or not PwTest.Tinted(powerman, "stunned") end)
         end)
 end

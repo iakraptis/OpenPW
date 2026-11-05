@@ -44,6 +44,12 @@ Damage per hit (C, `0x457cc4`):
 - Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
 - The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 
+**Poison.** The poison weapons (`JW2_12` "Poison arrows", record 20: the Dilophos and the wild Dilophosaurus;
+"poison-arrow", record 44: the Soldier's Venom arrow) stun the unit they hit for a moment, as in the original. The mod
+stuns for 12 ticks: the unit can't move or attack, tinted green (`^Poison` in weapons/defaults.yaml). How the original
+does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage kind, is the effect's draw style (C,
+`FUN_0047a8e0` picks the draw routine by it).
+
 ## Invisibility and detection
 
 - Units whose type has `.chr` 0x1f8 bit 0x2 are invisible from the start (unit flag 0x40, set when the unit is made

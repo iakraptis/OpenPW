@@ -327,5 +327,6 @@ demon-volcano:
 		FireDelay: 4
 		Weapon: VolcanoShot
 		RequiresCondition: !constructing
-	WithAttackAnimation:
+	# Its attack art is the fire alone: it rises above the crater, which stays.
+	WithAttackOverlay:
 		Sequence: attack

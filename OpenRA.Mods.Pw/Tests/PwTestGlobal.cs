@@ -188,5 +188,10 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("The internal name of the player the actor appears to belong to (a disguised unit: the Creeps).")]
 		public string AppearsOwnedBy(Actor actor) =>
 			actor.EffectiveOwner != null && actor.EffectiveOwner.Disguised ? actor.EffectiveOwner.Owner.InternalName : actor.Owner.InternalName;
+
+		[Desc("Whether the actor shows the coloured tint of a condition (petrified, stunned): the condition is on.")]
+		public bool Tinted(Actor actor, string condition) =>
+			actor.TraitsImplementing<WithColoredOverlay>().Any(o => !o.IsTraitDisabled && o.Info.RequiresCondition != null
+				&& o.Info.RequiresCondition.Variables.Contains(condition));
 	}
 }
