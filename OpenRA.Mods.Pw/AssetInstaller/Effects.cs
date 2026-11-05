@@ -67,6 +67,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			{
 				var (name, palette, frames, sounds) = ReadRecord(data);
 				var image = Image(name);
+				var flightStart = BitConverter.ToInt32(data, 0x204);
 				var flight = BitConverter.ToInt32(data, 0x208);
 				var impact = BitConverter.ToInt32(data, 0x20c);
 				var directional = BitConverter.ToInt32(data, 0x1fc) == 1;
@@ -82,22 +83,24 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					{
 						// The art's eight blocks start one step clockwise of north: block k points at facing k + 1.
 						var n = flight / 8;
-						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n));
+						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n)).Select(f => f + flightStart);
 						sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
 							$"\t\tTick: {FrameTicks(data, 0x218)}\n");
 					}
 					else
-						sequences.Append($"\tflight:\n\t\tLength: {flight}\n\t\tTick: {FrameTicks(data, 0x218)}\n");
+						sequences.Append($"\tflight:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
+							$"\t\tLength: {flight}\n\t\tTick: {FrameTicks(data, 0x218)}\n");
 
 					if (GlowingFlights.Contains(image))
 						sequences.Append(Glow);
 				}
 
 				// The impact at its own pace: 0x21c ticks per frame (the Giant's bomb 6).
-				var impactLook = $"\t\tScale: {ImpactScale}\n\t\tTick: {FrameTicks(data, 0x21c)}\n" + (SolidImpacts.Contains(image) ? "" : Glow);
+				var impactScale = image == "weapon-bubble" ? "0.25" : ImpactScale;
+				var impactLook = $"\t\tScale: {impactScale}\n\t\tTick: {FrameTicks(data, 0x21c)}\n" + (SolidImpacts.Contains(image) ? "" : Glow);
 
 				if (impact > 0)
-					sequences.Append($"\timpact:\n\t\tStart: {flight}\n\t\tLength: {impact}\n{impactLook}");
+					sequences.Append($"\timpact:\n\t\tStart: {flightStart + flight}\n\t\tLength: {impact}\n{impactLook}");
 
 				// Art with neither (melee sparks, the trap snap): all of it as the impact.
 				if (flight <= 0 && impact <= 0)

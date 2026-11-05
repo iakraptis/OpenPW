@@ -34,6 +34,12 @@ namespace OpenRA.Mods.Pw.Activities
 		int gatherTicks;
 		int moveAttempts;
 		int gatheringToken = Actor.InvalidConditionToken;
+		int flightToken = Actor.InvalidConditionToken;
+		BerryFlight berryFlight;
+		ElfLightningBeam lightning;
+
+		public bool IsBerryFlightActive => berryFlight != null && !berryFlight.IsComplete;
+		public bool IsLightningActive => lightning?.IsActive ?? false;
 
 		public GatherBerries(Actor self, Actor bush)
 		{
@@ -48,6 +54,23 @@ namespace OpenRA.Mods.Pw.Activities
 		{
 			if (IsCanceling)
 				return true;
+
+			if (berryFlight != null)
+			{
+				if (berryFlight.IsComplete)
+				{
+					berryFlight = null;
+					StopBerryFlight(self);
+					StopGathering(self);
+					return false;
+				}
+
+				var facing = self.TraitOrDefault<IFacing>();
+				if (facing != null)
+					facing.Facing = (berryFlight.Position - self.CenterPosition).Yaw;
+
+				return false;
+			}
 
 			// Loaded: take the berries home.
 			if (gatherer.Carried > 0)
@@ -101,26 +124,42 @@ namespace OpenRA.Mods.Pw.Activities
 				var facing = self.TraitOrDefault<IFacing>();
 				if (facing != null)
 					facing.Facing = (bush.CenterPosition - self.CenterPosition).Yaw;
+
+				if (gatherer.Info.FliesBerries)
+				{
+					lightning = new ElfLightningBeam(self.World, self, bush);
+					self.World.AddFrameEndTask(w => w.Add(lightning));
+				}
 			}
 
 			if (--gatherTicks > 0)
 				return false;
 
-			StopGathering(self);
 			var taken = bush.Trait<BerryBush>().Take(gatherer.TripAmount(self));
 
-			// Berry fly: the berries go to the main building on their own, and the worker gathers on.
+			// The Wizard keeps casting and follows the berries until they reach the main building.
 			if (gatherer.Info.FliesBerries)
 			{
+				StopLightning();
 				var dropOff = gatherer.NearestDropOff(self);
 				var info = gatherer.Info;
 				if (dropOff != null && taken > 0)
-					self.World.AddFrameEndTask(w => w.Add(new BerryFlight(w, bush.CenterPosition, dropOff, self.Owner, taken,
-						info.FlightImage, info.FlightSequence, info.FlightPalette, info.FlightSpeed)));
+				{
+					berryFlight = new BerryFlight(self.World, bush.CenterPosition, dropOff, self.Owner, taken,
+						info.FlightImage, info.FlightSequence, info.FlightPalette, info.FlightSpeed);
+					if (!string.IsNullOrEmpty(info.FlightCondition))
+						flightToken = self.GrantCondition(info.FlightCondition);
 
+					var flight = berryFlight;
+					self.World.AddFrameEndTask(w => w.Add(flight));
+					return false;
+				}
+
+				StopGathering(self);
 				return false;
 			}
 
+			StopGathering(self);
 			gatherer.Load(self, taken);
 			return false;
 		}
@@ -162,12 +201,26 @@ namespace OpenRA.Mods.Pw.Activities
 
 		void StopGathering(Actor self)
 		{
+			StopLightning();
 			if (gatheringToken != Actor.InvalidConditionToken)
 				gatheringToken = self.RevokeCondition(gatheringToken);
 		}
 
+		void StopLightning()
+		{
+			lightning?.Stop();
+			lightning = null;
+		}
+
+		void StopBerryFlight(Actor self)
+		{
+			if (flightToken != Actor.InvalidConditionToken)
+				flightToken = self.RevokeCondition(flightToken);
+		}
+
 		protected override void OnLastRun(Actor self)
 		{
+			StopBerryFlight(self);
 			StopGathering(self);
 		}
 	}

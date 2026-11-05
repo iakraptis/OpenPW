@@ -29,6 +29,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	public static class Units
 	{
 		const int SheetWidth = 2048;
+		const int ElfWizardGatherTicks = 48;
 
 		// Draw order lift for flying units: more than the tallest building's reach (in world units).
 		const int AirZOffset = 8192;
@@ -213,6 +214,39 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 
 				yaml.Append($"\t{name}:\n\t\tFacings: -8\n\t\tLength: {all.Count / 8}\n\t\tFrames: {string.Join(", ", all)}\n");
+
+				if (image == "elf-wizard" && g == 2)
+				{
+					if (steps.Length == 0 || steps.Length > ElfWizardGatherTicks)
+						throw new InvalidOperationException("The Elf Wizard attack sequence must fit its gathering cycle.");
+
+					// Hold the middle cast pose after the opening, then finish the attack at the end of the gather.
+					var middle = steps.Length / 2;
+					var gatherSteps = steps.Take(middle + 1)
+						.Concat(Enumerable.Repeat(steps[middle], ElfWizardGatherTicks - steps.Length))
+						.Concat(steps.Skip(middle + 1)).ToArray();
+					var gatherFrames = new List<int>();
+					foreach (var (block, mirrored) in Facings)
+					{
+						var (start, end) = Block(chr, g, block);
+						var first = mirrored ? mirrorStart[(g, block)] : groupStart[g] + start;
+						var length = end - start;
+						gatherFrames.AddRange(gatherSteps.Select(s => first + Math.Clamp(s, 0, Math.Max(0, length - 1))));
+					}
+
+					yaml.Append($"\tgather:\n\t\tFacings: -8\n\t\tLength: {gatherFrames.Count / 8}\n\t\tFrames: {string.Join(", ", gatherFrames)}\n");
+
+					var flightFrames = new List<int>();
+					foreach (var (block, mirrored) in Facings)
+					{
+						var (start, end) = Block(chr, g, block);
+						var first = mirrored ? mirrorStart[(g, block)] : groupStart[g] + start;
+						var length = end - start;
+						flightFrames.Add(first + Math.Clamp(steps[middle], 0, Math.Max(0, length - 1)));
+					}
+
+					yaml.Append($"\tgather-flight:\n\t\tFacings: -8\n\t\tLength: 1\n\t\tFrames: {string.Join(", ", flightFrames)}\n");
+				}
 			}
 
 			// The build icon: the type's portrait (Chrome.cs writes the sheet, one frame per type). Its own zero offset,

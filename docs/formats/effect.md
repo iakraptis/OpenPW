@@ -24,8 +24,9 @@ Known record fields:
 | 0x1f8 | **Splash radius** in pixels, 0 = single target (C: passed to the area damage routine at impact, `0x47713d`): fire arrow 40, egg and bomb 48, dragon fire 64 |
 | 0x1fc | 1 = the flight frames are directional (arrows, bolts); 0 = tumbling (stones, eggs) (D) |
 | 0x200 | Frame count |
-| 0x208 | Flight frames: 8 for projectiles (repeated at 0x224) |
-| 0x20c | Impact frames, after the flight frames (`Fire-arrow` 8 + 10, `Stone` 8 + 8) (repeated at 0x228) |
+| 0x204 | First flight frame (D; Redbolt 10) |
+| 0x208 | Flight frame count (Redbolt 10; `Soldier arrows` 8) |
+| 0x20c | Impact frame count, after the flight frames (Redbolt 11; `Fire-arrow` 8 + 10, `Stone` 8 + 8) |
 | 0x218, 0x21c | Frame delays (D) |
 | 0x220 | Lifetime in ticks for lingering effects (C, compared with a per-tick counter, `0x476eff`) |
 | 0x830 | Sound count |

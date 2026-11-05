@@ -42,6 +42,21 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Whether a worker is running its gathering loop.")]
 		public bool Gathering(Actor actor) => actor.CurrentActivity is GatherBerries;
 
+		[Desc("Whether a berry-gathering worker is currently guiding a berry flight.")]
+		public bool BerryFlying(Actor actor) => (actor.CurrentActivity as GatherBerries)?.IsBerryFlightActive ?? false;
+
+		[Desc("Whether a worker is currently sending its casting beam to its work target.")]
+		public bool LightningActive(Actor actor) =>
+			actor.CurrentActivity is GatherBerries gathering ? gathering.IsLightningActive :
+			actor.CurrentActivity is ConstructBuilding construction && construction.IsLightningActive;
+
+		[Desc("Whether the specified worker is constructing the site and remains in the world.")]
+		public bool ConstructionWorkerIsOutside(Actor site, Actor worker)
+		{
+			var construction = site.TraitOrDefault<UnderConstruction>();
+			return construction?.Builder == worker && worker.IsInWorld;
+		}
+
 		[Desc("Berries a worker is carrying, or -1 for anything else.")]
 		public int Carried(Actor worker) => worker.TraitOrDefault<BerryGatherer>()?.Carried ?? -1;
 

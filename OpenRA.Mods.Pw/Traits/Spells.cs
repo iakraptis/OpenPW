@@ -163,7 +163,8 @@ namespace OpenRA.Mods.Pw.Traits
 		public static Order Cast(Actor self, string name, Target target) =>
 			new(OrderID, self, target, false) { TargetString = name };
 
-		public bool IsUnlocked(Actor self) => (self.TraitOrDefault<PwLevels>()?.Level ?? 0) >= Info.MinLevel
+		public bool IsUnlocked(Actor self) => !self.Disposed
+			&& (self.TraitOrDefault<PwLevels>()?.Level ?? 0) >= Info.MinLevel
 			&& (Info.Prerequisites.Length == 0 || self.Owner.PlayerActor.Trait<TechTree>().HasPrerequisites(Info.Prerequisites));
 
 		// Kill points must stay above zero; mana must cover the cost.

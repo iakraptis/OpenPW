@@ -21,9 +21,10 @@ namespace OpenRA.Mods.Pw.Traits
 	public class UnderConstructionInit : RuntimeFlagInit, ISingleInstanceInit { }
 
 	[Desc("A building placed by a worker (Builder) starts at low HP. The worker walks up and goes inside it ",
-		"(ConstructBuilding removes it from the world); the building grows while the worker is inside and is finished ",
-		"after Duration ticks (.chr 0x18c), then lets the worker out beside it. If the site is destroyed meanwhile, the ",
-		"worker is lost with it. Map and editor placed buildings start finished. Ported from OpenSYW.")]
+		"(ConstructBuilding removes it from the world), unless Builder.WorksFromRange is enabled; the building grows ",
+		"while the worker is assigned and is finished after Duration ticks (.chr 0x18c). An inside worker comes out ",
+		"beside it. If the site is destroyed meanwhile, an inside worker is lost with it. Map and editor placed buildings ",
+		"start finished. Ported from OpenSYW.")]
 	public class UnderConstructionInfo : TraitInfo, Requires<HealthInfo>
 	{
 		[FieldLoader.Require]
@@ -51,6 +52,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		// The worker inside, building it, or null.
 		public Actor Builder { get; private set; }
+		bool builderInside;
 
 		public bool HasBuilder => Builder != null && !Builder.IsDead && !Builder.Disposed;
 
@@ -71,13 +73,22 @@ namespace OpenRA.Mods.Pw.Traits
 				conditionToken = init.Self.GrantCondition(info.Condition);
 		}
 
-		public bool TryAssignBuilder(Actor worker)
+		public bool TryAssignBuilder(Actor worker, bool removeWorkerFromWorld = true)
 		{
 			if (IsComplete || (HasBuilder && Builder != worker))
 				return false;
 
 			Builder = worker;
+			builderInside = removeWorkerFromWorld;
 			return true;
+		}
+
+		public void UnassignBuilder(Actor worker)
+		{
+			if (Builder != worker || builderInside)
+				return;
+
+			Builder = null;
 		}
 
 		void ITick.Tick(Actor self)
@@ -115,15 +126,21 @@ namespace OpenRA.Mods.Pw.Traits
 				return;
 
 			var worker = Builder;
+			var wasInside = builderInside;
 			Builder = null;
+			builderInside = false;
 			self.World.AddFrameEndTask(w =>
 			{
 				if (worker.IsDead || worker.Disposed)
 					return;
 
-				var cell = FreeCellBeside(self, worker);
-				w.Add(worker);
-				worker.Trait<IPositionable>().SetPosition(worker, cell);
+				if (wasInside)
+				{
+					var cell = FreeCellBeside(self, worker);
+					w.Add(worker);
+					worker.Trait<IPositionable>().SetPosition(worker, cell);
+				}
+
 				foreach (var voiced in worker.TraitsImplementing<IVoiced>())
 					voiced.PlayVoice(worker, "Built", worker.Owner.Faction.InternalName);
 			});
@@ -142,13 +159,14 @@ namespace OpenRA.Mods.Pw.Traits
 			return building.Location;
 		}
 
-		// Destroyed with the worker inside: there is no outside to put it, so it is lost with the building.
+		// An inside worker is lost with the building. A worker building from range remains in the world.
 		void INotifyRemovedFromWorld.RemovedFromWorld(Actor self)
 		{
-			if (Builder != null && !Builder.IsDead && !Builder.Disposed)
+			if (builderInside && Builder != null && !Builder.IsDead && !Builder.Disposed)
 				Builder.Dispose();
 
 			Builder = null;
+			builderInside = false;
 		}
 	}
 }

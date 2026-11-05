@@ -10,7 +10,7 @@ WizardFirebolt:
 	Projectile: Bullet
 		Image: weapon-wizard-firebolt
 		Sequences: flight
-		Speed: 704
+		Speed: 1056
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 9
 	Report: weapon-wizard-firebolt-0.wav
@@ -26,7 +26,7 @@ RedBolt:
 	Projectile: Bullet
 		Image: weapon-redbolt
 		Sequences: flight
-		Speed: 832
+		Speed: 1248
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-redbolt-0.wav
@@ -42,7 +42,7 @@ WhiteBolt:
 	Projectile: Bullet
 		Image: weapon-whitebolt
 		Sequences: flight
-		Speed: 960
+		Speed: 1440
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-whitebolt-0.wav
@@ -81,7 +81,7 @@ DragonFire:
 	Projectile: Bullet
 		Image: weapon-dragonfire
 		Sequences: flight
-		Speed: 1152
+		Speed: 1728
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 70
 		# Splash: full damage within the original radius (2c0).
@@ -102,7 +102,7 @@ PhoenixFire:
 	Projectile: Bullet
 		Image: weapon-phonixfire
 		Sequences: flight
-		Speed: 960
+		Speed: 1440
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Air
 		Damage: 30
@@ -115,7 +115,7 @@ AngelRing:
 	Projectile: Bullet
 		Image: weapon-angelring
 		Sequences: flight
-		Speed: 960
+		Speed: 1440
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 140
 	Report: weapon-angelring-0.wav
@@ -132,7 +132,7 @@ BubbleShot:
 	Projectile: Bullet
 		Image: weapon-bubble
 		Sequences: flight
-		Speed: 1280
+		Speed: 1920
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 25
 	Report: weapon-bubble-0.wav

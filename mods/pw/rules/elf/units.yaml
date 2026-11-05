@@ -22,6 +22,8 @@ elf-wizard:
 		Amount: 1
 	Builder:
 		Types: elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-manalibrary, elf-skylibrary, elf-bubble
+		WorksFromRange: true
+		WorkCondition: building
 	Buildable:
 		Queue: elf-heaven
 		BuildDuration: 160
@@ -46,14 +48,29 @@ elf-wizard:
 		Weapon: WizardFirebolt
 	BerryGatherer:
 		FliesBerries: true
-	# While it works its magic at the bush: the blue glow in its hands (Berry fly's caster frames).
+	# The Wizard casts at the bush, then keeps casting toward the berry as it flies home.
 	WithIdleOverlay@MAGIC:
 		Image: spell-berry-fly
 		Sequence: cast
 		Palette: effect
 		RequiresCondition: gathering
+	WithIdleOverlay@BUILDING:
+		Image: spell-elf-build
+		Sequence: cast
+		Palette: effect
+		RequiresCondition: building
+	WithInfantryBody:
+		RequiresCondition: !gathering && !carrying && !building
 	WithFacingSpriteBody@GATHER:
-		Sequence: stand-carry-a
+		Sequence: gather
+		RequiresCondition: gathering && !berry-flight
+	WithFacingSpriteBody@BUILDING:
+		Name: building
+		Sequence: attack
+		RequiresCondition: building
+	WithFacingSpriteBody@BERRYFLIGHT:
+		Sequence: gather-flight
+		RequiresCondition: berry-flight
 	# It never carries (^Worker's carrying body needs art it hasn't got).
 	WithInfantryBody@CARRY:
 		IdleSequences: stand

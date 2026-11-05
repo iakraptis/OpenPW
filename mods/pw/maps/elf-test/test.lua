@@ -45,6 +45,17 @@ Production = function()
         local limit = PwTest.PopulationLimit(me)
         local before = #me.GetActorsByType("elf-elftree")
         PwTest.Construct(wizard, "elf-elftree", CPos.New(9, 2))
+        WaitFor("the Wizard casts beside the unfinished ElfTree", 100, function()
+            local trees = me.GetActorsByType("elf-elftree")
+            return #trees == before + 1 and PwTest.ConstructionWorkerIsOutside(trees[#trees], wizard)
+        end, function(ok)
+            if ok then
+                Check(PwTest.LightningActive(wizard), "the Wizard channels lightning into the unfinished ElfTree")
+                Check(PwTest.ConstructionWorkerIsOutside(me.GetActorsByType("elf-elftree")[#me.GetActorsByType("elf-elftree")], wizard),
+                    "the Wizard remains outside while building")
+            end
+        end)
+
         WaitFor("the Wizard conjures an ElfTree", 800, function()
             local trees = me.GetActorsByType("elf-elftree")
             return #trees == before + 1 and PwTest.Finished(trees[#trees])
@@ -155,6 +166,7 @@ Meteor = function()
     local spread = Actor.Create("elf-manaspread", true, { Owner = me, Location = CPos.New(4, 24) })
     local foe = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = CPos.New(9, 24) })
     foe.Stance = "HoldFire"
+    PwTest.Select(spread)
     Later(2, function()
         PwTest.CastAt(spread, "meteor", CPos.New(9, 24))
         Later(30, function()
@@ -239,6 +251,23 @@ BerryFly = function()
     local strayed = false
     Later(2, function()
         PwTest.Gather(wizard, bush)
+        WaitFor("the Wizard channels lightning into the berry bush", 100, function()
+            return PwTest.LightningActive(wizard)
+        end)
+
+        WaitFor("the Wizard guides the berries while they fly", 200, function()
+            return PwTest.BerryFlying(wizard)
+        end, function(ok)
+            if ok then
+                Check(PwTest.Gathering(wizard), "the Wizard keeps its casting activity during berry flight")
+                Check(not PwTest.LightningActive(wizard), "the gathering beam stops when the berries fly")
+                Check(PwTest.Carried(wizard) == 0, "the flying berries are not carried")
+                Later(10, function()
+                    Check(PwTest.BerryFlying(wizard), "the next gather cycle waits for the berry to arrive")
+                end)
+            end
+        end)
+
         WaitFor("berries from the Wizard's bush reach the Heaven", 400, function()
             if (wizard.Location - CPos.New(21, 9)).Length > 2 then strayed = true end
             return enemy.Cash >= 12
