@@ -75,6 +75,7 @@ FireArrow:
 
 VenomArrow:
 	Inherits: SoldierArrow
+	Inherits@poison: ^Poison
 	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35

@@ -33,6 +33,15 @@
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 
+# Poison: the poison weapons of the original (JW2_12 "Poison arrows", "poison-arrow") stun the unit hit for a
+# moment, as poison does in the original: ^Unit's "stunned", no moving, no attacking. Added with Inherits@poison.
+^Poison:
+	Warhead@Stun: GrantExternalCondition
+		Condition: stunned
+		Duration: 10
+		Range: 0c256
+		ValidTargets: Ground, Air
+
 # Bombs, stones and eggs: lobbed, ground only, usually with splash.
 ^Thrown:
 	Inherits: ^PwWeapon

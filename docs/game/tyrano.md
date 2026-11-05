@@ -29,6 +29,9 @@ Merged units (TwinVelocis, TwinRhamphos, Mutant) cost nothing; they come from me
 | 43 | Mutant (air) | 550 | 100→136 | 0→36 | 192 | 384 | 48 | 5.8 | 0 | 320 (23 s) | 11 | 30 | Mutant arrow | – | range +160 px |
 | 44 | Tyranos | 1200 | 200→254 | 35→53 | 32 | 384 | 31 | 8.2 | 5000 | 2880 (204 s) | 30 | 30 | Tyranos hit. | EggNest, LandNest, SkyNest, UpgradeNest, LandNisdos, SkyNisdos | attack delay −100% |
 
+The Dilophos's poison spit stuns the unit it hits for a moment, as poison does in the original (see
+[rules.md](rules.md#combat)).
+
 ## Buildings
 
 | # | Building | HP | Armour | Cost | Time | Size | Pop | Needs | Trains | Researches | Sells |

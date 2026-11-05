@@ -74,12 +74,19 @@
 		UseDeathTypeSuffix: false
 		CrushedSequence: die
 	# Stone curse (a Kelpa's spell, PwSpell) turns it to stone for a while: grey, it can't move or attack (the
-	# movement and attack mixins pause on "petrified").
+	# movement and attack mixins pause on "petrified" or "stunned").
 	ExternalCondition@PETRIFIED:
 		Condition: petrified
 	WithColoredOverlay@PETRIFIED:
 		Color: A0808080
 		RequiresCondition: petrified
+	# Poison (weapons with ^Poison: the Dilophos's spit, the Venom arrow) stuns it for a moment: tinted green, it
+	# can't move or attack.
+	ExternalCondition@STUNNED:
+		Condition: stunned
+	WithColoredOverlay@STUNNED:
+		Color: 40FF4080
+		RequiresCondition: stunned
 	# Shield and Mass temper (Elf spells, PwSpell) give it a shield that soaks up damage, shown meanwhile.
 	PwShield:
 	WithIdleOverlay@SHIELD:
@@ -128,7 +135,7 @@
 		MoveSequence: walk-carry-b
 		DefaultAttackSequence: attack
 		RequiresCondition: carrying && !gathering
-	WithSpriteBody@GATHER:
+	WithFacingSpriteBody@GATHER:
 		Name: gather
 		Sequence: gather
 		RequiresCondition: gathering
@@ -270,19 +277,19 @@
 	Mobile:
 		Locomotor: foot
 		AlwaysTurnInPlace: true
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 
 ^HeavyMovement:
 	Mobile:
 		Locomotor: heavy
 		AlwaysTurnInPlace: true
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 
 ^WheeledMovement:
 	Mobile:
 		Locomotor: wheeled
 		AlwaysTurnInPlace: true
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 
 # Flying machines (Revolver, Squadron, Flattop): hover over any terrain; only the Revolver lands (to load). In the air only weapons
 # that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
@@ -301,7 +308,7 @@
 		VTOL: true
 		TurnSpeed: 64
 		AirborneCondition: airborne
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 	HiddenUnderFog:
 		Type: CenterPosition
 	RevealsShroud:
@@ -311,7 +318,7 @@
 ^Melee:
 	AttackFrontal:
 		FacingTolerance: 128
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 	AutoTarget:
 		# Units scan 5 cells and go for enemies they see, as OpenSYW's infantry do.
 		ScanRadius: 5
@@ -345,7 +352,7 @@
 	AttackAircraft:
 		AttackType: Hover
 		FacingTolerance: 128
-		PauseOnCondition: petrified
+		PauseOnCondition: petrified || stunned
 	AutoTarget:
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
