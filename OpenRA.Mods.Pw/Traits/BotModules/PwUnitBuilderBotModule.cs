@@ -167,6 +167,10 @@ namespace OpenRA.Mods.Pw.Traits
 					weight = workers < Info.MaximumWorkers ? Info.WorkerWeight : 0;
 				else if (PwBotUtils.IsArmy(item))
 					weight = Info.UnitWeights.TryGetValue(item.Name, out var w) ? w : Info.DefaultUnitWeight;
+
+				// Unarmed casters (Unicorn, ManaSpread): only those given a weight (PwSpellBotModule casts their spells).
+				else if (item.HasTraitInfo<PwSpellInfo>())
+					weight = Info.UnitWeights.TryGetValue(item.Name, out var w) ? w : 0;
 				else if (item.HasTraitInfo<CargoInfo>())
 					weight = Info.TrainTransports ? (Info.UnitWeights.TryGetValue(item.Name, out var w) ? w : Info.DefaultUnitWeight) : 0;
 				else

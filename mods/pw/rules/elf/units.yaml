@@ -46,6 +46,12 @@ elf-wizard:
 		Weapon: WizardFirebolt
 	BerryGatherer:
 		FliesBerries: true
+	# While it works its magic at the bush: the blue glow in its hands (Berry fly's caster frames).
+	WithIdleOverlay@MAGIC:
+		Image: spell-berry-fly
+		Sequence: cast
+		Palette: effect
+		RequiresCondition: gathering
 	WithFacingSpriteBody@GATHER:
 		Sequence: stand-carry-a
 	# It never carries (^Worker's carrying body needs art it hasn't got).
