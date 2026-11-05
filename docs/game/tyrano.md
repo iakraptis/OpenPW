@@ -8,8 +8,8 @@ Range and sight are in pixels; speed is the average east walk step in pixels per
 Tech tree: TyranoNest and Nest need nothing; EggNest → LandNest, SkyNest, ThrowNest, UpgradeNest, Ascomoid;
 LandNest + UpgradeNest → LandNisdos; SkyNest + UpgradeNest → SkyNisdos. Tyranos needs every other building.
 Merged units (TwinVelocis, TwinRhamphos, Mutant) cost nothing; they come from merging (see
-[rules.md](rules.md#merging-tyrano)). Ground mutation armour level 5 costs 100 in the data, probably a typo for
-1,000.
+[rules.md](rules.md#merging-tyrano)); in the mod the TwinVelocis and the Mutant have more health than in the table below
+(rules.md). Ground mutation armour level 5 costs 100 in the data, probably a typo for 1,000.
 
 ## Units
 

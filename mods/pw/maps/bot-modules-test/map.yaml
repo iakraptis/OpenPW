@@ -8,9 +8,9 @@ Author: OpenPW
 
 Tileset: TEST
 
-MapSize: 88,88
+MapSize: 88,142
 
-Bounds: 1,1,86,86
+Bounds: 1,1,86,140
 
 Visibility: MissionSelector
 
@@ -26,7 +26,7 @@ Players:
 		Name: Creeps
 		NonCombatant: True
 		Faction: Random
-		Enemies: BotAbilityRaider, BotAbilityTarget, BotDefenceRaider, BotDefenceTarget, BotHuntingRaider, BotHuntingTarget, BotTransportRaider, BotTransportTarget
+		Enemies: BotAbilityRaider, BotAbilityTarget, BotDefenceRaider, BotDefenceTarget, BotHuntingRaider, BotHuntingTarget, BotTransportRaider, BotTransportTarget, BotMergeRaider
 	PlayerReference@Multi0:
 		Name: Multi0
 		Playable: True
@@ -77,6 +77,12 @@ Players:
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotTransportRaider, Creeps
+	PlayerReference@BotMergeRaider:
+		Name: BotMergeRaider
+		Bot: normal
+		Faction: tyrano
+		LockFaction: True
+		Enemies: Creeps
 
 Actors:
 	Spawn0: mpspawn
@@ -151,6 +157,33 @@ Actors:
 	BotTransportTargetHouse: primitive-house
 		Owner: BotTransportTarget
 		Location: 81,80
+	BotMergeRaiderNest: tyrano-tyranonest
+		Owner: BotMergeRaider
+		Location: 3,111
+	BotMergeLandNest: tyrano-landnest
+		Owner: BotMergeRaider
+		Location: 11,111
+	BotMergeUpgradeNest: tyrano-upgradenest
+		Owner: BotMergeRaider
+		Location: 17,111
+	BotMergeSkyNisdos: tyrano-skynisdos
+		Owner: BotMergeRaider
+		Location: 24,111
+	BotMergeVelocis0: tyrano-velocis
+		Owner: BotMergeRaider
+		Location: 6,122
+	BotMergeVelocis1: tyrano-velocis
+		Owner: BotMergeRaider
+		Location: 10,122
+	BotMergeDilophos: tyrano-dilophos
+		Owner: BotMergeRaider
+		Location: 5,127
+	BotMergePteras: tyrano-pteras
+		Owner: BotMergeRaider
+		Location: 9,127
+	BotMergeTrices: tyrano-trices
+		Owner: BotMergeRaider
+		Location: 13,127
 
 Rules:
 	player:

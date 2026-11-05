@@ -9,6 +9,7 @@
  */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenRA.Mods.Common;
@@ -55,6 +56,13 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Research starts only with at least this much cash, the cheapest available first.")]
 		public readonly int ResearchCash = 1500;
+
+		[Desc("Research that comes before army units once the bot has PriorityResearchArmy of them, at any cash: each",
+			"entry names an upgrade without its level (every level, in turn), earlier entries first.")]
+		public readonly string[] PriorityResearch = Array.Empty<string>();
+
+		[Desc("Army units the bot has before PriorityResearch.")]
+		public readonly int PriorityResearchArmy = 4;
 
 		[Desc("Train transports (units that carry others): off by default, the bot doesn't load them yet.")]
 		public readonly bool TrainTransports = false;
@@ -115,7 +123,7 @@ namespace OpenRA.Mods.Pw.Traits
 			}
 		}
 
-		ActorInfo Choose(List<ActorInfo> items, int workers, System.Func<string, int> count)
+		ActorInfo Choose(List<ActorInfo> items, int workers, Func<string, int> count)
 		{
 			var cash = PwBotUtils.Cash(player);
 
@@ -123,6 +131,18 @@ namespace OpenRA.Mods.Pw.Traits
 			var army = PwBotUtils.Owned(world, player).Count(a => PwBotUtils.IsArmy(a.Info));
 			var saving = army < Info.ArmyBeforeSaving ? 0 : player.PlayerActor.TraitsImplementing<PwBaseBuilderBotModule>()
 				.Where(m => !m.IsTraitDisabled).Sum(m => m.SavingFor);
+
+			// The research that matters most, once there is an army to protect the base meanwhile.
+			if (army >= Info.PriorityResearchArmy)
+			{
+				foreach (var name in Info.PriorityResearch)
+				{
+					var research = items.FirstOrDefault(i => PwBotUtils.IsResearch(i)
+						&& (i.Name == name || i.Name.StartsWith(name + "-", StringComparison.Ordinal)));
+					if (research != null && Affordable(research, saving))
+						return research;
+				}
+			}
 
 			// Research when rich: the cheapest first (the next level of each upgrade follows).
 			if (cash >= Info.ResearchCash + saving)

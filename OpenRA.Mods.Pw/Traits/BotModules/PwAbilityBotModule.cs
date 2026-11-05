@@ -60,7 +60,7 @@ namespace OpenRA.Mods.Pw.Traits
 			{
 				if (!fallOut.IsUnlocked(caster))
 				{
-					Research(bot, fallOut.Info.Upgrade);
+					PwBotUtils.Research(world, player, bot, fallOut.Info.Upgrade, "an ability");
 					continue;
 				}
 
@@ -90,28 +90,6 @@ namespace OpenRA.Mods.Pw.Traits
 					return true;
 
 			return false;
-		}
-
-		// Starts the research that unlocks an ability, from whichever of the bot's queues offers it.
-		void Research(IBot bot, string upgrade)
-		{
-			var queues = world.ActorsWithTrait<ProductionQueue>()
-				.Where(q => q.Actor.Owner == player && !q.Actor.IsDead && q.Trait.Enabled && PwBotUtils.IsComplete(q.Actor)).ToList();
-			if (queues.Any(q => q.Trait.AllQueued().Any(i => i.Item == upgrade)))
-				return;
-
-			foreach (var q in queues)
-			{
-				var item = q.Trait.BuildableItems().FirstOrDefault(i => i.Name == upgrade);
-
-				// Queued behind whatever the queue is making (the unit builder only adds to idle queues).
-				if (item != null && PwBotUtils.Cash(player) >= PwBotUtils.Cost(item))
-				{
-					AIUtils.BotDebug("{0}: researching {1} for an ability.", player, upgrade);
-					bot.QueueOrder(Order.StartProduction(q.Actor, upgrade, 1));
-					return;
-				}
-			}
 		}
 	}
 }

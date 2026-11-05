@@ -150,8 +150,9 @@ tyrano-twinvelocis:
 		Name: actor-tyrano-twinvelocis.name
 	Valued:
 		Cost: 0
+	# The mod's health (the original's 350): as much as its two parts, so merging isn't a loss.
 	Health:
-		HP: 350
+		HP: 400
 	PwArmor:
 		Value: 0
 	Mobile:
@@ -520,8 +521,9 @@ tyrano-mutant:
 		Name: actor-tyrano-mutant.name
 	Valued:
 		Cost: 0
+	# The mod's health (the original's 550): more than its three parts' 730, so merging isn't a loss.
 	Health:
-		HP: 550
+		HP: 900
 	PwArmor:
 		Value: 0
 	Aircraft:
