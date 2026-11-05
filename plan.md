@@ -419,8 +419,9 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
       voice set per image (`voices/units.yaml`: Select, Action, Attack, Die, Work, Built). Weapons reference them
       (`research/tools/wire_weapons.py`); `PwVoiced` gives each unit its image's voice set. The `audio` stage writes
       the interface sounds (JW2_05): button click, victory, defeat (assumed entry 7), the race's "under attack",
-      buildings' select and destroyed sounds. `PwLevels` plays the original level-up effect and sound when experience
-      raises a unit's level. Hit plant-eaters run off and roar 1 in 4 (`PwFleeWhenHit`). Soft shroud and fog tiles
+      buildings' select and destroyed sounds. `PwLevels` plays the original, faster-paced level-up effect and sound
+      when experience raises a unit's level; Berry fly projectiles also animate faster. Hit plant-eaters run off and
+      roar 1 in 4 (`PwFleeWhenHit`). Soft shroud and fog tiles
       (`tools/shroud_art.py`; the original shades fog per pixel), fog and shroud on by default.
 - [x] **Features** (2026-11-02, branch `features`):
   - Meat (`Meat.cs`): a killed wild creature drops meat; living units pick it up, carry it and eat it while hurt
