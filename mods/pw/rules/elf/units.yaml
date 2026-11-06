@@ -341,16 +341,16 @@ elf-unicorn:
 		Range: 9c0
 	PwMana:
 		Max: 200
-	# Record 18: a friendly unit regains 2 HP a tick for 1 mana a tick, while it is hurt and the mana lasts.
+	# Record 18: automatically heals the most injured nearby ally, 2 HP for 1 mana each tick.
 	PwSpell@CURE:
 		Name: cure
 		Target: Unit
 		TargetRelationships: Ally
 		Range: 3c0
+		AutoHeal: true
 		ManaPerStep: 1
 		Heal: 2
-		Steps: 300
-		StepInterval: 1
+		Steps: 1
 		Image: spell-cure
 		Icon: ability-cure
 		Sound: spell-cure-0.wav

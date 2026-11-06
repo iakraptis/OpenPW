@@ -45,6 +45,9 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Whose units its area effects reach.")]
 		public readonly PlayerRelationship AffectsRelationships = PlayerRelationship.Enemy | PlayerRelationship.Neutral;
 
+		[Desc("Automatically heal the most injured eligible unit while the caster is idle.")]
+		public readonly bool AutoHeal = false;
+
 		[Desc("Kill points spent (spell record 0x1e0).")]
 		public readonly int Cost = 0;
 
@@ -149,11 +152,12 @@ namespace OpenRA.Mods.Pw.Traits
 		public override object Create(ActorInitializer init) { return new PwSpell(this); }
 	}
 
-	public class PwSpell : IResolveOrder, IOrderVoice
+	public class PwSpell : IResolveOrder, IOrderVoice, ITick
 	{
 		public const string OrderID = "PwSpell";
 
 		public readonly PwSpellInfo Info;
+		Actor autoHealTarget;
 
 		public PwSpell(PwSpellInfo info)
 		{
@@ -194,6 +198,46 @@ namespace OpenRA.Mods.Pw.Traits
 
 		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order) =>
 			order.OrderString == OrderID && order.TargetString == Info.Name ? Info.Voice : null;
+
+		void ITick.Tick(Actor self)
+		{
+			if (!Info.AutoHeal || !self.IsIdle || !IsReady(self))
+			{
+				autoHealTarget = null;
+				return;
+			}
+
+			var target = self.World.FindActorsInCircle(self.CenterPosition, Info.Range)
+				.Where(a => CanTarget(self, a)
+					&& a.TraitOrDefault<IHealth>() is IHealth health
+					&& health.HP < health.MaxHP)
+				.OrderBy(a => (long)a.Trait<IHealth>().HP * 100 / a.Trait<IHealth>().MaxHP)
+				.FirstOrDefault();
+
+			if (target == null)
+			{
+				autoHealTarget = null;
+				return;
+			}
+
+			if (autoHealTarget != target)
+			{
+				autoHealTarget = target;
+				if (Info.Sound != null)
+					Game.Sound.Play(SoundType.World, Info.Sound, target.CenterPosition);
+
+				if (Info.Image != null)
+					ShowEffect(self.World, target, target.CenterPosition);
+			}
+
+			var mana = self.TraitOrDefault<PwMana>();
+			if (mana?.Spend(Info.ManaPerStep) != true)
+				return;
+
+			var health = target.Trait<IHealth>();
+			var heal = Power(self, Info.Heal);
+			health.InflictDamage(target, self, new Damage(-Math.Min(heal, health.MaxHP - health.HP)), true);
+		}
 
 		// Called by CastSpell once the caster is in range, facing the target.
 		public void Release(Actor self, Target target)

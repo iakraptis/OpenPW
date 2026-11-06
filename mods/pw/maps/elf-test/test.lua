@@ -4,7 +4,7 @@
 -- 3. Shield (WhiteElf, level 1, 60 mana): a friendly unit's shield soaks up 480 damage before it is hurt.
 -- 4. Teleport (Ranger, 65 mana): the Ranger is at the place at once.
 -- 5. Drop stone (BlueElf, level 1, 65 mana): 200 damage around the place.
--- 6. Cure (Unicorn): heals a friendly unit for its mana. Fake (after Study Fake): a harmless copy, the Unicorn's own.
+-- 6. Cure (Unicorn): automatically heals a nearby friendly unit for its mana. Fake (after Study Fake): a harmless copy.
 -- 7. Meteor (ManaSpread, after Study Meteor): it dies, meteors hurt the enemies there.
 -- 8. Resurrect (AngelElf, 80 mana): a unit that fell there comes back, the caster's own, at half health.
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
@@ -12,6 +12,7 @@
 -- 11. Jump portal (Ranger, level 3): an enemy standing in the portal is thrown away.
 -- 12. Berry fly: a Wizard stays at the bush, and the berries fly to the Heaven by themselves (here the Enemy player's,
 --     whose cash nothing else touches).
+-- 13. The Bubble tower deals 1 damage and traps the target in its bubble for 72 ticks.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -31,7 +32,26 @@ WorldLoaded = function()
     Later(5, MassTemper)
     Later(5, JumpPortal)
     Later(5, BerryFly)
+    Later(5, Bubble)
     FinishWhenDone("ELF", 4000)
+end
+
+Bubble = function()
+    local tower = Actor.Create("elf-bubble", true, { Owner = me, Location = CPos.New(24, 27) })
+    local target = Actor.Create("primitive-buildman", true, { Owner = enemy, Location = CPos.New(29, 27) })
+    target.Stance = "HoldFire"
+    local full = target.Health
+
+    WaitFor("the Bubble traps its target", 300, function()
+        return not target.IsMobile
+    end, function(ok)
+        if not ok then return end
+        Check(target.Health == full - 1, "the Bubble deals 1 damage")
+        tower.Kill()
+        WaitFor("the target can move again after the bubble expires", 100, function()
+            return target.IsMobile
+        end)
+    end)
 end
 
 Production = function()
@@ -145,10 +165,9 @@ Unicorn = function()
     model.Stance = "HoldFire"
     Later(2, function()
         hurt.Health = 30
-        PwTest.CastOn(unicorn, "cure", hurt)
-        WaitFor("Cure heals the RedElf to full", 200, function() return hurt.Health == hurt.MaxHealth end, function(ok)
+        WaitFor("Cure automatically heals the RedElf to full", 200, function() return hurt.Health == hurt.MaxHealth end, function(ok)
             if not ok then return end
-            Check(PwTest.Mana(unicorn) < 200, "Cure costs mana (" .. PwTest.Mana(unicorn) .. " left)")
+            Check(PwTest.Mana(unicorn) < 200, "automatic Cure spends mana (" .. PwTest.Mana(unicorn) .. " left)")
             PwTest.CastOn(unicorn, "fake", model)
             Later(30, function()
                 Check(#me.GetActorsByType("primitive-knight") == 0, "no Fake before Study Fake")

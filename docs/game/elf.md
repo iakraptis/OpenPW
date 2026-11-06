@@ -12,6 +12,10 @@ the mod: Study Divine being's Weapon Secret level 3 takes 3,360 ticks (1,200 in 
 kind 3,360), and record 47, which raises armour, is named "Study Divine being's Armor Secret" (the data repeats the
 weapon one's name).
 
+The Bubble tower's recorded attack value (25) does not reduce hit points in the original: its bubble traps the target
+instead. The mod applies a 72-tick immobilizing condition, inferred from the weapon's 36 impact frames at 2 ticks per
+frame (`JW2_12` `Bubble.wpn`, 0x20c and 0x21c; D), and deals 1 damage per hit as a design choice.
+
 ## Units
 
 | # | Unit | HP | Attack (L0→L9) | Armour (L0→L9) | Range | Sight | Delay | Speed | Cost | Time | Pop | XP/level | Weapon | Needs | Level bonus |
@@ -69,7 +73,8 @@ the middle casting pose while gathering, then keeps casting toward the berry as 
 berry until it arrives before starting the next gathering cycle. During gathering the Wizard channels a lightning beam
 to the bush; during building it stays beside the site and channels a beam into it instead of entering it. The gathering
 beam stops while the berry flies. The Wizard's blue spell glows are drawn over it while gathering and building; the
-Elf Build sparks play over the unfinished building. The Bubble Tower's water impact is drawn at half its previous size.
+Elf Build sparks play over the unfinished building. The Bubble Tower's bubble animation is drawn over trapped units
+at quarter scale.
 
 ## AI
 

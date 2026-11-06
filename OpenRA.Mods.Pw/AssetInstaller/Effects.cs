@@ -88,7 +88,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 							$"\t\tTick: {FrameTicks(data, 0x218)}\n");
 					}
 					else
-						sequences.Append($"\tflight:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
+						sequences.Append("\tflight:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
 							$"\t\tLength: {flight}\n\t\tTick: {FrameTicks(data, 0x218)}\n");
 
 					if (GlowingFlights.Contains(image))
