@@ -96,6 +96,24 @@ namespace OpenRA.Mods.Pw.Projectiles
 		protected override void Explode(World world)
 		{
 			exploded = true;
+			if (info.Mode == 2 && Args.GuidedTarget.Type == TargetType.Actor && !Args.GuidedTarget.Actor.IsDead)
+			{
+				if (pos != target)
+					return;
+
+				world.AddFrameEndTask(w => w.Remove(this));
+				var impactPosition = Args.GuidedTarget.Actor.CenterPosition;
+				var trackingWarheadArgs = new WarheadArgs(Args)
+				{
+					ImpactOrientation = new WRot(WAngle.Zero, Util.GetVerticalAngle(lastPos, pos), Args.Facing),
+					ImpactPosition = impactPosition,
+					WeaponTarget = Target.FromActor(Args.GuidedTarget.Actor),
+				};
+
+				Args.Weapon.Impact(Target.FromPos(impactPosition), trackingWarheadArgs);
+				return;
+			}
+
 			if (info.Mode != 4)
 			{
 				base.Explode(world);

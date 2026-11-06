@@ -51,13 +51,18 @@ do
         local healthBeforeMove
         Later(1, function()
             tracker.Attack(movingTarget)
-            Later(14, function()
+            Later(2, function()
                 healthBeforeMove = movingTarget.Health
-                movingTarget.Move(At(11, 24))
+                movingTarget.Move(At(10, 27))
             end)
         end)
-        WaitFor("a mode-2 arrow follows a target that moves after launch", 300, function()
+        WaitFor("the first mode-2 arrow hits after its target moves after launch", 32, function()
             return healthBeforeMove ~= nil and movingTarget.Health < healthBeforeMove
+        end, function(ok)
+            if ok then
+                Check(healthBeforeMove - movingTarget.Health == 17,
+                    "the first tracking arrow hits the moved target exactly once")
+            end
         end)
 
         local wildShooter = Actor.Create("wild-dilophosaurus", true, { Owner = enemy, Location = At(4, 32) })

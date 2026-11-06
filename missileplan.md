@@ -110,6 +110,8 @@ Implemented for all inventory entries:
 
 - `PwBullet` preserves OpenRA projectile rendering and uses original travel speeds while implementing
   original modes 0 (fixed endpoint), 2 (tracks the target actor), and 4 (pierces actors along its path).
+- Mode-2 impacts resolve at the tracked actor's current position after the flight, so terrain collision cannot
+  prematurely end a target-tracking shot.
 - Mode-4 collision samples the path every 2 px against enabled OpenRA hit shapes. This intentionally approximates
   the original actor-specific `.chr` rectangles; a projectile hits each actor at most once, up to the original
   16-actor limit. It continues along its aimed direction to the weapon's full effective range, even if the aimed
