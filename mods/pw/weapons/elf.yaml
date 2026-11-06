@@ -1,5 +1,5 @@
 # Elf weapons (docs/game/elf.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack delay
-# (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 2
+# (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32
 # (weapons/defaults.yaml).
 
 # The Wizard (the worker) shoots a little firebolt.
@@ -7,10 +7,10 @@ WizardFirebolt:
 	Inherits: ^Arrow
 	ReloadDelay: 34
 	Range: 4c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-wizard-firebolt
 		Sequences: flight
-		Speed: 1056
+		Speed: 352
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 9
 	Report: weapon-wizard-firebolt-0.wav
@@ -23,10 +23,10 @@ RedBolt:
 	Inherits: ^Arrow
 	ReloadDelay: 27
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-redbolt
 		Sequences: flight
-		Speed: 1248
+		Speed: 416
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-redbolt-0.wav
@@ -39,10 +39,10 @@ WhiteBolt:
 	Inherits: ^Arrow
 	ReloadDelay: 30
 	Range: 7c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-whitebolt
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-whitebolt-0.wav
@@ -78,15 +78,16 @@ DragonFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 54
 	Range: 10c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-dragonfire
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
+		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 70
-		# Splash: full damage within the original radius (2c0).
-		Range: 0, 2c0, 2112
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 64 px splash radius.
+		Range: 0, 2c0
+		Falloff: 100, 0
 	Report: weapon-dragonfire-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground
@@ -99,10 +100,11 @@ PhoenixFire:
 	ValidTargets: Air
 	ReloadDelay: 41
 	Range: 7c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-phonixfire
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
+		Mode: 4
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Air
 		Damage: 30
@@ -112,10 +114,10 @@ AngelRing:
 	Inherits: ^Arrow
 	ReloadDelay: 38
 	Range: 7c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-angelring
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 140
 	Report: weapon-angelring-0.wav
@@ -129,10 +131,10 @@ BubbleShot:
 	Inherits: ^Arrow
 	ReloadDelay: 26
 	Range: 9c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-bubble
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 25
 	Report: weapon-bubble-0.wav

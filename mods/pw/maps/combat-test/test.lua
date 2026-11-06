@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local FirstHit, Voices, WorldLoaded, enemy, me
+    local FirstHit, MissileModes, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -24,8 +24,9 @@ do
         Later(5, function() FirstHit("primitive-soldier", "primitive-powerman", 17, At(4, 12), At(10, 12)) end)
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerman-shield-of-peace", 1, At(4, 20), At(5, 20)) end)
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, At(20, 20), At(22, 14)) end)
+        Later(5, MissileModes)
         Later(5, Voices)
-        FinishWhenDone("COMBAT", 2000)
+        FinishWhenDone("COMBAT", 2500)
     end
 
     -- The attacker attacks; the first change in the target's health must be exactly the expected damage.
@@ -40,6 +41,64 @@ do
             if ok and not target.IsDead then
                 Check(full - target.Health == damage, label .. " for " .. damage .. " (did " .. (full - target.Health) .. ")")
             end
+        end)
+    end
+
+    MissileModes = function()
+        local tracker = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(4, 24) })
+        local movingTarget = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(10, 24) })
+        movingTarget.Stance = "HoldFire"
+        local healthBeforeMove
+        Later(1, function()
+            tracker.Attack(movingTarget)
+            Later(14, function()
+                healthBeforeMove = movingTarget.Health
+                movingTarget.Move(At(11, 24))
+            end)
+        end)
+        WaitFor("a mode-2 arrow follows a target that moves after launch", 300, function()
+            return healthBeforeMove ~= nil and movingTarget.Health < healthBeforeMove
+        end)
+
+        local wildShooter = Actor.Create("wild-dilophosaurus", true, { Owner = enemy, Location = At(4, 32) })
+        local wildTarget = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(8, 32) })
+        wildTarget.Stance = "HoldFire"
+        Later(1, function() wildShooter.Attack(wildTarget) end)
+        WaitFor("a wildlife missile damages its target", 300, function()
+            return wildTarget.Health < wildTarget.MaxHealth
+        end)
+
+        local piercer = Actor.Create("primitive-knight", true, { Owner = me, Location = At(4, 28) })
+        local aimedTarget = Actor.Create("primitive-giant", true, { Owner = enemy, Location = At(7, 28) })
+        local fullRangeTarget = Actor.Create("primitive-giant", true, { Owner = enemy, Location = At(9, 28) })
+        aimedTarget.Stance = "HoldFire"
+        fullRangeTarget.Stance = "HoldFire"
+        Later(1, function() piercer.Attack(aimedTarget) end)
+        WaitFor("a mode-4 sword continues to full range after hitting its target", 300, function()
+            return aimedTarget.Health < aimedTarget.MaxHealth and fullRangeTarget.Health < fullRangeTarget.MaxHealth
+        end, function(ok)
+            if not ok then return end
+            piercer.Stop()
+            Check(aimedTarget.MaxHealth - aimedTarget.Health == 40, "a mode-4 sword hits its aimed target once")
+            Check(fullRangeTarget.MaxHealth - fullRangeTarget.Health == 40,
+                "a mode-4 sword hits an actor beyond its aimed target once")
+        end)
+
+        local bowMachine = Actor.Create("primitive-bowmachine", true, { Owner = me, Location = At(20, 28) })
+        local pathTarget = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(23, 28) })
+        local splashTarget = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(26, 28) })
+        local endpointTarget = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(27, 28) })
+        pathTarget.Stance = "HoldFire"
+        splashTarget.Stance = "HoldFire"
+        endpointTarget.Stance = "HoldFire"
+        Later(1, function() bowMachine.Attack(endpointTarget) end)
+        WaitFor("a mode-0 arrow ignores actors along its path and splashes at its endpoint", 400, function()
+            return endpointTarget.Health < endpointTarget.MaxHealth
+        end, function(ok)
+            if not ok then return end
+            Check(pathTarget.Health == pathTarget.MaxHealth, "a mode-0 arrow does not hit an actor along its path")
+            Check(splashTarget.Health < splashTarget.MaxHealth and splashTarget.Health > endpointTarget.Health,
+                "mode-0 splash damage falls with distance from the endpoint")
         end)
     end
 

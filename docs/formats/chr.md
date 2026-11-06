@@ -51,7 +51,12 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x030c | `u8` | Hotkey letter | D | `B`uildman, `S`oldier, `K`night… |
 | 0x030f, 0x0310 | `u8`, `u8[]` | Buildings: items they sell (`Item.itm` index) | D | Blacksmith: 9, 5, 6, 7 |
 | 0x0330, 0x0334 | `i32` | Building footprint in 32-pixel cells (width, height) | D | Sanctuary 6 × 4 matches its 199 × 136 frame |
-| 0x0350–0x0388 | `i32` | Bounds / selection boxes (?) | D | |
+| 0x0350–0x035c | `i32[4]` | Additional bounds; meaning not confirmed | | |
+| 0x0360 | `i32` | Actor collision rectangle left offset from its position; used by mode-4 projectiles | C | `FUN_0047afc0` |
+| 0x0364 | `i32` | Actor collision rectangle top offset from its position; used by mode-4 projectiles | C | `FUN_0047afc0` |
+| 0x0368 | `i32` | Actor collision rectangle width; used by mode-4 projectiles | C | `FUN_0047afc0` |
+| 0x036c | `i32` | Actor collision rectangle height; used by mode-4 projectiles | C | `FUN_0047afc0` |
+| 0x0370–0x0388 | `i32` | Other bounds; meaning not confirmed | | |
 | 0x03cc + 0x200·(f−1) | `(i32, i32)[64]` | Walk step displacement in pixels for facing *f* = 1…8, one pair per walk frame | D | see [Movement](#movement) |
 | 0x13cc | `i32` | Attack delay (Soldier 11, Buildman 19); `Level.lvt` row 0 reduces it by a % per level | C/D | `FUN_004594d2` |
 | 0x13d0 | `i32` | Unknown (320 for ground units, 0 for Rhamphos) | | |
