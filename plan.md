@@ -424,6 +424,8 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 - [x] **Features** (2026-11-02, branch `features`):
   - Meat (`Meat.cs`): a killed wild creature drops meat; living units pick it up, carry it and eat it while hurt
     (1 HP every 8 ticks). Meat rots on the ground; other items don't.
+  - Workers can be ordered onto damaged friendly buildings to repair them from range: up to 7 HP every 24 ticks,
+    costing the OpenRA default 20% full-repair value prorated to each step's HP.
   - Wild creatures respawn about 2 minutes after death (`PwRespawns`); predators attack nearby units
     (`^WildPredator`, `AttackAnything`, scan radius 3).
   - The Chief: Morale (+10% attack and armour to nearby units) and Fall out (80 mana, a DoT that leaves the target

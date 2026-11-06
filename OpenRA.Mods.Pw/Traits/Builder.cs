@@ -33,6 +33,18 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("The worker remains in the world and builds from EnterRange instead of entering the building.")]
 		public readonly bool WorksFromRange = false;
 
+		[Desc("Cost to fully repair a building as a percent of its value (OpenRA default: 20).")]
+		public readonly int RepairPercent = 20;
+
+		[Desc("Maximum HP repaired per step (OpenRA default: 7).")]
+		public readonly int RepairStep = 7;
+
+		[Desc("Ticks between repair steps (OpenRA default: 24).")]
+		public readonly int RepairInterval = 24;
+
+		[Desc("How close the worker must come to repair a building.")]
+		public readonly WDist RepairRange = WDist.FromCells(1);
+
 		[GrantedConditionReference]
 		[Desc("Condition granted while working from range.")]
 		public readonly string WorkCondition = "building";
@@ -44,6 +56,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public const string OrderID = "PwBuildAt";
 		public const string ResumeOrderID = "PwResumeBuild";
+		public const string RepairOrderID = "PwRepairBuilding";
 
 		public readonly BuilderInfo Info;
 
@@ -63,6 +76,17 @@ namespace OpenRA.Mods.Pw.Traits
 			return underConstruction != null && !underConstruction.IsComplete && !underConstruction.HasBuilder;
 		}
 
+		public bool CanRepair(Actor self, Actor target)
+		{
+			if (target == null || target.IsDead || target.Disposed || !target.IsInWorld
+				|| !target.AppearsFriendlyTo(self) || !target.Info.HasTraitInfo<BuildingInfo>()
+				|| !target.Info.HasTraitInfo<IHealthInfo>() || target.GetDamageState() == DamageState.Undamaged)
+				return false;
+
+			var underConstruction = target.TraitOrDefault<UnderConstruction>();
+			return underConstruction == null || underConstruction.IsComplete;
+		}
+
 		// The worker's footprint check: free, buildable cells for this building.
 		public static bool CanPlace(World world, Actor builder, ActorInfo actorInfo, BuildingInfo buildingInfo, CPos cell)
 		{
@@ -71,21 +95,37 @@ namespace OpenRA.Mods.Pw.Traits
 
 		IEnumerable<IOrderTargeter> IIssueOrder.Orders
 		{
-			get { yield return new ResumeTargeter(this); }
+			get
+			{
+				yield return new ResumeTargeter(this);
+				yield return new RepairTargeter(this);
+			}
 		}
 
 		Order IIssueOrder.IssueOrder(Actor self, IOrderTargeter order, in Target target, bool queued)
 		{
-			return order.OrderID == ResumeOrderID ? new Order(order.OrderID, self, target, queued) : null;
+			return order.OrderID == ResumeOrderID || order.OrderID == RepairOrderID
+				? new Order(order.OrderID, self, target, queued)
+				: null;
 		}
 
 		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order)
 		{
-			return order.OrderString == OrderID || order.OrderString == ResumeOrderID ? Info.Voice : null;
+			return order.OrderString == OrderID || order.OrderString == ResumeOrderID || order.OrderString == RepairOrderID
+				? Info.Voice
+				: null;
 		}
 
 		void IResolveOrder.ResolveOrder(Actor self, Order order)
 		{
+			if (order.OrderString == RepairOrderID)
+			{
+				if (order.Target.Type == TargetType.Actor && CanRepair(self, order.Target.Actor))
+					self.QueueActivity(order.Queued, new RepairBuildingActivity(order.Target.Actor, this));
+
+				return;
+			}
+
 			if (order.OrderString == ResumeOrderID)
 			{
 				if (order.Target.Type == TargetType.Actor && CanResume(self, order.Target.Actor))
@@ -150,6 +190,23 @@ namespace OpenRA.Mods.Pw.Traits
 			{
 				return false;
 			}
+		}
+
+		sealed class RepairTargeter : UnitOrderTargeter
+		{
+			readonly Builder builder;
+
+			public RepairTargeter(Builder builder)
+				: base(RepairOrderID, 7, "repair", false, true)
+			{
+				this.builder = builder;
+			}
+
+			public override bool CanTargetActor(Actor self, Actor target, TargetModifiers modifiers, ref string cursor) =>
+				builder.CanRepair(self, target);
+
+			public override bool CanTargetFrozenActor(Actor self, FrozenActor target, TargetModifiers modifiers, ref string cursor) =>
+				false;
 		}
 	}
 }
