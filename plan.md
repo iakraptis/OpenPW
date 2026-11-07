@@ -544,8 +544,8 @@ dead.
   - Spells (`PwSpell`, now general): which spells a unit has, their level and their research come from the original
     (`.chr` 0x1f0, record 0x160 and 0x15c; C, `FUN_0046c3a5`), with mana costs. Shield and Mass temper use
     `PwShield`, Resurrect uses the world's `PwGraveyard` (living deaths), and Fake makes a timed, harmless copy
-    (`ExternalCondition@ILLUSION` on `^Unit`). The ManaSpread refills casters' mana (`PwManaAura`), and Study Mana
-    Potion Secret raises mana by 50.
+    (`ExternalCondition@ILLUSION` on `^Unit`). The Unicorn automatically heals the most injured nearby ally while it
+    has mana. The ManaSpread refills casters' mana (`PwManaAura`), and Study Mana Potion Secret raises mana by 50.
   - Data fixes: the second "Study Divine being's Weapon Secret" (record 47) raises armour and is named so. The
     first one's level 3 takes 3,360 ticks, not 1,200.
   - `elf-test`. `bot-test` is now one four-way battle (each race's Normal AI, all against all, on (4) The X Cross),

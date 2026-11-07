@@ -45,6 +45,10 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Whose units its area effects reach.")]
 		public readonly PlayerRelationship AffectsRelationships = PlayerRelationship.Enemy | PlayerRelationship.Neutral;
 
+		[Desc("While the caster is idle, it heals on its own (Cure): the unit last cast on while it is hurt and in Range,",
+			"otherwise the most hurt one it can target, Heal HP for ManaPerStep mana every tick.")]
+		public readonly bool AutoHeal = false;
+
 		[Desc("Kill points spent (spell record 0x1e0).")]
 		public readonly int Cost = 0;
 
@@ -149,11 +153,15 @@ namespace OpenRA.Mods.Pw.Traits
 		public override object Create(ActorInitializer init) { return new PwSpell(this); }
 	}
 
-	public class PwSpell : IResolveOrder, IOrderVoice
+	public class PwSpell : IResolveOrder, IOrderVoice, ITick
 	{
 		public const string OrderID = "PwSpell";
 
 		public readonly PwSpellInfo Info;
+		Actor autoHealTarget;
+
+		// AutoHeal: the unit the spell was last cast on, healed first.
+		Actor preferred;
 
 		public PwSpell(PwSpellInfo info)
 		{
@@ -195,6 +203,51 @@ namespace OpenRA.Mods.Pw.Traits
 		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order) =>
 			order.OrderString == OrderID && order.TargetString == Info.Name ? Info.Voice : null;
 
+		void ITick.Tick(Actor self)
+		{
+			if (!Info.AutoHeal || !self.IsIdle || !IsReady(self))
+			{
+				autoHealTarget = null;
+				return;
+			}
+
+			bool Hurt(Actor a) => CanTarget(self, a) && a.TraitOrDefault<IHealth>() is IHealth health && health.HP < health.MaxHP;
+			if (preferred != null && (!Hurt(preferred)
+				|| (preferred.CenterPosition - self.CenterPosition).HorizontalLengthSquared > Info.Range.LengthSquared))
+				preferred = null;
+
+			var target = preferred ?? self.World.FindActorsInCircle(self.CenterPosition, Info.Range)
+				.Where(Hurt)
+				.OrderBy(a => (long)a.Trait<IHealth>().HP * 100 / a.Trait<IHealth>().MaxHP)
+				.FirstOrDefault();
+
+			if (target == null)
+			{
+				autoHealTarget = null;
+				return;
+			}
+
+			// The cue when it turns to a new patient, only where the viewer can see it.
+			var viewer = self.World.RenderPlayer;
+			if (autoHealTarget != target && (viewer == null || target.CanBeViewedByPlayer(viewer)))
+			{
+				autoHealTarget = target;
+				if (Info.Sound != null)
+					Game.Sound.Play(SoundType.World, Info.Sound, target.CenterPosition);
+
+				if (Info.Image != null)
+					ShowEffect(self.World, target, target.CenterPosition);
+			}
+
+			var mana = self.TraitOrDefault<PwMana>();
+			if (mana?.Spend(Info.ManaPerStep) != true)
+				return;
+
+			var health = target.Trait<IHealth>();
+			var heal = Power(self, Info.Heal);
+			health.InflictDamage(target, self, new Damage(-Math.Min(heal, health.MaxHP - health.HP)), true);
+		}
+
 		// Called by CastSpell once the caster is in range, facing the target.
 		public void Release(Actor self, Target target)
 		{
@@ -209,6 +262,9 @@ namespace OpenRA.Mods.Pw.Traits
 
 			var pos = target.CenterPosition;
 			var victim = Info.Target == PwSpellTarget.Unit ? target.Actor : null;
+			if (Info.AutoHeal && victim != null)
+				preferred = victim;
+
 			var world = self.World;
 			if (Info.Sound != null)
 				Game.Sound.Play(SoundType.World, Info.Sound, pos);
