@@ -11,6 +11,7 @@
 
 using System;
 using System.Linq;
+using OpenRA.Mods.Common.Effects;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Primitives;
 using OpenRA.Traits;
@@ -51,6 +52,18 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Per level 0-9: % added to the effect of its spells (Level.lvt row 2; C, Pw.exe 0x478db8).")]
 		public readonly int[] SpellPower = Array.Empty<int>();
+
+		[Desc("Played over the unit when it gains a level (the original's Level Up art, JW2_11 record 23).")]
+		public readonly string LevelUpImage = "spell-level-up";
+
+		[SequenceReference(nameof(LevelUpImage))]
+		public readonly string LevelUpSequence = "effect";
+
+		[PaletteReference]
+		public readonly string LevelUpPalette = "effect";
+
+		[Desc("Sound played where the unit gains a level.")]
+		public readonly string LevelUpSound = "spell-level-up-0.wav";
 
 		public override object Create(ActorInitializer init) { return new PwLevels(init, this); }
 	}
@@ -99,12 +112,27 @@ namespace OpenRA.Mods.Pw.Traits
 			if (amount <= 0 || Level >= info.MaxLevel)
 				return;
 
+			var previousLevel = Level;
 			Experience += amount;
 			while (Level < info.MaxLevel && Experience >= ExperiencePerLevel)
 			{
 				Experience -= ExperiencePerLevel;
 				Level++;
 			}
+
+			if (Level == previousLevel)
+				return;
+
+			// Only where the viewer can see the unit: not under fog, not an enemy's invisible unit.
+			var viewer = self.World.RenderPlayer;
+			if (viewer != null && !self.CanBeViewedByPlayer(viewer))
+				return;
+
+			if (!string.IsNullOrEmpty(info.LevelUpSound))
+				Game.Sound.Play(SoundType.World, info.LevelUpSound, self.CenterPosition);
+
+			if (!string.IsNullOrEmpty(info.LevelUpImage))
+				self.World.AddFrameEndTask(w => w.Add(new SpriteEffect(self, w, info.LevelUpImage, info.LevelUpSequence, info.LevelUpPalette)));
 		}
 
 		Armament[] Armaments => armaments ??= self.TraitsImplementing<Armament>().ToArray();

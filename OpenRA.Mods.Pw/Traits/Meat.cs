@@ -234,7 +234,7 @@ namespace OpenRA.Mods.Pw.Traits
 		sealed class MeatTargeter : UnitOrderTargeter
 		{
 			public MeatTargeter()
-				: base(PwMeatEater.OrderID, 7, "move", true, true) { }
+				: base(PwMeatEater.OrderID, 7, "capture", true, true) { }
 
 			public override bool CanTargetActor(Actor self, Actor target, TargetModifiers modifiers, ref string cursor)
 			{
