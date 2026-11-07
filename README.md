@@ -44,7 +44,8 @@ powershell -ExecutionPolicy Bypass -File packaging\windows\update-portable.ps1 -
 
 This builds a self-contained portable game, ..\OpenPW-portable next to the checkout, and zips it to
 ..\OpenPW-portable-test-<commit>.zip. The game runs on any Windows PC as it is: it has its own .NET runtime, and it
-keeps its settings and logs in its Support folder. The zip includes the content this PC converted with
+keeps its settings and logs in game\Support. The top of the folder holds only OpenPW.exe, a small launcher for
+game\OpenPW.exe, and a readme for testers. The zip includes the content this PC converted with
 install-assets, so it is for private testing only and must never be published. The script refuses a folder inside
 the repository.
 

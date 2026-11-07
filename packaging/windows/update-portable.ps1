@@ -10,8 +10,11 @@
 #
 # The bundled content is converted from the original game, so the folder (and its zip) is for private testing only,
 # never a public release. It never enters the repository: the folder must be outside it. The content comes from this
-# PC's OpenRA content folder; run install-assets.cmd first. A portable folder is one with a Support folder beside
-# OpenPW.exe, which the engine then uses instead of %APPDATA%\OpenRA.
+# PC's OpenRA content folder; run install-assets.cmd first.
+#
+# The folder holds only OpenPW.exe (PortableLauncher.cs, which starts game\OpenPW.exe), the testers' readme and game\:
+# the engine, its runtime and the mod, and game\Support, which the engine uses instead of %APPDATA%\OpenRA because it
+# sits beside it (settings, the bundled content, logs).
 param(
 	[string]$Destination,
 	[string]$Content = (Join-Path $env:APPDATA 'OpenRA\Content\pw'),
@@ -36,6 +39,10 @@ function Invoke-Mirror([string]$from, [string]$to, [string[]]$extra) {
 $Destination = [IO.Path]::GetFullPath($Destination)
 if ($Destination.StartsWith($root.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase)) {
 	throw "The portable folder must be outside the repository ($root), so its game content can never be committed."
+}
+
+if (Test-Path (Join-Path $Destination 'OpenRA.Game.dll')) {
+	throw "$Destination has the game at its top (an older layout). Delete it, or keep its Support folder elsewhere."
 }
 
 # Files of a running game can't be replaced.
@@ -70,8 +77,16 @@ try {
 	Step "Updating the game in $Destination"
 	# Everything but Support mirrors the new game (files dropped from the game are removed here too); Support is the
 	# player's data and the bundled content, never touched by this step.
-	Invoke-Mirror $game $Destination @('/XD', (Join-Path $Destination 'Support'), '/XF', 'README-testers.txt')
-	New-Item -ItemType Directory -Force (Join-Path $Destination 'Support') | Out-Null
+	$gameFolder = Join-Path $Destination 'game'
+	$support = Join-Path $gameFolder 'Support'
+	Invoke-Mirror $game $gameFolder @('/XD', $support)
+	New-Item -ItemType Directory -Force $support | Out-Null
+
+	Step 'Building the launcher'
+	$csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+	& $csc /nologo /target:winexe /optimize+ "/win32icon:$(Join-Path $gameFolder 'pw.ico')" `
+		"/out:$(Join-Path $Destination 'OpenPW.exe')" (Join-Path $PSScriptRoot 'PortableLauncher.cs') | Out-Host
+	if ($LASTEXITCODE -ne 0) { throw "csc failed with exit code $LASTEXITCODE" }
 }
 finally {
 	if (Test-Path $work) { Remove-Item -Recurse -Force $work }
@@ -79,13 +94,13 @@ finally {
 
 # Desktop OpenGL, as launch-game.cmd asks for: the engine would otherwise pick ANGLE on Windows, whose texture readback
 # can crash the game. Only a new folder gets these defaults; the testers' own settings are kept.
-$settings = Join-Path $Destination 'Support\settings.yaml'
+$settings = Join-Path $support 'settings.yaml'
 if (-not (Test-Path $settings)) {
 	[IO.File]::WriteAllText($settings, "Graphics:`n`tMode: PseudoFullscreen`n`tGLProfile: Modern`n")
 }
 
 if (-not $SkipContent) {
-	$target = Join-Path $Destination 'Support\Content\pw'
+	$target = Join-Path $support 'Content\pw'
 	if (Test-Path (Join-Path $Content 'install-manifest.txt')) {
 		Step "Bundling the converted game content from $Content"
 		# Without the developer maps install-assets adds (AssetInstaller/TestMaps.cs): they need the test harness.
@@ -107,9 +122,10 @@ if (-not $SkipContent) {
 OpenPW $Tag - private test build
 
 Run OpenPW.exe. Nothing needs installing: the game, its .NET runtime and the game content are all in this folder.
-Settings, replays and logs are kept in the Support folder here, so deleting the folder removes everything.
+Settings, replays and logs are kept in game\Support, so deleting the folder removes everything.
 
-If the game crashes, please send the newest files from Support\Logs.
+If Windows says "Windows protected your PC", click "More info", then "Run anyway".
+If the game crashes, please send the newest files from game\Support\Logs.
 
 This build contains content converted from Primitive Wars. Do not share it.
 "@.Replace("`r`n", "`n").Replace("`n", "`r`n"))
@@ -124,7 +140,7 @@ if ($Pack) {
 	try {
 		foreach ($file in Get-ChildItem -Recurse -File $Destination) {
 			$name = $file.FullName.Substring($Destination.Length + 1).Replace('\', '/')
-			if ($name -match '^Support/(Logs|Replays|ModMetadata)/') { continue }
+			if ($name -match '^game/Support/(Logs|Replays|ModMetadata)/') { continue }
 			[IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $file.FullName, "OpenPW/$name",
 				[IO.Compression.CompressionLevel]::Optimal) | Out-Null
 		}
