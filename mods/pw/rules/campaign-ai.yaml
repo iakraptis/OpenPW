@@ -1,0 +1,15 @@
+# The campaign's computer players, apart from the skirmish AI (ai.yaml): only the campaign maps load this file (their
+# Rules, AssetInstaller/Campaign.cs), so skirmish never offers it. As simple as the original's mission scripts. PwCampaignBotModule trains the units the mission's script names and attacks with them in
+# groups (each mission's map rules set Train and AttackSize); the workers gather. The armies the mission places stay
+# where they are and fight what comes to them.
+player:
+	ModularBot@Campaign:
+		Name: bot-campaign.name
+		Type: campaign
+	GrantConditionOnBotOwner@campaign:
+		Condition: enable-campaign-ai
+		Bots: campaign
+	PwCampaignBotModule@campaign:
+		RequiresCondition: enable-campaign-ai
+	PwGathererBotModule@campaign:
+		RequiresCondition: enable-campaign-ai

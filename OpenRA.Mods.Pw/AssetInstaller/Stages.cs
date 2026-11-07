@@ -24,6 +24,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			new("tilesets", "The Jungle, Dungeon and Ruin tilesets (.trt), copied as they are", Terrain.ExportTilesets),
 			new("objects", "Map objects: the doodads of each tileset and the berry bushes", Objects.Export),
 			new("maps", "Every skirmish map: movement terrain, original terrain cells and start positions", Maps.Export),
+			new("campaign", "The campaign missions converted so far: map, placed bases and armies, briefing, narration, script", Campaign.Export),
 			new("units", "Every unit and building: sprite sheets with player colour, and their sequences", Units.Export),
 			new("chrome", "Interface art: the mouse cursors, portraits, upgrade and item buttons", Chrome.Export),
 			new("audio", "Interface sounds: clicks, victory, under attack, building sounds", Audio.Export),

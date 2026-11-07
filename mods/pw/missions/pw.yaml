@@ -1,0 +1,4 @@
+# The campaign missions by race, in order: map folders the installer converts from JW2_06.TRC
+# (OpenRA.Mods.Pw/AssetInstaller/Campaign.cs) into the content folder.
+Primitive Campaign:
+	primitive-01:
