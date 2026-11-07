@@ -1,5 +1,5 @@
 # Demon weapons (docs/game/demon.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack
-# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 2
+# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32
 # (weapons/defaults.yaml). Weapons with no flight frames strike at once (InstantHit) and show their impact art.
 
 InsectHit:
@@ -12,10 +12,10 @@ SkeletonArrow:
 	Inherits: ^Arrow
 	ReloadDelay: 32
 	Range: 5c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-skeleton-arrows
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 22
 	Report: weapon-skeleton-arrows-0.wav
@@ -48,32 +48,36 @@ RedEye:
 		Image: weapon-red-eye
 		Explosions: impact
 
-# Kelpa: breathes fire on the ground before it, splashing 48 px.
+# Kelpa: breathes fire at what stands right before it, splashing 48 px around it. The original's 160 px range is not
+# used: the record is not a projectile (0x14c = 0), so Pw.exe tests the target against the Kelpa's attack rectangle
+# (.chr 0x370-0x37c, doubled: 44 px behind to 58 px ahead; FUN_00457ac3), a reach of about 64 px (2c0) as the
+# Soldier's rectangle gives the melee 1c256. The fire then lands where the target stood (FUN_0047ac00).
 CelberosFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 40
-	Range: 5c0
+	Range: 2c0
 	Projectile: InstantHit
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 40
-		# Splash: full damage within the original radius (1c512).
-		Range: 0, 1c512, 1600
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 48 px splash radius (FUN_00457d4b).
+		Range: 0, 1c512
+		Falloff: 100, 0
 	Report: weapon-celberos-fire-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground
 		Image: weapon-celberos-fire
 		Explosions: impact
 
-# KingDemon: a fireball at ground units (target mask 23).
+# KingDemon: a fireball that pierces ground units along its path (target mask 23).
 KingDemonFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 47
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-kingdemon-fire
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
+		Mode: 4
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 	Report: weapon-kingdemon-fire-0.wav
@@ -86,10 +90,10 @@ NoiseWave:
 	Inherits: ^Arrow
 	ReloadDelay: 44
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-noise-wave
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 26
 	Report: weapon-noise-wave-0.wav
@@ -126,10 +130,10 @@ VolcanoShot:
 	ValidTargets: Ground, Air
 	ReloadDelay: 24
 	Range: 9c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-volcano
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40

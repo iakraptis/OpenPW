@@ -23,15 +23,15 @@ ThrowBomb:
 	Inherits: ^Thrown
 	ReloadDelay: 39
 	Range: 5c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-throw-bomb
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 45
-		# Splash: full damage within the original radius (1c512).
-		Range: 0, 1c512, 1600
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 48 px splash radius.
+		Range: 0, 1c512
+		Falloff: 100, 0
 	Report: weapon-throw-bomb-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -43,10 +43,10 @@ SoldierArrow:
 	Inherits: ^Arrow
 	ReloadDelay: 29
 	Range: 8c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-soldier-arrows
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-soldier-arrows-0.wav
@@ -61,11 +61,11 @@ FireArrow:
 	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
-		# Splash: full damage within the original radius (1c256).
-		Range: 0, 1c256, 1344
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 40 px splash radius.
+		Range: 0, 1c256
+		Falloff: 100, 0
 	Report: weapon-fire-arrow-0.wav
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-fire-arrow
 		Sequences: flight
 	Warhead@2Eff: CreateEffect
@@ -79,8 +79,11 @@ VenomArrow:
 	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
+		# The original damage falls to zero at the 32 px splash radius.
+		Range: 0, 1c0
+		Falloff: 100, 0
 	Report: weapon-poison-arrow-0.wav
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-poison-arrow
 		Sequences: flight
 
@@ -89,10 +92,11 @@ ShootSword:
 	ValidTargets: Ground
 	ReloadDelay: 46
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-shoot-sword-sprit
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
+		Mode: 4
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground
 		Damage: 45
@@ -115,16 +119,17 @@ BowMachineArrow:
 	Inherits: ^Thrown
 	ReloadDelay: 65
 	Range: 11c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-bow-machine-arrows
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
 		LaunchAngle: 0
+		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
-		# Splash: full damage within the original radius (1c0).
-		Range: 0, 1c0, 1088
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 32 px splash radius.
+		Range: 0, 1c0
+		Falloff: 100, 0
 	Report: weapon-bow-machine-arrows-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -147,10 +152,10 @@ Stone:
 	ValidTargets: Ground, Air
 	ReloadDelay: 21
 	Range: 9c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-stone
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40
@@ -178,10 +183,10 @@ SquadronShot:
 	Inherits: ^Arrow
 	ReloadDelay: 33
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-squadron-shoot
 		Sequences: flight
-		Speed: 2112
+		Speed: 704
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-squadron-shoot-0.wav
@@ -192,15 +197,16 @@ PhantomFire:
 	Inherits: ^Arrow
 	ReloadDelay: 56
 	Range: 7c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-phantom-fire
 		Sequences: flight
-		Speed: 1536
+		Speed: 512
+		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 75
-		# Splash: full damage within the original radius (1c512).
-		Range: 0, 1c512, 1600
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 48 px splash radius.
+		Range: 0, 1c512
+		Falloff: 100, 0
 	Report: weapon-phantom-fire-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air

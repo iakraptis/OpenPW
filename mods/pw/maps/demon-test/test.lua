@@ -9,6 +9,7 @@
 -- 7. Rise death (Devil): costs 100 KP; three zombies rise.
 -- 8. Invisibility: the MudMan and the Pixie are invisible to the other players; attacking doesn't reveal the MudMan;
 --    an enemy Revolver (a detector) sees it.
+-- 9. The Kelpa's fire reaches only what stands right before it (2 cells, not its 160 px range).
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -24,6 +25,7 @@ WorldLoaded = function()
     Later(5, Suicide)
     Later(5, RiseDeath)
     Later(5, Invisible)
+    Later(5, KelpaReach)
     FinishWhenDone("DEMON", 4000)
 end
 
@@ -175,5 +177,25 @@ Invisible = function()
                 Check(PwTest.CanSee(enemy, mud), "an enemy Revolver, a detector, sees it")
             end)
         end)
+    end)
+end
+
+KelpaReach = function()
+    -- A Kelpa ordered to attack an enemy Powerman 4 cells away has to walk up to it: its fire only reaches what
+    -- stands right before it. Other sections' units may wander over and hit the Powerman; only the Kelpa's hit counts.
+    local start = CPos.New(20, 30)
+    local kelpa = Actor.Create("demon-kelpa", true, { Owner = me, Location = start })
+    local foe = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = CPos.New(24, 30) })
+    foe.Stance = "HoldFire"
+    local firedFrom
+    Trigger.OnDamaged(foe, function(_, attacker)
+        if attacker == kelpa and not firedFrom then firedFrom = kelpa.Location end
+    end)
+    Later(1, function() kelpa.Attack(foe) end)
+    WaitFor("the Kelpa breathes fire on the Powerman", 400, function() return firedFrom ~= nil end, function(ok)
+        if ok then
+            Check((firedFrom - foe.Location).Length <= 2, "the Kelpa had to come within 2 cells to reach it (fired from "
+                .. firedFrom.X .. "," .. firedFrom.Y .. ")")
+        end
     end)
 end

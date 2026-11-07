@@ -37,10 +37,10 @@ DilophosaurusSpit:
 	Inherits@poison: ^Poison
 	ReloadDelay: 36
 	Range: 4c0
-	Projectile: Bullet
+	Projectile: PwBullet
+		Speed: 576
 		Image: weapon-poison-arrows
 		Sequences: flight
-		Speed: 1728
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 40
 	Report: weapon-poison-arrows-0.wav

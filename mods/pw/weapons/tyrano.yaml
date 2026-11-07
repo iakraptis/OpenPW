@@ -1,5 +1,5 @@
 # Tyrano weapons (docs/game/tyrano.md, docs/formats/effect.md). ReloadDelay is the attack animation plus the attack
-# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32 x 2
+# delay (.chr 0x13dc sequence length + 0x13cc, D); projectile speeds are the weapon's 0x194 x 32
 # (weapons/defaults.yaml).
 
 DinosHit:
@@ -37,10 +37,10 @@ PoisonSpit:
 	Inherits@poison: ^Poison
 	ReloadDelay: 29
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-poison-arrows
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 25
 	Report: weapon-poison-arrows-0.wav
@@ -49,10 +49,10 @@ RhamphosArrow:
 	Inherits: ^Arrow
 	ReloadDelay: 35
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-rhamphos-arrows
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 27
 	Report: weapon-rhamphos-arrows-0.wav
@@ -65,10 +65,10 @@ PterasAxe:
 	Inherits: ^Arrow
 	ReloadDelay: 41
 	Range: 5c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-pteras-axe
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-pteras-axe-0.wav
@@ -82,10 +82,10 @@ CarrnosBoomerang:
 	Inherits: ^Arrow
 	ReloadDelay: 48
 	Range: 7c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-carrnos-boomerang
 		Sequences: flight
-		Speed: 1440
+		Speed: 480
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 50
 	Report: weapon-carrnos-boomerang-0.wav
@@ -99,15 +99,16 @@ EggThrow:
 	Inherits: ^Thrown
 	ReloadDelay: 70
 	Range: 13c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-egg-throw
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
+		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
-		# Splash: full damage within the original radius (1c512).
-		Range: 0, 1c512, 1600
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 48 px splash radius.
+		Range: 0, 1c512
+		Falloff: 100, 0
 	Report: weapon-egg-throw-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -119,15 +120,15 @@ MutantArrow:
 	Inherits: ^Arrow
 	ReloadDelay: 64
 	Range: 6c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-mutant-arrows
 		Sequences: flight
-		Speed: 1728
+		Speed: 576
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
-		# Splash: full damage within the original radius (2c0).
-		Range: 0, 2c0, 2112
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 64 px splash radius.
+		Range: 0, 2c0
+		Falloff: 100, 0
 	Report: weapon-mutant-arrows-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
@@ -152,10 +153,10 @@ AscomoidShot:
 	Inherits: ^Arrow
 	ReloadDelay: 29
 	Range: 9c0
-	Projectile: Bullet
+	Projectile: PwBullet
 		Image: weapon-ascomoid
 		Sequences: flight
-		Speed: 1920
+		Speed: 640
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
 	Report: weapon-ascomoid-0.wav
