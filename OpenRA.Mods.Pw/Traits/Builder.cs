@@ -46,8 +46,8 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly WDist RepairRange = WDist.FromCells(1);
 
 		[GrantedConditionReference]
-		[Desc("Condition granted while working from range.")]
-		public readonly string WorkCondition = "building";
+		[Desc("Condition granted while working from range (the Elf Wizard's casting body); none by default.")]
+		public readonly string WorkCondition = null;
 
 		public override object Create(ActorInitializer init) { return new Builder(this); }
 	}

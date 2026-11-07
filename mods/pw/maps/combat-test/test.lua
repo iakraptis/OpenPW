@@ -220,6 +220,8 @@ do
         local victim = Actor.Create(victimType, true, { Owner = owner, Location = victimAt })
         Later(1, function()
             victim.Stance = "HoldFire"
+            -- Holding fire, it hits only its ordered victim: left free, a chaser could kill another check's victim.
+            attacker.Stance = "HoldFire"
             attacker.Attack(victim)
         end)
         WaitFor(label, 2000, function() return victim.IsDead end, function(ok)

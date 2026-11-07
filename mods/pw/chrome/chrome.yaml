@@ -117,14 +117,14 @@ strategic:
 		player_owned: 160, 142, 22, 22
 
 flags:
-	Inherits: ^Glyphs
+	Image: chrome/assets/faction-flags.png
 	Regions:
-		primitive: 226, 241, 30, 15
-		tyrano: 226, 241, 30, 15
-		demon: 226, 241, 30, 15
-		elf: 226, 241, 30, 15
-		Random: 226, 241, 30, 15
-		spectator: 226, 241, 30, 15
+		primitive: 0, 0, 30, 15
+		tyrano: 30, 0, 30, 15
+		demon: 60, 0, 30, 15
+		elf: 90, 0, 30, 15
+		Random: 120, 0, 30, 15
+		spectator: 150, 0, 30, 15
 
 music:
 	Inherits: ^Glyphs
@@ -406,9 +406,9 @@ editor:
 		hole: 327, 25, 118, 127
 		left-panel: 16, 70, 294, 80
 		right-panel: 462, 70, 322, 80
-		menu: 227, 17, 82, 32
-		allies: 465, 17, 37, 32
-		msg: 504, 17, 41, 32
+		menu: 470, 21, 82, 32
+		allies: 232, 21, 37, 32
+		msg: 270, 21, 41, 32
 
 bar-primitive:
 	Inherits: ^bar
@@ -427,6 +427,9 @@ bar-tyrano:
 	Inherits: ^bar
 	Image: chrome/bar-tyrano.png
 	Regions:
+		menu: 471, 23, 81, 28
+		allies: 228, 23, 45, 28
+		msg: 276, 23, 30, 28
 		left-fixed: 0, 0, 37, 161
 		left-tile: 37, 0, 108, 161
 		left-join: 145, 0, 68, 161
@@ -440,6 +443,9 @@ bar-elf:
 	Inherits: ^bar
 	Image: chrome/bar-elf.png
 	Regions:
+		menu: 469, 22, 85, 31
+		allies: 231, 22, 40, 31
+		msg: 270, 22, 42, 31
 		left-fixed: 0, 0, 81, 161
 		left-tile: 81, 0, 80, 161
 		left-join: 161, 0, 52, 161
@@ -453,6 +459,9 @@ bar-demon:
 	Inherits: ^bar
 	Image: chrome/bar-demon.png
 	Regions:
+		menu: 468, 24, 87, 27
+		allies: 232, 24, 39, 27
+		msg: 271, 24, 40, 27
 		left-fixed: 0, 0, 46, 161
 		left-tile: 46, 0, 59, 161
 		left-join: 105, 0, 108, 161
