@@ -599,6 +599,11 @@ dead.
   - Tests: `bot-test` (the four races' Normal AIs, all against all, on the converted (4) The X Cross, written by
     the installer's `TestMaps.cs`, played out to 40,000 ticks at most, then the standings) and `bot-modules-test`
     (the ability, defence, hunting, transport, merge and spell modules).
+  - AI battles (2026-11-07): `run_tests.py --battles` plays `bot-test`, the four races on (4) Four Ways
+    (`battle-four-ways`) and every pairing of two races on (2) One vs One (`battle-<race>-<race>`), all written by
+    `TestMaps.cs`. Each prints its state every 5,000 ticks and a result line per bot (alive, assets, berries earned and
+    spent, by 5k/10k/20k ticks, peak army and its value, kills and losses); `tools/battle_stats.py` appends them to
+    `test-results/battles.csv` and writes `test-results/battles.md` (wins per race, the duel table, every battle).
   - Tyrano (2026-11-03): the modules play it from its traits. `IsHouse` now needs more than 1 population, because
     the Nisdos (1 population, no queue) counted as houses and were never built as tech. The squad manager lists and
     the weights include it.

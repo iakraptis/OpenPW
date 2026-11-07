@@ -4,6 +4,7 @@ Usage (from the repository root):
   python run_tests.py                 # build + check-yaml + all maps
   python run_tests.py --only start-test,combat-test
   python run_tests.py --no-build --no-check
+  python run_tests.py --battles      # the AI battles (bot-test and battle-* maps, about 90 minutes), then tools/battle_stats.py
 
 Each map is launched with Launch.Map=<map>. A map PASSES when its expected number of "... TEST PASS" lines has
 appeared (C# harness tests print to stdout, Lua tests to %APPDATA%/OpenRA/Logs/lua.log). It FAILS on a
@@ -35,9 +36,9 @@ MANUAL = set()
 EXPECTED_PASSES = {}
 
 DEFAULT_TIMEOUT = 180  # seconds of wall time, including game start-up
-# The bot match plays 40000 ticks at 5x speed (about 9 minutes).
-# The bot battle stops at 25000 ticks (its script's MaxTicks), about 6 minutes at the test speed.
+# The bot battles play up to 40000 ticks at 5x speed (their script's MaxTicks), about 11 minutes at most.
 TIMEOUTS = {'bot-test': 2400}
+BATTLE_TIMEOUT = 2400
 
 FAIL_PATTERN = re.compile(r'TEST FAIL|FAIL:|Fatal Lua Error')
 
@@ -81,7 +82,7 @@ def run_map(name: str):
     lua_log.unlink(missing_ok=True)
     started = time.time()
     expected = EXPECTED_PASSES.get(name, 1)
-    timeout = TIMEOUTS.get(name, DEFAULT_TIMEOUT)
+    timeout = TIMEOUTS.get(name, BATTLE_TIMEOUT if name.startswith('battle-') else DEFAULT_TIMEOUT)
 
     with open(out_path, 'w') as out, open(err_path, 'w') as err:
         proc = subprocess.Popen([str(ENGINE / 'bin' / 'OpenRA.exe'), 'Game.Mod=pw', 'Engine.EngineDir=..',
@@ -125,6 +126,7 @@ def main():
     parser.add_argument('--only', help='comma-separated map names')
     parser.add_argument('--no-build', action='store_true')
     parser.add_argument('--no-check', action='store_true')
+    parser.add_argument('--battles', action='store_true', help='run the AI battles (battle-* maps) and collect their stats')
     args = parser.parse_args()
 
     kill_openra()
@@ -133,8 +135,11 @@ def main():
     yaml_ok = True if args.no_check else check_yaml()
 
     folders = [MAPS] + ([CONTENT_MAPS] if CONTENT_MAPS.is_dir() else [])
-    maps = args.only.split(',') if args.only else sorted({
-        p.name for folder in folders for p in folder.iterdir() if p.name.endswith('-test') and p.name not in MANUAL})
+    if args.battles:
+        maps = sorted(p.name for folder in folders for p in folder.iterdir() if p.name.startswith('battle-') or p.name == 'bot-test')
+    else:
+        maps = args.only.split(',') if args.only else sorted({
+            p.name for folder in folders for p in folder.iterdir() if p.name.endswith('-test') and p.name not in MANUAL})
     results = []
     for name in maps:
         print(f'{name:22} ...', end=' ', flush=True)
@@ -148,6 +153,12 @@ def main():
     lines += [f'| {n} | {v} | {s:.0f}s | {d.replace("|", "/")} |' for n, v, s, d in results]
     (RESULTS / 'summary.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     print(f'\n{passed}/{len(results)} passed, YAML check {"PASS" if yaml_ok else "FAIL"}; see {RESULTS / "summary.md"}')
+    battles = [n for n, _, _, _ in results if n.startswith('battle-') or n == 'bot-test']
+    if battles:
+        sys.path.insert(0, str(SDK / 'tools'))
+        import battle_stats
+        print()
+        battle_stats.main(battles)
     sys.exit(0 if passed == len(results) and yaml_ok else 1)
 
 

@@ -23,11 +23,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// repository's test maps. run_tests.py finds them in the content folder.
 	public static class TestMaps
 	{
-		// bot-test: four Normal AIs, one of each race, all against all on (4) The X Cross, each starting as a player
-		// of its race does (rules/world.yaml StartingUnits): its main building and four workers. Each bot is named
-		// after its race.
-		const string BotTest = "bot-test";
-		const string BotTestBase = "4-the-x-cross";
+		// The duels' map (Battles).
+		const string DuelMap = "2-one-vs-one";
+
 		static readonly (string Faction, string Main, string Worker)[] Races =
 		{
 			("primitive", "primitive-sanctuary", "primitive-buildman"),
@@ -38,24 +36,56 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		static readonly string[] Colors = { "E02020", "2050E0", "20C020", "E0C020" };
 
-		static string BotName((string Faction, string Main, string Worker) race) =>
-			char.ToUpperInvariant(race.Faction[0]) + race.Faction[1..];
+		// Battles of Normal AIs, each starting as a player of its race does (rules/world.yaml StartingUnits): its main
+		// building and four workers, named after its race. bot-test (the four races on (4) The X Cross) is a test with
+		// checks; the battle-* maps only report (run_tests.py --battles runs them, tools/battle_stats.py collects them):
+		// the four races on (4) Four Ways, and every pairing of two races on (2) One vs One.
+		static readonly (string Name, string Title, string BaseMap, bool Checks, int[] Races)[] Battles =
+			new (string Name, string Title, string BaseMap, bool Checks, int[] Races)[]
+			{
+				("bot-test", "Test: Bots", "4-the-x-cross", true, new[] { 0, 1, 2, 3 }),
+				("battle-four-ways", "Battle: Four Ways", "4-four-ways", false, new[] { 0, 1, 2, 3 }),
+			}
+			.Concat(
+				from a in Enumerable.Range(0, Races.Length)
+				from b in Enumerable.Range(a + 1, Races.Length - a - 1)
+				select ($"battle-{Faction(a)}-{Faction(b)}", $"Battle: {BotName(a)} vs {BotName(b)}", DuelMap, false, new[] { a, b }))
+			.ToArray();
+
+		static string Faction(int race) => Races[race].Faction;
+
+		static string BotName(int race) => char.ToUpperInvariant(Races[race].Faction[0]) + Races[race].Faction[1..];
 
 		public static void Export(InstallContext c)
 		{
-			var baseFolder = c.OutputPath($"maps/{BotTestBase}");
-			if (!File.Exists(Path.Combine(baseFolder, "map.yaml")))
+			var script = Encoding.UTF8.GetString(Template("MapTemplates/bot-test/test.lua")).Replace("\r\n", "\n");
+			var testlib = File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/economy-test/testlib.lua"));
+			foreach (var battle in Battles)
 			{
-				c.Warnings.Add($"{BotTest}: no converted map {BotTestBase}");
-				return;
+				var baseFolder = c.OutputPath($"maps/{battle.BaseMap}");
+				if (!File.Exists(Path.Combine(baseFolder, "map.yaml")))
+				{
+					c.Warnings.Add($"{battle.Name}: no converted map {battle.BaseMap}");
+					continue;
+				}
+
+				foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
+					c.WriteFile($"maps/{battle.Name}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
+
+				c.WriteText($"maps/{battle.Name}/test.lua", Script(script, battle.Name, battle.Checks, battle.Races));
+				c.WriteFile($"maps/{battle.Name}/testlib.lua", testlib);
+				var source = File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n");
+				c.WriteText($"maps/{battle.Name}/map.yaml", BattleYaml(source, battle.Title, battle.Races));
 			}
+		}
 
-			foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
-				c.WriteFile($"maps/{BotTest}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
-
-			c.WriteFile($"maps/{BotTest}/test.lua", Template($"MapTemplates/{BotTest}/test.lua"));
-			c.WriteFile($"maps/{BotTest}/testlib.lua", File.ReadAllBytes(Path.Combine(c.ModFolder, "maps/economy-test/testlib.lua")));
-			c.WriteText($"maps/{BotTest}/map.yaml", BotTestYaml(File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n")));
+		// The template with this battle's settings: its bots, whether it checks, its name.
+		static string Script(string template, string name, bool checks, int[] races)
+		{
+			var bots = string.Join(", ", races.Select(r => "\"" + BotName(r) + "\""));
+			var lua = Regex.Replace(template, "^Bots = .*$", "Bots = { " + bots + " }", RegexOptions.Multiline);
+			lua = Regex.Replace(lua, "^Checks = .*$", "Checks = " + (checks ? "true" : "false"), RegexOptions.Multiline);
+			return Regex.Replace(lua, "^BattleName = .*$", "BattleName = \"" + name + "\"", RegexOptions.Multiline);
 		}
 
 		static byte[] Template(string name)
@@ -70,7 +100,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return memory.ToArray();
 		}
 
-		static string BotTestYaml(string source)
+		static string BattleYaml(string source, string title, int[] races)
 		{
 			var lines = source.Split('\n');
 			string Field(string name) => lines.First(l => l.StartsWith(name + ":", System.StringComparison.Ordinal));
@@ -89,8 +119,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					actors.Add(lines[++i]);
 			}
 
-			var bots = Races.Select(BotName).ToArray();
-			var s = new StringBuilder("MapFormat: 12\n\nRequiresMod: pw\n\nTitle: Test: Bots\n\nAuthor: OpenPW\n\n");
+			var bots = races.Select(BotName).ToArray();
+			var s = new StringBuilder($"MapFormat: 12\n\nRequiresMod: pw\n\nTitle: {title}\n\nAuthor: OpenPW\n\n");
 			s.Append($"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
@@ -101,8 +131,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < bots.Length; i++)
 			{
 				var enemies = bots.Where(b => b != bots[i]).Append("Creeps");
-				s.Append($"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: normal\n\t\tFaction: {Races[i].Faction}\n\t\tLockFaction: True\n");
-				s.Append($"\t\tColor: {Colors[i]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
+				s.Append($"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: normal\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
+				s.Append($"\t\tColor: {Colors[races[i]]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 
 			// Each bot's start: what StartingUnits gives a player of its race (rules/world.yaml), at its spawn point.
@@ -110,7 +140,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < bots.Length && i < starts.Count; i++)
 			{
 				var (x, y) = starts[i];
-				var (_, main, worker) = Races[i];
+				var (_, main, worker) = Races[races[i]];
 				s.Append($"\t{bots[i]}Main: {main}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x},{y}\n");
 				for (var w = 0; w < 4; w++)
 					s.Append($"\t{bots[i]}Worker{w}: {worker}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");

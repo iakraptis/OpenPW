@@ -1,10 +1,14 @@
--- Four Normal AIs, one of each race, all against all on (4) The X Cross at 5x speed, each from its main building
--- and four workers; each is named after its race. Every one must grow its workforce, build a base and an army, and
--- guard it early with towers (by the main building and by the berries); they must fight early, and some bot must
--- destroy a building of another. The battle then goes on until one bot is left or MaxTicks (a hard cap), and the
--- standings are printed: what each bot has left, its kills and its losses.
+-- Normal AIs, all against all on a converted original map at 5x speed, each from its main building and four
+-- workers; each is named after its race. The installer writes one map per battle (AssetInstaller/TestMaps.cs) and sets
+-- Bots, Checks and BattleName below. With Checks (bot-test), every bot must grow its workforce, build a base and an
+-- army, and guard it early with towers (by the main building and by the berries); they must fight early, and some bot
+-- must destroy a building of another. The battle goes on until one bot is left or MaxTicks (a hard cap). Every 5000
+-- ticks each bot's state is printed; at the end, one "BATTLE RESULT" line per bot and a "BATTLE END" line, which
+-- tools/battle_stats.py collects.
 MaxTicks = 40000
 Bots = { "Primitive", "Tyrano", "Demon", "Elf" }
+Checks = true
+BattleName = "bot-test"
 -- Written by the asset installer (OpenRA.Mods.Pw/AssetInstaller/MapTemplates/bot-test) on the converted map.
 Races = {
     primitive = {
@@ -50,15 +54,21 @@ WorldLoaded = function()
         local p = Player.GetPlayer(name)
         players[#players + 1] = p
         isBot[name] = true
-        peak[name] = { workers = 0, base = 0, army = 0, towers = 0 }
+        peak[name] = { workers = 0, base = 0, army = 0, towers = 0, armyValue = 0 }
         guard[name] = { }
         nextReport[name] = 0
     end
     kills = 0
     buildingKills = 0
     score = { }
-    for _, name in ipairs(Bots) do score[name] = { kills = 0, losses = 0 } end
+    for _, name in ipairs(Bots) do score[name] = { kills = 0, losses = 0, gone = nil, earned = { } } end
     Watch()
+    Battle()
+    if not Checks then
+        FinishWhenDone("BATTLE", MaxTicks)
+        return
+    end
+
     for _, p in ipairs(Bots) do
         WaitFor(p .. " trains workers (6+)", 6000, function() return peak[p].workers >= 6 end)
         WaitFor(p .. " builds a base (3+ buildings besides the main one)", 15000, function() return peak[p].base >= 3 end)
@@ -70,7 +80,6 @@ WorldLoaded = function()
     end
     WaitFor("the bots fight (a kill within 15000 ticks)", 15000, function() return kills > 0 end)
     WaitFor("a bot destroys a building of another", MaxTicks, function() return buildingKills > 0 end)
-    Battle()
     FinishWhenDone("BOT", MaxTicks)
 end
 
@@ -80,23 +89,46 @@ Standing = function(p)
     return #p.GetActorsByTypes({ race.Main }) + #p.GetActorsByTypes(race.Base), p.GetActorsByTypes(race.Army)
 end
 
--- Goes on while two bots or more still have something, then prints the standings.
+-- Goes on while two bots or more still have something, then prints the standings. The winner is the last bot
+-- standing; at MaxTicks there is none, and the leader is the one owning the most (PwTest.AssetValue).
 Battle = function()
-    local alive = 0
+    local alive = { }
     for _, p in ipairs(players) do
         local buildings, army = Standing(p)
-        if buildings + #army > 0 then alive = alive + 1 end
+        if buildings + #army > 0 then
+            alive[#alive + 1] = p
+        elseif not score[p.InternalName].gone then
+            score[p.InternalName].gone = DateTime.GameTime
+        end
     end
-    if alive > 1 and DateTime.GameTime < MaxTicks - 300 then
+    if #alive > 1 and DateTime.GameTime < MaxTicks - 300 then
         Later(250, Battle)
         return
+    end
+
+    local winner = #alive == 1 and alive[1].InternalName or "none"
+    local leader, best = "none", -1
+    for _, p in ipairs(alive) do
+        local value = PwTest.AssetValue(p)
+        if value > best then leader, best = p.InternalName, value end
     end
     for _, p in ipairs(players) do
         local name = p.InternalName
         local buildings, army = Standing(p)
+        local s = score[name]
         print("bot: standing at tick " .. DateTime.GameTime .. ": " .. name .. " buildings " .. buildings .. ", army "
-            .. #army .. " (" .. Census(army) .. "), kills " .. score[name].kills .. ", losses " .. score[name].losses)
+            .. #army .. " (" .. Census(army) .. "), kills " .. s.kills .. ", losses " .. s.losses)
+        print("BATTLE RESULT battle=" .. BattleName .. " bot=" .. name .. " race=" .. p.Faction
+            .. " alive=" .. ((buildings + #army > 0) and 1 or 0) .. " gone=" .. (s.gone or -1)
+            .. " buildings=" .. buildings .. " army=" .. #army .. " armyValue=" .. PwTest.ArmyValue(p)
+            .. " assets=" .. PwTest.AssetValue(p) .. " peakWorkers=" .. peak[name].workers .. " peakArmy=" .. peak[name].army
+            .. " peakArmyValue=" .. peak[name].armyValue .. " earned=" .. PwTest.Earned(p) .. " spent=" .. PwTest.Spent(p)
+            .. " earned5k=" .. (s.earned[5000] or -1) .. " earned10k=" .. (s.earned[10000] or -1)
+            .. " earned20k=" .. (s.earned[20000] or -1) .. " kills=" .. s.kills .. " losses=" .. s.losses
+            .. " killsValue=" .. p.KillsCost .. " lossesValue=" .. p.DeathsCost)
     end
+    print("BATTLE END battle=" .. BattleName .. " tick=" .. DateTime.GameTime .. " winner=" .. winner .. " leader=" .. leader)
+    battleOver = true
 end
 
 -- "type n, type n" of these actors, without the race prefix.
@@ -120,6 +152,8 @@ Watch = function()
         if workers > peak[name].workers then peak[name].workers = workers end
         if #base > peak[name].base then peak[name].base = #base end
         if #army > peak[name].army then peak[name].army = #army end
+        local armyValue = PwTest.ArmyValue(p)
+        if armyValue > peak[name].armyValue then peak[name].armyValue = armyValue end
         local towers = p.GetActorsByTypes(race.Towers)
         if #towers > peak[name].towers then peak[name].towers = #towers end
         local hq = Map.NamedActor(name .. "Main")
@@ -149,11 +183,14 @@ Watch = function()
             end
         end
         if DateTime.GameTime >= nextReport[name] then
+            -- The berries earned by each 5000 ticks, for the economy comparison.
+            if nextReport[name] > 0 then score[name].earned[nextReport[name]] = PwTest.Earned(p) end
             nextReport[name] = nextReport[name] + 5000
             print("bot: tick " .. DateTime.GameTime .. " " .. name .. " workers " .. workers .. ", buildings " .. #base
-                .. " (" .. Census(base) .. "), army " .. #army .. " (" .. Census(army) .. "), berries "
-                .. (p.Cash + p.Resources) .. ", kills " .. score[name].kills .. ", losses " .. score[name].losses)
+                .. " (" .. Census(base) .. "), army " .. #army .. " (" .. Census(army) .. ", value " .. armyValue
+                .. "), berries " .. (p.Cash + p.Resources) .. " (earned " .. PwTest.Earned(p) .. ", spent "
+                .. PwTest.Spent(p) .. "), kills " .. score[name].kills .. ", losses " .. score[name].losses)
         end
     end
-    if not finished then Trigger.AfterDelay(250, Watch) end
+    if not finished and not battleOver then Trigger.AfterDelay(250, Watch) end
 end

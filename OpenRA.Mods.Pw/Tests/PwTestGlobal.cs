@@ -95,6 +95,19 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Population limit: what the player's finished buildings provide.")]
 		public int PopulationLimit(Player player) => PwPopulation.Capacity(player);
 
+		[Desc("Berries a player has earned (gathered, plus refunds) since the start; not its starting berries.")]
+		public int Earned(Player player) => player.PlayerActor.Trait<PlayerResources>().Earned;
+
+		[Desc("Berries a player has spent since the start.")]
+		public int Spent(Player player) => player.PlayerActor.Trait<PlayerResources>().Spent;
+
+		[Desc("The cost of a player's army units (armed units that aren't workers) alive now.")]
+		public int ArmyValue(Player player) =>
+			PwBotUtils.Owned(player.World, player).Where(a => a.IsInWorld && PwBotUtils.IsArmy(a.Info)).Sum(a => PwBotUtils.Cost(a.Info));
+
+		[Desc("The cost of everything a player owns now: units, workers and buildings.")]
+		public int AssetValue(Player player) => PwBotUtils.Owned(player.World, player).Sum(a => PwBotUtils.Cost(a.Info));
+
 		[Desc("A unit's level, or -1 if it doesn't level.")]
 		public int Level(Actor actor) => actor.TraitOrDefault<PwLevels>()?.Level ?? -1;
 
