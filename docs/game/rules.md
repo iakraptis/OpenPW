@@ -109,6 +109,9 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
   - row 2: spell power: the spell's effect is raised by this % (C, `0x478db8` reads the table at `0xe5e0b8` + 0x50);
   - rows 4 and 5 (Dilophos; MudMan and Gargoyle): no code reads them, so they have no effect.
 
+In the mod, a unit that gains a level shows the Level Up art (`JW2_11` record 23, played twice as fast as the
+original's frames) and its sound, only where the viewer can see the unit (`PwLevels`).
+
 ## Upgrades (`Upgrade.upi`)
 
 64 records of 0x394 bytes after a `u32` 100. Each building lists the upgrades it researches (`.chr` 0x2c8 count,
