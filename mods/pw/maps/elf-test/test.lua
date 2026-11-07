@@ -13,6 +13,7 @@
 -- 12. Berry fly: a Wizard stays at the bush, and the berries fly to the Heaven by themselves (here the Enemy player's,
 --     whose cash nothing else touches).
 -- 13. The Bubble tower deals 1 damage and traps the target in its bubble for 72 ticks.
+-- 14. Cast on a unit, Cure heals that one first, though another is more hurt.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -33,7 +34,26 @@ WorldLoaded = function()
     Later(5, JumpPortal)
     Later(5, BerryFly)
     Later(5, Bubble)
+    Later(5, CurePreferred)
     FinishWhenDone("ELF", 4000)
+end
+
+CurePreferred = function()
+    local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(10, 31) })
+    local worse = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(9, 31) })
+    local chosen = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(11, 31) })
+    worse.Stance = "HoldFire"
+    chosen.Stance = "HoldFire"
+    Later(2, function()
+        worse.Health = 20
+        chosen.Health = 60
+        PwTest.CastOn(unicorn, "cure", chosen)
+        WaitFor("Cure heals the unit it was cast on first", 100, function() return chosen.Health == chosen.MaxHealth end,
+            function(ok)
+                if ok then Check(worse.Health < worse.MaxHealth, "the more hurt one waits its turn") end
+                WaitFor("then the other", 200, function() return worse.Health == worse.MaxHealth end)
+            end)
+    end)
 end
 
 Bubble = function()

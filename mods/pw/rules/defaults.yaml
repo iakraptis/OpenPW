@@ -74,7 +74,7 @@
 		UseDeathTypeSuffix: false
 		CrushedSequence: die
 	# Stone curse (a Kelpa's spell, PwSpell) turns it to stone for a while: grey, it can't move or attack (the
-	# movement and attack mixins pause on "petrified" or "stunned").
+	# movement and attack mixins pause on "petrified", "stunned" or "bubbled").
 	ExternalCondition@PETRIFIED:
 		Condition: petrified
 	WithColoredOverlay@PETRIFIED:
@@ -87,6 +87,7 @@
 	WithColoredOverlay@STUNNED:
 		Color: 40FF4080
 		RequiresCondition: stunned
+	# The Elf Bubble tower's shot traps it in a bubble for a while: it can't move or attack.
 	ExternalCondition@BUBBLED:
 		Condition: bubbled
 	WithIdleOverlay@BUBBLED:
