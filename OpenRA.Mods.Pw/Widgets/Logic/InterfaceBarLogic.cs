@@ -159,7 +159,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
 
-			// Keep a fixed selection area and reserve the training column at the far right.
+			// The selection panel takes the left panel, less the training column at its far right.
 			var left = bar.Area("left-panel");
 			var panelGap = (int)(PanelGap * bar.Scale);
 			var trainingWidth = Math.Min((int)(TrainingWidth * bar.Scale), Math.Max(0, left.Width));
@@ -242,8 +242,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var actorInfo = world.Map.Rules.Actors[item.Item];
 			var image = actorInfo.TraitInfoOrDefault<RenderSpritesInfo>()?.Image ?? actorInfo.Name;
 			var iconSequence = actorInfo.TraitInfo<BuildableInfo>().Icon;
-			var sprite = world.Map.Sequences.HasSequence(image, iconSequence)
-				? world.Map.Sequences.GetSequence(image, iconSequence).GetSprite(0)
+			var sequences = world.Map.Sequences;
+			var sprite = sequences.Images.Contains(image) && sequences.HasSequence(image, iconSequence)
+				? sequences.GetSequence(image, iconSequence).GetSprite(0)
 				: null;
 			if (sprite == null)
 			{
