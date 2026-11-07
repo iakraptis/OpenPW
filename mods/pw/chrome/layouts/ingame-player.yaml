@@ -97,6 +97,14 @@ Container@PLAYER_WIDGETS:
 					Width: 100
 					Height: 5
 					Color: 28C828
+				StretchedImage@MEAT_ICON:
+					Width: 14
+					Height: 14
+					Visible: false
+					ImageCollection: resource-icons
+					ImageName: food
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: SIMPLE_TOOLTIP
 				LabelWithTooltip@NAME:
 					Width: 200
 					Height: 18
@@ -506,6 +514,25 @@ Container@PLAYER_WIDGETS:
 							Width: 34
 							Height: 4
 							Color: 28C828
+		# The current unit being trained, beside the selection panel.
+		Container@TRAINING_PANEL:
+			Width: 72
+			Height: 80
+			Children:
+				Sprite@ICON:
+					Width: 48
+					Height: 48
+					Visible: false
+				ColorBlock@PROGRESS_BACK:
+					Width: 64
+					Height: 4
+					Visible: false
+					Color: 000000
+				ColorBlock@PROGRESS_FILL:
+					Width: 64
+					Height: 4
+					Visible: false
+					Color: 28C828
 		# What the selection can build, train or do (CommandPanelLogic), on the bar's right panel.
 		Container@COMMAND_PANEL:
 			Logic: CommandPanelLogic

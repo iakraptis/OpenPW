@@ -42,6 +42,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly ColorBlockWidget healthBack, healthFill;
 		readonly LabelWithTooltipWidget name;
 		readonly LabelWithTooltipWidget[] lines;
+		readonly StretchedImageWidget meatIcon;
 		readonly ButtonWidget[] icons;
 		Actor[] shown = Array.Empty<Actor>();
 
@@ -56,6 +57,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			healthBack = widget.Get<ColorBlockWidget>("HEALTH_BACK");
 			healthFill = widget.Get<ColorBlockWidget>("HEALTH_FILL");
 			name = widget.Get<LabelWithTooltipWidget>("NAME");
+			meatIcon = widget.Get<StretchedImageWidget>("MEAT_ICON");
 			lines = Enumerable.Range(0, 6).Select(i => widget.Get<LabelWithTooltipWidget>($"LINE_{i}")).ToArray();
 			icons = Enumerable.Range(0, MaxIcons).Select(i => widget.Get<ButtonWidget>($"UNIT_{i}")).ToArray();
 			for (var i = 0; i < icons.Length; i++)
@@ -114,6 +116,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			if (selected.Length == 0)
 			{
 				portrait.Visible = name.Visible = healthBack.Visible = healthFill.Visible = false;
+				meatIcon.Visible = false;
 				Hide(lines);
 				Hide(icons);
 				return;
@@ -136,6 +139,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		void ShowOne(Actor actor, int width, int height, float k)
 		{
 			Hide(icons);
+			meatIcon.Visible = false;
 			shown = Array.Empty<Actor>();
 
 			var size = (int)(50 * k);
@@ -166,6 +170,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			// The numbers, two columns of three lines under the health bar.
 			var entries = new List<(string Text, string Tooltip)>();
+			var meatEntryIndex = -1;
 			if (health != null)
 			{
 				// A Demon's health is its kill points.
@@ -187,7 +192,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			var meat = actor.TraitOrDefault<PwMeatEater>();
 			if (meat != null)
-				entries.Add((FluentProvider.GetMessage("label-stat-meat", "meat", meat.Meat), FluentProvider.GetMessage("tooltip-stat-meat")));
+			{
+				meatEntryIndex = entries.Count;
+				entries.Add((FluentProvider.GetMessage("label-stat-meat-amount", "meat", meat.Meat),
+					FluentProvider.GetMessage("tooltip-stat-meat")));
+			}
 
 			var mana = actor.TraitOrDefault<PwMana>();
 			if (mana != null)
@@ -208,7 +217,20 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					continue;
 
 				var (text, tooltip) = entries[i];
-				line.Bounds = new WidgetBounds(x + i / 3 * (textWidth / 2), top + i % 3 * lineHeight, textWidth / 2, lineHeight);
+				var lineX = x + i / 3 * (textWidth / 2);
+				var lineY = top + i % 3 * lineHeight;
+				var lineWidth = textWidth / 2;
+				if (i == meatEntryIndex)
+				{
+					var iconSize = (int)(14 * k);
+					meatIcon.Visible = true;
+					meatIcon.Bounds = new WidgetBounds(lineX, lineY + (lineHeight - iconSize) / 2, iconSize, iconSize);
+					meatIcon.GetTooltipText = () => tooltip;
+					lineX += iconSize + pad;
+					lineWidth -= iconSize + pad;
+				}
+
+				line.Bounds = new WidgetBounds(lineX, lineY, lineWidth, lineHeight);
 				line.GetText = () => text;
 				line.GetTooltipText = () => tooltip;
 			}
@@ -217,6 +239,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		void ShowMany(Actor[] selected, int width, int height, float k)
 		{
 			portrait.Visible = name.Visible = healthBack.Visible = healthFill.Visible = false;
+			meatIcon.Visible = false;
 			Hide(lines);
 
 			shown = selected.Take(MaxIcons).ToArray();
