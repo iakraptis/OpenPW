@@ -41,8 +41,8 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly string CarryingCondition = "carrying";
 
 		[GrantedConditionReference]
-		[Desc("Condition granted while berries fly to the drop-off.")]
-		public readonly string FlightCondition = "berry-flight";
+		[Desc("Condition granted while berries fly to the drop-off (FliesBerries: the Elf Wizard's pose); none by default.")]
+		public readonly string FlightCondition = null;
 
 		[Desc("The worker stays at the bush and its berries fly to the main building (the Elf Wizard's Berry fly, JW2_11 ",
 			"record 16) instead of being carried there.")]

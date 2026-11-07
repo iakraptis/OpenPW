@@ -75,6 +75,12 @@ does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage k
   per 32 ticks until gone; the other items 400 (C, `FUN_00462a30`). The mod keeps the other items until picked up.
 - Mod addition: dead wild creatures come back where they were placed after a long delay (`PwRespawns`).
 
+## Repairs
+
+In the mod, a worker ordered onto a damaged, finished friendly building repairs it (`Builder`, `RepairBuildingActivity`):
+up to 7 HP every 24 ticks, each step paid as its share of 20% of the building's value (at least 1 berry), as OpenRA's
+defaults. It stops when the building is whole or the berries run out.
+
 ## The Chief
 
 - Morale (help file, Special Abilities: "the Morale of chiefs can add to nearby primitive units"): Primitive units
@@ -108,6 +114,9 @@ Units with flag bit 1 (0x1f4 & 2) gain levels 0–9 (C, `FUN_00458b2c`).
   - row 1: attack range bonus in pixels, also against air;
   - row 2: spell power: the spell's effect is raised by this % (C, `0x478db8` reads the table at `0xe5e0b8` + 0x50);
   - rows 4 and 5 (Dilophos; MudMan and Gargoyle): no code reads them, so they have no effect.
+
+In the mod, a unit that gains a level shows the Level Up art (`JW2_11` record 23, played twice as fast as the
+original's frames) and its sound, only where the viewer can see the unit (`PwLevels`).
 
 ## Upgrades (`Upgrade.upi`)
 

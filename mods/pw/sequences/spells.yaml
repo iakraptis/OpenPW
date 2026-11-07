@@ -259,7 +259,7 @@ spell-berry-fly:
 	flight:
 		Start: 40
 		Length: 16
-		Tick: 360
+		Tick: 180
 
 spell-elf-build:
 	Defaults:
@@ -343,6 +343,6 @@ spell-level-up:
 	effect:
 		Start: 0
 		Length: 47
-		Tick: 160
+		Tick: 80
 		BlendMode: Screen
 

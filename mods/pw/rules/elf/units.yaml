@@ -48,6 +48,7 @@ elf-wizard:
 		Weapon: WizardFirebolt
 	BerryGatherer:
 		FliesBerries: true
+		FlightCondition: berry-flight
 	# The Wizard casts at the bush, then keeps casting toward the berry as it flies home.
 	WithIdleOverlay@MAGIC:
 		Image: spell-berry-fly
