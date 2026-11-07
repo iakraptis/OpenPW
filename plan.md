@@ -565,8 +565,11 @@ dead.
 ### Phase 7: AI, UI and audio
 - [x] **Interface** (2026-11-02, branch `ui`):
   - The race's interface bar (Intfbg, `InterfaceBarWidget` + `InterfaceBarLogic`) scaled to any window: minimap in
-    its hole, selection panel (portrait, HP, level, attack, armour, meat, mana; several units as a grid) on the
-    left, command panel (two rows of slots) on the right, Menu / Allies / Msg buttons with their original art.
+    its hole, selection panel (portrait, HP, level, attack, armour, meat icon and carried amount, mana; several units
+    as a grid) and a compact current unit training or upgrade progress indicator for the selected producer building on
+    the left, command panel (two rows of slots) on the right, Menu / Allies / Msg buttons with their original art.
+  - Menu sits at the right of the minimap; Allies and Msg sit together on its left, consistently across all four races.
+    Custom race flags appear in the lobby's faction picker.
   - Berries and population top right with the original Food and House icons (`StretchedImageWidget`).
   - Tooltips on everything; unavailable build and train options are listed dimmed with what they need.
   - The original main menu (`Main.mnt`, `PwMainMenuLogic`) scaled to the window; Intro is disabled (its Bink
