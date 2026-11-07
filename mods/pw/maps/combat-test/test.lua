@@ -16,6 +16,8 @@ do
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
     -- 4. A melee unit can hit a large building (Buildman, attack 10, on a PowerHouse, armour 0).
     -- 3. A weak hit still does 1 (Buildman, attack 10, on a Powerman with Shield of Peace, armour 10).
+    -- 5. A worker repairs a damaged friendly building for a price (Builder), in the map's spare corner; not without
+    --    the berries for the next step, not a whole one, not an enemy's.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")

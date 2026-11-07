@@ -16,6 +16,9 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Activities
 {
+	// A worker repairs a damaged friendly building (Builder's repair order): it walks within RepairRange, then every
+	// RepairInterval ticks restores up to RepairStep HP for its share of RepairPercent of the building's value. It
+	// stops when the building is whole, gone, or the owner can't pay for the next step.
 	public class RepairBuildingActivity : Activity
 	{
 		const int MaxMoveAttempts = 3;
