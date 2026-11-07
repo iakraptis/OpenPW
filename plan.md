@@ -453,12 +453,10 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
       `GrantConditionOnPrerequisiteManager` on the player (it crashed without). Checked in `combat-test` (Defence)
       and `demon-test`.
 - [x] **Combat tuning** (2026-11-02):
-  - `SubtractArmorDamage` is area damage like the engine's `SpreadDamage` (as OpenSYW's arrows): projectiles hurt
-    what they land near, full within 100, then 37/14/5%. Melee keeps a near-zero spread; splash weapons keep full
-    damage within the original radius (`Range: 0, r, r+64`, `Falloff: 100, 100, 0`).
-  - Projectile speeds were raised by 50% from their previous values on 2026-11-05 (listed missiles now fly three
-    times as fast as in the original). Bullets still don't follow their target, so fast creatures dodge some; homing
-    projectiles are the open option.
+  - Missiles (2026-11-07, `PwBullet`, missileplan.md): the original's projectile modes (`JW2_12` 0x190) at the
+    original speeds. Mode 2 tracks its unit and always hits it, damaging only it unless it has splash; mode 4 pierces
+    enemies along its path (not allies) to full range; mode 0 flies to a fixed point. Splash falls linearly to the
+    original radius (`FUN_00457d4b`). Before, bullets flew to where the target was and fast units dodged them.
   - Units scan 5 cells and attack enemies on their own (`AttackAnything`), as OpenSYW's infantry.
   - The Squadron's shot has no impact effect (only its two spears).
 - [x] **Effects** (2026-11-02): glowing art (fire, sparks, magic) is painted on black; drawn opaque it showed black

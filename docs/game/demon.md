@@ -29,6 +29,10 @@ and is never trained.
 | 60 | RiseZombie2 | 99 | 30→30 | 5→5 | 32 | 256 | 26 | 5.0 | 0 | 0 (0 s) | 0 | 10 | R-zombie.wpn | – | – |
 | 61 | Imp | 150 | 30→30 | 5→5 | 32 | 288 | 20 | 6.0 | 0 | 0 (0 s) | 1 | 10 | – | – | – |
 
+The Kelpa's Celberos fire is not a projectile (`JW2_12` 0x14c = 0), so its 160 px range is never used: Pw.exe
+attacks only a unit touching the Kelpa's attack rectangle (`.chr` 0x370–0x37c, doubled; C, `FUN_00457ac3`), about
+64 px, and the fire splashes 48 px around where that unit stood. The mod gives it a 2-cell reach.
+
 ## Buildings
 
 | # | Building | HP | Armour | Cost | Time | Size | Pop | Needs | Trains | Researches | Sells |

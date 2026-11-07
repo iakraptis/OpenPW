@@ -3,10 +3,10 @@
 # Projectile speeds match the original: an arrow of 18 px a tick flies 576 WDist (about 8 cells a second).
 # Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
 
-# Hits strike the target actor itself (TargetActorCenter). A projectile flies to where the target was and damages what
-# it lands near, as OpenSYW's arrows do: full damage within 100 (a tenth of a cell) of a unit's body, then 37%, 14%
-# and 5% each 100 further (the engine's SpreadDamage falloff), so a target that moved on a little is still hit. Splash
-# weapons set Range and Falloff to reduce damage linearly from the impact point to the original splash radius.
+# Missiles follow the original's modes (PwBullet, missileplan.md): mode 2 tracks its unit and hands the damage straight
+# to it (nobody beside it is hurt; with splash, the damage spreads around it); mode 4 pierces enemies along its path;
+# mode 0 flies to a fixed point. Melee hits strike the target itself. Splash weapons set Range and Falloff, damage
+# falling linearly from the impact point to the original splash radius; the Spread below only serves the rest.
 ^PwWeapon:
 	ValidTargets: Ground
 	TargetActorCenter: true

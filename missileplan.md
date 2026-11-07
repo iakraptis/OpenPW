@@ -111,7 +111,12 @@ Implemented for all inventory entries:
 - `PwBullet` preserves OpenRA projectile rendering and uses original travel speeds while implementing
   original modes 0 (fixed endpoint), 2 (tracks the target actor), and 4 (pierces actors along its path).
 - Mode-2 impacts resolve at the tracked actor's current position after the flight, so terrain collision cannot
-  prematurely end a target-tracking shot.
+  prematurely end a target-tracking shot. Without splash, the damage goes to the target alone, as the original
+  passes the target to the damage routine (`0x4770f7` → `FUN_00457d4b` with the target actor; C); with splash, it
+  spreads around the target. If the target is dead when the shot arrives, a shot without splash hurts no one
+  (`0x477107` skips the damage for a dead target; C).
+- Mode-4 path collision skips the shooter's allies other than the aimed target, as `FUN_0047afc0` does (it tests
+  the actor's player against the shooter's alliance mask; C).
 - Mode-4 collision samples the path every 2 px against enabled OpenRA hit shapes. This intentionally approximates
   the original actor-specific `.chr` rectangles; a projectile hits each actor at most once, up to the original
   16-actor limit. It continues along its aimed direction to the weapon's full effective range, even if the aimed
@@ -122,8 +127,9 @@ Implemented for all inventory entries:
 - The source-record audit keyed records by their actual `index` and confirmed all 29 inventory entries have the
   documented mode and speed (`original px/tick x 32 WDist/px`). Item variants inherit their base projectile's
   mode and speed.
-- The focused `combat-test` covers target tracking, path piercing through the aimed target to full weapon range,
-  single-hit behavior, fixed-endpoint path avoidance, splash falloff, and the hostile-wildlife projectile rule.
+- The focused `combat-test` covers target tracking, the direct hit sparing a unit beside the target, path piercing
+  through the aimed target to full weapon range, passing allies, single-hit behavior, fixed-endpoint path
+  avoidance, splash falloff, and the hostile-wildlife projectile rule.
 
 ## Work plan
 

@@ -48,17 +48,20 @@ RedEye:
 		Image: weapon-red-eye
 		Explosions: impact
 
-# Kelpa: breathes fire on the ground before it, splashing 48 px.
+# Kelpa: breathes fire at what stands right before it, splashing 48 px around it. The original's 160 px range is not
+# used: the record is not a projectile (0x14c = 0), so Pw.exe tests the target against the Kelpa's attack rectangle
+# (.chr 0x370-0x37c, doubled: 44 px behind to 58 px ahead; FUN_00457ac3), a reach of about 64 px (2c0) as the
+# Soldier's rectangle gives the melee 1c256. The fire then lands where the target stood (FUN_0047ac00).
 CelberosFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 40
-	Range: 5c0
+	Range: 2c0
 	Projectile: InstantHit
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 40
-		# Splash: full damage within the original radius (1c512).
-		Range: 0, 1c512, 1600
-		Falloff: 100, 100, 0
+		# The original damage falls to zero at the 48 px splash radius (FUN_00457d4b).
+		Range: 0, 1c512
+		Falloff: 100, 0
 	Report: weapon-celberos-fire-0.wav
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground

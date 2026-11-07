@@ -18,6 +18,8 @@ do
     -- 3. A weak hit still does 1 (Buildman, attack 10, on a Powerman with Shield of Peace, armour 10).
     -- 5. A worker repairs a damaged friendly building for a price (Builder), in the map's spare corner; not without
     --    the berries for the next step, not a whole one, not an enemy's.
+    -- 6. Missiles (PwBullet): a tracking arrow hits a target that moved, and only it; a piercing sword hits each enemy
+    --    on its path once, to full range, and passes allies; a fixed-endpoint arrow ignores its path and splashes.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -91,6 +93,34 @@ do
             Check(fullRangeTarget.MaxHealth - fullRangeTarget.Health == 40,
                 "a mode-4 sword hits an actor beyond its aimed target once")
         end)
+
+        -- A tracking arrow without splash hurts only its target, not one standing in the same cell (the original hands
+        -- the damage straight to the target).
+        local archer = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(12, 16) })
+        local marked = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(18, 16) })
+        local bystander = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(18, 16) })
+        marked.Stance = "HoldFire"
+        bystander.Stance = "HoldFire"
+        Later(1, function() archer.Attack(marked) end)
+        WaitFor("a mode-2 arrow hits its target", 300, function() return marked.Health < marked.MaxHealth end, function(ok)
+            if not ok then return end
+            archer.Stop()
+            Check(bystander.Health == bystander.MaxHealth, "a mode-2 arrow without splash spares the unit beside its target")
+        end)
+
+        -- A piercing sword passes through the thrower's allies (Pw.exe FUN_0047afc0 skips them).
+        local thrower = Actor.Create("primitive-knight", true, { Owner = me, Location = At(10, 8) })
+        local friend = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(12, 8) })
+        local foe = Actor.Create("primitive-giant", true, { Owner = enemy, Location = At(14, 8) })
+        friend.Stance = "HoldFire"
+        foe.Stance = "HoldFire"
+        Later(1, function() thrower.Attack(foe) end)
+        WaitFor("a mode-4 sword thrown past an ally hits the enemy", 300, function() return foe.Health < foe.MaxHealth end,
+            function(ok)
+                if not ok then return end
+                thrower.Stop()
+                Check(friend.Health == friend.MaxHealth, "a mode-4 sword passes through an ally")
+            end)
 
         local bowMachine = Actor.Create("primitive-bowmachine", true, { Owner = me, Location = At(20, 28) })
         local pathTarget = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(23, 28) })

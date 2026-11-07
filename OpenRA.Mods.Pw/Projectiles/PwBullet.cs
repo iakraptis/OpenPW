@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenRA.GameRules;
 using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Projectiles;
@@ -45,6 +46,14 @@ namespace OpenRA.Mods.Pw.Projectiles
 		readonly HashSet<Actor> hitActors = new();
 		readonly WVec targetOffset;
 
+		// The original hands a tracking shot without splash straight to its target (Pw.exe 0x4770f7 passes the target
+		// to the damage routine 0x457d4b): no one beside it is hurt. With splash, the damage spreads around it.
+		readonly bool splash;
+
+		// Fired at a unit (mode 2): if it is gone when the shot arrives, a shot without splash hurts no one (Pw.exe
+		// 0x477107 skips the damage for a dead target).
+		readonly bool tracking;
+
 		bool exploded;
 
 		public PwBullet(PwBulletInfo info, ProjectileArgs args)
@@ -54,6 +63,9 @@ namespace OpenRA.Mods.Pw.Projectiles
 
 			if (info.Mode == 2 && args.GuidedTarget.Type == TargetType.Actor)
 				targetOffset = target - args.GuidedTarget.Actor.CenterPosition;
+
+			splash = args.Weapon.Warheads.Any(w => w is SpreadDamageWarhead s && s.Range != null);
+			tracking = info.Mode == 2 && args.GuidedTarget.Type == TargetType.Actor;
 		}
 
 		static ProjectileArgs ExtendPathPiercingTarget(PwBulletInfo info, ProjectileArgs args)
@@ -102,15 +114,23 @@ namespace OpenRA.Mods.Pw.Projectiles
 					return;
 
 				world.AddFrameEndTask(w => w.Remove(this));
-				var impactPosition = Args.GuidedTarget.Actor.CenterPosition;
+				var victim = Args.GuidedTarget.Actor;
+				var impactPosition = victim.CenterPosition;
 				var trackingWarheadArgs = new WarheadArgs(Args)
 				{
 					ImpactOrientation = new WRot(WAngle.Zero, Util.GetVerticalAngle(lastPos, pos), Args.Facing),
 					ImpactPosition = impactPosition,
-					WeaponTarget = Target.FromActor(Args.GuidedTarget.Actor),
+					WeaponTarget = Target.FromActor(victim),
 				};
 
-				Args.Weapon.Impact(Target.FromPos(impactPosition), trackingWarheadArgs);
+				Args.Weapon.Impact(splash ? Target.FromPos(impactPosition) : Target.FromActor(victim), trackingWarheadArgs);
+				return;
+			}
+
+			if (tracking && !splash)
+			{
+				world.AddFrameEndTask(w => w.Remove(this));
+				ImpactEffects(pos);
 				return;
 			}
 
@@ -123,15 +143,21 @@ namespace OpenRA.Mods.Pw.Projectiles
 			CheckPath(world, lastPos, pos);
 			world.AddFrameEndTask(w => w.Remove(this));
 
+			ImpactEffects(pos);
+		}
+
+		// The weapon's impact without its damage (the effect art, sounds).
+		void ImpactEffects(WPos at)
+		{
 			var warheadArgs = new WarheadArgs(Args)
 			{
 				ImpactOrientation = new WRot(WAngle.Zero, Util.GetVerticalAngle(lastPos, pos), Args.Facing),
-				ImpactPosition = pos,
+				ImpactPosition = at,
 			};
 
 			foreach (var warhead in Args.Weapon.Warheads)
 				if (warhead is not DamageWarhead)
-					warhead.DoImpact(Target.FromPos(pos), warheadArgs);
+					warhead.DoImpact(Target.FromPos(at), warheadArgs);
 		}
 
 		void CheckPath(World world, WPos from, WPos to)
@@ -141,6 +167,7 @@ namespace OpenRA.Mods.Pw.Projectiles
 
 			var distance = (to - from).Length;
 			var steps = Math.Max((distance + PathStep - 1) / PathStep, 1);
+			var aimed = Args.GuidedTarget.Type == TargetType.Actor ? Args.GuidedTarget.Actor : null;
 			var candidates = world.ActorMap.ActorsInBox(
 				new WPos(Math.Min(from.X, to.X) - ActorSearchPadding, Math.Min(from.Y, to.Y) - ActorSearchPadding, Math.Min(from.Z, to.Z)),
 				new WPos(Math.Max(from.X, to.X) + ActorSearchPadding, Math.Max(from.Y, to.Y) + ActorSearchPadding, Math.Max(from.Z, to.Z)));
@@ -151,6 +178,11 @@ namespace OpenRA.Mods.Pw.Projectiles
 				foreach (var victim in candidates)
 				{
 					if (victim == Args.SourceActor || victim.IsDead || hitActors.Contains(victim))
+						continue;
+
+					// Allies are passed through, unless aimed at (Pw.exe FUN_0047afc0 tests the shooter's alliances).
+					if (Args.SourceActor != null && victim != aimed
+						&& Args.SourceActor.Owner.RelationshipWith(victim.Owner) == PlayerRelationship.Ally)
 						continue;
 
 					var target = Target.FromActor(victim);

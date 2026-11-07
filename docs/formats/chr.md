@@ -56,7 +56,8 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x0364 | `i32` | Actor collision rectangle top offset from its position; used by mode-4 projectiles | C | `FUN_0047afc0` |
 | 0x0368 | `i32` | Actor collision rectangle width; used by mode-4 projectiles | C | `FUN_0047afc0` |
 | 0x036c | `i32` | Actor collision rectangle height; used by mode-4 projectiles | C | `FUN_0047afc0` |
-| 0x0370–0x0388 | `i32` | Other bounds; meaning not confirmed | | |
+| 0x0370–0x037c | `i32[4]` | Attack rectangle (left, top, width, height from the position): a weapon that is not a projectile (`JW2_12` 0x14c = 0) reaches a target whose own rectangle overlaps this one doubled (Kelpa −22, −17, 51, 40) | C | `FUN_00457ac3` |
+| 0x0380–0x0388 | `i32` | Other bounds; meaning not confirmed | | |
 | 0x03cc + 0x200·(f−1) | `(i32, i32)[64]` | Walk step displacement in pixels for facing *f* = 1…8, one pair per walk frame | D | see [Movement](#movement) |
 | 0x13cc | `i32` | Attack delay (Soldier 11, Buildman 19); `Level.lvt` row 0 reduces it by a % per level | C/D | `FUN_004594d2` |
 | 0x13d0 | `i32` | Unknown (320 for ground units, 0 for Rhamphos) | | |
