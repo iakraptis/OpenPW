@@ -36,6 +36,22 @@ make.cmd test         # YAML and lint checks
 make.cmd check        # C# style checks
 ```
 
+## Test builds
+
+```
+powershell -ExecutionPolicy Bypass -File packaging\windows\update-portable.ps1 -Pack
+```
+
+This builds a self-contained portable game, ..\OpenPW-portable next to the checkout, and zips it to
+..\OpenPW-portable-test-<commit>.zip. The game runs on any Windows PC as it is: it has its own .NET runtime, and it
+keeps its settings and logs in game\Support. The top of the folder holds only OpenPW.exe, a small launcher for
+game\OpenPW.exe, and a readme for testers. The zip includes the content this PC converted with
+install-assets, so it is for private testing only and must never be published. The script refuses a folder inside
+the repository.
+
+`packaging\windows\package-windows.ps1` builds the release package without any game content: a portable zip and,
+with NSIS installed, a setup.exe in dist\.
+
 ## License
 
 GPLv3, see [COPYING](COPYING). Primitive Wars and its assets belong to their respective owners.
