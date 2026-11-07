@@ -10,12 +10,14 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local FirstHit, MissileModes, Voices, WorldLoaded, enemy, me
+    local FirstHit, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
     -- 4. A melee unit can hit a large building (Buildman, attack 10, on a PowerHouse, armour 0).
     -- 3. A weak hit still does 1 (Buildman, attack 10, on a Powerman with Shield of Peace, armour 10).
+    -- 5. A worker repairs a damaged friendly building for a price (Builder), in the map's spare corner; not without
+    --    the berries for the next step, not a whole one, not an enemy's.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -26,6 +28,7 @@ do
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, At(20, 20), At(22, 14)) end)
         Later(5, MissileModes)
         Later(5, Voices)
+        Later(200, Repairing)
         FinishWhenDone("COMBAT", 2500)
     end
 
@@ -118,6 +121,41 @@ do
             for _, v in ipairs(voices) do if not PwTest.HasVoice(man, v) then all = false end end
             Check(all, "a Buildman has its select, order, death, work and built voices")
             Check(PwTest.HasVoice(knight, "Attack"), "a Knight has its attack sound")
+        end)
+    end
+
+    Repairing = function()
+        local function RepairAt(x, y) return CPos.New(x + 54, y + 54) end
+        me.Cash = 20000
+        local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = RepairAt(31, 10) })
+        local tower = Actor.Create("primitive-stonetower", true, { Owner = me, Location = RepairAt(28, 10) })
+        tower.Health = tower.MaxHealth - 10
+        Later(1, function()
+            Check(PwTest.CanOrder(worker, "PwRepairBuilding", tower), "a worker can target a damaged friendly building")
+            PwTest.OrderOn(worker, "PwRepairBuilding", tower)
+        end)
+
+        WaitFor("a worker repairs a building", 400, function() return tower.Health == tower.MaxHealth end, function(ok)
+            if ok then
+                Check(me.Cash == 19998, "repairing 10 HP costs 2 at the default 20% repair price")
+                Check(not PwTest.CanOrder(worker, "PwRepairBuilding", tower), "a worker cannot target a fully repaired building")
+            end
+
+            local brokeWorker = Actor.Create("primitive-buildman", true, { Owner = me, Location = RepairAt(31, 20) })
+            local brokeTower = Actor.Create("primitive-stonetower", true, { Owner = me, Location = RepairAt(28, 20) })
+            brokeTower.Health = brokeTower.MaxHealth - 7
+            me.Cash = 0
+            Later(1, function() PwTest.OrderOn(brokeWorker, "PwRepairBuilding", brokeTower) end)
+            Later(41, function()
+                Check(brokeTower.Health == brokeTower.MaxHealth - 7 and me.Cash == 0,
+                    "a worker does not repair when its owner cannot afford the next step")
+            end)
+
+            local enemyTower = Actor.Create("primitive-stonetower", true, { Owner = enemy, Location = RepairAt(20, 10) })
+            enemyTower.Health = enemyTower.MaxHealth - 10
+            Later(1, function()
+                Check(not PwTest.CanOrder(worker, "PwRepairBuilding", enemyTower), "a worker cannot repair an enemy building")
+            end)
         end)
     end
     Sections[#Sections + 1] = WorldLoaded
@@ -248,6 +286,8 @@ do
         local victim = Actor.Create(victimType, true, { Owner = owner, Location = victimAt })
         Later(1, function()
             victim.Stance = "HoldFire"
+            -- Holding fire, it hits only its ordered victim: left free, a chaser could kill another check's victim.
+            attacker.Stance = "HoldFire"
             attacker.Attack(victim)
         end)
         WaitFor(label, 2000, function() return victim.IsDead end, function(ok)

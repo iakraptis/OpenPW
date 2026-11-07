@@ -156,7 +156,14 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				if (length <= 0)
 					return;
 
-				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {FrameTicks(data, tickOffset)}\n");
+				var ticks = FrameTicks(data, tickOffset);
+
+				// The mod speeds up the level-up cue and Berry fly projectile from their original frame timing.
+				if ((image == "spell-level-up" && name == "effect")
+					|| (image == "spell-berry-fly" && name == "flight"))
+					ticks = Math.Max(1, ticks / 2);
+
+				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {ticks}\n");
 				if (!SolidSpellParts.Contains($"{image}/{solidKey}"))
 					yaml.Append(Glow);
 			}

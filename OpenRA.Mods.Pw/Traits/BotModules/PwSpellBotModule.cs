@@ -90,7 +90,7 @@ namespace OpenRA.Mods.Pw.Traits
 				if (Casting(self) || Harmless(self))
 					continue;
 
-				foreach (var spell in caster.Select(c => c.Trait).Where(s => Info.Spells.Count == 0 || Info.Spells.Contains(s.Info.Name)))
+				foreach (var spell in caster.Select(c => c.Trait).Where(s => !s.Info.AutoHeal && (Info.Spells.Count == 0 || Info.Spells.Contains(s.Info.Name))))
 				{
 					if (!spell.IsUnlocked(self))
 					{
