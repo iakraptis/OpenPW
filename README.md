@@ -6,6 +6,10 @@ engine, built with the OpenRA Mod SDK (engine `release-20250330`).
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
 converts the art, sounds, terrain and maps from your own copy of the game.
 
+## Original Game Description
+
+Primitive Wars (also known as Jurassic War II) is a 2001 real-time strategy (RTS). Set on the fictional Primitive Island, it blends prehistoric dinosaur combat with high-fantasy elements. Playable Factions: Players choose from four distinct races. Primitives (Humans), Elves, Tyranos (mutant dinosaurs), and Demons.
+
 ## Status
 
 Skirmish is playable with all four races, against other players or the AI:
@@ -14,10 +18,10 @@ Skirmish is playable with all four races, against other players or the AI:
   mechanics: the Primitive Blacksmith's items and the Chief, Tyrano merging and disguise, Demon kill points, and
   the Elves' and Demons' spells;
 - the 17 original multiplayer maps, with their terrain, berry bushes and wild dinosaurs;
-- levels, invisibility and detection as in the original, plus hunting and meat as new mechanics;
+- levels, invisibility and detection as in the original, plus meat and hunting with a smarter algorithm;
 - each race's original interface bar and the original main menu;
 - the original music, by race;
-- Normal and Hard AI.
+- Modern AI with no resource cheating.
 
 Not yet: the campaign, and an installer screen inside the game (the conversion runs from the command line).
 The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
