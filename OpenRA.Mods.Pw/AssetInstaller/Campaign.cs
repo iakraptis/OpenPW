@@ -1,0 +1,387 @@
+#region Copyright & License Information
+/*
+ * Copyright (c) The OpenPW Developers and Contributors
+ * This file is part of OpenPW, which is free software. It is made
+ * available to you under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version. For more
+ * information, see COPYING.
+ */
+#endregion
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace OpenRA.Mods.Pw.AssetInstaller
+{
+	// The campaign scenarios of JW2_06.TRC (docs/formats/campaign.md), each into maps/<folder>/ of the content folder: the
+	// map as Maps.cs converts it, every placed unit and building with its owner, the players, the briefing, the
+	// narration MP3s, and mission.lua with the scenario script (players, teams, locations, triggers), which
+	// mods/pw/scripts/campaign.lua runs. The missions are listed in mods/pw/missions/pw.yaml.
+	public static class Campaign
+	{
+		const int Players = 8;
+		const int Wildlife = 8;
+
+		// P_SCRIP is loaded to 0x8ec420 (docs/formats/campaign.md); the code addresses its parts absolutely.
+		const int ScriptBase = 0x8ec420;
+		const int TriggerSize = 0x1c4a;
+		const int Teams = 32;
+		const int TeamsAt = 0x924d68 - ScriptBase;
+		const int TeamSize = 0x9c;
+		const int Locations = 100;
+		const int LocationsAt = 0x928a58 - ScriptBase;
+		const int LocationSize = 0x50;
+		const int MoreTriggersAt = 0x92a99c - ScriptBase;
+
+		// Action 1, a transmission: shown for (text length / 2 + 80) ticks (FUN_00405170 case 1).
+		const int TransmissionAction = 1;
+		const int ObjectivesAction = 13;
+
+		// The scenarios converted so far: prefix (race letter and number, as the archive names them) and map folder.
+		static readonly (string Prefix, string Folder)[] Missions =
+		{
+			("P01", "primitive-01"),
+		};
+
+		// Unit types that only the campaign places and the mod has no actor for yet (Alien1-3, the plants, the Treant).
+		static readonly HashSet<int> Unsupported = new() { 83, 84, 85, 160, 161, 162, 163 };
+
+		static readonly string[] Colors = { "E02020", "2050E0", "20C020", "E0C020", "20C0C0", "C020C0", "E08020", "A0A0A0" };
+
+		public static void Export(InstallContext c)
+		{
+			var archive = c.Game.Archive("Jw2_06.trc");
+			var image = Maps.ImageNames(c);
+			var scenarios = Scenarios(archive);
+			foreach (var (prefix, folder) in Missions)
+			{
+				if (!scenarios.TryGetValue(prefix, out var entries))
+				{
+					c.Warnings.Add($"campaign: no scenario {prefix} in JW2_06.TRC");
+					continue;
+				}
+
+				byte[] Section(string name)
+				{
+					var entry = entries.FirstOrDefault(e => string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
+					if (entry.Name == null)
+						throw new FileNotFoundException($"campaign {prefix}: no {name} section");
+
+					return archive.Read(entry.Index);
+				}
+
+				ExportMission(c, prefix, folder, Section, image);
+			}
+		}
+
+		// The archive holds the scenarios one after another, each starting with its <prefix>_S.MP3 narration.
+		static Dictionary<string, List<TrcArchive.Entry>> Scenarios(TrcArchive archive)
+		{
+			var scenarios = new Dictionary<string, List<TrcArchive.Entry>>();
+			List<TrcArchive.Entry> current = null;
+			foreach (var e in archive.Entries)
+			{
+				if (Regex.IsMatch(e.Name, @"^[A-Z]\d\d_S\.MP3$", RegexOptions.IgnoreCase))
+					scenarios[e.Name[..3].ToUpperInvariant()] = current = new List<TrcArchive.Entry>();
+
+				current?.Add(e);
+			}
+
+			return scenarios;
+		}
+
+		static void ExportMission(InstallContext c, string prefix, string folder, Func<string, byte[]> section, Func<int, string> image)
+		{
+			var map = Maps.Read(section);
+			var scenario = section("P_SCENA");
+			var playe = section("P_PLAYE");
+			var availability = section("P_UB");
+			var script = section("P_SCRIP");
+
+			var all = Maps.PlacedUnits(section("OBC"), image);
+			var units = all.Where(u => !Unsupported.Contains(u.Type) && u.Owner >= 0 && u.Owner <= Wildlife).ToList();
+			if (units.Count < all.Count)
+				c.Warnings.Add($"campaign {prefix}: left out {all.Count - units.Count} units of types the mod does not have yet");
+
+			// The players: the local one (P_PLAYE +0) and every one that owns something, by the race most of it belongs to.
+			var human = BitConverter.ToInt32(playe, 0);
+			var owners = units.Where(u => u.Owner < Players).Select(u => u.Owner).Append(human).Distinct().OrderBy(o => o).ToList();
+			var races = owners.ToDictionary(o => o, o => units.Where(u => u.Owner == o && Units.Race(u.Type) != "wild")
+				.GroupBy(u => Units.Race(u.Type)).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault() ?? "primitive");
+			var names = new Dictionary<int, string>();
+			foreach (var o in owners)
+			{
+				var name = char.ToUpperInvariant(races[o][0]) + races[o][1..];
+				names[o] = names.ContainsValue(name) ? $"{name}{o}" : name;
+			}
+
+			names[Wildlife] = "Creeps";
+
+			// Alliances: P_PLAYE 0x234, a bit mask per player.
+			bool Allied(int a, int b) => a != b && (BitConverter.ToInt32(playe, 0x234 + 4 * a) & (1 << b)) != 0;
+
+			var header = Text(scenario, 8, 0x800);
+			var title = Field(header, "Title") ?? prefix;
+			var objective = Field(header, "Objective") ?? title;
+			var number = int.Parse(prefix[1..], CultureInfo.InvariantCulture);
+			var race = races[human];
+			var raceTitle = char.ToUpperInvariant(race[0]) + race[1..];
+			var briefing = $"{Lines(header).FirstOrDefault()}\nTitle: {title}\nObjective: {objective}\n\n{Story(Text(scenario, 0x808, 0x1000))}";
+			var ending = Story(Text(scenario, 0x1808, 0x1000));
+
+			var s = new StringBuilder(Maps.Header(map, $"{raceTitle} {number}: {title}", "Wizard Soft", "MissionSelector", "Campaign"));
+			s.Append("Players:\n");
+			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
+			s.Append("\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
+			s.Append($"\t\tEnemies: {string.Join(", ", owners.Select(o => names[o]))}\n");
+			foreach (var o in owners)
+			{
+				s.Append($"\tPlayerReference@{names[o]}:\n\t\tName: {names[o]}\n");
+				if (o == human)
+					s.Append("\t\tPlayable: True\n\t\tAllowBots: False\n\t\tRequired: True\n\t\tLockSpawn: True\n\t\tLockTeam: True\n\t\tLockColor: True\n");
+				else
+					s.Append("\t\tBot: campaign\n");
+
+				s.Append($"\t\tFaction: {races[o]}\n\t\tLockFaction: True\n\t\tColor: {Colors[o]}\n");
+				var allies = owners.Where(x => Allied(o, x)).Select(x => names[x]).ToList();
+				if (allies.Count > 0)
+					s.Append($"\t\tAllies: {string.Join(", ", allies)}\n");
+
+				s.Append($"\t\tEnemies: {string.Join(", ", owners.Where(x => x != o && !Allied(o, x)).Select(x => names[x]).Append("Creeps"))}\n");
+			}
+
+			// The camera starts over the human's units, where the one spawn point is (the engine wants one per playable
+			// player; the units are all placed, SpawnStartingUnits is off).
+			var humanUnits = units.Where(u => u.Owner == human).ToList();
+			var camera = humanUnits.Count > 0
+				? (X: (int)humanUnits.Average(u => u.X), Y: (int)humanUnits.Average(u => u.Y))
+				: (X: map.Width / 2, Y: map.Height / 2);
+
+			s.Append("\nActors:\n");
+			s.Append($"\tSpawn0: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {camera.X},{camera.Y}\n");
+			Maps.AppendObjects(s, map);
+			foreach (var u in units)
+			{
+				s.Append($"\tUnit{u.Slot}: {u.Actor}\n\t\tOwner: {names[u.Owner]}\n\t\tLocation: {u.X},{u.Y}\n");
+				if (u.Type < 96 || u.Type >= 160)
+					s.Append($"\t\tFacing: {u.Facing}\n");
+			}
+
+			// Unit availability, P_UB: a byte per player and type. A type nobody of its race may build is taken off the build
+			// menus.
+			var disabled = units.Select(u => u.Type).Concat(Enumerable.Range(0, 160)).Distinct()
+				.Where(t => Units.Race(t) != "wild" && image(t) != null
+					&& owners.Any(o => races[o] == Units.Race(t))
+					&& owners.Where(o => races[o] == Units.Race(t)).All(o => availability[o * 170 + t] == 0))
+				.OrderBy(t => t).Select(image).ToList();
+
+			// The computer players play their original scripts (JW2_16 <prefix>_<player>.txt) with the campaign AI
+			// (rules/campaign-ai.yaml, PwCampaignBotModule): what they train, and how many wait before they attack.
+			var scripts = c.Game.Archive("Jw2_16.trc");
+			var ai = owners.Where(o => o != human).ToDictionary(o => names[o], o => AiScript(scripts, $"{prefix}_{o:00}.txt", image));
+
+			s.Append("\nRules: pw|rules/campaign-ai.yaml\n");
+			s.Append("\tplayer:\n\t\t# The script decides victory and defeat (scripts/campaign.lua).\n\t\t-ConquestVictoryConditions:\n");
+			s.Append("\t\tPwCampaignBotModule@campaign:\n\t\t\tTrain:\n");
+			foreach (var (player, plan) in ai.Where(a => a.Value.Train.Count > 0))
+			{
+				s.Append($"\t\t\t\t{player}:\n");
+				foreach (var (type, count) in plan.Train)
+					s.Append($"\t\t\t\t\t{type}: {count}\n");
+			}
+
+			s.Append("\t\t\tAttackSize:\n");
+			foreach (var (player, plan) in ai)
+				s.Append($"\t\t\t\t{player}: {plan.AttackSize}\n");
+			s.Append("\tworld:\n\t\t-SpawnStartingUnits:\n\t\tLuaScript:\n\t\t\tScripts: pw|scripts/campaign.lua, mission.lua\n");
+			s.Append($"\t\tMissionData:\n\t\t\tBriefing: {YamlLine(briefing)}\n");
+			s.Append("\t\tObjectivesPanel:\n\t\t\tPanelName: MISSION_OBJECTIVES\n");
+			foreach (var actor in disabled)
+				s.Append($"\t{actor}:\n\t\tBuildable:\n\t\t\tPrerequisites: ~disabled\n");
+
+			// The narrations of the intro and the ending story, as hidden music tracks of the map: music is streamed, a
+			// sound would be decoded whole and stall the game. PwRaceMusic plays "intro" first; the script plays "outro".
+			s.Append("\nMusic:\n");
+			s.Append("\tintro:\n\t\tTitle: Briefing\n\t\tExtension: mp3\n\t\tHidden: true\n");
+			s.Append("\toutro:\n\t\tTitle: Ending\n\t\tExtension: mp3\n\t\tHidden: true\n");
+			c.WriteFile($"maps/{folder}/intro.mp3", section($"{prefix}_S.MP3"));
+			c.WriteFile($"maps/{folder}/outro.mp3", section($"{prefix}_E.MP3"));
+			Maps.WriteTerrain(c, $"maps/{folder}", map);
+			c.WriteText($"maps/{folder}/map.yaml", s.ToString());
+
+			var placed = units.Select(u => u.Slot).ToHashSet();
+			c.WriteText($"maps/{folder}/mission.lua", MissionLua(prefix, script, names, human, owners, playe, objective, ending,
+				camera, placed));
+		}
+
+		// An AI script (docs/formats/text.md): the units it makes (SET_UNIT_MAKE <type> <count>, by actor) and how many
+		// gather before an attack (the first SET_ATTACK_COUNTER, 10 without one). Its branches are not followed yet.
+		static (List<(string Type, int Count)> Train, int AttackSize) AiScript(TrcArchive scripts, string name, Func<int, string> image)
+		{
+			const int DefaultAttackSize = 10;
+			if (!scripts.Contains(name))
+				return (new List<(string, int)>(), DefaultAttackSize);
+
+			var text = Encoding.GetEncoding(949).GetString(scripts.Read(name));
+			var train = Regex.Matches(text, @"^\s*SET_UNIT_MAKE\s+(\d+)\s+(\d+)", RegexOptions.Multiline)
+				.Select(m => (Type: image(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)),
+					Count: int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture)))
+				.Where(t => t.Type != null).GroupBy(t => t.Type).Select(g => (g.Key, g.Max(t => t.Count))).ToList();
+			var attack = Regex.Match(text, @"^\s*SET_ATTACK_COUNTER\s+(\d+)", RegexOptions.Multiline);
+			return (train, attack.Success ? int.Parse(attack.Groups[1].Value, CultureInfo.InvariantCulture) : DefaultAttackSize);
+		}
+
+		static string MissionLua(string prefix, byte[] script, Dictionary<int, string> names, int human, List<int> owners, byte[] playe,
+			string objective, string ending, (int X, int Y) camera, HashSet<int> placed)
+		{
+			static string Int(int v) => v.ToString(CultureInfo.InvariantCulture);
+			var s = new StringBuilder($"-- Generated by install-assets (OpenRA.Mods.Pw/AssetInstaller/Campaign.cs) from JW2_06.TRC scenario {prefix};\n" +
+				"-- run by scripts/campaign.lua. Locations are pixel rectangles of the original map; teams list placed units.\n\n");
+			s.Append("Mission = {\n");
+			s.Append($"\tHuman = {Lua(names[human])},\n");
+			s.Append($"\tPlayers = {{ {string.Join(", ", names.OrderBy(n => n.Key).Select(n => $"[{Int(n.Key)}] = {Lua(n.Value)}"))} }},\n");
+
+			// P_PLAYE 0x144: starting berries per player.
+			s.Append($"\tCash = {{ {string.Join(", ", owners.Select(o => $"{names[o]} = {Int(BitConverter.ToInt32(playe, 0x144 + 4 * o))}"))} }},\n");
+			s.Append($"\tObjective = {Lua(objective)},\n\tEnding = {Lua(ending)},\n");
+			s.Append($"\tCamera = {{ {Int(camera.X)}, {Int(camera.Y)} }},\n");
+
+			s.Append("\tLocations = {\n");
+			for (var i = 0; i < Locations; i++)
+			{
+				var o = LocationsAt + i * LocationSize + 0x24;
+				var rect = Enumerable.Range(0, 4).Select(k => BitConverter.ToInt32(script, o + 4 * k)).ToArray();
+				if (rect.Any(v => v != 0))
+					s.Append($"\t\t[{Int(i)}] = {{ {string.Join(", ", rect.Select(Int))} }},\n");
+			}
+
+			s.Append("\t},\n\tTeams = {\n");
+			for (var i = 0; i < Teams; i++)
+			{
+				var o = TeamsAt + i * TeamSize;
+				if (script[o + 0x7c] == 0)
+					continue;
+
+				var members = Enumerable.Range(0, 20).Select(k => BitConverter.ToInt32(script, o + 0x2c + 4 * k))
+					.Where(placed.Contains).Select(slot => Lua($"Unit{slot}"));
+				s.Append($"\t\t[{Int(i)}] = {{ {string.Join(", ", members)} }},\n");
+			}
+
+			// The first 32 triggers, then the teams and locations, then 224 more (T01 has an older script without them).
+			s.Append("\t},\n\tTriggers = {\n");
+			var count = script.Length > MoreTriggersAt ? 256 : 32;
+			for (var i = 0; i < count; i++)
+			{
+				var t = i < 32 ? 4 + i * TriggerSize : MoreTriggersAt + (i - 32) * TriggerSize;
+				if (script[t + 0x1bce] == 0)
+					continue;
+
+				var condition = t + 2;
+				var action = t + 0x8a6;
+				var conditionArgs = new[] { 8, 0x11c, 0x230, 0x344 }.Select(k => BitConverter.ToInt32(script, condition + k));
+				var actionArgs = new[] { 8, 0x25c, 0x4b0, 0x704, 0x958 }.Select(k => BitConverter.ToInt32(script, action + k));
+				var actionType = BitConverter.ToInt32(script, action);
+				s.Append($"\t\t[{Int(i)}] = {{ Name = {Lua(Text(script, t + 0x1b4a, 0x80))},\n");
+				s.Append($"\t\t\tCondition = {{ Type = {Int(BitConverter.ToInt32(script, condition))}, {string.Join(", ", conditionArgs.Select(Int))} }},\n");
+				s.Append($"\t\t\tAction = {{ Type = {Int(actionType)}, {string.Join(", ", actionArgs.Select(Int))} }}");
+
+				// Only these actions show their text; the others keep stale text from the editor.
+				if (actionType == TransmissionAction || actionType == ObjectivesAction)
+				{
+					var raw = Text(script, action + 0x58, 0x800);
+					var (speaker, message) = Transmission(raw);
+					s.Append($",\n\t\t\tSpeaker = {Lua(speaker)}, Text = {Lua(message)}, Duration = {Int(raw.Length / 2 + 80)}");
+				}
+
+				s.Append(" },\n");
+			}
+
+			s.Append("\t},\n}\n");
+			return s.ToString();
+		}
+
+		// A null-ended CP949 string.
+		static string Text(byte[] data, int offset, int max)
+		{
+			var end = Array.IndexOf(data, (byte)0, offset, max);
+			return Encoding.GetEncoding(949).GetString(data, offset, (end < 0 ? offset + max : end) - offset);
+		}
+
+		static IEnumerable<string> Lines(string text) =>
+			text.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0);
+
+		// "Objective : Obstruct the Skeletons and" with its continuation lines, up to the next field or blank line.
+		static string Field(string header, string name)
+		{
+			var lines = header.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).ToList();
+			var i = lines.FindIndex(l => l.StartsWith(name, StringComparison.OrdinalIgnoreCase) && l.Contains(':'));
+			if (i < 0)
+				return null;
+
+			var parts = new List<string> { lines[i][(lines[i].IndexOf(':') + 1)..].Trim() };
+			for (var j = i + 1; j < lines.Count && lines[j].Length > 0 && !Regex.IsMatch(lines[j], @"^\w+\s*:"); j++)
+				parts.Add(lines[j]);
+
+			return Clean(string.Join(" ", parts));
+		}
+
+		// The intro and ending stories: lines wrapped by hand, paragraphs split by blank lines, "#..." and "@" marker lines.
+		static string Story(string text)
+		{
+			var paragraphs = new List<string>();
+			var current = new List<string>();
+			foreach (var line in text.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).Append(""))
+			{
+				if (line.StartsWith('#') || line == "@")
+					continue;
+
+				if (line.Length > 0)
+					current.Add(line);
+				else if (current.Count > 0)
+				{
+					paragraphs.Add(Clean(string.Join(" ", current)));
+					current.Clear();
+				}
+			}
+
+			return string.Join("\n\n", paragraphs);
+		}
+
+		// "Powerman - Chief [Jarrmyn], We cannot ...": the speaker and the message, the names unbracketed.
+		static (string Speaker, string Message) Transmission(string raw)
+		{
+			var text = Clean(string.Join(" ", Lines(raw)));
+			var dash = text.IndexOf(" - ", StringComparison.Ordinal);
+			return dash > 0 && dash < 40 ? (text[..dash].Trim(), text[(dash + 3)..].Trim()) : ("", text);
+		}
+
+		static string Clean(string text) => Regex.Replace(text.Replace("[", "").Replace("]", ""), @"\s+", " ").Trim();
+
+		// One MiniYaml line: line breaks as \n (MissionData turns them back), no comment marks.
+		static string YamlLine(string text) => text.Replace("#", "").Replace("\n", "\\n").Trim();
+
+		static string Lua(string text)
+		{
+			var s = new StringBuilder("\"");
+			foreach (var ch in text)
+			{
+				s.Append(ch switch
+				{
+					'\\' => "\\\\",
+					'"' => "\\\"",
+					'\n' => "\\n",
+					'\r' => "",
+					_ => ch.ToString(),
+				});
+			}
+
+			return s.Append('"').ToString();
+		}
+	}
+}

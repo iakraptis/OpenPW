@@ -31,6 +31,10 @@ bot-normal =
 bot-hard =
     .name = Hard AI
 
+## campaign-ai.yaml
+bot-campaign =
+    .name = Campaign AI
+
 ## Primitive (names as in the original data)
 actor-primitive-buildman =
     .name = BuildMan

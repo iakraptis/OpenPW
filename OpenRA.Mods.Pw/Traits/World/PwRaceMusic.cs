@@ -29,6 +29,9 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("The tracks played in turn after the start tune, by faction.")]
 		public readonly Dictionary<string, string[]> Battle = new();
 
+		[Desc("A track the map may define (a campaign mission's narration), played before the start tune.")]
+		public readonly string Intro = "intro";
+
 		public override object Create(ActorInitializer init) { return new PwRaceMusic(this); }
 	}
 
@@ -70,6 +73,14 @@ namespace OpenRA.Mods.Pw.Traits
 					tracks.Add(track);
 
 			battle = tracks.ToArray();
+			if (Track(info.Intro) is MusicInfo intro)
+				playlist.Play(intro, () => PlayStart(faction));
+			else
+				PlayStart(faction);
+		}
+
+		void PlayStart(string faction)
+		{
 			if (info.Start.TryGetValue(faction, out var start) && Track(start) is MusicInfo tune)
 				playlist.Play(tune, PlayNext);
 			else

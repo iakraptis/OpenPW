@@ -23,7 +23,9 @@ Skirmish is playable with all four races, against other players or the AI:
 - the original music, by race;
 - Modern AI with no resource cheating.
 
-Not yet: the campaign, and an installer screen inside the game (the conversion runs from the command line).
+The campaign has begun: the first Primitive mission, Battle at Sellbaros, plays from the Missions menu with its
+briefing, narration, dialogue and script. Not yet: the other 47 missions, and an installer screen inside the game
+(the conversion runs from the command line).
 The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
 original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
 

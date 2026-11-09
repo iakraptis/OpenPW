@@ -10,7 +10,7 @@ a fixed buffer, in this order:
 | `P_SCENA` | 0x2898 | `0x560964` | Scenario: +4 number of players; +0x2808 and +0x2850 are 1 or 4 (unknown); rest zero in skirmish maps |
 | `P_PLAYE` | 0x374 | `0x5631fc` | **Players**: resources and start positions (below) |
 | `P_UB` | 0x550 | `0x563570` | Unit availability: 8 players × 170 types, one byte each; 1 everywhere in the shipped maps |
-| `P_SCRIP` | variable | `0x8ec420` | Scenario script; empty in every skirmish map |
+| `P_SCRIP` | variable | `0x8ec420` | Scenario script; empty in every skirmish map (the campaign's: [campaign.md](campaign.md)) |
 | `OBB` | 0x15000 | `0x10b2350` | Run-time pool, 512 × 0xa8 (free-list links at +0xa0/+0xa4); empty in every map |
 | `OBC` | 0xe8000 | `0x7fef08` | The **unit table**: placed units (below) |
 | `OBI` | 0x7800 | `0xee2ed0` | Run-time pool, 512 × 0x3c (links at +0x34/+0x38); empty in every map |
@@ -41,19 +41,20 @@ Loaded to `0x5631fc`, so the resource array the cost code uses (`0x563340`) is a
 
 ## `OBC`: placed units
 
-The game's unit table itself: 4,096 slots of 0xe8 bytes. A slot is live when +0x60 is 1; free slots hold only
-the free-list links at +0xe0/+0xe4. The shipped maps place **only wild creatures** (owner 8): no player units or
-buildings.
+The game's unit table itself: 2,048 slots of 0x1d0 bytes (the code indexes `0x7fef08 + 4 · 0x74 · i`; the campaign's
+teams refer to units by slot). A slot is live when +0x60 is 1. The skirmish maps place **only wild creatures**
+(owner 8): no player units or buildings; the campaign places bases and armies ([campaign.md](campaign.md)).
 
 | Offset | Content |
 |---|---|
 | 0x00 | Type (index into `JW2_09.TRC`, see [chr.md](chr.md)) |
 | 0x04 | Owner: 0–7 players, 8 wildlife |
+| 0xa0 | Flags: bit 2 dead |
 | 0x10, 0x18 | Hit points, maximum |
 | 0x1c | Attack (copied from the type) |
 | 0x60 | 1 = alive |
 | 0xa8 | Facing 1–8 |
-| 0xb8, 0xbc | Position, pixels |
+| 0xb8, 0xbc | Position, pixels (a building's footprint top-left corner) |
 | 0xc0–0xd4 | Copies of the position (movement targets) |
 
 ## `P_MAP`
@@ -72,6 +73,11 @@ buildings.
 A cell is one 32 × 32 [tileset](trt.md) tile. `MAP1`, `MAP2` and `MAP3` are 256 × 256 grids of `u32`, row-major
 (cell (x, y) at `(y * 256 + x) * 4`); only the top-left width × height is used. Older content can remain outside
 it (`One VS One` has 128 × 128 cells of `MAP1` data for a 64 × 64 map).
+
+The installer writes each map's preview (`map.png`, one pixel per cell, `Maps.cs`) with the original minimap's
+formula (`FUN_00407be0`): the first pixel of the cell's six material tiles summed and shifted right by 3, or, under an
+overlay, mixed half with the overlay's pixel (approximated by the hilltop material); plus `2 · height + 2` when the
+height is not 0 (twice that for 6-bit green); times a grain of 6-8 eighths (random in the original, a hash here).
 
 ### `MAP1`: ground
 

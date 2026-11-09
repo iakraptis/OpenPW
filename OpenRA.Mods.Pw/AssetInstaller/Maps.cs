@@ -15,6 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using OpenRA.FileFormats;
+using OpenRA.Graphics;
 
 namespace OpenRA.Mods.Pw.AssetInstaller
 {
@@ -26,8 +28,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// The map gets a one-cell border, so original cell (x, y) is OpenRA cell (x + 1, y + 1).
 	public static class Maps
 	{
-		const int Border = 1;
+		public const int Border = 1;
 		const int GridSize = 256;
+		const int TileBytes = 0x800;
+
+		// The first tile of each ground material in a tileset (docs/formats/trt.md); 6 is the liquid.
+		static readonly int[] MaterialBase = { 0, 200, 400, 600, 800, 1000, 1200 };
 
 		// Balance: hostile creatures that start too close to a player's start, moved away on the converted map (and the
 		// test maps built on it): map, creature types, fewest cells from every start position.
@@ -37,23 +43,26 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			["2-one-vs-one"] = (new[] { "wild-velociraptor" }, 30),
 		};
 
+		// A map's terrain and objects, read from its sections: a skirmish .jw2 file or a campaign scenario (Campaign.cs).
+		public sealed class Source
+		{
+			public string Title;
+			public int Tileset, Width, Height;
+			public byte[] Map1, Map2;
+			public List<(string Actor, int X, int Y)> Objects;
+		}
+
+		// A live slot of the OBC unit table: a placed unit, building or creature, at its OpenRA cell.
+		public sealed record Placed(int Slot, int Type, int Owner, string Actor, int X, int Y, int Facing);
+
 		public static void Export(InstallContext c)
 		{
-			var types = c.Game.Archive("Jw2_09.trc");
-			var images = new Dictionary<int, string>();
-			string Image(int type)
-			{
-				if (!images.TryGetValue(type, out var image))
-					images[type] = image = Units.ImageName(type, new ChrFile(types.Read(type)));
-
-				return image;
-			}
-
+			var image = ImageNames(c);
 			foreach (var file in c.Game.MapFiles())
 			{
 				try
 				{
-					ExportMap(c, new TrcArchive(file), Image);
+					ExportMap(c, new TrcArchive(file), image);
 				}
 				catch (Exception e) when (e is InvalidDataException or FileNotFoundException)
 				{
@@ -64,27 +73,68 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			TestMaps.Export(c);
 		}
 
-		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)
+		// The actor (image) name of each unit type of JW2_09.TRC (Units.ImageName); null for the empty types.
+		public static Func<int, string> ImageNames(InstallContext c)
 		{
-			var pMap = jw2.Read("P_MAP");
-			var title = Encoding.GetEncoding(949).GetString(pMap, 0, Math.Max(0, Array.IndexOf(pMap, (byte)0, 0, 0x20)));
+			var types = c.Game.Archive("Jw2_09.trc");
+			var images = new Dictionary<int, string>();
+			return type =>
+			{
+				if (!images.TryGetValue(type, out var image))
+				{
+					var data = type < types.Entries.Count ? types.Read(type) : Array.Empty<byte>();
+					var chr = data.Length < ChrFile.RecordSize + 0x400 ? null : new ChrFile(data);
+					images[type] = image = chr == null || chr.Frames.All(g => g.Count == 0) ? null : Units.ImageName(type, chr);
+				}
+
+				return image;
+			};
+		}
+
+		public static Source Read(Func<string, byte[]> section)
+		{
+			var pMap = section("P_MAP");
 			var tileset = BitConverter.ToInt32(pMap, 0x160);
 			var width = BitConverter.ToInt32(pMap, 0x164);
 			var height = BitConverter.ToInt32(pMap, 0x168);
 			if (tileset < 0 || tileset >= Terrain.Tilesets.Length || width <= 0 || width > GridSize || height <= 0 || height > GridSize)
 				throw new InvalidDataException($"unexpected map header (tileset {tileset}, {width}x{height})");
 
-			var map1 = jw2.Read("MAP1");
-			var map2 = jw2.Read("MAP2");
+			return new Source
+			{
+				Title = Encoding.GetEncoding(949).GetString(pMap, 0, Math.Max(0, Array.IndexOf(pMap, (byte)0, 0, 0x20))),
+				Tileset = tileset,
+				Width = width,
+				Height = height,
+				Map1 = section("MAP1"),
+				Map2 = section("MAP2"),
+				Objects = MapObjects(section("MAP3"), Terrain.Tilesets[tileset].Name, width, height),
+			};
+		}
+
+		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)
+		{
+			var map = Read(jw2.Read);
 			var players = jw2.Read("P_SCENA")[4];
 			var starts = StartPositions(jw2.Read("P_PLAYE"));
-			var objects = MapObjects(jw2.Read("MAP3"), Terrain.Tilesets[tileset].Name, width, height);
-			var creatures = Creatures(jw2.Read("OBC"), image);
 
-			var slug = Regex.Replace(title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
+			// Only wild creatures (owner 8) are placed on the skirmish maps; they become Creeps actors.
+			var creatures = PlacedUnits(jw2.Read("OBC"), image).Where(u => u.Owner == 8)
+				.Select(u => (u.Actor, u.X, u.Y, u.Facing)).ToList();
+
+			var slug = Regex.Replace(map.Title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
 			if (KeepAway.TryGetValue(slug, out var keepAway))
-				creatures = MoveAway(creatures, keepAway.Types, keepAway.Distance, starts, objects, map1, width, height);
+				creatures = MoveAway(creatures, keepAway.Types, keepAway.Distance, starts, map.Objects, map.Map1, map.Width, map.Height);
+
 			var folder = $"maps/{slug}";
+			WriteTerrain(c, folder, map);
+			c.WriteText($"{folder}/map.yaml", MapYaml(map, players, starts, creatures));
+		}
+
+		// map.bin (movement terrain) and terrain.bin (the original cells PwTerrainRenderer draws).
+		public static void WriteTerrain(InstallContext c, string folder, Source map)
+		{
+			var (width, height) = (map.Width, map.Height);
 			var mapWidth = width + 2 * Border;
 			var mapHeight = height + 2 * Border;
 
@@ -105,7 +155,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					for (var y = 0; y < mapHeight; y++)
 					{
 						var inside = x >= Border && y >= Border && x < width + Border && y < height + Border;
-						writer.Write(inside ? MovementTemplate(Cell(map1, x - Border, y - Border)) : (ushort)4);
+						writer.Write(inside ? MovementTemplate(Cell(map.Map1, x - Border, y - Border)) : (ushort)4);
 						writer.Write((byte)0);
 					}
 				}
@@ -127,8 +177,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				{
 					for (var x = 0; x < width; x++)
 					{
-						writer.Write(Cell(map1, x, y));
-						writer.Write(Cell(map2, x, y));
+						writer.Write(Cell(map.Map1, x, y));
+						writer.Write(Cell(map.Map2, x, y));
 					}
 				}
 
@@ -136,7 +186,74 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				c.WriteFile($"{folder}/terrain.bin", stream.ToArray());
 			}
 
-			c.WriteText($"{folder}/map.yaml", MapYaml(title, Terrain.Tilesets[tileset].Id, mapWidth, mapHeight, width, height, players, starts, objects, creatures));
+			c.WriteFile($"{folder}/map.png", Preview(c, map));
+		}
+
+		// map.png, one pixel per cell: the engine shows no preview without one (lobby, map chooser, mission browser). The
+		// colours are the original minimap's (FUN_00407be0, docs/formats/map.md): the first pixel of the six materials
+		// of the cell summed, overlays mixed in, brighter with height, with a little grain.
+		static byte[] Preview(InstallContext c, Source map)
+		{
+			// The overlay's own piece is approximated by the hilltop material: its tile table is not in the installer.
+			const int HilltopMaterial = 5;
+			var tiles = c.Game.Archive("Jw2_03.trc").Read(map.Tileset * 15);
+			var rgba = new byte[4 * map.Width * map.Height];
+			for (var y = 0; y < map.Height; y++)
+			{
+				for (var x = 0; x < map.Width; x++)
+				{
+					var ground = BitConverter.ToUInt32(map.Map1, 4 * (y * GridSize + x));
+					int Sample(int material)
+					{
+						var tile = MaterialBase[Math.Min(material, 6)] + y % 10 * 20 + x % 20;
+						return BitConverter.ToUInt16(tiles, tile * TileBytes);
+					}
+
+					var (r, g, b) = (0, 0, 0);
+					for (var i = 0; i < 6; i++)
+					{
+						var pixel = Sample((int)(ground >> (3 * i)) & 7);
+						(r, g, b) = (r + (pixel >> 11), g + ((pixel >> 5) & 63), b + (pixel & 31));
+					}
+
+					if ((BitConverter.ToUInt32(map.Map2, 4 * (y * GridSize + x)) & 0x3f) == 0)
+						(r, g, b) = (r >> 3, g >> 3, b >> 3);
+					else
+					{
+						var pixel = Sample(HilltopMaterial);
+						(r, g, b) = ((r + (pixel >> 11) * 8) >> 4, (g + ((pixel >> 5) & 63) * 8) >> 4, (b + (pixel & 31) * 8) >> 4);
+					}
+
+					var height = (int)(ground >> 26) & 7;
+					var bright = height == 0 ? 0 : height * 2 + 2;
+
+					// The original's grain is random (6-8 eighths); this one gives the same preview on every install.
+					var grain = (int)((((uint)x * 73856093u) ^ ((uint)y * 19349663u)) >> 8) % 3 + 6;
+					var at = 4 * (y * map.Width + x);
+					var (red, green, blue) = (Math.Min(31, (r + bright) * grain >> 3), Math.Min(63, (g + bright * 2) * grain >> 3), Math.Min(31, (b + bright) * grain >> 3));
+					rgba[at] = (byte)(red << 3 | red >> 2);
+					rgba[at + 1] = (byte)(green << 2 | green >> 4);
+					rgba[at + 2] = (byte)(blue << 3 | blue >> 2);
+					rgba[at + 3] = 255;
+				}
+			}
+
+			return new Png(rgba, SpriteFrameType.Rgba32, map.Width, map.Height).Save();
+		}
+
+		// The map.yaml fields before Players.
+		public static string Header(Source map, string title, string author, string visibility, string categories)
+		{
+			return $"MapFormat: 12\n\nRequiresMod: pw\n\nTitle: {title}\n\nAuthor: {author}\n\nTileset: {Terrain.Tilesets[map.Tileset].Id}\n\n" +
+				$"MapSize: {map.Width + 2 * Border},{map.Height + 2 * Border}\n\nBounds: {Border},{Border},{map.Width},{map.Height}\n\n" +
+				$"Visibility: {visibility}\n\nCategories: {categories}\n\n";
+		}
+
+		// The map objects as Neutral actors, Object<n>.
+		public static void AppendObjects(StringBuilder s, Source map)
+		{
+			for (var i = 0; i < map.Objects.Count; i++)
+				s.Append($"\tObject{i}: {map.Objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {map.Objects[i].X},{map.Objects[i].Y}\n");
 		}
 
 		// MAP1 bits 29-31: walkable, water, buildable (docs/formats/map.md).
@@ -173,25 +290,33 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return objects;
 		}
 
-		// OBC (docs/formats/map.md): the unit table, 0xe8-byte slots, live when +0x60 is 1. The shipped maps place only
-		// wild creatures (owner 8), which become Creeps actors. Facing 1-8 runs clockwise from north.
-		static List<(string Actor, int X, int Y, int Facing)> Creatures(byte[] obc, Func<int, string> image)
+		// OBC (docs/formats/map.md): the unit table, 0x1d0-byte slots, live when +0x60 is 1; the campaign's teams refer to
+		// units by slot. Positions are pixels (a building's is its footprint's top-left corner, which is how its sprites are
+		// placed, Units.cs), so every kind lands on cell position / 32. Facing 1-8 runs clockwise from north. Types without
+		// art (the "Null" entries) are left out.
+		public static List<Placed> PlacedUnits(byte[] obc, Func<int, string> image)
 		{
-			const int SlotSize = 0xe8;
-			var creatures = new List<(string Actor, int X, int Y, int Facing)>();
-			for (var o = 0; o + SlotSize <= obc.Length; o += SlotSize)
+			const int SlotSize = 0x1d0;
+			var units = new List<Placed>();
+			for (var slot = 0; (slot + 1) * SlotSize <= obc.Length; slot++)
 			{
-				if (BitConverter.ToInt32(obc, o + 0x60) != 1 || BitConverter.ToInt32(obc, o + 4) != 8)
+				var o = slot * SlotSize;
+				if (BitConverter.ToInt32(obc, o + 0x60) != 1)
+					continue;
+
+				var type = BitConverter.ToInt32(obc, o);
+				var actor = type >= 0 && type < 170 ? image(type) : null;
+				if (actor == null)
 					continue;
 
 				var facing = Math.Clamp(BitConverter.ToInt32(obc, o + 0xa8), 1, 8);
-				creatures.Add((image(BitConverter.ToInt32(obc, o)),
+				units.Add(new Placed(slot, type, BitConverter.ToInt32(obc, o + 4), actor,
 					BitConverter.ToInt32(obc, o + 0xb8) / 32 + Border,
 					BitConverter.ToInt32(obc, o + 0xbc) / 32 + Border,
 					(1024 - (facing - 1) * 128) % 1024));
 			}
 
-			return creatures;
+			return units;
 		}
 
 		// Each creature of the given types closer than distance cells to a start goes to the nearest walkable free cell
@@ -251,16 +376,11 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return starts;
 		}
 
-		static string MapYaml(string title, string tileset, int mapWidth, int mapHeight, int width, int height, int players,
-			List<(int X, int Y)> starts, List<(string Actor, int X, int Y)> objects,
-			List<(string Actor, int X, int Y, int Facing)> creatures)
+		static string MapYaml(Source map, int players, List<(int X, int Y)> starts, List<(string Actor, int X, int Y, int Facing)> creatures)
 		{
 			var multi = Enumerable.Range(0, players).Select(i => $"Multi{i}").ToList();
-			var s = new StringBuilder();
-			s.Append("MapFormat: 12\n\nRequiresMod: pw\n\n");
-			s.Append($"Title: {title}\n\nAuthor: Wizard Soft\n\nTileset: {tileset}\n\n");
-			s.Append($"MapSize: {mapWidth},{mapHeight}\n\nBounds: {Border},{Border},{width},{height}\n\n");
-			s.Append("Visibility: Lobby\n\nCategories: Conquest\n\nPlayers:\n");
+			var s = new StringBuilder(Header(map, map.Title, "Wizard Soft", "Lobby", "Conquest"));
+			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append("\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append($"\t\tEnemies: {string.Join(", ", multi)}\n");
@@ -271,9 +391,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < starts.Count; i++)
 				s.Append($"\tActor{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
 
-			for (var i = 0; i < objects.Count; i++)
-				s.Append($"\tObject{i}: {objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {objects[i].X},{objects[i].Y}\n");
-
+			AppendObjects(s, map);
 			for (var i = 0; i < creatures.Count; i++)
 			{
 				var (actor, x, y, facing) = creatures[i];

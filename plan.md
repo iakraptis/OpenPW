@@ -626,9 +626,30 @@ dead.
 - Windows installer and portable zip (OpenSYW `packaging/`, GitHub release workflow). Only files that git tracks
   under `mods/` are packaged.
 
-### Out of scope for now
-- Campaign: ~48 scenarios in Jw2_06 (maps, briefings, dialogue, scripts in `P_SCRIP`). The archive reader should
-  still list them, so they can be converted later.
+### Campaign (started 2026-11-07)
+- 48 scenarios in Jw2_06, 12 per race ([docs/formats/campaign.md](docs/formats/campaign.md)): the map sections with
+  the placed bases and armies, players, unit availability, briefing text, narration MP3s and the trigger script
+  (`P_SCRIP`: 256 triggers of one condition and one action; Ghidra `FUN_00404490`, `FUN_00404650`, `FUN_00405170`).
+  The computer players' scripts are in Jw2_16.
+- The installer's `campaign` stage (`Campaign.cs`) converts the missions listed in its `Missions` (so far **P01,
+  Battle at Sellbaros**) into `maps/<race>-<nn>/` of the content folder: the map (shared with `Maps.cs`), every placed
+  unit (`Unit<slot>`), the players, unit availability as `~disabled` prerequisites, the briefing (`MissionData`), the
+  narrations as the map's hidden `intro`/`outro` music (a sound would be decoded whole and stall the game), and
+  `mission.lua` with the script. `mods/pw/missions/pw.yaml` lists them for the mission browser.
+- `mods/pw/scripts/campaign.lua` runs the triggers the way `Pw.exe` does (transmissions as mission messages,
+  victory, defeat, the camera, team orders); victory and defeat are the script's (no `ConquestVictoryConditions`).
+  `PwRaceMusic` plays a map's `intro` track first.
+- The computer players use the campaign AI (`rules/campaign-ai.yaml`, loaded only by the campaign maps, so the
+  skirmish AI and lobby are untouched): `PwCampaignBotModule` trains what their script names (`SET_UNIT_MAKE`) and
+  attacks in groups (`SET_ATTACK_COUNTER`, or smaller when the population is full); the placed army stays home.
+- Melee units (`PwMeleeAttack`, `Activities/MeleeAttack.cs`): a melee weapon reaches only the 4 cells beside its target
+  and the engine's Attack gives up when none is free; a blocked unit now fights the nearest enemy it can reach within
+  6 cells, or waits, then returns to its target. Applies to skirmish too.
+- Map previews: the installer writes `map.png` for every converted map (skirmish, battle and campaign); the engine
+  shows none without it.
+- Next: the other 47 missions; actions 2 (create units), 19 (change unit type), 22/23 (scene flags); the 7
+  campaign-only unit types (Alien1-3, the plants, the Treant); the AI scripts' branches and other settings; the
+  briefing pictures.
 
 ---
 
@@ -654,7 +675,7 @@ dead.
 1. Project **OpenPW**, mod id `pw`.
 2. **Modernised**, like OpenSYW: the original is the reference for content and balance, not for its interface
    limits.
-3. Campaign **out of scope** for now; skirmish and multiplayer first.
+3. Campaign **out of scope** for now; skirmish and multiplayer first. (Started 2026-11-07, see Campaign above.)
 4. Races: **Primitive, then Tyrano**; Elf and Demon later (all four done by 2026-11-03). "Tyrano" is the race, "Dinosaur"/`wild-*` the neutral
    wildlife.
 5. Data files use **inheritance** throughout (§3).
