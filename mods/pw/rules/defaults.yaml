@@ -323,7 +323,8 @@
 
 # Attack mixins.
 ^Melee:
-	AttackFrontal:
+	# AttackFrontal, except that a unit which cannot get next to its target fights another enemy near it.
+	PwMeleeAttack:
 		FacingTolerance: 128
 		PauseOnCondition: petrified || stunned || bubbled
 	AutoTarget:

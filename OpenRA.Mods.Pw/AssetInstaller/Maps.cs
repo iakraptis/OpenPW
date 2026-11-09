@@ -15,6 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using OpenRA.FileFormats;
+using OpenRA.Graphics;
 
 namespace OpenRA.Mods.Pw.AssetInstaller
 {
@@ -28,6 +30,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	{
 		public const int Border = 1;
 		const int GridSize = 256;
+		const int TileBytes = 0x800;
+
+		// The first tile of each ground material in a tileset (docs/formats/trt.md); 6 is the liquid.
+		static readonly int[] MaterialBase = { 0, 200, 400, 600, 800, 1000, 1200 };
 
 		// Balance: hostile creatures that start too close to a player's start, moved away on the converted map (and the
 		// test maps built on it): map, creature types, fewest cells from every start position.
@@ -179,6 +185,60 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				writer.Flush();
 				c.WriteFile($"{folder}/terrain.bin", stream.ToArray());
 			}
+
+			c.WriteFile($"{folder}/map.png", Preview(c, map));
+		}
+
+		// map.png, one pixel per cell: the engine shows no preview without one (lobby, map chooser, mission browser). The
+		// colours are the original minimap's (FUN_00407be0, docs/formats/map.md): the first pixel of the six materials
+		// of the cell summed, overlays mixed in, brighter with height, with a little grain.
+		static byte[] Preview(InstallContext c, Source map)
+		{
+			// The overlay's own piece is approximated by the hilltop material: its tile table is not in the installer.
+			const int HilltopMaterial = 5;
+			var tiles = c.Game.Archive("Jw2_03.trc").Read(map.Tileset * 15);
+			var rgba = new byte[4 * map.Width * map.Height];
+			for (var y = 0; y < map.Height; y++)
+			{
+				for (var x = 0; x < map.Width; x++)
+				{
+					var ground = BitConverter.ToUInt32(map.Map1, 4 * (y * GridSize + x));
+					int Sample(int material)
+					{
+						var tile = MaterialBase[Math.Min(material, 6)] + y % 10 * 20 + x % 20;
+						return BitConverter.ToUInt16(tiles, tile * TileBytes);
+					}
+
+					var (r, g, b) = (0, 0, 0);
+					for (var i = 0; i < 6; i++)
+					{
+						var pixel = Sample((int)(ground >> (3 * i)) & 7);
+						(r, g, b) = (r + (pixel >> 11), g + ((pixel >> 5) & 63), b + (pixel & 31));
+					}
+
+					if ((BitConverter.ToUInt32(map.Map2, 4 * (y * GridSize + x)) & 0x3f) == 0)
+						(r, g, b) = (r >> 3, g >> 3, b >> 3);
+					else
+					{
+						var pixel = Sample(HilltopMaterial);
+						(r, g, b) = ((r + (pixel >> 11) * 8) >> 4, (g + ((pixel >> 5) & 63) * 8) >> 4, (b + (pixel & 31) * 8) >> 4);
+					}
+
+					var height = (int)(ground >> 26) & 7;
+					var bright = height == 0 ? 0 : height * 2 + 2;
+
+					// The original's grain is random (6-8 eighths); this one gives the same preview on every install.
+					var grain = (int)((((uint)x * 73856093u) ^ ((uint)y * 19349663u)) >> 8) % 3 + 6;
+					var at = 4 * (y * map.Width + x);
+					var (red, green, blue) = (Math.Min(31, (r + bright) * grain >> 3), Math.Min(63, (g + bright * 2) * grain >> 3), Math.Min(31, (b + bright) * grain >> 3));
+					rgba[at] = (byte)(red << 3 | red >> 2);
+					rgba[at + 1] = (byte)(green << 2 | green >> 4);
+					rgba[at + 2] = (byte)(blue << 3 | blue >> 2);
+					rgba[at + 3] = 255;
+				}
+			}
+
+			return new Png(rgba, SpriteFrameType.Rgba32, map.Width, map.Height).Save();
 		}
 
 		// The map.yaml fields before Players.

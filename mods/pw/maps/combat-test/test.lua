@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local FirstHit, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local FirstHit, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -29,9 +29,38 @@ do
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerman-shield-of-peace", 1, At(4, 20), At(5, 20)) end)
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, At(20, 20), At(22, 14)) end)
         Later(5, MissileModes)
+        Later(5, MeleeBlocked)
         Later(5, Voices)
         Later(200, Repairing)
         FinishWhenDone("COMBAT", 2500)
+    end
+
+    -- A melee unit whose target has others on every cell in reach fights another enemy near it (PwMeleeAttack), and goes
+    -- back to its target once there is a cell free. The other enemy is beyond its automatic targeting (5 cells), so
+    -- only that search finds it.
+    MeleeBlocked = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local target = Actor.Create("primitive-powerman-shield-of-peace", true, { Owner = foe, Location = At(40, 30) })
+        local other = Actor.Create("primitive-powerman-shield-of-peace", true, { Owner = foe, Location = At(49, 26) })
+        local attacker = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(45, 30) })
+        local blockers = { }
+        for _, cell in ipairs({ At(41, 30), At(39, 30), At(40, 31), At(40, 29) }) do
+            blockers[#blockers + 1] = Actor.Create("primitive-buildman", true, { Owner = me, Location = cell })
+        end
+
+        Later(2, function()
+            target.Stance = "HoldFire"
+            other.Stance = "HoldFire"
+            for _, blocker in ipairs(blockers) do blocker.Stance = "HoldFire" end
+            attacker.Attack(target)
+        end)
+        WaitFor("a blocked melee unit fights another enemy", 400, function() return other.Health < other.MaxHealth end, function(ok)
+            if not ok then return end
+            Check(target.Health == target.MaxHealth, "the surrounded target was left alone meanwhile")
+            other.Kill()
+            blockers[1].Kill()
+            WaitFor("a blocked melee unit returns to its target", 400, function() return target.Health < target.MaxHealth end)
+        end)
     end
 
     -- The attacker attacks; the first change in the target's health must be exactly the expected damage.

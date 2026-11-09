@@ -33,11 +33,15 @@ Players:
 		LockFaction: True
 		NonCombatant: True
 		Faction: primitive
+	PlayerReference@CombatFoe:
+		Name: CombatFoe
+		Faction: primitive
+		Enemies: Combat
 	PlayerReference@Combat:
 		Name: Combat
 		LockFaction: True
 		Faction: primitive
-		Enemies: Creeps
+		Enemies: Creeps, CombatFoe
 	PlayerReference@Defence:
 		Name: Defence
 		LockFaction: True

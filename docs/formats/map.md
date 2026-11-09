@@ -74,6 +74,11 @@ A cell is one 32 × 32 [tileset](trt.md) tile. `MAP1`, `MAP2` and `MAP3` are 256
 (cell (x, y) at `(y * 256 + x) * 4`); only the top-left width × height is used. Older content can remain outside
 it (`One VS One` has 128 × 128 cells of `MAP1` data for a 64 × 64 map).
 
+The installer writes each map's preview (`map.png`, one pixel per cell, `Maps.cs`) with the original minimap's
+formula (`FUN_00407be0`): the first pixel of the cell's six material tiles summed and shifted right by 3, or, under an
+overlay, mixed half with the overlay's pixel (approximated by the hilltop material); plus `2 · height + 2` when the
+height is not 0 (twice that for 6-bit green); times a grain of 6-8 eighths (random in the original, a hash here).
+
 ### `MAP1`: ground
 
 | Bits | Content |

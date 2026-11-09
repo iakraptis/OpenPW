@@ -642,6 +642,11 @@ dead.
 - The computer players use the campaign AI (`rules/campaign-ai.yaml`, loaded only by the campaign maps, so the
   skirmish AI and lobby are untouched): `PwCampaignBotModule` trains what their script names (`SET_UNIT_MAKE`) and
   attacks in groups (`SET_ATTACK_COUNTER`, or smaller when the population is full); the placed army stays home.
+- Melee units (`PwMeleeAttack`, `Activities/MeleeAttack.cs`): a melee weapon reaches only the 4 cells beside its target
+  and the engine's Attack gives up when none is free; a blocked unit now fights the nearest enemy it can reach within
+  6 cells, or waits, then returns to its target. Applies to skirmish too.
+- Map previews: the installer writes `map.png` for every converted map (skirmish, battle and campaign); the engine
+  shows none without it.
 - Next: the other 47 missions; actions 2 (create units), 19 (change unit type), 22/23 (scene flags); the 7
   campaign-only unit types (Alien1-3, the plants, the Treant); the AI scripts' branches and other settings; the
   briefing pictures.
