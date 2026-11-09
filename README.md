@@ -1,6 +1,6 @@
 # OpenPW
 
-A restoration of **Primitive Wars** (Legend of the Land, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
+A restoration of **Primitive Wars** (Arxel Tribe, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
 engine, built with the OpenRA Mod SDK (engine `release-20250330`).
 
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
