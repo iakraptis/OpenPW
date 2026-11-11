@@ -81,9 +81,15 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				{
 					if (directional && flight % 8 == 0)
 					{
-						// The art's eight blocks start one step clockwise of north: block k points at facing k + 1.
+						// The art's eight blocks run clockwise, from north (block k points at facing k: the Skeleton's arrow
+						// and most others) or from one step clockwise of it (block k at facing k + 1: the Soldier's and the
+						// Rhamphos's arrows). Art whose block 0 is much taller than wide and block 2 much wider than tall
+						// starts at north.
 						var n = flight / 8;
-						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n)).Select(f => f + flightStart);
+						var north = frames[flightStart].Frame;
+						var east = frames[flightStart + 2 * n].Frame;
+						var shift = north.Height * 2 >= north.Width * 3 && east.Width * 2 >= east.Height * 3 ? 0 : 7;
+						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + shift) % 8 * n, n)).Select(f => f + flightStart);
 						sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
 							$"\t\tTick: {FrameTicks(data, 0x218)}\n");
 					}
