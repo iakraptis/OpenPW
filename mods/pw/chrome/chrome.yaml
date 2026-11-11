@@ -455,21 +455,27 @@ bar-elf:
 		solid-sides: 0, 56, 800, 105
 		solid-middle: 213, 20, 352, 141
 
+# The Demon bar's art is 148 high, not 161: its pieces have that height, so it sits on the window's bottom edge,
+# and its minimap hole and panels are those of its art.
 bar-demon:
 	Inherits: ^bar
 	Image: chrome/bar-demon.png
 	Regions:
+		center: 213, 0, 352, 148
+		hole: 327, 24, 118, 116
+		left-panel: 16, 63, 294, 80
+		right-panel: 462, 63, 322, 80
 		menu: 468, 24, 87, 27
 		allies: 232, 24, 39, 27
 		msg: 271, 24, 40, 27
-		left-fixed: 0, 0, 46, 161
-		left-tile: 46, 0, 59, 161
-		left-join: 105, 0, 108, 161
-		right-join: 565, 0, 60, 161
-		right-tile: 625, 0, 59, 161
-		right-fixed: 684, 0, 116, 161
-		solid-sides: 0, 30, 800, 131
-		solid-middle: 213, 7, 352, 154
+		left-fixed: 0, 0, 46, 148
+		left-tile: 46, 0, 59, 148
+		left-join: 105, 0, 108, 148
+		right-join: 565, 0, 60, 148
+		right-tile: 625, 0, 59, 148
+		right-fixed: 684, 0, 116, 148
+		solid-sides: 0, 30, 800, 118
+		solid-middle: 213, 7, 352, 141
 
 # The bars' buttons (chrome/bar-<race>-buttons.png: JW2_02 Menu, Allies, Msg; released and pressed).
 bar-primitive-buttons:

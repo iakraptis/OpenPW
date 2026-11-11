@@ -31,6 +31,10 @@ namespace OpenRA.Mods.Pw.Widgets
 		[Desc("Share of the window height the bar takes (the original's 161 of 600 is 0.27).")]
 		public float HeightShare = 0.21f;
 
+		[Desc("The bar height HeightShare applies to (the original's 161), so that every race's bar has the same scale",
+			"whatever its art's own height (the Demon's is 148).")]
+		public int ReferenceHeight = 161;
+
 		// Bar coordinates of the pieces' edges, from the collection (all relative to the original 800-wide bar).
 		Sprite leftFixed, leftTile, leftJoin, center, rightJoin, rightTile, rightFixed;
 		int solidSidesTop, solidMiddleTop;
@@ -53,6 +57,7 @@ namespace OpenRA.Mods.Pw.Widgets
 			Collection = other.Collection;
 			GetCollection = other.GetCollection;
 			HeightShare = other.HeightShare;
+			ReferenceHeight = other.ReferenceHeight;
 		}
 
 		public override Widget Clone() { return new InterfaceBarWidget(this); }
@@ -88,7 +93,7 @@ namespace OpenRA.Mods.Pw.Widgets
 				return;
 
 			var b = RenderBounds;
-			Scale = Math.Min(Math.Max(1f, b.Height * HeightShare / BarHeight), (float)b.Width / BarWidth);
+			Scale = Math.Min(Math.Max(1f, b.Height * HeightShare / ReferenceHeight), (float)b.Width / BarWidth);
 			Top = b.Bottom - (int)(BarHeight * Scale);
 
 			centerLeft = b.X + (int)((b.Width - center.Bounds.Width * Scale) / 2);
