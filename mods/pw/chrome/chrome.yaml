@@ -518,6 +518,32 @@ bar-demon-buttons:
 		msg: 256, 0, 40, 27
 		msg-pressed: 297, 0, 40, 27
 
+# The bars' Menu buttons, the mod's own: "MENU" lettered in each race's style on its plaque (chrome/bar-<race>-menu.png,
+# made by the installer, AssetInstaller/MenuButtons.cs; released and pressed).
+bar-primitive-menu:
+	Image: chrome/bar-primitive-menu.png
+	Regions:
+		menu: 0, 0, 82, 32
+		menu-pressed: 83, 0, 82, 32
+
+bar-tyrano-menu:
+	Image: chrome/bar-tyrano-menu.png
+	Regions:
+		menu: 0, 0, 81, 28
+		menu-pressed: 82, 0, 81, 28
+
+bar-elf-menu:
+	Image: chrome/bar-elf-menu.png
+	Regions:
+		menu: 0, 0, 85, 31
+		menu-pressed: 86, 0, 85, 31
+
+bar-demon-menu:
+	Image: chrome/bar-demon-menu.png
+	Regions:
+		menu: 0, 0, 87, 27
+		menu-pressed: 88, 0, 87, 27
+
 # The resource icons (chrome/resources.png: JW2_02 Food, Water, Stone, House) beside the berries and population.
 resource-icons:
 	Image: chrome/resources.png

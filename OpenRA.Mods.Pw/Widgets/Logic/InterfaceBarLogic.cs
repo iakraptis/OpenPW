@@ -95,7 +95,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			{
 				var b = button;
 				var art = b.Get<StretchedImageWidget>("ART");
-				art.ImageCollection = collection + "-buttons";
+
+				// The Menu button is the mod's own lettered one (AssetInstaller/MenuButtons.cs), the others the original art.
+				art.ImageCollection = collection + (image == "menu" ? "-menu" : "-buttons");
 				art.GetImageName = () => b.Depressed || b.IsHighlighted() ? image + "-pressed" : image;
 			}
 

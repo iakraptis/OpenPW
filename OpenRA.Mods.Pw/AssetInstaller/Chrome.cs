@@ -268,6 +268,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// from entry 306: palette, bar, then the six buttons.
 		static void ExportInterfaceBars(InstallContext c, TrcArchive archive)
 		{
+			// The game's FreeType, for the lettering of the Menu buttons (MenuButtons).
+			var platform = Game.CreatePlatform("Default");
 			for (var race = 0; race < Races.Length; race++)
 			{
 				var block = 306 + 8 * race;
@@ -296,6 +298,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 
 				c.WriteFile($"chrome/bar-{Races[race]}.png", new Png(rgba, SpriteFrameType.Rgba32, sheetWidth, sheetHeight).Save());
+				MenuButtons.Export(c, platform, Races[race], rgba, sheetWidth);
 
 				var colors = Units.ConvertPalette(palette, false);
 				var buttons = new List<(ChrFile.Frame Frame, bool Mirrored)>();

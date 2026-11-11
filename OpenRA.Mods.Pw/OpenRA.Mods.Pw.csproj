@@ -19,6 +19,8 @@
 	<ItemGroup>
 		<!-- Test map scripts the asset installer writes on converted maps (AssetInstaller/TestMaps.cs). -->
 		<EmbeddedResource Include="AssetInstaller/MapTemplates/**/*" LogicalName="MapTemplates/%(RecursiveDir)%(Filename)%(Extension)" />
+		<!-- The Menu buttons' fonts (AssetInstaller/MenuButtons.cs; SIL Open Font License, beside each font). -->
+		<EmbeddedResource Include="AssetInstaller/Fonts/*.ttf" LogicalName="Fonts/%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
