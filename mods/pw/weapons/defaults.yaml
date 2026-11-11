@@ -3,7 +3,7 @@
 # Projectile speeds match the original: an arrow of 18 px a tick flies 576 WDist (about 8 cells a second).
 # Damage is the original rule, attack minus armour and at least 1 (SubtractArmorDamage, docs/game/rules.md).
 
-# Missiles follow the original's modes (PwBullet, missileplan.md): mode 2 tracks its unit and hands the damage straight
+# Missiles follow the original's modes (PwBullet, docs/formats/effect.md): mode 2 tracks its unit and hands the damage straight
 # to it (nobody beside it is hurt; with splash, the damage spreads around it); mode 4 pierces enemies along its path;
 # mode 0 flies to a fixed point. Melee hits strike the target itself. Splash weapons set Range and Falloff, damage
 # falling linearly from the impact point to the original splash radius; the Spread below only serves the rest.

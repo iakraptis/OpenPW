@@ -453,7 +453,7 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
       `GrantConditionOnPrerequisiteManager` on the player (it crashed without). Checked in `combat-test` (Defence)
       and `demon-test`.
 - [x] **Combat tuning** (2026-11-02):
-  - Missiles (2026-11-07, `PwBullet`, missileplan.md): the original's projectile modes (`JW2_12` 0x190) at the
+  - Missiles (2026-11-07, `PwBullet`, [effect.md](docs/formats/effect.md)): the original's projectile modes (`JW2_12` 0x190) at the
     original speeds. Mode 2 tracks its unit and always hits it, damaging only it unless it has splash; mode 4 pierces
     enemies along its path (not allies) to full range; mode 0 flies to a fixed point. Splash falls linearly to the
     original radius (`FUN_00457d4b`). Before, bullets flew to where the target was and fast units dodged them.
@@ -462,7 +462,9 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 - [x] **Effects** (2026-11-02): glowing art (fire, sparks, magic) is painted on black; drawn opaque it showed black
       halos. The installer's effects stage gives impacts `BlendMode: Screen` except the solid ones (stone, trap,
       egg, bubble, the Giant's smoke), and the fireball/magic projectiles too (lists in `Effects.cs`). The Giant's
-      bomb smoke keeps its darkening palette.
+      bomb smoke keeps its darkening palette. Directional projectiles (2026-11-11): most art starts at north, the
+      Soldier's and Rhamphos's arrows one step clockwise; the installer tells them apart by the shape of the art
+      (`Effects.cs`, [effect.md](docs/formats/effect.md) 0x1fc).
 - [x] **Wildlife fixes** (2026-11-02): flyers (Pteranodon, Rhamphorhynchus) loop their flight with no idle animation
       (hovering, an aircraft flips idle/busy every tick, which restarted the loop: frozen wings); `^WildFlyer` has
       its own `WithInfantryBody@FLIGHT`. On (2) One vs One the velociraptors start at least 30 cells from both
@@ -483,8 +485,8 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 ### Phase 4: Asset installer
 Started 2026-10-31: `install-assets.cmd` / `.sh` run `utility pw --install-assets [GAME_FOLDER] [--out] [--only]
 [--write-yaml] [--list]` (`OpenRA.Mods.Pw/AssetInstaller`, modelled on OpenSYW's). Stages: `tilesets`, `objects`,
-`maps` (with the installer's `bot-test`), `units`, `chrome`, `audio`, `effects`. Its map output matched the Python
-prototype byte for byte.
+`maps` (with the installer's test and battle maps), `campaign`, `units`, `chrome` (also the interface bars and the
+lettered Menu buttons), `audio`, `effects`, `music`. Its map output matched the Python prototype byte for byte.
 - `OpenRA.Mods.Pw/AssetInstaller`: `TrcArchive`, then one stage per format (units, buildings, terrain, effects,
   chrome, audio, maps). Output to `^SupportDir/Content/pw/`, mounted with the same relative paths as `mods/pw/`.
 - Not done: a `mods/pw-content` first-launch screen (locate the folder holding `Pw.exe` and convert): the
@@ -559,6 +561,10 @@ dead.
     resource actors with 4,000 berries and art that changes at 1,500 / 1,000 / 500 remaining;
   - `OBC` creatures become `wild-*` actors owned by the Creeps player, with their facing;
   - `P_PLAYE` start positions become `mpspawn` actors, and the player count goes into the map title.
+- [x] **(6) Dino Hunting Fixed** (2026-11-11, `Maps.cs` `FixedCopies`): the original Dino Hunting has walkable ways
+  onto two plateaus, liquid under its cliffs and sea creatures on plateau grass (the original game shows the same).
+  It is converted as it is, plus a fixed copy: the leaking plateau cells sealed, the stray liquid replaced by the
+  surrounding ground, no Plesiosaurs or Peleneustes ([docs/formats/map.md](docs/formats/map.md)).
 - The Python tools (`map_render.py`, `map_objects.py`) are the reference for the C# converter: the same map must
   look the same in both.
 
@@ -567,7 +573,7 @@ dead.
   - The race's interface bar (Intfbg, `InterfaceBarWidget` + `InterfaceBarLogic`) scaled to any window: minimap in
     its hole, selection panel (portrait, HP, level, attack, armour, meat icon and carried amount, mana; several units
     as a grid) and a compact current unit training or upgrade progress indicator for the selected producer building on
-    the left, command panel (two rows of slots) on the right, Menu / Allies / Msg buttons with their original art.
+    the left, command panel (two rows of slots) on the right, Menu / Allies / Msg buttons.
   - Menu sits at the right of the minimap; Allies and Msg sit together on its left, consistently across all four races.
     Custom race flags appear in the lobby's faction picker.
   - Berries and population top right with the original Food and House icons (`StretchedImageWidget`).
@@ -578,12 +584,19 @@ dead.
     Buttons with child art use `IgnoreChildMouseOver`.
   - The camera zooms out 25% past the default (`UnlockMinimumZoom(0.75)` in `InterfaceBarLogic`).
   - The minimap paints explored terrain (`PlayerRadarTerrain` on the player).
-  - All four races' bars (2026-11-03). They share Primitive's hole, panel and button areas: the original lays out
-    every race the same way, and Elf and Demon's buttons fit those spots exactly. Each bar has its own pieces (a
-    section of each lower panel whose ends join seamlessly repeats) and its own solid edges (`solid-sides`,
-    `solid-middle`). The buttons scale with the bar at their own art's size. The installer pads the button sheets to
-    a power-of-two height; the other races' sheets crashed the game. Hunt and Share meat use the local race's
-    button frame.
+  - All four races' bars (2026-11-03; one layout since 2026-11-11). The bars' art differs in height (Primitive 161,
+    Elf 164, Tyrano 179, Demon 148), so each is drawn at its own height on the window's bottom edge, at the scale of
+    the 161-high original. Its areas are measured in a 161-high frame whose bottom is the bar's bottom: one minimap
+    area for all (the 112 × 112 square inside every race's hole) and the same panels; the buttons sit on each race's
+    own blank plaques (found by matching the button art against the bar art), and the solid edges (`solid-sides`,
+    `solid-middle`) are each race's. Each bar has its own pieces (a section of each lower panel whose ends join
+    seamlessly repeats). The buttons scale with the bar at their own art's size. The installer pads the button
+    sheets to a power-of-two height; the other races' sheets crashed the game. Hunt and Share meat use the local
+    race's button frame.
+  - Lettered Menu buttons (2026-11-11, `AssetInstaller/MenuButtons.cs`): the original Elf and Demon Menu buttons carry
+    a picture, so the installer makes every race's: "MENU" in a font of the race's character (Caesar Dressing, Metal
+    Mania, Uncial Antiqua, Pirata One; SIL Open Font License, in `AssetInstaller/Fonts` with their licences), lit in
+    the race's style and colours on its own plaque, through the game's FreeType. Allies and Msg keep the original art.
   - Not done: the Intro slideshow.
 - [x] **AI** (2026-11-02, branches `bot`, `bot2`; `rules/ai.yaml`, `OpenRA.Mods.Pw/Traits/BotModules`): Normal and
       Hard bots after OpenSYW's. The modules read every actor's role from its traits, so a new faction plays as
@@ -621,6 +634,8 @@ dead.
 - Sound effects, voices and music: the original's are in. The music (JW2_15, 19 MP3s) plays as `Pw.exe` plays it:
   the title in the menus, the player's race start tune and battle tracks in a game, victory and defeat at the end
   (docs/game/rules.md, Music). Four tracks the skirmish game never plays (6, 9, 12, 18) are installed by number.
+  Voices (2026-11-11): the worker's "Built", heard everywhere, plays only for its owner; the voices heard where the
+  unit is (work, attack, death, fleeing) don't play for units hidden in the fog (`PwVoiced`, `UnderConstruction`).
 
 ### Phase 8: Release
 - Windows installer and portable zip (OpenSYW `packaging/`, GitHub release workflow). Only files that git tracks

@@ -17,9 +17,10 @@ Skirmish is playable with all four races, against other players or the AI:
 - **Primitive**, **Tyrano**, **Demon** and **Elf**, each with its units, buildings, research and the race's own
   mechanics: the Primitive Blacksmith's items and the Chief, Tyrano merging and disguise, Demon kill points, and
   the Elves' and Demons' spells;
-- the 17 original multiplayer maps, with their terrain, berry bushes and wild dinosaurs;
+- the 17 original multiplayer maps, with their terrain, berry bushes and wild dinosaurs, plus (6) Dino Hunting
+  Fixed, a copy of Dino Hunting without the original's walkable cliffs and stray water;
 - levels, invisibility and detection as in the original, plus meat and hunting with a smarter algorithm;
-- each race's original interface bar and the original main menu;
+- each race's original interface bar, with a lettered Menu button in the race's style, and the original main menu;
 - the original music, by race;
 - Modern AI with no resource cheating.
 
@@ -61,3 +62,6 @@ with NSIS installed, a setup.exe in dist\.
 ## License
 
 GPLv3, see [COPYING](COPYING). Primitive Wars and its assets belong to their respective owners.
+
+The fonts in `OpenRA.Mods.Pw/AssetInstaller/Fonts/` (Caesar Dressing, Metal Mania, Uncial Antiqua, Pirata One) are
+under the SIL Open Font License, whose text is beside each font.
