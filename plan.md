@@ -413,7 +413,10 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 - [x] **Air units** (2026-11-01, branch `prim_air`): Revolver (transport for 10: passengers weigh their `.chr` 0x188
       size, deduced; lands to load), Squadron and Flattop (splash). They hover at a token altitude because the art
       draws the height and shadow; ground weapons can't reach them, arrows and stones can. `air-test`. The
-      Revolver's +8 transport upgrade works through `PwTransportCapacity`.
+      Revolver's +8 transport upgrade works through `PwTransportCapacity`. Unload at a place (2026-11-12,
+      `PwUnloadAt`, `UnloadAtOrderGenerator`): every transport (Revolver, Dsunguri, ElfRing, Phantom) has an Unload
+      button (Action.trt icon 31); a click on the ground sends it there to land and unload. Unloading shows the
+      original's ring cursor, not the shovel, which is only for building and repairing.
 - [x] **Effects and sounds** (2026-11-01, branch `prim_air`): the installer's `effects` stage writes every weapon's
       flight and impact art (`sequences/weapons.yaml`) and sounds; the `units` stage writes each unit's sounds and a
       voice set per image (`voices/units.yaml`: Select, Action, Attack, Die, Work, Built). Weapons reference them
@@ -436,9 +439,11 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 - [x] **Hunting and meat sharing** (2026-11-02, branches `hunting`, `bot2`), a new design, not the original's:
   - `PwHunter`: a per-unit toggle (command panel, the original's Action.trt icon 13). While on, an idle unit picks
     up meat within 8 cells, else attacks a wild creature within 8 cells its weapons can hit, aggressive ones first,
-    then the nearest; several hunters can hunt the same creature.
+    then the nearest; several hunters can hunt the same creature. A player's attack order on a target turns it off
+    (2026-11-12; bots keep theirs, their hunting module sets it by where the unit is).
     While on, a gold H at the bottom left of the unit's selection box (the original's H mark), and the Hunt button
-    has a gold frame (`OutlineWidget`, on any command slot that is on).
+    has a gold frame (`OutlineWidget`, on any command slot that is on), animated since 2026-11-12: it glows, and a
+    light with a fading tail runs around it.
   - Share meat (`ShareMeat` activity, icon 35): the selected meat eaters meet and split their meat evenly.
   - Tests: `hunting-test`, `share-meat-test`.
 - [x] **Rally points** (2026-11-02, branch `features`): stock `RallyPoint` on every production building (right-click

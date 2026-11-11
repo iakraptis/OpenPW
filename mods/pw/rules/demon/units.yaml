@@ -383,6 +383,8 @@ demon-phantom:
 		Types: Ground
 		MaxWeight: 12
 		UnloadVoice: Action
+	# Unload at a place (the command panel's Unload button).
+	PwUnloadAt:
 	WithInfantryBody@FLIGHT:
 		DefaultAttackSequence: walk
 

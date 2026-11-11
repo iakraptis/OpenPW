@@ -497,6 +497,8 @@ tyrano-dsunguri:
 		Types: Ground
 		MaxWeight: 12
 		UnloadVoice: Action
+	# Unload at a place (the command panel's Unload button).
+	PwUnloadAt:
 	# No attack animation (it has no attack).
 	WithInfantryBody@FLIGHT:
 		DefaultAttackSequence: walk

@@ -55,7 +55,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			("capture", 80, 4),
 			("capture-blocked", 0, 1),
 			("harvest", 36, 1),
-			("deploy", 72, 1),
+
+			// Unloading a transport (on the transport itself, or at a place): the same ring. The shovel (72) is only for
+			// building and repairing.
+			("deploy", 92, 8),
 			("deploy-blocked", 0, 1),
 			("ability", 56, 8),
 			("heal", 56, 8),
