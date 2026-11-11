@@ -394,26 +394,29 @@ editor:
 		erase: 50, 187, 16, 16
 
 # The races' interface bars (chrome/bar-<race>.png, written by the installer from JW2_02 Intfbg.spr), drawn by
-# InterfaceBarWidget: the pieces (the middle is kept whole, one section of each lower panel repeats to fill the
-# width), and areas that are not drawn but place the other widgets (minimap hole, panels, buttons) or say where the
-# bar is solid (solid-sides, solid-middle: from their top edge down, the bar takes the clicks). Coordinates in the
-# original 800 x 161 bar. The original lays out every race's interface the same way (each bar's art is drawn
-# around the same hole, panels and buttons), so only the pieces and the solid edges differ; the repeated sections
-# are the ones whose ends join seamlessly.
+# InterfaceBarWidget on the window's bottom edge: the pieces, at the art's own height (Primitive 161, Elf 164,
+# Tyrano 179, Demon 148; the middle is kept whole, one section of each lower panel repeats to fill the width; the
+# repeated sections are the ones whose ends join seamlessly), and areas that are not drawn but place the other
+# widgets (minimap hole, panels, buttons) or say where the bar is solid (solid-sides, solid-middle: from their top
+# edge down, the bar takes the clicks). The pieces are in the art's own pixels; the areas are in an 800 x 161 frame
+# whose bottom is the bar's bottom (a race's own y + 161 - its height), the extra height of the taller bars being
+# decoration above. Every race's art has its hole and panels at about the same place from the bottom, so all share
+# one minimap area (the square inside every race's hole) and the same panels; the buttons and solid edges are each
+# race's own.
 ^bar:
 	Regions:
 		center: 213, 0, 352, 161
-		hole: 327, 25, 118, 127
+		hole: 331, 38, 112, 112
 		left-panel: 16, 70, 294, 80
 		right-panel: 462, 70, 322, 80
-		menu: 470, 21, 82, 32
-		allies: 232, 21, 37, 32
-		msg: 270, 21, 41, 32
 
 bar-primitive:
 	Inherits: ^bar
 	Image: chrome/bar-primitive.png
 	Regions:
+		menu: 470, 21, 82, 32
+		allies: 232, 21, 37, 32
+		msg: 270, 21, 41, 32
 		left-fixed: 0, 0, 77, 161
 		left-tile: 77, 0, 74, 161
 		left-join: 151, 0, 62, 161
@@ -427,55 +430,52 @@ bar-tyrano:
 	Inherits: ^bar
 	Image: chrome/bar-tyrano.png
 	Regions:
-		menu: 471, 23, 81, 28
-		allies: 228, 23, 45, 28
-		msg: 276, 23, 30, 28
-		left-fixed: 0, 0, 37, 161
-		left-tile: 37, 0, 108, 161
-		left-join: 145, 0, 68, 161
-		right-join: 565, 0, 1, 161
-		right-tile: 566, 0, 58, 161
-		right-fixed: 624, 0, 176, 161
-		solid-sides: 0, 68, 800, 93
-		solid-middle: 213, 36, 352, 125
+		center: 213, 0, 352, 179
+		menu: 471, 5, 81, 28
+		allies: 228, 5, 45, 28
+		msg: 276, 5, 30, 28
+		left-fixed: 0, 0, 37, 179
+		left-tile: 37, 0, 108, 179
+		left-join: 145, 0, 68, 179
+		right-join: 565, 0, 1, 179
+		right-tile: 566, 0, 58, 179
+		right-fixed: 624, 0, 176, 179
+		solid-sides: 0, 50, 800, 111
+		solid-middle: 213, 18, 352, 143
 
 bar-elf:
 	Inherits: ^bar
 	Image: chrome/bar-elf.png
 	Regions:
-		menu: 469, 22, 85, 31
-		allies: 231, 22, 40, 31
-		msg: 270, 22, 42, 31
-		left-fixed: 0, 0, 81, 161
-		left-tile: 81, 0, 80, 161
-		left-join: 161, 0, 52, 161
-		right-join: 565, 0, 6, 161
-		right-tile: 571, 0, 106, 161
-		right-fixed: 677, 0, 123, 161
-		solid-sides: 0, 56, 800, 105
-		solid-middle: 213, 20, 352, 141
+		center: 213, 0, 352, 164
+		menu: 469, 19, 85, 31
+		allies: 231, 19, 40, 31
+		msg: 270, 19, 42, 31
+		left-fixed: 0, 0, 81, 164
+		left-tile: 81, 0, 80, 164
+		left-join: 161, 0, 52, 164
+		right-join: 565, 0, 6, 164
+		right-tile: 571, 0, 106, 164
+		right-fixed: 677, 0, 123, 164
+		solid-sides: 0, 53, 800, 108
+		solid-middle: 213, 17, 352, 144
 
-# The Demon bar's art is 148 high, not 161: its pieces have that height, so it sits on the window's bottom edge,
-# and its minimap hole and panels are those of its art.
 bar-demon:
 	Inherits: ^bar
 	Image: chrome/bar-demon.png
 	Regions:
 		center: 213, 0, 352, 148
-		hole: 327, 24, 118, 116
-		left-panel: 16, 63, 294, 80
-		right-panel: 462, 63, 322, 80
-		menu: 468, 24, 87, 27
-		allies: 232, 24, 39, 27
-		msg: 271, 24, 40, 27
+		menu: 468, 37, 87, 27
+		allies: 232, 37, 39, 27
+		msg: 271, 37, 40, 27
 		left-fixed: 0, 0, 46, 148
 		left-tile: 46, 0, 59, 148
 		left-join: 105, 0, 108, 148
 		right-join: 565, 0, 60, 148
 		right-tile: 625, 0, 59, 148
 		right-fixed: 684, 0, 116, 148
-		solid-sides: 0, 30, 800, 118
-		solid-middle: 213, 7, 352, 141
+		solid-sides: 0, 43, 800, 118
+		solid-middle: 213, 20, 352, 141
 
 # The bars' buttons (chrome/bar-<race>-buttons.png: JW2_02 Menu, Allies, Msg; released and pressed).
 bar-primitive-buttons:
