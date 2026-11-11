@@ -35,7 +35,10 @@ button frames in its own style.
 
 `u16` width (800), `u16` height, 8 zero bytes, then `width × height` bytes. One per race, each after its palette
 (`Primitive.pn`, `Elf.pnt`, `Tyrano.pnt`, `Demon.pnt`): the bottom bar, with a green surround and a black hole
-for the minimap.
+for the minimap. Heights differ: Primitive 161, Elf 164, Tyrano 179, Demon 148; each has its hole about 8–10 pixels
+above its bottom edge, and blank plaques where the Menu, Allies and Msg buttons go (the buttons are separate
+`.spz` frames). The original Elf and Demon Menu buttons carry a picture, not the word; the mod's installer makes its
+own lettered Menu buttons on each race's plaque (`MenuButtons.cs`, with open-licence fonts).
 
 ## Menus: `.mnt` and the per-race menus
 

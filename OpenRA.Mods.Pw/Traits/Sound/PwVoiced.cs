@@ -52,7 +52,8 @@ namespace OpenRA.Mods.Pw.Traits
 
 		bool IVoiced.PlayVoiceLocal(Actor self, string phrase, string variant, float volume)
 		{
-			if (phrase == null || !((IVoiced)this).HasVoice(self, phrase))
+			// Heard where the unit is (work, attack, death), so only when it can be seen: not from units in the fog.
+			if (phrase == null || !((IVoiced)this).HasVoice(self, phrase) || self.World.FogObscures(self))
 				return false;
 
 			return Game.Sound.PlayPredefined(SoundType.World, self.World.Map.Rules, null, self, voiceSet, phrase, variant, false, self.CenterPosition, volume, true);

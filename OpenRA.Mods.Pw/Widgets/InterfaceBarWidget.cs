@@ -17,12 +17,14 @@ using OpenRA.Widgets;
 namespace OpenRA.Mods.Pw.Widgets
 {
 	// The race's bottom interface bar (JW2_02 Intfbg.spr, chrome/bar-<race>.png), fitted to any window: drawn at a
-	// scale that makes it HeightShare of the window height (never smaller than the original, never wider than the
-	// window), its middle (raised blocks and the minimap hole) centred and kept whole, its two lower panels widened by
-	// repeating one section. The chrome collection bar-<race> holds the pieces and, as regions that are not drawn,
-	// the areas the other widgets go in (hole, left-panel, right-panel, menu, allies, msg) and the top edges of its
-	// solid part (solid-sides, solid-middle); Area() gives the areas on screen. Clicks on the bar don't reach the
-	// world.
+	// scale that makes the original's 161-high bar HeightShare of the window height (never smaller than the original,
+	// never wider than the window), on the window's bottom edge, its middle (raised blocks and the minimap hole)
+	// centred and kept whole, its two lower panels widened by repeating one section. The chrome collection bar-<race>
+	// holds the pieces, at the art's own height (148 to 179 by race), and, as regions that are not drawn, the areas
+	// the other widgets go in (hole, left-panel, right-panel, menu, allies, msg) and the top edges of its solid part
+	// (solid-sides, solid-middle). Those regions are measured in a ReferenceHeight-high frame whose bottom is the
+	// bar's bottom, so every race shares the minimap and panel areas; Area() gives them on screen. Clicks on the bar
+	// don't reach the world.
 	public class InterfaceBarWidget : Widget
 	{
 		public string Collection = "bar-primitive";
@@ -30,6 +32,10 @@ namespace OpenRA.Mods.Pw.Widgets
 
 		[Desc("Share of the window height the bar takes (the original's 161 of 600 is 0.27).")]
 		public float HeightShare = 0.21f;
+
+		[Desc("The bar height HeightShare applies to and the height of the frame the areas are measured in (the original's",
+			"161), so that every race's bar has the same scale and areas whatever its art's own height (the Demon's is 148).")]
+		public int ReferenceHeight = 161;
 
 		// Bar coordinates of the pieces' edges, from the collection (all relative to the original 800-wide bar).
 		Sprite leftFixed, leftTile, leftJoin, center, rightJoin, rightTile, rightFixed;
@@ -53,6 +59,7 @@ namespace OpenRA.Mods.Pw.Widgets
 			Collection = other.Collection;
 			GetCollection = other.GetCollection;
 			HeightShare = other.HeightShare;
+			ReferenceHeight = other.ReferenceHeight;
 		}
 
 		public override Widget Clone() { return new InterfaceBarWidget(this); }
@@ -88,7 +95,7 @@ namespace OpenRA.Mods.Pw.Widgets
 				return;
 
 			var b = RenderBounds;
-			Scale = Math.Min(Math.Max(1f, b.Height * HeightShare / BarHeight), (float)b.Width / BarWidth);
+			Scale = Math.Min(Math.Max(1f, b.Height * HeightShare / ReferenceHeight), (float)b.Width / BarWidth);
 			Top = b.Bottom - (int)(BarHeight * Scale);
 
 			centerLeft = b.X + (int)((b.Width - center.Bounds.Width * Scale) / 2);
@@ -126,8 +133,11 @@ namespace OpenRA.Mods.Pw.Widgets
 
 			var left = X(region.Left);
 			var right = X(region.Right);
-			return new Rectangle(left, Top + (int)(region.Y * Scale), right - left, (int)(region.Height * Scale));
+			return new Rectangle(left, FrameY(region.Y), right - left, (int)(region.Height * Scale));
 		}
+
+		// Screen y of a y in the area frame (ReferenceHeight high, its bottom on the bar's bottom).
+		int FrameY(int frameY) => RenderBounds.Bottom - (int)((ReferenceHeight - frameY) * Scale);
 
 		public override void Draw()
 		{
@@ -164,8 +174,8 @@ namespace OpenRA.Mods.Pw.Widgets
 			if (center == null || pos.Y < Top)
 				return false;
 
-			var panelTop = Top + (int)(solidSidesTop * Scale);
-			var middleTop = Top + (int)(solidMiddleTop * Scale);
+			var panelTop = FrameY(solidSidesTop);
+			var middleTop = FrameY(solidMiddleTop);
 			return pos.Y >= panelTop || (pos.X >= centerLeft && pos.X < centerLeft + center.Bounds.Width * Scale && pos.Y >= middleTop);
 		}
 

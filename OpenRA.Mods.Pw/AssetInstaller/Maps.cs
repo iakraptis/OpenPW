@@ -31,6 +31,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public const int Border = 1;
 		const int GridSize = 256;
 		const int TileBytes = 0x800;
+		const uint WalkableBit = 1u << 29;
+		const uint WaterBit = 1u << 30;
 
 		// The first tile of each ground material in a tileset (docs/formats/trt.md); 6 is the liquid.
 		static readonly int[] MaterialBase = { 0, 200, 400, 600, 800, 1000, 1200 };
@@ -54,6 +56,15 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		// A live slot of the OBC unit table: a placed unit, building or creature, at its OpenRA cell.
 		public sealed record Placed(int Slot, int Type, int Owner, string Actor, int X, int Y, int Facing);
+
+		// Original maps that also get a fixed copy (FixedCopy): the original's folder, the copy's folder and title.
+		static readonly Dictionary<string, (string Slug, string Title)> FixedCopies = new()
+		{
+			["6-dino-hunting"] = ("6-dino-hunting-fixed", "(6) Dino Hunting Fixed"),
+		};
+
+		// Left out of the fixed copies: they are placed on dry land, where they cannot move.
+		static readonly string[] WaterCreatures = { "wild-plesiosaurs", "wild-peleneustes" };
 
 		public static void Export(InstallContext c)
 		{
@@ -129,6 +140,91 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var folder = $"maps/{slug}";
 			WriteTerrain(c, folder, map);
 			c.WriteText($"{folder}/map.yaml", MapYaml(map, players, starts, creatures));
+
+			if (FixedCopies.TryGetValue(slug, out var copy))
+			{
+				var fixedMap = FixedCopy(map, copy.Title);
+				var landCreatures = creatures.Where(cr => !WaterCreatures.Contains(cr.Actor)).ToList();
+				WriteTerrain(c, $"maps/{copy.Slug}", fixedMap);
+				c.WriteText($"maps/{copy.Slug}/map.yaml", MapYaml(fixedMap, players, starts, landCreatures));
+			}
+		}
+
+		// A copy of an original map with its bugs fixed, next to the original (converted as it is, bugs and all; the
+		// original game has them too): the plateaus closed, no liquid where the map has no water, no sea creatures.
+		static Source FixedCopy(Source map, string title)
+		{
+			var map1 = (byte[])map.Map1.Clone();
+			SealPlateaus(map.Map1, map1, map.Width, map.Height);
+			DrainLiquid(map.Map1, map1, map.Width, map.Height);
+			return new Source
+			{
+				Title = title,
+				Tileset = map.Tileset,
+				Width = map.Width,
+				Height = map.Height,
+				Map1 = map1,
+				Map2 = map.Map2,
+				Objects = map.Objects,
+			};
+		}
+
+		// The original's movement checks only MAP1's walkable bit (FUN_0045cf94), so a plateau whose cliff has a walkable
+		// cell, or two walkable cells meeting at a corner, can be climbed. Walkable plateau cells (height 1 and up) that
+		// touch walkable lowland (height 0) become unwalkable: no plateau can be entered on foot.
+		static void SealPlateaus(byte[] source, byte[] target, int width, int height)
+		{
+			uint Cell(int x, int y) => BitConverter.ToUInt32(source, 4 * (y * GridSize + x));
+			bool Walkable(int x, int y) => x >= 0 && y >= 0 && x < width && y < height && (Cell(x, y) & WalkableBit) != 0;
+			int Height(int x, int y) => (int)(Cell(x, y) >> 26) & 7;
+
+			for (var y = 0; y < height; y++)
+			{
+				for (var x = 0; x < width; x++)
+				{
+					if (!Walkable(x, y) || Height(x, y) == 0)
+						continue;
+
+					var touchesLowland = false;
+					for (var dy = -1; dy <= 1; dy++)
+						for (var dx = -1; dx <= 1; dx++)
+							touchesLowland |= (dx != 0 || dy != 0) && Walkable(x + dx, y + dy) && Height(x + dx, y + dy) == 0;
+
+					if (touchesLowland)
+						BitConverter.TryWriteBytes(target.AsSpan(4 * (y * GridSize + x)), Cell(x, y) & ~WalkableBit);
+				}
+			}
+		}
+
+		// The liquid material (6) in cells without the water bit: under the cliffs it shows as water at their foot. Each
+		// such field takes the cell's most common other material, or else its neighbours'.
+		static void DrainLiquid(byte[] source, byte[] target, int width, int height)
+		{
+			const int Liquid = 6;
+			uint Cell(int x, int y) => BitConverter.ToUInt32(source, 4 * (y * GridSize + x));
+			IEnumerable<int> Fields(uint cell) => Enumerable.Range(0, 6).Select(i => (int)(cell >> (3 * i)) & 7);
+			int? MostCommon(IEnumerable<int> materials) =>
+				materials.Where(m => m != Liquid).GroupBy(m => m).OrderByDescending(g => g.Count()).ThenBy(g => g.Key)
+					.Select(g => (int?)g.Key).FirstOrDefault();
+
+			for (var y = 0; y < height; y++)
+			{
+				for (var x = 0; x < width; x++)
+				{
+					var cell = BitConverter.ToUInt32(target, 4 * (y * GridSize + x));
+					if ((cell & WaterBit) != 0 || !Fields(cell).Contains(Liquid))
+						continue;
+
+					var neighbours = Enumerable.Range(-1, 3).SelectMany(dy => Enumerable.Range(-1, 3).Select(dx => (X: x + dx, Y: y + dy)))
+						.Where(p => p.X >= 0 && p.Y >= 0 && p.X < width && p.Y < height).SelectMany(p => Fields(Cell(p.X, p.Y)));
+					var material = (uint)(MostCommon(Fields(cell)) ?? MostCommon(neighbours) ?? 0);
+					for (var i = 0; i < 6; i++)
+						if (((cell >> (3 * i)) & 7) == Liquid)
+							cell = (cell & ~(7u << (3 * i))) | (material << (3 * i));
+
+					BitConverter.TryWriteBytes(target.AsSpan(4 * (y * GridSize + x)), cell);
+				}
+			}
 		}
 
 		// map.bin (movement terrain) and terrain.bin (the original cells PwTerrainRenderer draws).

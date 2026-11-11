@@ -141,6 +141,10 @@ namespace OpenRA.Mods.Pw.Traits
 					worker.Trait<IPositionable>().SetPosition(worker, cell);
 				}
 
+				// "Built" is heard everywhere, so only by the builder's owner.
+				if (worker.Owner != w.LocalPlayer)
+					return;
+
 				foreach (var voiced in worker.TraitsImplementing<IVoiced>())
 					voiced.PlayVoice(worker, "Built", worker.Owner.Faction.InternalName);
 			});
