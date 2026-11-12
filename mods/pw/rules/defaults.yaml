@@ -184,7 +184,7 @@
 ^WildPredator:
 	Inherits: ^Melee
 	-PwHunter:
-	-WithTextDecoration@HUNTING:
+	-PwWithTextDecoration@HUNTING:
 	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
 	Targetable@PREDATOR:
 		TargetTypes: Predator
@@ -339,7 +339,7 @@
 	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
 		HuntingCondition: hunting
-	WithTextDecoration@HUNTING:
+	PwWithTextDecoration@HUNTING:
 		Text: H
 		Font: TinyBold
 		Color: FFD700
@@ -369,7 +369,7 @@
 	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
 		HuntingCondition: hunting
-	WithTextDecoration@HUNTING:
+	PwWithTextDecoration@HUNTING:
 		Text: H
 		Font: TinyBold
 		Color: FFD700
