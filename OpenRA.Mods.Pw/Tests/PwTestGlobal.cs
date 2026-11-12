@@ -77,6 +77,13 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Select one actor, as a click would.")]
 		public void Select(Actor actor) => actor.World.Selection.Combine(actor.World, new[] { actor }, false, true);
 
+		[Desc("Whether a worker may place a building with its top left at a cell (the placement check).")]
+		public bool CanPlace(Actor builder, string building, CPos cell)
+		{
+			var info = builder.World.Map.Rules.Actors[building];
+			return Builder.CanPlace(builder.World, builder, info, info.TraitInfo<BuildingInfo>(), cell);
+		}
+
 		[Desc("Order a worker to construct a building at a cell (the real build order).")]
 		public void Construct(Actor builder, string building, CPos cell) =>
 			Resolve(builder, new Order(Builder.OrderID, builder, Target.FromCell(builder.World, cell), false) { TargetString = building });

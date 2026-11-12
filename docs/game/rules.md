@@ -24,6 +24,8 @@ and speeds keep their original values without rescaling.
   `BerryBush.RegrowAmount/RegrowInterval`), instead of being used up for good.
 - A worker plays its gather animation once (`Buildman`: 48 steps), then carries **12 berries**, plus the
   gathering upgrade (+4) (C, `FUN_00476e88`: `12 + bonus[player][type]`). It delivers to the main building.
+  **Mod change:** a main building can't be placed right against a berry bush: one free cell between them
+  (`AcceptsBerries.BushClearance`, checked in `Builder.CanPlace` for players and the AI alike).
 - A **second resource** exists (`P_PLAYE` 0x194, 1,000 at start; type cost 0x194; upgrade cost +0x22c), but every
   unit, building and upgrade costs 0 of it in the shipped data. The mod can leave it out.
 - Elf Wizards don't carry: they stay at the bush, and each trip's berries fly to the Heaven on their own (Berry fly,

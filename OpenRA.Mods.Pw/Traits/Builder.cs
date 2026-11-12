@@ -9,7 +9,9 @@
  */
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Orders;
 using OpenRA.Mods.Common.Traits;
@@ -91,10 +93,31 @@ namespace OpenRA.Mods.Pw.Traits
 			return underConstruction == null || underConstruction.IsComplete;
 		}
 
-		// The worker's footprint check: free, buildable cells for this building.
+		// The worker's footprint check: free, buildable cells for this building, and for a main building (AcceptsBerries)
+		// a gap of BushClearance cells to every berry bush.
 		public static bool CanPlace(World world, Actor builder, ActorInfo actorInfo, BuildingInfo buildingInfo, CPos cell)
 		{
-			return world.CanPlaceBuilding(cell, actorInfo, buildingInfo, builder);
+			if (!world.CanPlaceBuilding(cell, actorInfo, buildingInfo, builder))
+				return false;
+
+			var clearance = actorInfo.TraitInfoOrDefault<AcceptsBerriesInfo>()?.BushClearance ?? 0;
+			return clearance <= 0 || !NearBush(world, buildingInfo.Tiles(cell).ToArray(), clearance);
+		}
+
+		// Whether a berry bush has a cell within clearance cells (diagonals included) of the footprint.
+		static bool NearBush(World world, CPos[] footprint, int clearance)
+		{
+			var minX = footprint.Min(c => c.X) - clearance;
+			var maxX = footprint.Max(c => c.X) + clearance;
+			var minY = footprint.Min(c => c.Y) - clearance;
+			var maxY = footprint.Max(c => c.Y) + clearance;
+			var actors = world.ActorMap.ActorsInBox(world.Map.CenterOfCell(new CPos(minX - 1, minY - 1)), world.Map.CenterOfCell(new CPos(maxX + 1, maxY + 1)));
+			foreach (var bush in actors.Where(a => a.Info.HasTraitInfo<BerryBushInfo>()))
+				foreach (var (bushCell, _) in bush.OccupiesSpace.OccupiedCells())
+					if (footprint.Any(f => Math.Max(Math.Abs(f.X - bushCell.X), Math.Abs(f.Y - bushCell.Y)) <= clearance))
+						return true;
+
+			return false;
 		}
 
 		IEnumerable<IOrderTargeter> IIssueOrder.Orders

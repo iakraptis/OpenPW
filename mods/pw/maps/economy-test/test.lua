@@ -168,6 +168,8 @@ do
     -- 1. A Powerman trained at a PowerHouse with a rally point walks to it.
     -- 2. A Buildman trained at a Sanctuary whose rally point is on a berry bush starts gathering there
     --    (GatherAtRallyPoint), not at the nearer bush.
+    -- 3. A main building can't be placed right against a berry bush: one free cell between them (AcceptsBerries
+    --    BushClearance); other buildings can.
     WorldLoaded = function()
         me = Player.GetPlayer("Rally")
         me.Cash = 5000
@@ -193,6 +195,15 @@ do
                     return PwTest.Carried(worker) > 0 and PwTest.Berries(bushFar) < start
                 end)
             end))
+        end)
+        Later(2, function()
+            local bush = Actor.Create("berry-bush-0", true, { Owner = Player.GetPlayer("Neutral"), Location = At(28, 26) })
+            local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(20, 30) })
+            Later(1, function()
+                Check(not PwTest.CanPlace(worker, "primitive-sanctuary", At(22, 24)), "a Sanctuary can't be placed right against a berry bush")
+                Check(PwTest.CanPlace(worker, "primitive-sanctuary", At(21, 24)), "a Sanctuary one cell from the bush can")
+                Check(PwTest.CanPlace(worker, "primitive-house", At(30, 26)), "a House can be placed right against it")
+            end)
         end)
         FinishWhenDone("RALLY", 3000)
     end
