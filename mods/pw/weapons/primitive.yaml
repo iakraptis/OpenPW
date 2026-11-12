@@ -165,11 +165,13 @@ Stone:
 		Image: weapon-stone
 		Explosions: impact
 
-# Trap: snaps at what stands beside it (32 px from its edge; the range is measured from its centre).
+# Trap: snaps at what stands beside it (32 px from its edge; the range is measured from its centre). Its target mask
+# is ground units only (1): hoverers pass over it.
 TrapSnap:
 	Inherits: ^Melee
 	ReloadDelay: 8
 	Range: 2c0
+	InvalidTargets: Hover
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
 	Report: weapon-trap-0.wav

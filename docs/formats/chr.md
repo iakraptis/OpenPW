@@ -31,7 +31,7 @@ Confidence: **C** confirmed in decompiled code, **D** deduced from the values on
 | 0x015c | `i32` | Armour (base) | C | same |
 | 0x0160, 0x0164 | `i32` | Two more levelled stats (zero in the sampled units) | C | same |
 | 0x0168–0x0178 | `i32[5]` | Level-9 caps of the five stats above | C | `FUN_00458b2c` |
-| 0x017c | `i32` | Movement class: 0 ground, 1 building, 2 Rhamphos only (?), 3 air | C/D | `== 1` starts construction in `FUN_004613f9` |
+| 0x017c | `i32` | Movement class: 0 ground, 1 building, 2 hover (Insect, Rhamphos, Warlock, Alien1-2), 3 air. It picks the step check (`0x45cb18` table in `FUN_0045cae0`: ground needs the walkable bit; hover the walkable or water bit; air anything) and the weapon target-mask bit (`FUN_00457c40`, [effect.md](effect.md) 0x154) | C | `== 1` starts construction in `FUN_004613f9` |
 | 0x0184 | `i32` | Population used (units) / provided (House 10, Nest 10, Sanctuary 9) | D | AI divides its budget by it, `FUN_0041e670` |
 | 0x018c | `i32` | Build / training time; construction runs `0x18c / 10` steps | C | `FUN_004613f9` |
 | 0x0190 | `i32` | Cost (main resource) | C | subtracted from the player's resource, `FUN_0041e670` |

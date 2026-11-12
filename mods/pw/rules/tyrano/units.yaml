@@ -337,13 +337,12 @@ tyrano-tyranos:
 		FireDelay: 7
 		Weapon: TyranosHit
 
-# Flyers. The Rhamphos flies low ("Fly"): ground weapons reach it too.
+# The Rhamphos hovers (.chr 0x17c = 2, ^LivingHoverer): over ground and water, not over cliffs; ground weapons reach it.
 tyrano-rhamphos:
-	Inherits: ^LivingFlyer
-	Inherits@flight: ^LowFlight
+	Inherits: ^LivingHoverer
 	Inherits@race: ^Tyrano
-	Inherits@attack: ^AirAttack
-	Inherits@disguise: ^DisguisableArmedFlyer
+	Inherits@attack: ^Ranged
+	Inherits@disguise: ^DisguisableArmedHoverer
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 27
@@ -367,7 +366,7 @@ tyrano-rhamphos:
 		HP: 120
 	PwArmor:
 		Value: 0
-	Aircraft:
+	Mobile:
 		Speed: 224
 	RevealsShroud:
 		Range: 10c0

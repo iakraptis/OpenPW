@@ -7,6 +7,8 @@
 --    enemy StoneTower leaves it alone while it stones a Masos beside it, and it doesn't attack an enemy next to it.
 --    Turned back, it is the owner's again and the tower stones it.
 -- 5. The Dilophos's poison spit stuns: an enemy Powerman it hits is frozen for a moment, then free again.
+-- 6. Hovering (.chr 0x17c = 2: Rhamphos, Insect): a ground unit that crosses water. Ground weapons reach a Rhamphos,
+--    the Phoenix's air-only fire doesn't; an enemy Trap snaps at a Masos beside it but not at an Insect.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -19,6 +21,7 @@ WorldLoaded = function()
     Later(5, Mutation)
     Later(5, Disguise)
     Later(5, Stun)
+    Later(5, Hovering)
     FinishWhenDone("TYRANO", 4000)
 end
 
@@ -147,4 +150,27 @@ Stun = function()
             dilophos.Stance = "HoldFire"
             WaitFor("the stun wears off", 60, function() return powerman.IsDead or not PwTest.Tinted(powerman, "stunned") end)
         end)
+end
+
+Hovering = function()
+    local rhamphos = Actor.Create("tyrano-rhamphos", true, { Owner = me, Location = CPos.New(14, 13) })
+    rhamphos.Stance = "HoldFire"
+    local soldier = Actor.Create("primitive-soldier", true, { Owner = enemy, Location = CPos.New(17, 13) })
+    local phoenix = Actor.Create("elf-phoenix", true, { Owner = enemy, Location = CPos.New(12, 15) })
+    soldier.Stance = "HoldFire"
+    phoenix.Stance = "HoldFire"
+    local trap = Actor.Create("primitive-trap", true, { Owner = enemy, Location = CPos.New(16, 16) })
+    local insect = Actor.Create("demon-insect", true, { Owner = me, Location = CPos.New(17, 16) })
+    local masos = Actor.Create("tyrano-masos", true, { Owner = me, Location = CPos.New(15, 16) })
+    insect.Stance = "HoldFire"
+    masos.Stance = "HoldFire"
+    Later(2, function()
+        Check(PwTest.CanOrder(soldier, "Attack", rhamphos), "a Soldier's arrows reach a Rhamphos")
+        Check(not PwTest.CanOrder(phoenix, "Attack", rhamphos), "the Phoenix's air-only fire doesn't reach a Rhamphos")
+    end)
+    WaitFor("an enemy Trap snaps at the Masos beside it", 300, function()
+        return masos.IsDead or masos.Health < masos.MaxHealth
+    end, function(ok)
+        if ok then Check(insect.Health == insect.MaxHealth, "the Trap leaves the hovering Insect alone") end
+    end)
 end

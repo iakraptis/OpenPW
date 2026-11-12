@@ -255,6 +255,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var list = new List<string>();
 			if (actor.TraitOrDefault<Aircraft>() != null)
 				list.Add("flying");
+			else if (actor.TraitsImplementing<Targetable>().Any(t => t.TargetTypes.Contains("Hover")))
+				list.Add("hovering");
 
 			if (actor.TraitsImplementing<Cloak>().Any(c => !c.IsTraitDisabled))
 				list.Add("invisible");

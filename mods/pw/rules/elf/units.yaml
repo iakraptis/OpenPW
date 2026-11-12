@@ -399,12 +399,13 @@ elf-pixie:
 	WithInfantryBody@FLIGHT:
 		DefaultAttackSequence: walk
 
-# The ManaSpread flies low ("Fly"), unarmed: it refills the mana of the casters around it (PwManaAura) and, once
-# researched, gives itself up for Meteor. It doesn't gain levels.
+# The ManaSpread, unarmed: it refills the mana of the casters around it (PwManaAura) and, once researched, gives
+# itself up for Meteor. It doesn't gain levels. A ground unit in the original (.chr 0x17c = 0): it walks, Traps catch
+# it; its art floats, so it has the hoverers' body.
 elf-manaspread:
-	Inherits: ^LivingFlyer
-	Inherits@flight: ^LowFlight
+	Inherits: ^LivingHoverer
 	Inherits@race: ^Elf
+	-Targetable@HOVER:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
@@ -422,7 +423,8 @@ elf-manaspread:
 		HP: 75
 	PwArmor:
 		Value: 0
-	Aircraft:
+	Mobile:
+		Locomotor: foot
 		Speed: 144
 	RevealsShroud:
 		Range: 6c0

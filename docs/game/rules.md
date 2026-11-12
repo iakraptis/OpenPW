@@ -40,7 +40,10 @@ Damage per hit (C, `0x457cc4`):
 - The target's armour is raised by a percentage under a shield effect (flags 0xc00).
 - Weapons with a splash radius (weapon record 0x1f8) hit everything inside it
   ([effect.md](../formats/effect.md)).
-- Whether a weapon can hit air is bit 3 of its target mask.
+- Whether a weapon can hit a unit is the bit of its target mask (weapon 0x154) for the unit's movement class (`.chr`
+  0x17c; C, `FUN_00457c40`): bit 0 ground, 1 buildings, 2 hovering units (Insect, Rhamphos, Warlock), 3 air. Every
+  weapon that hits ground units also hits hovering ones, except the Trap's (mask 1); the Phoenix's fire hits only air
+  (mask 8). Hovering units move as ground units that can also cross water ([map.md](../formats/map.md)).
 - Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
 - The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 

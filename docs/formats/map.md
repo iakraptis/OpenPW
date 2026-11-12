@@ -74,7 +74,7 @@ A cell is one 32 × 32 [tileset](trt.md) tile. `MAP1`, `MAP2` and `MAP3` are 256
 (cell (x, y) at `(y * 256 + x) * 4`); only the top-left width × height is used. Older content can remain outside
 it (`One VS One` has 128 × 128 cells of `MAP1` data for a 64 × 64 map).
 
-Movement (`FUN_0045cf94`, one step of a unit): a water unit needs the water bit; a flyer goes anywhere; any other
+Movement (`FUN_0045cf94`, one step of a unit; the check by movement class is `FUN_0045cae0`): a water unit needs the water bit; a flyer goes anywhere; a hovering unit (class 2: Insect, Rhamphos, Warlock) needs the walkable or the water bit and is otherwise checked as a ground unit; any other
 unit needs the walkable bit, no `MAP3` object (`& 0x700`) and no unit or building (`0x58e270` bit `0x20000000`). Height
 and the cliff art are not looked at, so a walkable cliff cell can be climbed. `(6) Dino Hunting` has such ways onto
 two plateaus, a liquid layer under its cliffs and sea creatures placed on plateau grass; the original game shows the
