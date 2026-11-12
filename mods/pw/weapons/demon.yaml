@@ -31,12 +31,14 @@ MudManHit:
 		Damage: 70
 	Report: weapon-mudman-hit-0.wav
 
-# Gargoyle: its red eye strikes at once, at ground or air, splashing 60 px.
+# Gargoyle: its red eye strikes at once with a red bolt of lightning, at ground or air, splashing 60 px, with a small
+# blast where it hits. The original's shot is instant (speed 0, no flight frames) and its bolt is drawn in code, not
+# found; the bolt here is the mod's (PwLightningBolt).
 RedEye:
 	Inherits: ^Arrow
 	ReloadDelay: 44
 	Range: 10c0
-	Projectile: InstantHit
+	Projectile: PwLightningBolt
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 50
 		# Splash: full damage within the original radius (1c896).
