@@ -68,7 +68,9 @@ CelberosFire:
 		Image: weapon-celberos-fire
 		Explosions: impact
 
-# KingDemon: a fireball that pierces ground units along its path (target mask 23).
+# KingDemon: a line of fire that sweeps forward to its full range and burns the ground units in its path (mode 4,
+# target mask 23). The moving front leaves a flame every tick that flares up and dies down in 16 ticks (Pw.exe
+# 0x477252); only the front does damage.
 KingDemonFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 47
@@ -78,6 +80,10 @@ KingDemonFire:
 		Sequences: flight
 		Speed: 576
 		Mode: 4
+		TrailImage: weapon-kingdemon-fire
+		TrailSequences: trail
+		TrailInterval: 0
+		TrailDelay: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 	Report: weapon-kingdemon-fire-0.wav

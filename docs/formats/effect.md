@@ -32,6 +32,13 @@ Known record fields:
 | 0x830 | Sound count |
 | 0x834 | Sound offset, −1 = none |
 
+Each weapon record has its own update routine: a table of handlers indexed by record (`0x47743c`; most share the
+plain flight, `0x477347`). `KingDemon Fire` (record 32) has its own (`0x477252`): every tick the moving shot leaves
+an object at its position (flag 0x400 set) that plays the flight frames once, two ticks each (0x224 frames, counted up
+to twice that), then goes away (C). The shot moves and hits as mode 4, so the attack is a line of flames that sweeps
+forward and burns what stands in its path; the flames left behind do no damage. Its record also holds 18-pixel
+steps for the eight directions at 0x198–0x1d4 (D).
+
 Melee hits (`Velocis hit`, `Chief hit`) have sounds but no frames. `R-zombie` and `R-skeleton` are records only.
 
 ## Spells
