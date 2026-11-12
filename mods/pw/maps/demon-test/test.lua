@@ -12,6 +12,7 @@
 -- 9. The Kelpa's fire reaches only what stands right before it (2 cells, not its 160 px range).
 -- 10. The KingDemon's fire sweeps on in a line to its full range: it burns the enemies standing in a row behind its
 --     target, and passes its friends.
+-- 11. The Insect builds but can't repair: it can't be ordered onto a damaged Tomb.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -30,6 +31,7 @@ WorldLoaded = function()
     Later(5, KelpaReach)
     -- After the Warlock's Suicide nearby (its blast would reach the row).
     Later(200, KingDemonFire)
+    Later(5, NoRepair)
     FinishWhenDone("DEMON", 4000)
 end
 
@@ -225,5 +227,16 @@ KingDemonFire = function()
         return burnt[1] and burnt[2] and burnt[3]
     end, function(ok)
         if ok then Check(not friendHurt, "the fire passes the KingDemon's own Skeleton") end
+    end)
+end
+
+NoRepair = function()
+    local tomb = Actor.Create("demon-tomb", true, { Owner = me, Location = CPos.New(2, 26) })
+    local insect = Actor.Create("demon-insect", true, { Owner = me, Location = CPos.New(6, 27) })
+    Later(2, function()
+        tomb.Health = math.floor(tomb.MaxHealth / 2)
+        Later(2, function()
+            Check(not PwTest.CanOrder(insect, "PwRepairBuilding", tomb), "an Insect can't be ordered to repair a damaged Tomb")
+        end)
     end)
 end

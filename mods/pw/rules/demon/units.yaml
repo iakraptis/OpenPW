@@ -21,8 +21,10 @@ demon-insect:
 		AttackDelay: 12
 	UsesPopulation:
 		Amount: 1
+	# It builds but can't repair: the original's Insect isn't ordered onto damaged buildings.
 	Builder:
 		Types: demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano
+		Repairs: false
 	Buildable:
 		Queue: demon-demonden
 		BuildDuration: 160

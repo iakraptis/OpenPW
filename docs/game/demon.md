@@ -8,7 +8,8 @@ Range and sight are in pixels; speed is the average east walk step in pixels per
 Tech tree: DemonDen and Tomb need nothing; DemonDen → DeathDen → FlyDen, MagicDen, DirtyPortal, Volcano; MagicDen →
 Hell, HighPortal. The Devil needs every other building. Demon health is kill points (KP), and their spells cost KP
 ([rules.md](rules.md#kill-points-demon)). RiseZombie1/2 are raised by the Devil's Rise death; the Imp costs nothing
-and is never trained.
+and is never trained. The Insect builds but, unlike the other races' workers, can't repair buildings (seen in the
+original game).
 
 ## Units
 

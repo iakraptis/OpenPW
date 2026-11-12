@@ -33,6 +33,10 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("The worker remains in the world and builds from EnterRange instead of entering the building.")]
 		public readonly bool WorksFromRange = false;
 
+		[Desc("Whether it can be ordered onto damaged friendly buildings to repair them (the Demon Insect can't, as in the",
+			"original).")]
+		public readonly bool Repairs = true;
+
 		[Desc("Cost to fully repair a building as a percent of its value (OpenRA default: 20).")]
 		public readonly int RepairPercent = 20;
 
@@ -78,7 +82,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public bool CanRepair(Actor self, Actor target)
 		{
-			if (target == null || target.IsDead || target.Disposed || !target.IsInWorld
+			if (!Info.Repairs || target == null || target.IsDead || target.Disposed || !target.IsInWorld
 				|| !target.AppearsFriendlyTo(self) || !target.Info.HasTraitInfo<BuildingInfo>()
 				|| !target.Info.HasTraitInfo<IHealthInfo>() || target.GetDamageState() == DamageState.Undamaged)
 				return false;
