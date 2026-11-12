@@ -41,6 +41,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly SpriteWidget portrait;
 		readonly ColorBlockWidget healthBack, healthFill;
 		readonly LabelWithTooltipWidget name;
+		readonly LabelWithTooltipWidget tags;
 		readonly LabelWithTooltipWidget[] lines;
 		readonly StretchedImageWidget meatIcon;
 		readonly ButtonWidget[] icons;
@@ -57,6 +58,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			healthBack = widget.Get<ColorBlockWidget>("HEALTH_BACK");
 			healthFill = widget.Get<ColorBlockWidget>("HEALTH_FILL");
 			name = widget.Get<LabelWithTooltipWidget>("NAME");
+			tags = widget.Get<LabelWithTooltipWidget>("TAGS");
 			meatIcon = widget.Get<StretchedImageWidget>("MEAT_ICON");
 			lines = Enumerable.Range(0, 6).Select(i => widget.Get<LabelWithTooltipWidget>($"LINE_{i}")).ToArray();
 			icons = Enumerable.Range(0, MaxIcons).Select(i => widget.Get<ButtonWidget>($"UNIT_{i}")).ToArray();
@@ -115,7 +117,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			// The container stays visible (a hidden widget's logic doesn't tick); its contents come and go.
 			if (selected.Length == 0)
 			{
-				portrait.Visible = name.Visible = healthBack.Visible = healthFill.Visible = false;
+				portrait.Visible = name.Visible = tags.Visible = healthBack.Visible = healthFill.Visible = false;
 				meatIcon.Visible = false;
 				Hide(lines);
 				Hide(icons);
@@ -151,8 +153,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			var x = pad * 2 + size;
 			var textWidth = width - x - pad;
+
+			// What it is besides its numbers, in gold at the right of the name row; the name takes the rest.
+			var tagList = Tags(actor);
+			var tagText = string.Join(", ", tagList.Select(t => FluentProvider.GetMessage($"label-tag-{t}")));
+			var tagWidth = tagList.Count > 0 ? Game.Renderer.Fonts["Small"].Measure(tagText).X : 0;
+			tags.Visible = tagList.Count > 0;
+			tags.Bounds = new WidgetBounds(x + textWidth - tagWidth, pad, tagWidth, 18);
+			tags.GetText = () => tagText;
+			tags.GetTooltipText = () => string.Join("\n", tagList.Select(t => FluentProvider.GetMessage($"tooltip-tag-{t}")));
+
 			name.Visible = true;
-			name.Bounds = new WidgetBounds(x, pad, textWidth, 18);
+			name.Bounds = new WidgetBounds(x, pad, Math.Max(0, textWidth - tagWidth - pad), 18);
 			var title = Name(actor.Info);
 			var owner = actor.Owner;
 			name.GetText = () => title;
@@ -236,9 +248,31 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			}
 		}
 
+		// The unit's traits worth naming: it flies, it is invisible to the enemy, it sees invisible units (detection that
+		// needs research counts once researched), it carries units.
+		static List<string> Tags(Actor actor)
+		{
+			var list = new List<string>();
+			if (actor.TraitOrDefault<Aircraft>() != null)
+				list.Add("flying");
+			else if (actor.TraitsImplementing<Targetable>().Any(t => t.TargetTypes.Contains("Hover")))
+				list.Add("hovering");
+
+			if (actor.TraitsImplementing<Cloak>().Any(c => !c.IsTraitDisabled))
+				list.Add("invisible");
+
+			if (actor.TraitsImplementing<DetectCloaked>().Any(d => !d.IsTraitDisabled))
+				list.Add("detector");
+
+			if (actor.TraitOrDefault<Cargo>() != null)
+				list.Add("transport");
+
+			return list;
+		}
+
 		void ShowMany(Actor[] selected, int width, int height, float k)
 		{
-			portrait.Visible = name.Visible = healthBack.Visible = healthFill.Visible = false;
+			portrait.Visible = name.Visible = tags.Visible = healthBack.Visible = healthFill.Visible = false;
 			meatIcon.Visible = false;
 			Hide(lines);
 

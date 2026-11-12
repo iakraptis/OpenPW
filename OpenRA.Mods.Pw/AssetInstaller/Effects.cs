@@ -52,6 +52,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			"weapon-angelring", "weapon-kingdemon-fire", "weapon-noise-wave"
 		};
 
+		// Shots that leave their flight art behind them as a trail: every tick, an object at the shot's position that
+		// plays the flight frames once, two ticks each (Pw.exe 0x477252, case 32 of the effect table at 0x47743c: the
+		// KingDemon's fire, a line of flames that sweeps forward; the flames themselves do no damage). Their "trail"
+		// sequence is that animation.
+		static readonly HashSet<string> Trails = new() { "weapon-kingdemon-fire" };
+
 		static Color[] SmokePalette(Color[] palette) =>
 			palette.Select(c => c.A == 0 ? c : Color.FromArgb(c.R * c.A / 255, 0, 0, 0)).ToArray();
 
@@ -99,6 +105,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 					if (GlowingFlights.Contains(image))
 						sequences.Append(Glow);
+
+					if (Trails.Contains(image))
+						sequences.Append("\ttrail:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
+							$"\t\tLength: {flight}\n\t\tTick: 80\n" + (GlowingFlights.Contains(image) ? Glow : ""));
 				}
 
 				// The impact at its own pace: 0x21c ticks per frame (the Giant's bomb 6).

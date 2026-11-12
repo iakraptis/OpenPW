@@ -31,12 +31,14 @@ MudManHit:
 		Damage: 70
 	Report: weapon-mudman-hit-0.wav
 
-# Gargoyle: its red eye strikes at once, at ground or air, splashing 60 px.
+# Gargoyle: its red eye strikes at once with a red bolt of lightning, at ground or air, splashing 60 px, with a small
+# blast where it hits. The original's shot is instant (speed 0, no flight frames) and its bolt is drawn in code, not
+# found; the bolt here is the mod's (PwLightningBolt).
 RedEye:
 	Inherits: ^Arrow
 	ReloadDelay: 44
 	Range: 10c0
-	Projectile: InstantHit
+	Projectile: PwLightningBolt
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 50
 		# Splash: full damage within the original radius (1c896).
@@ -68,7 +70,9 @@ CelberosFire:
 		Image: weapon-celberos-fire
 		Explosions: impact
 
-# KingDemon: a fireball that pierces ground units along its path (target mask 23).
+# KingDemon: a line of fire that sweeps forward to its full range and burns the ground units in its path (mode 4,
+# target mask 23). The moving front leaves a flame every tick that flares up and dies down in 16 ticks (Pw.exe
+# 0x477252); only the front does damage.
 KingDemonFire:
 	Inherits: ^PwWeapon
 	ReloadDelay: 47
@@ -78,6 +82,10 @@ KingDemonFire:
 		Sequences: flight
 		Speed: 576
 		Mode: 4
+		TrailImage: weapon-kingdemon-fire
+		TrailSequences: trail
+		TrailInterval: 0
+		TrailDelay: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 	Report: weapon-kingdemon-fire-0.wav

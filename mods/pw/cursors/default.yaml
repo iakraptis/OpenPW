@@ -77,9 +77,10 @@ Cursors:
 			X: -15
 			Y: -15
 		deploy:
-			Start: 72
-			X: -13
-			Y: -13
+			Start: 92
+			Length: 8
+			X: 0
+			Y: 1
 		deploy-blocked:
 			Start: 0
 			X: -15

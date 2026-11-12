@@ -112,6 +112,16 @@ Container@PLAYER_WIDGETS:
 					Contrast: true
 					TooltipContainer: TOOLTIP_CONTAINER
 					TooltipTemplate: SIMPLE_TOOLTIP
+				# What the unit is besides its numbers (Flying, Invisible, Detector, Transport), right of the name.
+				LabelWithTooltip@TAGS:
+					Width: 200
+					Height: 18
+					Font: Small
+					Align: Right
+					TextColor: FFD700
+					Contrast: true
+					TooltipContainer: TOOLTIP_CONTAINER
+					TooltipTemplate: SIMPLE_TOOLTIP
 				LabelWithTooltip@LINE_0:
 					Width: 100
 					Height: 16

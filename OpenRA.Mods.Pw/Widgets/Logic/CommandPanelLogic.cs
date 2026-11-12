@@ -28,6 +28,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// - the Chief: his ability (Fall out) with his mana;
 	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot;
 	// - two or more meat eaters with meat: Share meat (they meet and split it evenly), in the next;
+	// - transports: Unload, then a click on the ground where they unload (PwUnloadAt), in the next;
 	// - Tyrano units: a merge per recipe the selection makes up (PwMerge), Split for merged units (PwMerged), and the
 	//   Disguise toggle (PwDisguise), in the slots after those.
 	// Icons are the original portraits (each image's "icon" sequence); every slot has a tooltip (name and cost; time, what is missing, how to use it). InterfaceBarLogic
@@ -92,6 +93,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			free = slots.FirstOrDefault(s => !s.Visible);
 			if (eaters.Length > 1 && eaters.Any(e => e.Trait<PwMeatEater>().Meat > 0) && queue == null && free != null)
 				ShowShareMeat(free, eaters);
+
+			// Unload at a place: the selected transports.
+			var transports = selected.Where(a => a.TraitOrDefault<PwUnloadAt>() != null).ToArray();
+			free = slots.FirstOrDefault(s => !s.Visible);
+			if (transports.Length > 0 && queue == null && free != null)
+				ShowUnload(free, transports);
 
 			if (queue != null || builder != null)
 				return;
@@ -221,6 +228,23 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () =>
 				world.IssueOrder(PwMeatEater.Share(eaters.Where(e => !e.IsDead).OrderByDescending(e => e.Trait<PwMeatEater>().Meat).ToArray()));
+		}
+
+		// Then a click on the ground: the transports go there and let their passengers out. Usable while one carries any.
+		void ShowUnload(ButtonWidget slot, Actor[] transports)
+		{
+			var icon = CommandIcon("command-unload");
+			bool Loaded() => transports.Any(t => !t.IsDead && !t.Trait<Cargo>().IsEmpty());
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsHighlighted = () => world.OrderGenerator is UnloadAtOrderGenerator;
+			slot.IsDisabled = () => !Loaded();
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-unload");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage(Loaded() ? "tooltip-unload" : "tooltip-unload-empty");
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () => world.OrderGenerator = new UnloadAtOrderGenerator(transports);
 		}
 
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).

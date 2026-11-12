@@ -309,6 +309,10 @@ weapon-kingdemon-fire:
 		Length: 8
 		Tick: 160
 		BlendMode: Screen
+	trail:
+		Length: 8
+		Tick: 80
+		BlendMode: Screen
 
 weapon-noise-wave:
 	Defaults:

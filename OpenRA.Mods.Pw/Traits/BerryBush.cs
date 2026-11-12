@@ -90,7 +90,12 @@ namespace OpenRA.Mods.Pw.Traits
 	}
 
 	[Desc("Workers deliver gathered berries here (the main buildings).")]
-	public class AcceptsBerriesInfo : TraitInfo<AcceptsBerries> { }
+	public class AcceptsBerriesInfo : TraitInfo<AcceptsBerries>
+	{
+		[Desc("Cells to keep free between its footprint and any berry bush when it is placed (Builder.CanPlace): it",
+			"can't be built right against the berries. 0 for none.")]
+		public readonly int BushClearance = 1;
+	}
 
 	public class AcceptsBerries { }
 }

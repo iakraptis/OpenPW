@@ -3,15 +3,14 @@
 # points (^Fiend, PwKillPoints). Spells (PwSpell; JW2_11 records, docs/game/rules.md) cost kill points and grow with
 # the caster's level (PwLevels.SpellPower, Level.lvt row 2); the help file's spell levels count from 1, ours from 0.
 
-# The worker. It flies low ("Fly"): it walks over the ground like the others, but air weapons reach it too.
+# The worker. It hovers (.chr 0x17c = 2): over ground and water, not over cliffs; ground weapons reach it, Traps don't.
 demon-insect:
 	Inherits: ^Worker
-	Inherits@move: ^FootMovement
+	Inherits@move: ^HoverMovement
+	Inherits@hover: ^Hovering
 	Inherits@race: ^Demon
 	Inherits@attack: ^Melee
 	PwKillPoints:
-	Targetable@FLY:
-		TargetTypes: Air
 	Passenger:
 		Weight: 1
 	PwLevels:
@@ -21,8 +20,10 @@ demon-insect:
 		AttackDelay: 12
 	UsesPopulation:
 		Amount: 1
+	# It builds but can't repair: the original's Insect isn't ordered onto damaged buildings.
 	Builder:
 		Types: demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano
+		Repairs: false
 	Buildable:
 		Queue: demon-demonden
 		BuildDuration: 160
@@ -383,6 +384,8 @@ demon-phantom:
 		Types: Ground
 		MaxWeight: 12
 		UnloadVoice: Action
+	# Unload at a place (the command panel's Unload button).
+	PwUnloadAt:
 	WithInfantryBody@FLIGHT:
 		DefaultAttackSequence: walk
 
@@ -459,11 +462,11 @@ demon-gargoyle:
 		FireDelay: 6
 		Weapon: RedEye
 
-# The Warlock flies low ("Fly"); it has no weapon, only its spells: Noxious gas and Suicide from the start, Quake from
-# level 1 (the help file's levels 1 and 2).
+# The Warlock hovers (.chr 0x17c = 2, ^HoveringFiend): over ground and water, not over cliffs; ground weapons reach
+# it. It has no weapon, only its spells: Noxious gas and Suicide from the start, Quake from level 1 (the help file's
+# levels 1 and 2).
 demon-warlock:
-	Inherits: ^FlyingFiend
-	Inherits@flight: ^LowFlight
+	Inherits: ^HoveringFiend
 	Inherits@race: ^Demon
 	PwLevels:
 		XpPerLevel: 18
@@ -485,7 +488,7 @@ demon-warlock:
 		HP: 200
 	PwArmor:
 		Value: 0
-	Aircraft:
+	Mobile:
 		Speed: 168
 	RevealsShroud:
 		Range: 7c0

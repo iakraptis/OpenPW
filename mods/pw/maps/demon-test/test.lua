@@ -10,6 +10,9 @@
 -- 8. Invisibility: the MudMan and the Pixie are invisible to the other players; attacking doesn't reveal the MudMan;
 --    an enemy Revolver (a detector) sees it.
 -- 9. The Kelpa's fire reaches only what stands right before it (2 cells, not its 160 px range).
+-- 10. The KingDemon's fire sweeps on in a line to its full range: it burns the enemies standing in a row behind its
+--     target, and passes its friends.
+-- 11. The Insect builds but can't repair: it can't be ordered onto a damaged Tomb.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -26,6 +29,9 @@ WorldLoaded = function()
     Later(5, RiseDeath)
     Later(5, Invisible)
     Later(5, KelpaReach)
+    -- After the Warlock's Suicide nearby (its blast would reach the row).
+    Later(200, KingDemonFire)
+    Later(5, NoRepair)
     FinishWhenDone("DEMON", 4000)
 end
 
@@ -197,5 +203,40 @@ KelpaReach = function()
             Check((firedFrom - foe.Location).Length <= 2, "the Kelpa had to come within 2 cells to reach it (fired from "
                 .. firedFrom.X .. "," .. firedFrom.Y .. ")")
         end
+    end)
+end
+
+KingDemonFire = function()
+    -- A KingDemon fires at the first of three Buildmen in a row; a Skeleton of its own stands in the line too.
+    local king = Actor.Create("demon-kingdemon", true, { Owner = me, Location = CPos.New(8, 27) })
+    local row = { }
+    for i, x in ipairs({ 10, 12, 13 }) do
+        row[i] = Actor.Create("primitive-buildman", true, { Owner = enemy, Location = CPos.New(x, 27) })
+        row[i].Stance = "HoldFire"
+    end
+    local friend = Actor.Create("demon-skeleton", true, { Owner = me, Location = CPos.New(11, 27) })
+    friend.Stance = "HoldFire"
+    local burnt = { }
+    for i, b in ipairs(row) do
+        Trigger.OnDamaged(b, function(_, attacker) if attacker == king then burnt[i] = true end end)
+    end
+    local friendHurt = false
+    Trigger.OnDamaged(friend, function(_, attacker) if attacker == king then friendHurt = true end end)
+    Later(1, function() king.Attack(row[1]) end)
+    WaitFor("the KingDemon's fire burns the three Buildmen in its line", 400, function()
+        return burnt[1] and burnt[2] and burnt[3]
+    end, function(ok)
+        if ok then Check(not friendHurt, "the fire passes the KingDemon's own Skeleton") end
+    end)
+end
+
+NoRepair = function()
+    local tomb = Actor.Create("demon-tomb", true, { Owner = me, Location = CPos.New(2, 26) })
+    local insect = Actor.Create("demon-insect", true, { Owner = me, Location = CPos.New(6, 27) })
+    Later(2, function()
+        tomb.Health = math.floor(tomb.MaxHealth / 2)
+        Later(2, function()
+            Check(not PwTest.CanOrder(insect, "PwRepairBuilding", tomb), "an Insect can't be ordered to repair a damaged Tomb")
+        end)
     end)
 end

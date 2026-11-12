@@ -62,6 +62,14 @@
 		TerrainSpeeds:
 			Clear: 100
 			Ramp: 100
+	# Hovering (.chr 0x17c = 2: Insect, Rhamphos, Warlock): ground and water cells, but not cliffs, ridges or map objects
+	# (Pw.exe 0x45cb3c: walkable or water bit, no MAP3 object, no unit).
+	Locomotor@HOVER:
+		Name: hover
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 100
+			Water: 100
 	Locomotor@WATER:
 		Name: water
 		TerrainSpeeds:

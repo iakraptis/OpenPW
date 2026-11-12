@@ -48,6 +48,27 @@ command-share-meat-demon:
 		Filename: chrome/actions-demon.png
 		Start: 35
 
+# Unload at a place (transports): the original's ring with the arrow down (Action.trt 31), as the unload cursor.
+command-unload:
+	icon:
+		Filename: chrome/actions-primitive.png
+		Start: 31
+
+command-unload-tyrano:
+	icon:
+		Filename: chrome/actions-tyrano.png
+		Start: 31
+
+command-unload-elf:
+	icon:
+		Filename: chrome/actions-elf.png
+		Start: 31
+
+command-unload-demon:
+	icon:
+		Filename: chrome/actions-demon.png
+		Start: 31
+
 # Tyrano commands (Action.trt; which icon is which is read from the art): combine (10, arrows inward), mutate (27, the
 # Mutant), split (36, arrows outward), disguise (17, a wild dinosaur) and turning back (0, the round arrows).
 command-merge:

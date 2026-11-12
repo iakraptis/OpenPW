@@ -36,6 +36,10 @@ namespace OpenRA.Mods.Pw.Tests
 		public void OrderOn(Actor actor, string order, Actor target) =>
 			Resolve(actor, new Order(order, actor, Target.FromActor(target), false));
 
+		[Desc("Send a transport to unload at a place, as the Unload button and a click on the ground do.")]
+		public void UnloadAt(Actor transport, CPos cell) =>
+			Resolve(transport, new Order(PwUnloadAt.OrderID, transport, Target.FromCell(transport.World, cell), false));
+
 		[Desc("Order a worker onto a berry bush (the real gather order).")]
 		public void Gather(Actor worker, Actor bush) => OrderOn(worker, BerryGatherer.OrderID, bush);
 
@@ -72,6 +76,13 @@ namespace OpenRA.Mods.Pw.Tests
 
 		[Desc("Select one actor, as a click would.")]
 		public void Select(Actor actor) => actor.World.Selection.Combine(actor.World, new[] { actor }, false, true);
+
+		[Desc("Whether a worker may place a building with its top left at a cell (the placement check).")]
+		public bool CanPlace(Actor builder, string building, CPos cell)
+		{
+			var info = builder.World.Map.Rules.Actors[building];
+			return Builder.CanPlace(builder.World, builder, info, info.TraitInfo<BuildingInfo>(), cell);
+		}
 
 		[Desc("Order a worker to construct a building at a cell (the real build order).")]
 		public void Construct(Actor builder, string building, CPos cell) =>

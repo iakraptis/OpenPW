@@ -184,7 +184,7 @@
 ^WildPredator:
 	Inherits: ^Melee
 	-PwHunter:
-	-WithTextDecoration@HUNTING:
+	-PwWithTextDecoration@HUNTING:
 	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
 	Targetable@PREDATOR:
 		TargetTypes: Predator
@@ -262,12 +262,35 @@
 		MoveSequence: walk
 		DefaultAttackSequence: attack
 
-# Low flight ("Fly" in the original's unit list, .chr 0x17c = 2: the Rhamphos): in the air, but low enough for ground
-# weapons to reach it as well.
-^LowFlight:
-	Targetable@AIR:
-		TargetTypes: Air, Ground, Beast
-		RequiresCondition: airborne
+# Hovering, the original's movement class 2 (.chr 0x17c: Insect, Rhamphos, Warlock, Alien1-2). It moves as a ground
+# unit that can also cross water: cliffs, ridges, map objects and units stop it (Pw.exe 0x45cb3c). Weapons pick their
+# targets by class (weapon record 0x154, bit = class; FUN_00457c40): every weapon that hits ground units hits it too,
+# except the Trap's (mask 1); air-only fire (the Phoenix's, mask 8) doesn't. So it is a Ground target, also of type
+# Hover for the weapons that leave it out.
+^Hovering:
+	Targetable@HOVER:
+		TargetTypes: Hover
+
+^HoverMovement:
+	Mobile:
+		Locomotor: hover
+		AlwaysTurnInPlace: true
+		PauseOnCondition: petrified || stunned || bubbled
+
+# Living hoverers: their art always flaps (no stand animation), as the flyers'.
+^LivingHoverer:
+	Inherits: ^Unit
+	Inherits@move: ^HoverMovement
+	Inherits@hover: ^Hovering
+	Targetable:
+		TargetTypes: Ground, Beast
+	PwMeatEater:
+	PwLiving:
+	-WithInfantryBody:
+	WithInfantryBody@FLIGHT:
+		StandSequences: walk
+		MoveSequence: walk
+		DefaultAttackSequence: attack
 
 # The Demon race's bodies: their health is their kill points (PwKillPoints), lost to damage and to their spells,
 # regained from kills. ^Fiend walks (people-sized, ^Infantry); flying Demons are ^LivingFlyer with PwKillPoints.
@@ -277,6 +300,10 @@
 
 ^FlyingFiend:
 	Inherits: ^LivingFlyer
+	PwKillPoints:
+
+^HoveringFiend:
+	Inherits: ^LivingHoverer
 	PwKillPoints:
 
 # Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
@@ -339,7 +366,7 @@
 	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
 		HuntingCondition: hunting
-	WithTextDecoration@HUNTING:
+	PwWithTextDecoration@HUNTING:
 		Text: H
 		Font: TinyBold
 		Color: FFD700
@@ -369,7 +396,7 @@
 	# at the bottom left of its selection box (the original's H mark), for its owner and allies.
 	PwHunter:
 		HuntingCondition: hunting
-	WithTextDecoration@HUNTING:
+	PwWithTextDecoration@HUNTING:
 		Text: H
 		Font: TinyBold
 		Color: FFD700
@@ -888,7 +915,8 @@
 		MoveSequence: walk
 		DefaultAttackSequence: stand
 		RequiresCondition: disguised
-	AttackFrontal:
+	# The attack of ^Melee and ^Ranged (PwMeleeAttack, an AttackFrontal).
+	PwMeleeAttack:
 		RequiresCondition: !disguised
 	AutoTarget:
 		RequiresCondition: !disguised
@@ -907,6 +935,14 @@
 ^DisguisableArmedFlyer:
 	Inherits: ^DisguisableFlyer
 	AttackAircraft:
+		RequiresCondition: !disguised
+	AutoTarget:
+		RequiresCondition: !disguised
+
+# Hoverers (the Rhamphos): the flyers' looping art, a ground attack.
+^DisguisableArmedHoverer:
+	Inherits: ^DisguisableFlyer
+	PwMeleeAttack:
 		RequiresCondition: !disguised
 	AutoTarget:
 		RequiresCondition: !disguised

@@ -20,7 +20,8 @@ namespace OpenRA.Mods.Pw.Traits
 	[Desc("Hunting, toggled per unit (the command panel's Hunt button, order PwHunt). While on, the unit, whenever it is",
 		"idle, picks up meat lying within Radius, else attacks the wild creature within Radius it can hit: aggressive",
 		"ones (armed) first, then the nearest. After a kill it is idle again, so it takes the meat and goes for the next.",
-		"Other orders still work; hunting carries on when the unit is idle again. A new design, not the original's.")]
+		"Other orders still work and hunting carries on when the unit is idle again, except a player's attack order on a",
+		"target, which turns hunting off. A new design, not the original's.")]
 	public class PwHunterInfo : ConditionalTraitInfo, Requires<AttackBaseInfo>
 	{
 		[Desc("How far around the unit it looks for prey and meat.")]
@@ -60,10 +61,24 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void IResolveOrder.ResolveOrder(Actor self, Order order)
 		{
-			if (order.OrderString != OrderID || IsTraitDisabled)
+			if (IsTraitDisabled)
 				return;
 
-			Hunting = order.ExtraData != 0;
+			// A player's attack order on a target ends hunting: the unit was given its own fight. Bots keep theirs
+			// (their hunting module turns it on and off by where the unit is).
+			if (Hunting && !self.Owner.IsBot && (order.OrderString == "Attack" || order.OrderString == "ForceAttack"))
+			{
+				SetHunting(self, false);
+				return;
+			}
+
+			if (order.OrderString == OrderID)
+				SetHunting(self, order.ExtraData != 0);
+		}
+
+		void SetHunting(Actor self, bool on)
+		{
+			Hunting = on;
 			prey = null;
 			if (Hunting && token == Actor.InvalidConditionToken && !string.IsNullOrEmpty(Info.HuntingCondition))
 				token = self.GrantCondition(Info.HuntingCondition);

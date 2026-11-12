@@ -90,6 +90,7 @@ do
     -- 3. A Galimimus outside its radius is left alone, and so is one beside a Knight whose hunting is off.
     -- 4. A unit only hunts what it can strike: a hunting Powerman (melee) leaves a flying Pteranodon alone.
     -- 5. Two hunters can hunt the same creature together: both strike a Stegosaurus beside them.
+    -- 6. A player's attack order turns hunting off: one of those hunters, ordered onto a creature, stops hunting.
     WorldLoaded = function()
         me = Player.GetPlayer("Hunting")
         hunter = Map.NamedActor("HuntingHunter")
@@ -144,9 +145,15 @@ do
             PwTest.Hunt(b, true)
         end)
         WaitFor("two hunters kill the Stegosaurus", 2500, function() return prey.IsDead end, function(ok)
-            if ok then
-                Check(struck.a and struck.b, "both of them struck it")
-            end
+            if not ok then return end
+            Check(struck.a and struck.b, "both of them struck it")
+            local other = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 22) })
+            Later(2, function()
+                Check(PwTest.Hunting(a), "the hunter still hunts before it is given an order")
+                PwTest.OrderOn(a, "Attack", other)
+                Check(not PwTest.Hunting(a), "an attack order turns hunting off")
+                Check(PwTest.Hunting(b), "the other hunter keeps hunting")
+            end)
         end)
     end
     Sections[#Sections + 1] = WorldLoaded
