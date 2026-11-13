@@ -11,7 +11,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotAbility: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local WorldLoaded, chief, enemy, raider
-    -- The AI's abilities (PwAbilityBotModule). Raider, a Normal AI, has a BotAbilityChief (Fall out still locked) and berries; a
+    -- The AI's abilities (PwAbilityBotModule). Raider, an Easy AI, has a BotAbilityChief (Fall out still locked) and berries; a
     -- Target Powerman stands 6 cells from him. Both hold fire, so only the ability can hurt it.
     -- 1. With a BotAbilityChief, the bot researches Improve Fall out for BotAbilityChief (the Sanctuary).
     -- 2. The BotAbilityChief casts Fall out on the Powerman: its life goes down to 1.
@@ -43,7 +43,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotDefence: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local WorldLoaded, killedBy, raider, raptor, sanctuary
-    -- The AI defends against wild creatures (PwDefenseBotModule, AutoTargetPriority@PREDATORS). Raider, a Normal AI,
+    -- The AI defends against wild creatures (PwDefenseBotModule, AutoTargetPriority@PREDATORS). Raider, an Easy AI,
     -- has a Sanctuary and four idle Powermen a few cells away; a Velociraptor stands right by the Sanctuary.
     -- 1. The bot's Powermen go for the Velociraptor and kill it.
     -- 2. The Sanctuary still stands.
@@ -72,7 +72,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotHunting: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local WorldLoaded, farGrazer, grazer, knights, raider
-    -- The AI hunts (PwHuntingBotModule). Raider, a Normal AI, has two idle Knights near its Sanctuary; a Galimimus (a
+    -- The AI hunts (PwHuntingBotModule). Raider, an Easy AI, has two idle Knights near its Sanctuary; a Galimimus (a
     -- plant-eater: only hunting goes after it) grazes nearby, another far out.
     -- 1. The bot turns hunting on for the Knights by its base.
     -- 2. They kill the Galimimus near the base and take its meat.
@@ -107,7 +107,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotTransport: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local Watch, WorldLoaded, aboard, house, men, raider, revolver
-    -- The AI's air transport (PwTransportBotModule). Raider, a Normal AI, has a BotTransportRevolver and six idle Powermen at home
+    -- The AI's air transport (PwTransportBotModule). Raider, an Easy AI, has a BotTransportRevolver and six idle Powermen at home
     -- (top left); the Target player's House stands at the bottom right. With no berries the bot has nothing else to do.
     -- 1. The BotTransportRevolver loads at least four of the Powermen.
     -- 2. It flies them over and unloads them beside the House.
@@ -149,7 +149,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotMerge: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local WorldLoaded, raider
-    -- The AI merges Tyrano units (PwMergeBotModule). Raider, a Normal Tyrano AI, has a TyranoNest, a LandNest, an
+    -- The AI merges Tyrano units (PwMergeBotModule). Raider, an Easy Tyrano AI, has a TyranoNest, a LandNest, an
     -- UpgradeNest and a SkyNisdos, with two Velocis and a Dilophos, a Pteras and a Trices waiting by them. Its
     -- population is over the cap, so it trains nothing; it has berries for research.
     -- 1. The bot merges the two Velocis into a TwinVelocis (the LandNest allows it).
@@ -180,7 +180,7 @@ do
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("BotSpell: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
     local WorldLoaded, blue, enemies, raider, red, unicorn, white
-    -- The AI casts the Elves' spells (PwSpellBotModule). Raider, a Normal Elf AI, has a Heaven, a RedElf and a
+    -- The AI casts the Elves' spells (PwSpellBotModule). Raider, an Easy Elf AI, has a Heaven, a RedElf and a
     -- BlueElf (both raised to level 1, which their spells need) and, far from the fight, a Unicorn beside a hurt
     -- WhiteElf. Four enemy Powermen stand together 7 cells from the elves, holding fire.
     -- 1. The RedElf casts Thunder bolt on a Powerman (its mana goes down).

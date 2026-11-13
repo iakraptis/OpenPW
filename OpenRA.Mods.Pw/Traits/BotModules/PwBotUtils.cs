@@ -59,6 +59,43 @@ namespace OpenRA.Mods.Pw.Traits
 			return resources.Cash + resources.Resources;
 		}
 
+		// The base centre: the middle of the main building (drop-off), else of any building; null with no buildings.
+		public static CPos? BaseCenter(IEnumerable<Actor> owned)
+		{
+			var main = owned.FirstOrDefault(a => a.IsInWorld && IsDropOff(a.Info))
+				?? owned.FirstOrDefault(a => a.IsInWorld && IsBuilding(a.Info));
+			if (main == null)
+				return null;
+
+			var footprint = main.Info.TraitInfo<BuildingInfo>().Dimensions;
+			return main.Location + new CVec(footprint.X / 2, footprint.Y / 2);
+		}
+
+		// The berry bush with berries nearest a place, if one is within maxCells.
+		public static CPos? NearestBush(World world, CPos center, int maxCells)
+		{
+			var bush = world.ActorsHavingTrait<BerryBush>().Where(b => b.IsInWorld && !b.Trait<BerryBush>().IsEmpty)
+				.MinByOrDefault(b => (b.Location - center).LengthSquared);
+			return bush != null && (bush.Location - center).LengthSquared <= maxCells * maxCells ? bush.Location : null;
+		}
+
+		// The base's edge: distance cells from the base centre toward the nearest enemy building (or the map centre while
+		// none is known); null when the base centre is there.
+		public static CPos? EdgeToward(World world, Player player, CPos center, int distance)
+		{
+			var enemy = world.ActorsHavingTrait<Building>()
+				.Where(a => !a.IsDead && a.IsInWorld && !a.Owner.NonCombatant && player.RelationshipWith(a.Owner) == PlayerRelationship.Enemy)
+				.MinByOrDefault(a => (a.Location - center).LengthSquared);
+			var bounds = world.Map.Bounds;
+			var toward = enemy?.Location ?? new CPos(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2);
+			var offset = toward - center;
+			var length = offset.Length;
+			if (length == 0)
+				return null;
+
+			return center + new CVec(offset.X * distance / length, offset.Y * distance / length);
+		}
+
 		// Starts a research the bot needs (to unlock an ability or a merge), from whichever of its queues offers it,
 		// queued behind whatever the queue is making (the unit builder only adds to idle queues).
 		public static void Research(World world, Player player, IBot bot, string upgrade, string reason)

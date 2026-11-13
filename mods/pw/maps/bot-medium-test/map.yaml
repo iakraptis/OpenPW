@@ -1,0 +1,216 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Medium AI
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,88
+
+Bounds: 1,1,86,86
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@MedPrim:
+		Name: MedPrim
+		Bot: medium
+		Faction: primitive
+		LockFaction: True
+		Enemies: MedPrimTarget
+	PlayerReference@MedPrimTarget:
+		Name: MedPrimTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: MedPrim
+	PlayerReference@MedElf:
+		Name: MedElf
+		Bot: medium
+		Faction: elf
+		LockFaction: True
+		Enemies: MedElfTarget
+	PlayerReference@MedElfTarget:
+		Name: MedElfTarget
+		Faction: primitive
+		LockFaction: True
+		Enemies: MedElf
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 2,2
+	MedPrimSanctuary: primitive-sanctuary
+		Owner: MedPrim
+		Location: 4,4
+	MedPrimBush0: berry-bush-0
+		Owner: Neutral
+		Location: 14,5
+	MedPrimBush1: berry-bush-0
+		Owner: Neutral
+		Location: 14,8
+	MedPrimPowerhouse: primitive-powerhouse
+		Owner: MedPrim
+		Location: 4,12
+	MedPrimBlacksmith: primitive-blacksmith
+		Owner: MedPrim
+		Location: 11,12
+	MedPrimLandIncreaser: primitive-landincreaser
+		Owner: MedPrim
+		Location: 4,17
+	MedPrimSkyhouse: primitive-skyhouse
+		Owner: MedPrim
+		Location: 11,17
+	MedPrimHouse0: primitive-house
+		Owner: MedPrim
+		Location: 18,13
+	MedPrimHouse1: primitive-house
+		Owner: MedPrim
+		Location: 18,15
+	MedPrimHouse2: primitive-house
+		Owner: MedPrim
+		Location: 18,17
+	MedPrimHouse3: primitive-house
+		Owner: MedPrim
+		Location: 21,13
+	MedPrimHouse4: primitive-house
+		Owner: MedPrim
+		Location: 21,15
+	MedPrimWorker0: primitive-buildman
+		Owner: MedPrim
+		Location: 4,10
+	MedPrimWorker1: primitive-buildman
+		Owner: MedPrim
+		Location: 5,10
+	MedPrimWorker2: primitive-buildman
+		Owner: MedPrim
+		Location: 6,10
+	MedPrimWorker3: primitive-buildman
+		Owner: MedPrim
+		Location: 7,10
+	MedPrimWorker4: primitive-buildman
+		Owner: MedPrim
+		Location: 8,10
+	MedPrimWorker5: primitive-buildman
+		Owner: MedPrim
+		Location: 9,10
+	MedPrimFarBush0: berry-bush-1
+		Owner: Neutral
+		Location: 40,5
+	MedPrimFarBush1: berry-bush-1
+		Owner: Neutral
+		Location: 40,8
+	MedPrimFarBush2: berry-bush-1
+		Owner: Neutral
+		Location: 43,6
+	MedPrimTargetHouse: primitive-house
+		Owner: MedPrimTarget
+		Location: 80,40
+	MedElfHeaven: elf-heaven
+		Owner: MedElf
+		Location: 4,48
+	MedElfBush: berry-bush-0
+		Owner: Neutral
+		Location: 14,49
+	MedElfRedHall: elf-redhall
+		Owner: MedElf
+		Location: 4,56
+	MedElfBlueHall: elf-bluehall
+		Owner: MedElf
+		Location: 11,56
+	MedElfManaHall: elf-manahall
+		Owner: MedElf
+		Location: 18,56
+	MedElfTree0: elf-elftree
+		Owner: MedElf
+		Location: 4,61
+	MedElfTree1: elf-elftree
+		Owner: MedElf
+		Location: 7,61
+	MedElfTree2: elf-elftree
+		Owner: MedElf
+		Location: 10,61
+	MedElfRed0: elf-redelf
+		Owner: MedElf
+		Location: 4,66
+	MedElfRed1: elf-redelf
+		Owner: MedElf
+		Location: 5,66
+	MedElfRed2: elf-redelf
+		Owner: MedElf
+		Location: 6,66
+	MedElfRed3: elf-redelf
+		Owner: MedElf
+		Location: 7,66
+	MedElfRed4: elf-redelf
+		Owner: MedElf
+		Location: 8,66
+	MedElfRed5: elf-redelf
+		Owner: MedElf
+		Location: 9,66
+	MedElfRed6: elf-redelf
+		Owner: MedElf
+		Location: 10,66
+	MedElfRed7: elf-redelf
+		Owner: MedElf
+		Location: 11,66
+	MedElfRed8: elf-redelf
+		Owner: MedElf
+		Location: 12,66
+	MedElfRed9: elf-redelf
+		Owner: MedElf
+		Location: 13,66
+	MedElfRed10: elf-redelf
+		Owner: MedElf
+		Location: 14,66
+	MedElfRed11: elf-redelf
+		Owner: MedElf
+		Location: 15,66
+	MedElfRed12: elf-redelf
+		Owner: MedElf
+		Location: 16,66
+	MedElfRed13: elf-redelf
+		Owner: MedElf
+		Location: 17,66
+	MedElfTargetHouse: primitive-house
+		Owner: MedElfTarget
+		Location: 80,84
+
+Rules:
+	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		# Scripted actors appear after the first victory check.
+		-ConquestVictoryConditions:
+		# The second base and the attack escorts without the long waits.
+		PwBaseBuilderBotModule@medium:
+			ExpansionDelay: 300
+		PwDetectorBotModule@medium:
+			EscortDelay: 100
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true

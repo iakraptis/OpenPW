@@ -638,9 +638,28 @@ dead.
     ally under fire, Mass temper over 3+; Fake near a fight; Resurrect where 2+ fell; Teleport home under 35%
     health). Research that unlocks a spell comes first. The Unicorn and ManaSpread are trained (weights) and follow
     the main group. `Spells` lists the Elf spells; the Demon spells use the same module once listed.
-  - Not done: Blacksmith items, a second main building near far bushes, Tyrano disguise, the Demon spells,
-    training the unarmed scouts and the Warlock (Pixie; Warlock once Demon spells are on). In the four-way
-    `bot-test`, Primitive's AI clearly beats the others.
+  - Two levels (2026-11-12, branch `ai_diff`): Normal is renamed **Easy** (bot type `easy`; the installer's battle
+    maps and `bot-modules-test` use it) and **Medium** (`medium`) is new; the Hard bot is removed (bot cheats, which
+    the engine's multipliers and a small berry-income trait would allow, are left for later). Medium plays as Easy, a little quicker and with bigger waves, plus:
+    - a second base: `PwBaseBuilderBotModule.ExpansionDelay` (6750 ticks, about 8 minutes) builds a second main
+      building by the nearest group of berry bushes no drop-off of the bot serves (not near an enemy building, within
+      walking reach); it becomes a guard spot, and the tower limits are higher (4) so it gets one. The gatherers' nearest
+      drop-off rule sends new workers there.
+    - `BushDefenses`: one Primitive Trap by the berry bushes nearest the base (not counted as a guard tower).
+    - detectors (`PwDetectorBotModule`, new): it trains the race's detector (Revolver, DeathEye, Pixie; Tyrano merges
+      up to three TwinRhamphos) and posts one between the main building and its
+      berries, one at the base's edge toward the enemy; after `EscortDelay` (8500 ticks, about 10 minutes) a third
+      guards the centre unit of each attack wave. The transport module leaves posted Revolvers alone, and the
+      detector module leaves a Revolver on a trip alone.
+    - Tyrano can't train its detector: the module trains Rhamphos two per missing TwinRhamphos, and Medium keeps
+      Rhamphos out of the army mix and the attack squads so they wait at home to be merged.
+    - Four-way battles of Medium bots (a temporary copy of `battle-four-ways`): every race builds its second base by
+      10-15k ticks and keeps 2-3 detectors (Tyrano's from 15k). Primitive gets its Revolvers and Trap late (its
+      BlackSmith, SkyHouse and LandIncreaser come late); making them come early made it lose both trial battles, so
+      that tuning was dropped.
+    - Test: `bot-medium-test` (the Trap, the two posted Revolvers, the second Sanctuary, a Pixie with an Elf attack).
+  - Not done: Blacksmith items, Tyrano disguise, the Demon spells, the Warlock (once Demon spells are on). In the
+    four-way `bot-test`, Primitive's AI clearly beats the others.
 - Sound effects, voices and music: the original's are in. The music (JW2_15, 19 MP3s) plays as `Pw.exe` plays it:
   the title in the menus, the player's race start tune and battle tracks in a game, victory and defeat at the end
   (docs/game/rules.md, Music). Four tracks the skirmish game never plays (6, 9, 12, 18) are installed by number.

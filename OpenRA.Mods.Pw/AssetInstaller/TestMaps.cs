@@ -36,7 +36,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		static readonly string[] Colors = { "E02020", "2050E0", "20C020", "E0C020" };
 
-		// Battles of Normal AIs, each starting as a player of its race does (rules/world.yaml StartingUnits): its main
+		// Battles of Easy AIs, each starting as a player of its race does (rules/world.yaml StartingUnits): its main
 		// building and four workers, named after its race. bot-test (the four races on (4) The X Cross) is a test with
 		// checks; the battle-* maps only report (run_tests.py --battles runs them, tools/battle_stats.py collects them):
 		// the four races on (4) Four Ways, and every pairing of two races on (2) One vs One.
@@ -131,7 +131,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			for (var i = 0; i < bots.Length; i++)
 			{
 				var enemies = bots.Where(b => b != bots[i]).Append("Creeps");
-				s.Append($"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: normal\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
+				s.Append($"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: easy\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
 				s.Append($"\t\tColor: {Colors[races[i]]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 

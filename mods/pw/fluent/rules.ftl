@@ -25,11 +25,11 @@ faction-demon =
      Born of evil: their life is their kill points, spent on dark spells and won back by killing.
 
 ## ai.yaml
-bot-normal =
-    .name = Normal AI
+bot-easy =
+    .name = Easy AI
 
-bot-hard =
-    .name = Hard AI
+bot-medium =
+    .name = Medium AI
 
 ## campaign-ai.yaml
 bot-campaign =

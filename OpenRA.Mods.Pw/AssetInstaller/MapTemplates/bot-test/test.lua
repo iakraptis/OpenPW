@@ -1,4 +1,4 @@
--- Normal AIs, all against all on a converted original map at 5x speed, each from its main building and four
+-- Easy AIs, all against all on a converted original map at 5x speed, each from its main building and four
 -- workers; each is named after its race. The installer writes one map per battle (AssetInstaller/TestMaps.cs) and sets
 -- Bots, Checks and BattleName below. With Checks (bot-test), every bot must grow its workforce, build a base and an
 -- army, and guard it early with towers (by the main building and by the berries); they must fight early, and some bot

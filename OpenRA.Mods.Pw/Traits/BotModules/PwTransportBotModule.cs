@@ -92,6 +92,10 @@ namespace OpenRA.Mods.Pw.Traits
 
 		bool Alive(Actor a) => a != null && !a.IsDead && !a.Disposed && a.Owner == player;
 
+		// The transport of a running trip (PwDetectorBotModule doesn't take it as a detector).
+		public static bool Uses(Player player, Actor actor) =>
+			player.PlayerActor.TraitsImplementing<PwTransportBotModule>().Any(m => !m.IsTraitDisabled && m.transport == actor);
+
 		void IBotTick.BotTick(IBot bot)
 		{
 			ticks++;
@@ -136,7 +140,8 @@ namespace OpenRA.Mods.Pw.Traits
 			if (target == null)
 				return;
 
-			var transports = owned.Where(a => IsTransport(a.Info) && a.Trait<Cargo>().IsEmpty()).ToList();
+			// Not the detectors PwDetectorBotModule keeps (posted Revolvers).
+			var transports = owned.Where(a => IsTransport(a.Info) && a.Trait<Cargo>().IsEmpty() && !PwDetectorBotModule.Holds(player, a)).ToList();
 			if (transports.Count == 0)
 			{
 				var army = owned.Count(a => PwBotUtils.IsArmy(a.Info));

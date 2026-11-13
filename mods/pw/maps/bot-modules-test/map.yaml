@@ -35,7 +35,7 @@ Players:
 		Faction: primitive
 	PlayerReference@BotAbilityRaider:
 		Name: BotAbilityRaider
-		Bot: normal
+		Bot: easy
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotAbilityTarget, Creeps
@@ -46,7 +46,7 @@ Players:
 		Enemies: BotAbilityRaider, Creeps
 	PlayerReference@BotDefenceRaider:
 		Name: BotDefenceRaider
-		Bot: normal
+		Bot: easy
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotDefenceTarget, Creeps
@@ -57,7 +57,7 @@ Players:
 		Enemies: BotDefenceRaider, Creeps
 	PlayerReference@BotHuntingRaider:
 		Name: BotHuntingRaider
-		Bot: normal
+		Bot: easy
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotHuntingTarget, Creeps
@@ -68,7 +68,7 @@ Players:
 		Enemies: BotHuntingRaider, Creeps
 	PlayerReference@BotTransportRaider:
 		Name: BotTransportRaider
-		Bot: normal
+		Bot: easy
 		Faction: primitive
 		LockFaction: True
 		Enemies: BotTransportTarget, Creeps
@@ -79,7 +79,7 @@ Players:
 		Enemies: BotTransportRaider, Creeps
 	PlayerReference@BotSpellRaider:
 		Name: BotSpellRaider
-		Bot: normal
+		Bot: easy
 		Faction: elf
 		LockFaction: True
 		Enemies: BotSpellTarget, Creeps
@@ -90,7 +90,7 @@ Players:
 		Enemies: BotSpellRaider, Creeps
 	PlayerReference@BotMergeRaider:
 		Name: BotMergeRaider
-		Bot: normal
+		Bot: easy
 		Faction: tyrano
 		LockFaction: True
 		Enemies: Creeps
