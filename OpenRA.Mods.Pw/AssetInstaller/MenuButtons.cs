@@ -52,7 +52,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			// Glowing ember-orange letters on the dark wood, as the original's lit carving; pressed, the glow dies down.
 			("primitive", new Style
 			{
-				Font = "CaesarDressing-Regular.ttf", X = 460, Y = 25, Width = 82, Height = 32, Side = 9, Top = 7, Bottom = 8,
+				Font = "CaesarDressing-Regular.ttf", X = 460, Y = 25, Width = 82, Height = 32, Side = 9, Top = 9, Bottom = 6,
 				Fill = new[] { C(255, 214, 120), C(226, 112, 26) }, FillPressed = new[] { C(196, 120, 52), C(128, 62, 18) },
 				Light = C(255, 240, 190), LightPressed = C(210, 150, 90), Dark = C(120, 48, 8), Outline = C(36, 18, 6),
 				Glow = C(255, 140, 30)

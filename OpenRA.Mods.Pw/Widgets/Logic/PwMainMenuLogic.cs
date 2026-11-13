@@ -79,6 +79,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var credits = widget.Get("EXTRAS_MENU").Get<ButtonWidget>("CREDITS_BUTTON");
 			pictures[3].Button.OnClick = () => credits.OnClick();
 
+			// Mod change: Exit stays on the submenus too (Single Player, Extras, Map Editor), not only on the main
+			// screen. MainMenuLogic finds it under MAIN_MENU (hidden on the submenus), so it moves out afterwards.
+			var quit = pictures[4].Button;
+			var submenus = new[] { menus.Get("SINGLEPLAYER_MENU"), menus.Get("EXTRAS_MENU"), menus.Get("MAP_EDITOR_MENU") };
+			mainMenu.RemoveChild(quit);
+			widget.AddChild(quit);
+			quit.IsVisible = () => mainMenu.IsVisible() || Array.Exists(submenus, m => m.IsVisible());
+
 			Layout();
 		}
 
