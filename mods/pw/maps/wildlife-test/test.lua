@@ -13,7 +13,8 @@ do
     local Flee, Flyer, Grazer, Predator, WorldLoaded, creeps, me
     -- Wild creatures. The local player (Multi0) is Primitive; the creatures belong to Creeps.
     -- 1. A plant-eater wanders around where it was placed and never fights.
-    -- 2. A predator attacks player units within 3 cells, leaves the others alone, and fights back when attacked.
+    -- 2. A predator attacks player units within 3 cells, leaves the others alone, and fights back when attacked; a
+    --    player's Soldier 4 cells from a predator attacks it on its own.
     -- 3. A flyer wanders too, and melee can't reach it.
     -- 4. A plant-eater that is hit runs off.
     WorldLoaded = function()
@@ -51,6 +52,12 @@ do
             WaitFor("a predator fights back when attacked from afar", 900, function()
                 return fighter.IsDead or fighter.Health < fighter.MaxHealth
             end)
+        end)
+
+        local prey = Actor.Create("wild-velociraptor", true, { Owner = creeps, Location = At(44, 44) })
+        local guard = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(44, 48) })
+        WaitFor("a player's unit attacks a nearby predator on its own", 300, function()
+            return prey.IsDead or prey.Health < prey.MaxHealth
         end)
     end
 

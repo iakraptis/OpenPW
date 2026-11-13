@@ -156,8 +156,8 @@
 
 # Wild creatures (rules/wild.yaml, generated): placed by the maps, owned by Creeps. They wander around where they
 # were placed. Plant-eaters never fight; predators (^WildPredator) attack player units that come close and fight
-# back when attacked. Units don't pick wild creatures as targets on their own (target type Wild): they are hunted
-# by order.
+# back when attacked. Units and towers fight predators on their own (target type Predator) but leave plant-eaters
+# alone (target type Wild): those are hunted by order.
 ^Wild:
 	Inherits: ^Beast
 	Inherits@move: ^FootMovement
@@ -185,7 +185,7 @@
 	Inherits: ^Melee
 	-PwHunter:
 	-PwWithTextDecoration@HUNTING:
-	# Hostile: AI players' units fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
+	# Hostile: units and towers fight these on their own (^Melee's AutoTargetPriority@PREDATORS).
 	Targetable@PREDATOR:
 		TargetTypes: Predator
 	AutoTarget:
@@ -372,13 +372,9 @@
 		Color: FFD700
 		Position: BottomLeft
 		RequiresCondition: hunting
-	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
-	GrantConditionOnBotOwner@predators:
-		Condition: bot-owned
-		Bots: easy, medium
+	# Hostile wild creatures (predators) are fought on their own, like enemy units; plant-eaters only when hunting.
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
-		RequiresCondition: bot-owned
 
 # Ranged units also pick flying targets on their own, when their weapon reaches the air (arrows yes, bombs no).
 # Flying attackers: fire while hovering, at ground and air targets; they take off as soon as they appear.
@@ -402,13 +398,9 @@
 		Color: FFD700
 		Position: BottomLeft
 		RequiresCondition: hunting
-	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
-	GrantConditionOnBotOwner@predators:
-		Condition: bot-owned
-		Bots: easy, medium
+	# Hostile wild creatures (predators) are fought on their own, like enemy units; plant-eaters only when hunting.
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
-		RequiresCondition: bot-owned
 
 ^Ranged:
 	Inherits: ^Melee
@@ -475,7 +467,7 @@
 		PopulationLimitTextNotification: notification-population-limit
 
 # Towers and traps (StoneTower, Trap, Ascomoid): attack in every direction (AttackOmni) whatever enemy is in range,
-# once built; each sets its Armament (with RequiresCondition: !constructing). An AI player's also strike hostile wild
+# once built; each sets its Armament (with RequiresCondition: !constructing). They also strike hostile wild
 # creatures (^Melee).
 ^Defense:
 	Inherits: ^Building
@@ -485,12 +477,8 @@
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
-	GrantConditionOnBotOwner@predators:
-		Condition: bot-owned
-		Bots: easy, medium
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
-		RequiresCondition: bot-owned
 
 # Exit cells all around a footprint (corners included): a trained unit walks out to a random free cell along the
 # front (the bottom row, Priority 2), or to the sides and back when the front is blocked.

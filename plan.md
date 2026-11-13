@@ -625,8 +625,8 @@ dead.
   - `PwGathererBotModule`, `PwUnitBuilderBotModule` (workers, research when rich, weighted army),
     `PwTransportBotModule` (Revolver raids), `PwAbilityBotModule` (Fall out), `PwDefenseBotModule` (answers any
     attack, wild creatures included), `PwHuntingBotModule` (army near the base hunts).
-  - AI units also auto-target predators (`AutoTargetPriority@PREDATORS`, target type `Predator`, condition
-    `bot-owned`); players' units don't.
+  - AI units also auto-target predators (`AutoTargetPriority@PREDATORS`, target type `Predator`). Since 2026-11-13
+    players' units and towers do too (they had only fought back); plant-eaters are still only hunted.
   - Tests: `bot-test` (the four races' Normal AIs, all against all, on the converted (4) The X Cross, written by
     the installer's `TestMaps.cs`, played out to 40,000 ticks at most, then the standings) and `bot-modules-test`
     (the ability, defence, hunting, transport, merge and spell modules).
