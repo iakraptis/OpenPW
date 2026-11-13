@@ -28,7 +28,7 @@ Container@MAINMENU:
 			Font: Small
 			Contrast: true
 		# The picture buttons; each draws its state from the original art (ART). Only on the main screen, as the
-		# original's: the submenus have Back.
+		# original's: the submenus have Back. Mod change: PwMainMenuLogic keeps QUIT_BUTTON on the submenus too.
 		Container@MAIN_MENU:
 			Width: WINDOW_WIDTH
 			Height: WINDOW_HEIGHT
