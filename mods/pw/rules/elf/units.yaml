@@ -118,14 +118,14 @@ elf-redelf:
 		Weapon: RedBolt
 	PwMana:
 		Max: 100
-	# Record 1: lightning on one enemy unit, 80 damage (on frame 4), 40 mana.
+	# Record 1: lightning on one enemy unit, 80 damage (on frame 4: 4 ticks, one frame per tick), 40 mana.
 	PwSpell@THUNDER-BOLT:
 		Name: thunder-bolt
 		Target: Unit
 		ManaCost: 40
 		MinLevel: 1
 		Damage: 80
-		Delay: 16
+		Delay: 4
 		Image: spell-thunder-bolt
 		Icon: ability-thunder-bolt
 		Sound: spell-thunder-bolt-0.wav
@@ -244,14 +244,15 @@ elf-ranger:
 		Image: spell-teleport
 		Icon: ability-teleport
 		Sound: spell-teleport-0.wav
-	# Record 5: a portal of 48 px that throws the enemies walking into it away, open 216 ticks (its 54 frames of 4);
-	# 65 mana. Where they land is the mod's: 12 cells off.
+	# Record 5: a portal of 48 px that throws the enemies walking into it away every 4 ticks, open 54 ticks (0x1e8,
+	# counted every tick: 0x478b6e); 65 mana. Where they land is the mod's: 12 cells off.
 	PwSpell@JUMP-PORTAL:
 		Name: jump-portal
 		Target: Ground
 		ManaCost: 65
 		MinLevel: 3
-		PortalTicks: 216
+		PortalTicks: 54
+		StepInterval: 4
 		Radius: 1c512
 		Image: spell-jump-portal
 		Icon: ability-jump-portal
@@ -299,14 +300,14 @@ elf-blueelf:
 		Weapon: BlueElfHit
 	PwMana:
 		Max: 100
-	# Record 6: a stone falls on the place, 200 damage within 64 px (on frame 3); 65 mana.
+	# Record 6: a stone falls on the place, 200 damage within 64 px (on frame 3: 3 ticks); 65 mana.
 	PwSpell@DROP-STONE:
 		Name: drop-stone
 		Target: Ground
 		ManaCost: 65
 		MinLevel: 1
 		Damage: 200
-		Delay: 12
+		Delay: 3
 		Radius: 2c0
 		Image: spell-drop-stone
 		Icon: ability-drop-stone
@@ -431,16 +432,17 @@ elf-manaspread:
 	PwMana:
 		Max: 200
 	PwManaAura:
-	# Record 9: 60 meteors over the place, each 30 damage within 64 px, falling within 80 px of it; the ManaSpread
-	# is gone. After Study Meteor.
+	# Record 9: 60 meteors over the place, each 30 damage within 64 px, falling within 80 px of it, each after a
+	# random 1-48 ticks (0x1f0) and its 6 frames to the hit (0x478eea); the ManaSpread is gone. After Study Meteor.
 	PwSpell@METEOR:
 		Name: meteor
 		Target: Ground
 		Prerequisites: elf-upgrade-meteor-manaspread-1
 		Damage: 30
 		Steps: 60
-		StepInterval: 2
-		Delay: 24
+		StepInterval: 0
+		Delay: 7
+		RandomDelay: 48
 		Radius: 2c0
 		Scatter: 2c512
 		KillsCaster: true

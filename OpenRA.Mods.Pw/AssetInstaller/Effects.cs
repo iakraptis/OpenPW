@@ -33,6 +33,17 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// The blending of glowing art (GlowingFlights, impacts not in SolidImpacts).
 		const string Glow = "\t\tBlendMode: Screen\n";
 
+		// Blit mode 8 (the record's 0x218 for the flight, 0x21c for the impact; only the Noise wave) draws none of the
+		// art's colours: each pixel of the shape takes the screen pixel to its right (Pw.exe 0x48e261), a see-through
+		// ripple of the ground. Sprites can't read the screen, so the art is drawn faint instead (Mod change).
+		const int RippleMode = 8;
+		const string Ripple = "\t\tAlpha: 0.2\n";
+
+		// Effect art advances one frame per tick (all effects are updated once a game tick, 0x456aaa): weapons in flight
+		// (0x4773bc) and at the impact (0x477563), spells in every part (0x478131, 0x478844, ...). 40 ms in sequence
+		// ticks. The records have no frame delays (0x214-0x21c are blit modes).
+		const int FrameTick = 40;
+
 		// Smoke art: its palette holds only reds, which are the smoke's density, not colours (the Giant's bomb). It is
 		// drawn as black of that opacity, so it darkens the ground beneath (dark green smoke on grass, as in the game).
 		static readonly HashSet<string> Smoke = new() { "weapon-throw-bomb" };
@@ -60,9 +71,6 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		static Color[] SmokePalette(Color[] palette) =>
 			palette.Select(c => c.A == 0 ? c : Color.FromArgb(c.R * c.A / 255, 0, 0, 0)).ToArray();
-
-		// A frame delay field (ticks per frame, 0 = 1) as a sequence Tick in milliseconds (40 = one world tick).
-		static int FrameTicks(byte[] data, int offset) => 40 * Math.Max(1, BitConverter.ToInt32(data, offset));
 
 		public static string Image(string name) => "weapon-" + Regex.Replace(name.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
 
@@ -97,13 +105,15 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 						var shift = north.Height * 2 >= north.Width * 3 && east.Width * 2 >= east.Height * 3 ? 0 : 7;
 						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + shift) % 8 * n, n)).Select(f => f + flightStart);
 						sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
-							$"\t\tTick: {FrameTicks(data, 0x218)}\n");
+							$"\t\tTick: {FrameTick}\n");
 					}
 					else
 						sequences.Append("\tflight:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
-							$"\t\tLength: {flight}\n\t\tTick: {FrameTicks(data, 0x218)}\n");
+							$"\t\tLength: {flight}\n\t\tTick: {FrameTick}\n");
 
-					if (GlowingFlights.Contains(image))
+					if (BitConverter.ToInt32(data, 0x218) == RippleMode)
+						sequences.Append(Ripple);
+					else if (GlowingFlights.Contains(image))
 						sequences.Append(Glow);
 
 					if (Trails.Contains(image))
@@ -111,9 +121,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 							$"\t\tLength: {flight}\n\t\tTick: 80\n" + (GlowingFlights.Contains(image) ? Glow : ""));
 				}
 
-				// The impact at its own pace: 0x21c ticks per frame (the Giant's bomb 6).
 				var impactScale = image == "weapon-bubble" ? "0.25" : ImpactScale;
-				var impactLook = $"\t\tScale: {impactScale}\n\t\tTick: {FrameTicks(data, 0x21c)}\n" + (SolidImpacts.Contains(image) ? "" : Glow);
+				var impactBlend = BitConverter.ToInt32(data, 0x21c) == RippleMode ? Ripple : SolidImpacts.Contains(image) ? "" : Glow;
+				var impactLook = $"\t\tScale: {impactScale}\n\t\tTick: {FrameTick}\n" + impactBlend;
 
 				if (impact > 0)
 					sequences.Append($"\timpact:\n\t\tStart: {flightStart + flight}\n\t\tLength: {impact}\n{impactLook}");
@@ -155,8 +165,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		// A spell record's frames are, in order: the caster's (the Wizard's glow while it works its magic, the
 		// ManaSpread's swirl), 0x208 flight frames, and 0x20c effect frames at the target, which are three variants of
-		// 0x210 frames each when 0x22c is 1 (docs/formats/effect.md). Each part plays at its own pace (0x214, 0x218,
-		// 0x21c ticks per frame); the glowing ones with Screen blending.
+		// 0x210 frames each when 0x22c is 1 (docs/formats/effect.md). Each part plays one frame per tick; the glowing
+		// ones with Screen blending.
 		static string SpellSequences(string image, byte[] data, int count)
 		{
 			var flight = Math.Max(0, BitConverter.ToInt32(data, 0x208));
@@ -167,19 +177,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var part = variants == 3 ? variant : impact;
 
 			var yaml = new StringBuilder($"{image}:\n\tDefaults:\n\t\tFilename: effects/{image}.png\n");
-			void Part(string name, int start, int length, int tickOffset, string solidKey)
+			void Part(string name, int start, int length, string solidKey)
 			{
 				if (length <= 0)
 					return;
 
-				var ticks = FrameTicks(data, tickOffset);
-
-				// The mod speeds up the level-up cue and Berry fly projectile from their original frame timing.
-				if ((image == "spell-level-up" && name == "effect")
-					|| (image == "spell-berry-fly" && name == "flight"))
-					ticks = Math.Max(1, ticks / 2);
-
-				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {ticks}\n");
+				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {FrameTick}\n");
 				if (!SolidSpellParts.Contains($"{image}/{solidKey}"))
 					yaml.Append(Glow);
 			}
@@ -190,17 +193,17 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var n = cast / 8;
 				var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n));
 				yaml.Append($"\tcast:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
-					$"\t\tTick: {FrameTicks(data, 0x214)}\n{Glow}");
+					$"\t\tTick: {FrameTick}\n{Glow}");
 			}
 			else
-				Part("cast", 0, cast, 0x214, "cast");
-			Part("flight", cast, flight, 0x218, "flight");
+				Part("cast", 0, cast, "cast");
+			Part("flight", cast, flight, "flight");
 			for (var v = 0; v < variants; v++)
-				Part(v == 0 ? "effect" : $"effect-{v + 1}", cast + flight + v * part, part, 0x21c, "effect");
+				Part(v == 0 ? "effect" : $"effect-{v + 1}", cast + flight + v * part, part, "effect");
 
 			// Art that is all caster frames (Level up): its whole as the effect.
 			if (impact == 0 && flight == 0)
-				Part("effect", 0, cast, 0x214, "effect");
+				Part("effect", 0, cast, "effect");
 
 			return yaml.Append('\n').ToString();
 		}

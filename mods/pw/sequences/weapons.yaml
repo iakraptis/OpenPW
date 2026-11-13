@@ -10,7 +10,7 @@ weapon-throw-bomb:
 		Start: 1
 		Length: 20
 		Scale: 0.5
-		Tick: 240
+		Tick: 40
 
 weapon-soldier-arrows:
 	Defaults:
@@ -34,13 +34,13 @@ weapon-shoot-sword-sprit:
 		Facings: -8
 		Length: 5
 		Frames: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	impact:
 		Start: 40
 		Length: 11
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-bow-machine-arrows:
@@ -50,12 +50,12 @@ weapon-bow-machine-arrows:
 		Facings: -8
 		Length: 1
 		Frames: 0, 1, 2, 3, 4, 5, 6, 7
-		Tick: 360
+		Tick: 40
 	impact:
 		Start: 8
 		Length: 3
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-squadron-shoot:
@@ -70,7 +70,7 @@ weapon-squadron-shoot:
 		Start: 8
 		Length: 3
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-phantom-fire:
@@ -84,7 +84,7 @@ weapon-phantom-fire:
 		Start: 1
 		Length: 23
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-wizard-firebolt:
@@ -94,13 +94,13 @@ weapon-wizard-firebolt:
 		Facings: -8
 		Length: 1
 		Frames: 20, 21, 22, 23, 24, 25, 26, 27
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	impact:
 		Start: 28
 		Length: 10
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-redbolt:
@@ -109,13 +109,13 @@ weapon-redbolt:
 	flight:
 		Start: 10
 		Length: 10
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	impact:
 		Start: 20
 		Length: 11
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-whitebolt:
@@ -124,13 +124,13 @@ weapon-whitebolt:
 	flight:
 		Start: 11
 		Length: 10
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	impact:
 		Start: 21
 		Length: 10
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-ranger-hit:
@@ -140,7 +140,7 @@ weapon-ranger-hit:
 		Start: 0
 		Length: 10
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-blueelf-hit:
@@ -150,7 +150,7 @@ weapon-blueelf-hit:
 		Start: 0
 		Length: 10
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-dragonfire:
@@ -158,12 +158,12 @@ weapon-dragonfire:
 		Filename: effects/weapon-dragonfire.png
 	flight:
 		Length: 3
-		Tick: 160
+		Tick: 40
 	impact:
 		Start: 3
 		Length: 40
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-phonixfire:
@@ -173,7 +173,7 @@ weapon-phonixfire:
 		Facings: -8
 		Length: 1
 		Frames: 7, 0, 1, 2, 3, 4, 5, 6
-		Tick: 160
+		Tick: 40
 
 weapon-angelring:
 	Defaults:
@@ -182,13 +182,13 @@ weapon-angelring:
 		Facings: -8
 		Length: 3
 		Frames: 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	impact:
 		Start: 33
 		Length: 16
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-poison-arrows:
@@ -227,7 +227,7 @@ weapon-pteras-axe:
 		Start: 64
 		Length: 3
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-carrnos-boomerang:
@@ -240,7 +240,7 @@ weapon-carrnos-boomerang:
 		Start: 8
 		Length: 4
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-egg-throw:
@@ -260,12 +260,12 @@ weapon-mutant-arrows:
 		Filename: effects/weapon-mutant-arrows.png
 	flight:
 		Length: 13
-		Tick: 160
+		Tick: 40
 	impact:
 		Start: 13
 		Length: 11
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-skeleton-arrows:
@@ -275,12 +275,12 @@ weapon-skeleton-arrows:
 		Facings: -8
 		Length: 1
 		Frames: 0, 1, 2, 3, 4, 5, 6, 7
-		Tick: 360
+		Tick: 40
 	impact:
 		Start: 8
 		Length: 3
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-red-eye:
@@ -290,7 +290,7 @@ weapon-red-eye:
 		Start: 0
 		Length: 6
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-celberos-fire:
@@ -299,7 +299,7 @@ weapon-celberos-fire:
 	impact:
 		Length: 15
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-kingdemon-fire:
@@ -307,7 +307,7 @@ weapon-kingdemon-fire:
 		Filename: effects/weapon-kingdemon-fire.png
 	flight:
 		Length: 8
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 	trail:
 		Length: 8
@@ -321,14 +321,14 @@ weapon-noise-wave:
 		Facings: -8
 		Length: 1
 		Frames: 7, 0, 1, 2, 3, 4, 5, 6
-		Tick: 320
-		BlendMode: Screen
+		Tick: 40
+		Alpha: 0.2
 	impact:
 		Start: 8
 		Length: 11
 		Scale: 0.5
-		Tick: 320
-		BlendMode: Screen
+		Tick: 40
+		Alpha: 0.2
 
 weapon-apocalypse:
 	Defaults:
@@ -337,7 +337,7 @@ weapon-apocalypse:
 		Start: 0
 		Length: 12
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-stone:
@@ -359,31 +359,31 @@ weapon-trap:
 		Start: 0
 		Length: 4
 		Scale: 0.5
-		Tick: 360
+		Tick: 40
 
 weapon-bubble:
 	Defaults:
 		Filename: effects/weapon-bubble.png
 	flight:
 		Length: 3
-		Tick: 80
+		Tick: 40
 	impact:
 		Start: 3
 		Length: 36
 		Scale: 0.25
-		Tick: 80
+		Tick: 40
 
 weapon-ascomoid:
 	Defaults:
 		Filename: effects/weapon-ascomoid.png
 	flight:
 		Length: 10
-		Tick: 160
+		Tick: 40
 	impact:
 		Start: 10
 		Length: 5
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-volcano:
@@ -391,12 +391,12 @@ weapon-volcano:
 		Filename: effects/weapon-volcano.png
 	flight:
 		Length: 11
-		Tick: 160
+		Tick: 40
 	impact:
 		Start: 11
 		Length: 8
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-alien:
@@ -406,12 +406,12 @@ weapon-alien:
 		Facings: -8
 		Length: 1
 		Frames: 0, 1, 2, 3, 4, 5, 6, 7
-		Tick: 160
+		Tick: 40
 	impact:
 		Start: 8
 		Length: 5
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-fire-arrow:
@@ -426,7 +426,7 @@ weapon-fire-arrow:
 		Start: 8
 		Length: 10
 		Scale: 0.5
-		Tick: 160
+		Tick: 40
 		BlendMode: Screen
 
 weapon-poison-arrow:

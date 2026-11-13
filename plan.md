@@ -470,6 +470,14 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
       bomb smoke keeps its darkening palette. Directional projectiles (2026-11-11): most art starts at north, the
       Soldier's and Rhamphos's arrows one step clockwise; the installer tells them apart by the shape of the art
       (`Effects.cs`, [effect.md](docs/formats/effect.md) 0x1fc).
+  - Frame timing and blit modes (2026-11-13): the records' 0x214-0x21c are blit modes, not frame delays; every effect
+    (weapons and spells) advances one frame per game tick, so all sequences have `Tick: 40` (they were 2-9 times
+    too slow). The Noise wave's blit mode 8 shifts the ground under its shape one pixel (a see-through ripple); the
+    mod draws its art at 20% (Mod change). Timings read as frames of 4 ticks follow: Thunder bolt hits after 4
+    ticks, Drop stone 3, Meteor's 60 meteors at random 7-54 ticks (`RandomDelay`), Noxious gas a blow every tick
+    for 144 ticks with its cloud looping (`EffectTicks`), Quake 25 blows in 25 ticks, Jump portal open 54 ticks,
+    Stone curse 66 ticks, the Bubble's hold 36 ticks. Mana refills at 1 every 16 ticks for every caster, as the
+    original (`0x46090a`; was the mod's 1 every 8).
 - [x] **Wildlife fixes** (2026-11-02): flyers (Pteranodon, Rhamphorhynchus) loop their flight with no idle animation
       (hovering, an aircraft flips idle/busy every tick, which restarted the loop: frozen wings); `^WildFlyer` has
       its own `WithInfantryBody@FLIGHT`. On (2) One vs One the velociraptors start at least 30 cells from both

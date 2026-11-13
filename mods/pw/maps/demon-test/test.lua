@@ -99,7 +99,8 @@ StoneCurse = function()
             Check(kelpa.Health == 165, "Stone curse costs 85 KP (" .. kelpa.Health .. ")")
             local at = target.Location
             target.Move(CPos.New(17, 14))
-            Later(60, function()
+            -- The curse lasts 66 ticks from the cast.
+            Later(20, function()
                 Check(target.Location == at, "the cursed PowerMan can't move")
                 WaitFor("the curse wears off and it walks", 500, function() return target.Location ~= at end)
             end)
@@ -119,7 +120,7 @@ NoxiousGas = function()
         if not ok then return end
         Check(warlock.Health == 80, "Noxious gas costs 120 KP (" .. warlock.Health .. ")")
         Later(60, function()
-            Check(friend.Health < friend.MaxHealth, "it hurts the Warlock's own Skeleton too")
+            Check(friend.IsDead or friend.Health < friend.MaxHealth, "it hurts the Warlock's own Skeleton too")
             Check(house.Health == house.MaxHealth, "it doesn't hurt buildings")
         end)
     end)

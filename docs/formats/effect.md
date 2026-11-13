@@ -27,7 +27,8 @@ Known record fields:
 | 0x204 | First flight frame (D; Redbolt 10) |
 | 0x208 | Flight frame count (Redbolt 10; `Soldier arrows` 8) |
 | 0x20c | Impact frame count, after the flight frames (Redbolt 11; `Fire-arrow` 8 + 10, `Stone` 8 + 8) |
-| 0x218, 0x21c | Frame delays (D) |
+| 0x210, 0x214, 0x218, 0x21c | **Blit modes**, not frame delays: the draw routine of each part, an index into the jump table at `0x66be64` called from `0x48e435` (C, `0x477e10`): 0x218 the flight frames, 0x21c the impact frames, 0x214 the lingering frames (flag 0x2), 0x210 (× 0x22c) the frames drawn in the player's colours (flag 0x80). Seen: 0 solid (stones, most arrows), 2 the Bubble, 4 glowing (fire, bolts), 6 the Giant's smoke, 8 only the Noise wave: no colours, each pixel of the shape takes the screen pixel to its right (`0x48e261`), a see-through ripple; 9 the Trap and the Bow machine's and Skeleton's arrows. Weapon frames advance one per tick, in flight (`0x4773bc`, wrapping at 0x224, divided by 8 for directional art) and at the impact (`0x477563`, ending at 0x228) (C) |
+| 0x224, 0x228 | Flight and impact frame counts as the update and draw code use them (C) |
 | 0x220 | Lifetime in ticks for lingering effects (C, compared with a per-tick counter, `0x476eff`) |
 | 0x830 | Sound count |
 | 0x834 | Sound offset, −1 = none |
@@ -55,16 +56,17 @@ The same record in `JW2_11`, with different fields in use (D):
 | 0x1e0 | Health cost: the Demon spells' kill points (Stone curse 85, Quake 150) (C, `FUN_00478cd5`) |
 | 0x1e4 | Mana cost (Fall out 80, Thunder bolt 40) (C, same) |
 | 0x1e8 | HP effect: negative = damage (Drop Stone −200, Thunder bolt −80, Meteo −30 per hit), positive = heal (Cure +2 per tick) |
-| 0x1ec | A count: Rise death's zombies (3) (D) |
-| 0x1f4 | Duration (Mass temper 300, Meteo 160, Noxious gas 144) |
+| 0x1ec | A count: Rise death's zombies (3) (D); Meteo's meteors (60) (C, `0x478e9f`) |
+| 0x1f0 | Meteo: each meteor waits a random 1 to this many ticks (48) before it falls (C, `0x478eea`) |
+| 0x1f4 | Duration in ticks (Mass temper 300, Noxious gas 144: `0x47937e`); Meteo: the spread, each meteor within half of it (160: ±80 px) of the place (C, `0x478f01`) |
 | 0x1f8 | Radius in pixels (Quake 144, Suicide 160, Noxious gas 112) |
 | 0x208 | Flight frames (Berry fly 16: the berries; Resurrect 16) |
 | 0x20c | Effect frames, at the target |
 | 0x210, 0x22c | 0x22c = 1: the effect frames are three variants of 0x210 frames each (Shield 3 × 13, Meteo 3 × 21, Cure 3 × 15) |
-| 0x214, 0x218 | Ticks per caster frame, per flight frame (Berry fly's flight 9) |
-| 0x21c | Ticks per effect frame (4) |
+| 0x214, 0x218, 0x21c | Blit modes of the caster, flight and effect frames, as in weapons (C, `0x479f2d`, `0x47a0b3`, `0x47a165`): 0 solid, 4 glowing, 9 (Berry fly's flight). Not frame delays: every part of a spell advances one frame per tick, spells being updated once a game tick (C, `0x478131`, `0x478844`, `0x4788a6`, `0x478c9a`; `FUN_0047aaf0` from the game tick at `0x456aaa`) |
+| 0x220, 0x224, 0x228 | Caster, flight and effect frame counts as the update and draw code use them (C) |
 | 0x220 | Lifetime in ticks |
-| 0x8b8, 0x8bc | Number and list of the effect frames that hit (Noxious gas and Quake: every frame) (C, `0x478c1a`) |
+| 0x8b8, 0x8bc | Number and list of the effect frames that hit, one frame a tick (C, `0x4787e1`, `0x478c43`): Thunder bolt 4, Drop Stone 3, Meteo 6, Stone curse 4; Noxious gas all 21 (its frames loop for 0x1f4 ticks: a blow every tick); Quake frames 0-24 of its 31 |
 
 A spell's frames are, in order: the caster's (the frame count less the flight and effect frames: the Wizard's glow
 in its hands, 8 directions × 5 frames, in Berry fly and Elf Build; the ManaSpread's swirl in Meteo), the flight

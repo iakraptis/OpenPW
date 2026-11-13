@@ -93,7 +93,7 @@ defaults. It stops when the building is whole or the berries run out.
   mod's.
 - Fall out (`JW2_11` `Fall out.maz`, unlocked by the upgrade Improve Fall out for Chief): aimed at an enemy unit for
   80 mana (record 0x1e4); it wears the target's HP down to 1 (1 HP per tick) without killing it. The Chief has 100
-  mana (`.chr` stat 4), regained over time (mod: 1 every 8 ticks).
+  mana (`.chr` stat 4), regained at 1 every 16 ticks, as every unit with mana (C, `0x46090a`).
 
 ## Population
 
@@ -223,17 +223,19 @@ A spell record's costs (C, `FUN_00478cd5` checks them, `FUN_00478db8` pays them)
 Fall out 80, Thunder bolt 40, …) and 0x1e0 health (Demon: Stone curse 85, Noxious gas 120, Quake 150, Rise death
 100, Suicide 1). The caster needs more health than the cost. The effect (0x1e8, negative = damage) is raised by the
 caster's spell power. Area effects hit within the radius (0x1f8) on the effect frames listed at 0x8bc (count 0x8b8),
-one frame every 0x21c ticks (4), until the effect ends: Noxious gas on every frame for its duration (0x1f4, 144
-ticks), Quake on each of its 31 frames, Suicide once. Stone curse sets the target's petrified flag (unit flags 0x20)
-on its hit frame; where the flag is cleared was not found.
+one frame a tick (C, docs/formats/effect.md), until the effect ends: Noxious gas on every frame for its duration (0x1f4, 144
+ticks: 144 blows), Quake on its frames 0-24 (25 blows), Suicide once. Meteo's 60 meteors (0x1ec) each fall after a
+random 1 to 0x1f0 (48) ticks, within 80 px of the place, and hit on their frame 6 (C, `0x478eea`). Stone curse sets
+the target's petrified flag (unit flags 0x20) and a stone counter of its 66 (unit 0xa0, `0x461faa`) on its hit frame;
+the unit's update counts it down and clears the flag at 0 (C, `0x461b37`), every tick (D).
 
 Elf spells in the mod (`PwSpell`): Thunder bolt 80 damage to a unit; Shield a 480-point damage shield on a friendly
 unit (the shield pool of `0x478db8`, drained by damage in `FUN_00457d4b`), Mass temper 160 for 300 ticks to the
-friendly units within 56 px; Teleport the Ranger to any explored place; Jump portal open 216 ticks (its 54 frames of
-4), throwing enemies that walk in 12 cells away (the landing is the mod's); Drop stone 200 within 64 px; Cure 2 HP a
+friendly units within 56 px; Teleport the Ranger to any explored place; Jump portal open 54 ticks (0x1e8, counted every
+tick, `0x478b6e`), throwing enemies that walk in every 4 ticks (`0x478a40`) 12 cells away (the landing is the mod's); Drop stone 200 within 64 px; Cure 2 HP a
 tick for 1 mana a tick; Fake a copy of a unit, the caster's own, harmless, gone after 960 ticks (Fake's 0x1ec 30 ×
 32: the original's timer for summoned units); Meteor 60 meteors of 30 within 64 px, falling within 80 px of the
-place, the ManaSpread lost; Resurrect the living units that died within 64 px of the place lately, the caster's own,
+place 7 to 54 ticks after the cast, the ManaSpread lost; Resurrect the living units that died within 64 px of the place lately, the caster's own,
 at half health. The ManaSpread's passive (.chr 0x1f8 bit 0x4, and its name) gives nearby casters mana (the amounts
 are the mod's). Magic.trt holds 16 icons (records 0-15): Cure, record 18, takes Vanishing's.
 
@@ -250,8 +252,8 @@ reduce KP. … Any units killed, even friendly units, will replenish KP."
 - Healing follows 0x1c8/0x1cc as for the others (C, `FUN_0046089a`): Demon units with 0x1cc = 1 don't heal over time
   and heal by eating meat.
 
-In the mod (`PwKillPoints`, `PwLiving`, `PwSpell`): as above. Stone curse lasts 264 ticks (its 66 read as frames of 4
-ticks, D), raised by spell power; the spell levels of the help file (Kelpa Stone curse at level 2, Warlock Quake at 2)
+In the mod (`PwKillPoints`, `PwLiving`, `PwSpell`): as above. Stone curse lasts 66 ticks (its stone counter, counted every
+tick: D), raised by spell power; the spell levels of the help file (Kelpa Stone curse at level 2, Warlock Quake at 2)
 count from 1, ours from 0. The raised zombies stay until killed: the only timed units in the original are the Fake
 spell's illusions (unit flag 0x10 and a lifetime from Fake's 0x1ec, counted down every 32 ticks; C, `0x4792c2`,
 `FUN_0046089a`).

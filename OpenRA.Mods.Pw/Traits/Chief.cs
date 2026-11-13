@@ -22,10 +22,11 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public readonly int Max = 100;
 
-		[Desc("Mana regained every RegenInterval ticks (not known from the original: full in about a minute).")]
+		[Desc("Mana regained every RegenInterval ticks: as the original, 1 every 16 ticks for every unit with mana, up to ",
+			"its most (Pw.exe 0x46090a, on game ticks whose counter is a multiple of 16).")]
 		public readonly int RegenAmount = 1;
 
-		public readonly int RegenInterval = 8;
+		public readonly int RegenInterval = 16;
 
 		public override object Create(ActorInitializer init) { return new PwMana(init.Self, this); }
 	}
