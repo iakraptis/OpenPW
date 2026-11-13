@@ -375,7 +375,7 @@
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
-		Bots: easy, medium, hard
+		Bots: easy, medium
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
 		RequiresCondition: bot-owned
@@ -405,7 +405,7 @@
 	# AI players' units also fight hostile wild creatures on their own (players' units leave all wild ones alone).
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
-		Bots: easy, medium, hard
+		Bots: easy, medium
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
 		RequiresCondition: bot-owned
@@ -487,7 +487,7 @@
 		InvalidTargets: Wild
 	GrantConditionOnBotOwner@predators:
 		Condition: bot-owned
-		Bots: easy, medium, hard
+		Bots: easy, medium
 	AutoTargetPriority@PREDATORS:
 		ValidTargets: Predator
 		RequiresCondition: bot-owned

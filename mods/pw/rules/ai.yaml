@@ -17,8 +17,8 @@
 #   units); the Mutant Morphosis research comes first once the bot has a part.
 # - PwDetectorBotModule (Medium): trains detectors (Revolver, DeathEye, Pixie; the Tyrano merge TwinRhamphos) and
 #   posts one between the main building and its berries and one at the base's edge; later one goes with each attack.
-# Three levels: Easy (the first AI, called Normal before), Medium (Easy with a second base, a Trap by the berries and
-# detectors) and Hard (a bigger economy and larger waves).
+# Two levels: Easy (the first AI, called Normal before) and Medium (Easy with a second base, a Trap by the berries
+# and detectors).
 # The stock SquadManagerBotModule attacks and defends; it takes type names, so a new faction adds its workers to
 # ExcludeFromSquadsTypes, its main building to ConstructionYardTypes, its air units to AirUnitsTypes and what it
 # defends to ProtectionTypes. The weights and limits below only tune them; types not listed use the defaults.
@@ -29,18 +29,12 @@ player:
 	ModularBot@Medium:
 		Name: bot-medium.name
 		Type: medium
-	ModularBot@Hard:
-		Name: bot-hard.name
-		Type: hard
 	GrantConditionOnBotOwner@easy:
 		Condition: enable-easy-ai
 		Bots: easy
 	GrantConditionOnBotOwner@medium:
 		Condition: enable-medium-ai
 		Bots: medium
-	GrantConditionOnBotOwner@hard:
-		Condition: enable-hard-ai
-		Bots: hard
 
 	# ------------------------------------------------------------------ Easy
 
@@ -231,106 +225,6 @@ player:
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
 		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-rhamphos, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye, elf-wizard, elf-elfring, elf-pixie, elf-unicorn, elf-manaspread
-		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden, elf-heaven
-		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle, elf-phoenix, elf-dragon, elf-angelelf
-		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect, elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary, elf-bubble, elf-wizard
-
-	# ------------------------------------------------------------------ Hard: a bigger economy, building two at a
-	# time, quicker decisions and larger attack waves.
-
-	PwBaseBuilderBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		DecisionInterval: 40
-		MaxConcurrentConstructions: 2
-		MinimumWorkers: 6
-		CashReserve: 100
-		PopulationMargin: 5
-		BuildingLimits:
-			primitive-powerhouse: 2
-			primitive-soldierhouse: 2
-			primitive-stonetower: 4
-			primitive-trap: 3
-			tyrano-eggnest: 2
-			tyrano-ascomoid: 4
-			demon-deathden: 2
-			demon-volcano: 4
-			elf-redhall: 2
-			elf-bubble: 4
-	PwGathererBotModule@hard:
-		RequiresCondition: enable-hard-ai
-	PwUnitBuilderBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		# Tyrano units have no armour of their own: the mutations come first (the races' other research waits for cash).
-		PriorityResearch: tyrano-upgrade-ground-dino-mutation-armor, tyrano-upgrade-ground-dinos-mutation-weapon
-		MinimumWorkers: 8
-		MaximumWorkers: 16
-		ResearchCash: 1000
-		UnitWeights:
-			primitive-powerman: 20
-			primitive-soldier: 20
-			primitive-giant: 12
-			primitive-knight: 14
-			primitive-bowmachine: 10
-			primitive-squadron: 6
-			primitive-flattop: 5
-			primitive-chief: 4
-			tyrano-masos: 10
-			tyrano-velocis: 24
-			tyrano-dilophos: 20
-			tyrano-trices: 14
-			tyrano-eggthrower: 10
-			tyrano-rhamphos: 8
-			tyrano-pteras: 10
-			tyrano-tyranos: 4
-			demon-skeleton: 20
-			demon-mudman: 15
-			demon-kelpa: 14
-			demon-kingdemon: 12
-			demon-darkbat: 8
-			demon-gargoyle: 6
-			demon-devil: 4
-			elf-redelf: 20
-			elf-whiteelf: 14
-			elf-ranger: 15
-			elf-blueelf: 14
-			elf-phoenix: 6
-			elf-dragon: 8
-			elf-angelelf: 4
-			elf-unicorn: 8
-			elf-manaspread: 4
-		UnitLimits:
-			primitive-chief: 1
-			tyrano-tyranos: 1
-			demon-devil: 1
-			elf-angelelf: 1
-	PwTransportBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		MinimumPassengers: 5
-		RaidArmy: 12
-		Cooldown: 500
-	PwAbilityBotModule@hard:
-		RequiresCondition: enable-hard-ai
-	PwDefenseBotModule@hard:
-		RequiresCondition: enable-hard-ai
-	PwHuntingBotModule@hard:
-		RequiresCondition: enable-hard-ai
-	PwSpellBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		# The Elves' spells for now; the Demons' come later.
-		Spells: thunder-bolt, shield, mass-temper, teleport, jump-portal, drop-stone, cure, fake, meteor, resurrect
-	PwMergeBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		Into:
-			tyrano-twinvelocis: 0
-			tyrano-mutant: 0
-			tyrano-twinrhamphos: 1
-	SquadManagerBotModule@hard:
-		RequiresCondition: enable-hard-ai
-		SquadSize: 12
-		SquadSizeRandomBonus: 6
-		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
-		IgnoredEnemyTargetTypes: Wild
-		ExcludeFromSquadsTypes: primitive-buildman, primitive-revolver, tyrano-dinos, tyrano-dsunguri, tyrano-twinrhamphos, demon-insect, demon-phantom, demon-deatheye, elf-wizard, elf-elfring, elf-pixie, elf-unicorn, elf-manaspread
 		ConstructionYardTypes: primitive-sanctuary, tyrano-tyranonest, demon-demonden, elf-heaven
 		AirUnitsTypes: primitive-squadron, primitive-flattop, tyrano-pteras, tyrano-mutant, demon-darkbat, demon-gargoyle, elf-phoenix, elf-dragon, elf-angelelf
 		ProtectionTypes: primitive-sanctuary, primitive-house, primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser, primitive-stonetower, primitive-buildman, tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid, tyrano-dinos, demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano, demon-insect, elf-heaven, elf-elftree, elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary, elf-bubble, elf-wizard

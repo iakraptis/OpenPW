@@ -638,12 +638,12 @@ dead.
     ally under fire, Mass temper over 3+; Fake near a fight; Resurrect where 2+ fell; Teleport home under 35%
     health). Research that unlocks a spell comes first. The Unicorn and ManaSpread are trained (weights) and follow
     the main group. `Spells` lists the Elf spells; the Demon spells use the same module once listed.
-  - Three levels (2026-11-12, branch `ai_diff`): Normal is renamed **Easy** (bot type `easy`; the installer's battle
-    maps and `bot-modules-test` use it) and **Medium** (`medium`) comes between it and Hard, unchanged. Medium plays
-    as Easy, a little quicker and with bigger waves, plus:
+  - Two levels (2026-11-12, branch `ai_diff`): Normal is renamed **Easy** (bot type `easy`; the installer's battle
+    maps and `bot-modules-test` use it) and **Medium** (`medium`) is new; the Hard bot is removed (bot cheats, which
+    the engine's multipliers and a small berry-income trait would allow, are left for later). Medium plays as Easy, a little quicker and with bigger waves, plus:
     - a second base: `PwBaseBuilderBotModule.ExpansionDelay` (6750 ticks, about 8 minutes) builds a second main
       building by the nearest group of berry bushes no drop-off of the bot serves (not near an enemy building, within
-      walking reach); it becomes a guard spot, and the tower limits are Hard's so it gets one. The gatherers' nearest
+      walking reach); it becomes a guard spot, and the tower limits are higher (4) so it gets one. The gatherers' nearest
       drop-off rule sends new workers there.
     - `BushDefenses`: one Primitive Trap by the berry bushes nearest the base (not counted as a guard tower).
     - detectors (`PwDetectorBotModule`, new): it trains the race's detector (Revolver, DeathEye, Pixie; Tyrano merges

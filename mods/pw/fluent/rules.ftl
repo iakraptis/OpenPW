@@ -31,9 +31,6 @@ bot-easy =
 bot-medium =
     .name = Medium AI
 
-bot-hard =
-    .name = Hard AI
-
 ## campaign-ai.yaml
 bot-campaign =
     .name = Campaign AI
