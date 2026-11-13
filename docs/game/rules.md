@@ -67,11 +67,12 @@ does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage k
   owner has (Improve StoneTower Detection, Study Bubble Detection Secret, Learn Volcano Detection: the towers detect
   nothing before). Buildings detect once finished.
 - **Mod change (no HQ):** a player without a finished main building (Sanctuary, TyranoNest, Heaven, DemonDen) for
-  4,225 ticks (5 minutes at the default speed) is exposed: each enemy sees a red marker on every unit and building
-  of theirs it can't see itself, in the fog, in the shroud, or invisible out of detection. The marker shows where, on
-  the map and the minimap; it reveals nothing else, and an invisible unit still needs a detector to be attacked. The
-  player sees the countdown at the top of the screen. A finished main building hides them again and restarts the
-  count (`PwExposure`; a lobby checkbox, on by default; off in the campaign missions).
+  4,225 ticks (5 minutes at the default speed) is exposed: each enemy sees a red marker on every unit and building of
+  theirs it can't see itself, in the fog, in the shroud, or invisible out of detection. The marker shows where, on the
+  map and the minimap; it reveals nothing else, and an invisible unit still needs a detector to be attacked. A box at
+  the top left lists every player counting down, with name, race and time left (the viewer's own row red, allies'
+  orange, enemies' green). A finished main building hides them again and restarts the count (`PwExposure`; a lobby
+  checkbox, on by default; off in the campaign missions).
 
 ## Meat and healing
 

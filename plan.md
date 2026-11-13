@@ -625,8 +625,9 @@ dead.
     each trainable unit's likewise in the training list ("Ground Melee Unit", "Air Transport, detects invisible").
   - No HQ exposure (2026-11-14, branch `qol`, Mod change, `PwExposure`): 5 minutes without a finished main building
     and the enemies see the player's units and buildings as red markers wherever they can't see them (fog, shroud,
-    invisible), on the map and the minimap (`ExposureRadarWidget`); a countdown label for the player. A lobby
-    checkbox; off in mission-selector maps unless `InMissions` (combat-test turns it on with a 100-tick delay).
+    invisible), on the map and the minimap (`ExposureRadarWidget`); a box at the top left with each player's countdown
+    (own red, allies orange, enemies green). A lobby checkbox; off in mission-selector maps unless `InMissions`
+    (combat-test turns it on with a 100-tick delay).
   - Not done: the Intro slideshow.
 - [x] **AI** (2026-11-02, branches `bot`, `bot2`; `rules/ai.yaml`, `OpenRA.Mods.Pw/Traits/BotModules`): Normal and
       Hard bots after OpenSYW's. The modules read every actor's role from its traits, so a new faction plays as

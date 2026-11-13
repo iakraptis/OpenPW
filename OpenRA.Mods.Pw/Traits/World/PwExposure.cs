@@ -103,6 +103,16 @@ namespace OpenRA.Mods.Pw.Traits
 			return t >= Info.Delay ? 0 : Info.Delay - t;
 		}
 
+		// The players counting down or exposed.
+		public IEnumerable<Player> PlayersWithoutHQ => withoutHQ.Keys;
+
+		// "4m 12s": ticks at the game's speed, rounded up to the second.
+		public static string FormatTime(int ticks, int timestep)
+		{
+			var s = (ticks * timestep + 999) / 1000;
+			return $"{s / 60}m {s % 60}s";
+		}
+
 		public bool IsExposed(Player p) => Enabled && TicksWithoutHQ(p) >= Info.Delay;
 
 		// The viewer sees this actor only as a marker: its exposed enemy's, and not visible to the viewer itself.

@@ -27,8 +27,9 @@ checkbox-no-hq-reveal =
     .label = Reveal Without HQ
     .description = A player without a main building for 5 minutes is shown to the enemy: their units and buildings as red markers
 
-label-no-hq-countdown = No HQ: the enemy sees your army in { $time }
-label-no-hq-exposed = No HQ: the enemy sees your army
+label-no-hq-panel-title = No HQ: revealed in
+label-no-hq-entry = { $player }, { $race }: { $time }
+label-no-hq-entry-exposed = { $player }, { $race }: revealed
 notification-no-hq-exposed = { $player } has had no HQ for 5 minutes: their army is shown
 notification-no-hq-self-exposed = You have had no HQ for 5 minutes: the enemy sees your army
 notification-no-hq-hidden = { $player } has an HQ again: their army is hidden
