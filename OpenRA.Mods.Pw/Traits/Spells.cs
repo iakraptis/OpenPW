@@ -75,11 +75,20 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Steps (1 = one blow).")]
 		public readonly int Steps = 1;
 
-		[Desc("Ticks between steps (the effect's frame delay, record 0x21c).")]
-		public readonly int StepInterval = 4;
+		[Desc("Ticks between steps. Spell art advances one frame per tick, so a blow on every frame is 1 (record 0x8bc ",
+			"lists the frames that hit); a jump portal throws every 4.")]
+		public readonly int StepInterval = 1;
 
-		[Desc("Ticks before the first step (the effect frame that hits, record 0x8bc, times StepInterval).")]
+		[Desc("Ticks before the first step: the effect frame that hits (record 0x8bc), one frame per tick.")]
 		public readonly int Delay = 0;
+
+		[Desc("Each step also waits a random 0 to RandomDelay - 1 ticks (Meteor: each meteor falls after a random ",
+			"1 to 0x1f0 ticks).")]
+		public readonly int RandomDelay = 0;
+
+		[Desc("The effect art is played again each time it ends until this many ticks have passed (Noxious gas: its ",
+			"cloud loops for its duration, record 0x1f4). 0: once.")]
+		public readonly int EffectTicks = 0;
 
 		[Desc("Radius of the area (record 0x1f8). Zero: the target unit only.")]
 		public readonly WDist Radius = WDist.Zero;
@@ -270,7 +279,18 @@ namespace OpenRA.Mods.Pw.Traits
 				Game.Sound.Play(SoundType.World, Info.Sound, pos);
 
 			if (Info.Image != null && Info.PortalTicks == 0)
+			{
 				ShowEffect(world, victim, pos);
+
+				// Looped for EffectTicks: again each time the art ends.
+				var sequence = world.Map.Sequences.GetSequence(Info.Image, Info.EffectSequence);
+				var length = Math.Max(1, sequence.Length * sequence.Tick / 40);
+				for (var t = length; t < Info.EffectTicks; t += length)
+				{
+					var delay = t;
+					world.AddFrameEndTask(w => w.Add(new OpenRA.Effects.DelayedAction(delay, () => ShowEffect(w, victim, pos))));
+				}
+			}
 
 			if (victim != null && Info.PetrifyTicks > 0)
 			{
@@ -290,7 +310,7 @@ namespace OpenRA.Mods.Pw.Traits
 				for (var step = 0; step < Info.Steps; step++)
 				{
 					// A blow without delay lands at once (Suicide: before the caster dies).
-					var delay = Info.Delay + step * Info.StepInterval;
+					var delay = Info.Delay + step * Info.StepInterval + (Info.RandomDelay > 0 ? world.SharedRandom.Next(Info.RandomDelay) : 0);
 					if (delay == 0)
 						Step(self, victim, pos, damage, heal);
 					else

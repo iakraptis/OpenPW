@@ -12,7 +12,7 @@
 -- 11. Jump portal (Ranger, level 3): an enemy standing in the portal is thrown away.
 -- 12. Berry fly: a Wizard stays at the bush, and the berries fly to the Heaven by themselves (here the Enemy player's,
 --     whose cash nothing else touches).
--- 13. The Bubble tower deals 1 damage and traps the target in its bubble for 72 ticks.
+-- 13. The Bubble tower deals 1 damage and traps the target in its bubble for 36 ticks.
 -- 14. Cast on a unit, Cure heals that one first, though another is more hurt.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")

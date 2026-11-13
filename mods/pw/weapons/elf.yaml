@@ -126,7 +126,7 @@ AngelRing:
 		Image: weapon-angelring
 		Explosions: impact
 
-# Bubble: the Elf tower immobilizes a target for the 36 impact frames x 2 original ticks per frame.
+# Bubble: the Elf tower immobilizes a target for its 36 impact frames, one per tick (docs/formats/effect.md).
 BubbleShot:
 	Inherits: ^Arrow
 	ReloadDelay: 26
@@ -137,7 +137,7 @@ BubbleShot:
 		Speed: 640
 	Warhead@1Dam: GrantExternalCondition
 		Condition: bubbled
-		Duration: 72
+		Duration: 36
 		Range: 0c256
 		ValidTargets: Ground, Air
 	Warhead@2Dam: SubtractArmorDamage

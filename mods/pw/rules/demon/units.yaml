@@ -167,14 +167,14 @@ demon-kelpa:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
 		FireDelay: 6
 		Weapon: CelberosFire
-	# Turns an enemy unit to stone: it can't move or attack. Record 11: 85 kill points; its 66 read as 66 frames of
-	# 4 ticks (D).
+	# Turns an enemy unit to stone: it can't move or attack. Record 11: 85 kill points; its 66 is the unit's stone
+	# counter, counted down in the unit's update (0x461b37; every tick, D).
 	PwSpell@STONE-CURSE:
 		Name: stone-curse
 		Target: Unit
 		Cost: 85
 		MinLevel: 1
-		PetrifyTicks: 264
+		PetrifyTicks: 66
 		Image: spell-stone-curse
 		Icon: ability-stone-curse
 		Sound: spell-stone-curse-0.wav
@@ -492,15 +492,15 @@ demon-warlock:
 		Speed: 168
 	RevealsShroud:
 		Range: 7c0
-	# Record 13: a poisonous cloud, 3 damage to every living thing within 112 px each frame (4 ticks) for 144 ticks;
-	# 120 kill points.
+	# Record 13: a poisonous cloud, 3 damage to every living thing within 112 px every tick (all its frames hit,
+	# one per tick) for 144 ticks (0x1f4, 0x47937e), the cloud looping meanwhile; 120 kill points.
 	PwSpell@NOXIOUS-GAS:
 		Name: noxious-gas
 		Target: Ground
 		Cost: 120
 		Damage: 3
-		Steps: 36
-		StepInterval: 4
+		Steps: 144
+		EffectTicks: 144
 		Radius: 3c512
 		LivingOnly: true
 		AffectsRelationships: Ally, Enemy, Neutral
@@ -517,16 +517,15 @@ demon-warlock:
 		Image: spell-suicide
 		Icon: ability-suicide
 		Sound: spell-suicide-0.wav
-	# Record 14: the ground shakes, 12 damage to the enemies within 144 px (buildings too) on each of its 31 frames;
-	# 150 kill points.
+	# Record 14: the ground shakes, 12 damage to the enemies within 144 px (buildings too) on its frames 0-24 (0x8bc),
+	# one per tick; 150 kill points.
 	PwSpell@QUAKE:
 		Name: quake
 		Target: Ground
 		Cost: 150
 		MinLevel: 1
 		Damage: 12
-		Steps: 31
-		StepInterval: 4
+		Steps: 25
 		Radius: 4c512
 		Image: spell-quake
 		Icon: ability-quake
