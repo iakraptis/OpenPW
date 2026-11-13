@@ -44,6 +44,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly InterfaceBarWidget bar;
 		readonly RadarWidget radar;
 		readonly (Widget Icon, Widget Label)[] counters;
+		readonly LabelWidget noHQ;
 		readonly Widget selection, training, commands;
 		readonly SpriteWidget trainingIcon;
 		readonly ColorBlockWidget trainingProgressBack, trainingProgressFill;
@@ -123,6 +124,17 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			populationIcon.GetTooltipText = population.GetTooltipText;
 			counters = new (Widget, Widget)[] { (cashIcon, cash), (populationIcon, population) };
 
+			// Without a main building: the time left before the enemies see the army (PwExposure), then that they do.
+			var exposure = world.WorldActor.TraitOrDefault<PwExposure>();
+			noHQ = widget.Get<LabelWidget>("NO_HQ");
+			noHQ.GetText = () =>
+			{
+				var player = world.LocalPlayer;
+				var left = player == null || exposure == null ? -1 : exposure.TicksLeft(player);
+				return left < 0 ? "" : left == 0 ? FluentProvider.GetMessage("label-no-hq-exposed")
+					: FluentProvider.GetMessage("label-no-hq-countdown", "time", WidgetUtils.FormatTime(left, world.Timestep));
+			};
+
 			worldRoot = Ui.Root.Get("WORLD_ROOT");
 			menuRoot = Ui.Root.Get("MENU_ROOT");
 			buttons[1].Button.OnClick = () => OpenMenuPanel(IngameInfoPanel.Objectives);
@@ -160,6 +172,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				icon.Bounds = new WidgetBounds(right - 110 - iconSize - 6, y, iconSize, iconSize);
 				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
+
+			noHQ.Bounds = new WidgetBounds(0, 8, bar.Bounds.Width, 20);
 
 			// The selection panel takes the left panel, less the training column at its far right.
 			var left = bar.Area("left-panel");

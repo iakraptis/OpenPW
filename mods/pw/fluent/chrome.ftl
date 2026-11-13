@@ -22,6 +22,17 @@ dropdown-starting-units =
     .label = Starting Units
     .description = The units that players start the game with
 
+## PwExposure
+checkbox-no-hq-reveal =
+    .label = Reveal Without HQ
+    .description = A player without a main building for 5 minutes is shown to the enemy: their units and buildings as red markers
+
+label-no-hq-countdown = No HQ: the enemy sees your army in { $time }
+label-no-hq-exposed = No HQ: the enemy sees your army
+notification-no-hq-exposed = { $player } has had no HQ for 5 minutes: their army is shown
+notification-no-hq-self-exposed = You have had no HQ for 5 minutes: the enemy sees your army
+notification-no-hq-hidden = { $player } has an HQ again: their army is hidden
+
 ## World
 options-starting-units =
     .unlabeled = Unlabeled

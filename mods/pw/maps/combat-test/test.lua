@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local AttackMove, FirstHit, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, Exposure, FirstHit, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -22,6 +22,9 @@ do
     --    on its path once, to full range, and passes allies; a fixed-endpoint arrow ignores its path and splashes.
     -- 7. Attack (attack-move): a Soldier sent past an enemy House attacks it on the way.
     -- 8. Patrol: a Soldier goes to the place and back, attacking an enemy beside its way, and goes on.
+    -- 9. Exposure (PwExposure, its delay 100 ticks here): a player without a main building is exposed after the
+    --    delay; its enemy then sees a marker on its invisible MudMan, not on the Soldier it already sees; a finished
+    --    main building hides the player again.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -35,6 +38,7 @@ do
         Later(5, AttackMove)
         Later(5, Patrolling)
         Later(5, Voices)
+        Exposure()
         Later(200, Repairing)
         FinishWhenDone("COMBAT", 2500)
     end
@@ -47,6 +51,28 @@ do
         soldier.AttackMove(At(30, 44))
         WaitFor("an attack-moving Soldier attacks the enemy House on its way", 600, function()
             return house.IsDead or house.Health < house.MaxHealth
+        end)
+    end
+
+    -- No main building for the delay: the enemy sees the army as markers (Mod change).
+    Exposure = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        Later(50, function()
+            Check(not PwTest.Exposed(me) and PwTest.ExposureTicksLeft(me) > 0, "a player without an HQ is not exposed before the delay")
+        end)
+        Later(110, function()
+            Check(PwTest.Exposed(me) and PwTest.ExposureTicksLeft(me) == 0, "a player without an HQ is exposed after the delay")
+            local mudman = Actor.Create("demon-mudman", true, { Owner = me, Location = At(46, 42) })
+            local soldier = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(48, 42) })
+            Later(2, function()
+                Check(not PwTest.CanSee(foe, mudman) and PwTest.Marked(foe, mudman), "the enemy sees an exposed player's invisible unit as a marker")
+                Check(not PwTest.Marked(foe, soldier), "no marker on a unit the enemy already sees")
+                Check(not PwTest.Marked(me, mudman), "no marker for its owner")
+                Actor.Create("primitive-sanctuary", true, { Owner = me, Location = At(40, 46) })
+                Later(2, function()
+                    Check(not PwTest.Exposed(me) and not PwTest.Marked(foe, mudman), "a main building hides the player again")
+                end)
+            end)
         end)
     end
 

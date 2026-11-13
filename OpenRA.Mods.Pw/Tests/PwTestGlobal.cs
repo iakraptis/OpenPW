@@ -197,6 +197,15 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Whether the player can see the actor (fog and stealth: a hidden trap needs a detector near it).")]
 		public bool CanSee(Player player, Actor actor) => actor.CanBeViewedByPlayer(player);
 
+		[Desc("Whether the player is exposed: no main building for PwExposure's delay.")]
+		public bool Exposed(Player player) => player.World.WorldActor.Trait<PwExposure>().IsExposed(player);
+
+		[Desc("Ticks left before the player is exposed: -1 with a main building, 0 once exposed.")]
+		public int ExposureTicksLeft(Player player) => player.World.WorldActor.Trait<PwExposure>().TicksLeft(player);
+
+		[Desc("Whether the viewer sees the actor as an exposed enemy's red marker.")]
+		public bool Marked(Player viewer, Actor actor) => actor.World.WorldActor.Trait<PwExposure>().IsMarked(actor, viewer);
+
 		[Desc("Whether a unit's hunting is on.")]
 		public bool Hunting(Actor actor) => actor.TraitOrDefault<PwHunter>()?.Hunting ?? false;
 

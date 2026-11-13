@@ -43,6 +43,17 @@ Container@PLAYER_WIDGETS:
 			Width: 118
 			Height: 127
 			WorldInteractionController: INTERACTION_CONTROLLER
+		# The exposed enemies' markers over the minimap (PwExposure); it draws where the radar draws the map.
+		ExposureRadar@EXPOSURE_RADAR:
+			Radar: RADAR
+		# Without a main building: the countdown to being exposed (PwExposure), at the top centre.
+		Label@NO_HQ:
+			Width: 400
+			Height: 20
+			Font: Bold
+			Contrast: true
+			Align: Center
+			TextColor: FF4040
 		MenuButton@OPTIONS_BUTTON:
 			IgnoreChildMouseOver: true
 			Key: escape
