@@ -102,7 +102,7 @@ This is about 4× the content of SYW (4 races of ~12 units + ~10 buildings, vs 2
 ## 2. Repository layout
 
 ```
-primwars/                      (git)
+OpenPW/                        (git: github.com/iakraptis/OpenPW, formerly primwars)
   plan.md
   docs/formats/*.md            file format specs: no original data, tracked
   docs/game/*.md               recovered rules: stats, tech trees, spells
