@@ -4,6 +4,9 @@
 wild-tyranosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	DetectCloaked:
+		Range: 10c0
+		DetectionTypes: Invisible
 	Tooltip:
 		Name: actor-wild-tyranosaurus.name
 	Health:
@@ -82,6 +85,9 @@ wild-pachycephalosaurus:
 wild-dilophosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	DetectCloaked:
+		Range: 7c0
+		DetectionTypes: Invisible
 	Tooltip:
 		Name: actor-wild-dilophosaurus.name
 	Health:
