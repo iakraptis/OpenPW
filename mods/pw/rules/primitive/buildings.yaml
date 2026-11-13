@@ -12,6 +12,7 @@ primitive-sanctuary:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-primitive-sanctuary
 		BuildPaletteOrder: 10
 	Production:
 		Produces: primitive-sanctuary
@@ -47,6 +48,7 @@ primitive-house:
 	UnderConstruction:
 		Duration: 320
 	Buildable:
+		Description: description-primitive-house
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: primitive-house
@@ -79,6 +81,7 @@ primitive-powerhouse:
 	UnderConstruction:
 		Duration: 880
 	Buildable:
+		Description: description-primitive-powerhouse
 		BuildPaletteOrder: 30
 		Prerequisites: primitive-sanctuary
 	Production:
@@ -116,6 +119,7 @@ primitive-soldierhouse:
 	UnderConstruction:
 		Duration: 960
 	Buildable:
+		Description: description-primitive-soldierhouse
 		BuildPaletteOrder: 40
 		Prerequisites: primitive-powerhouse
 	Production:
@@ -153,6 +157,7 @@ primitive-skyhouse:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-primitive-skyhouse
 		BuildPaletteOrder: 70
 		Prerequisites: primitive-blacksmith
 	Production:
@@ -190,6 +195,7 @@ primitive-blacksmith:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-primitive-blacksmith
 		BuildPaletteOrder: 50
 		Prerequisites: primitive-powerhouse
 	Production:
@@ -227,6 +233,7 @@ primitive-landincreaser:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-primitive-landincreaser
 		BuildPaletteOrder: 60
 		Prerequisites: primitive-powerhouse
 	RenderSprites:
@@ -260,6 +267,7 @@ primitive-skyincreaser:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-primitive-skyincreaser
 		BuildPaletteOrder: 80
 		Prerequisites: primitive-skyhouse
 	RenderSprites:
@@ -290,6 +298,7 @@ primitive-stonetower:
 	UnderConstruction:
 		Duration: 560
 	Buildable:
+		Description: description-primitive-stonetower
 		BuildPaletteOrder: 35
 		Prerequisites: primitive-powerhouse
 	RenderSprites:
@@ -331,6 +340,7 @@ primitive-trap:
 	UnderConstruction:
 		Duration: 480
 	Buildable:
+		Description: description-primitive-trap
 		BuildPaletteOrder: 90
 		Prerequisites: primitive-landincreaser
 	RenderSprites:

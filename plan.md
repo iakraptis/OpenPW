@@ -615,6 +615,14 @@ dead.
     a picture, so the installer makes every race's: "MENU" in a font of the race's character (Caesar Dressing, Metal
     Mania, Uncial Antiqua, Pirata One; SIL Open Font License, in `AssetInstaller/Fonts` with their licences), lit in
     the race's style and colours on its own plaque, through the game's FreeType. Allies and Msg keep the original art.
+  - Attack button (2026-11-13, branch `qol`): armed units get Attack in the command panel (the original's crossed
+    swords, Action.trt 5), then a click on the map: OpenRA's attack-move, as OpenSYW's; they attack every enemy
+    they meet on the way, buildings included. Shift queues it. No A hotkey yet (the mod loads no hotkeys).
+    Patrol (Action.trt 9, `PwPatrol` and the `Patrol` activity): back and forth between where the units stand and
+    the clicked place, each leg an attack-move, until another order.
+  - Building tooltips (2026-11-13, branch `qol`): each building's `Buildable.Description` (`description-<type>`,
+    `fluent/rules.ftl`), as OpenSYW's, is the first line of its build list tooltip: what it does, in a few words;
+    each trainable unit's likewise in the training list ("Ground Melee Unit", "Air Transport, detects invisible").
   - Not done: the Intro slideshow.
 - [x] **AI** (2026-11-02, branches `bot`, `bot2`; `rules/ai.yaml`, `OpenRA.Mods.Pw/Traits/BotModules`): Normal and
       Hard bots after OpenSYW's. The modules read every actor's role from its traits, so a new faction plays as

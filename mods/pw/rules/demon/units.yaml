@@ -25,6 +25,7 @@ demon-insect:
 		Types: demon-demonden, demon-tomb, demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal, demon-volcano
 		Repairs: false
 	Buildable:
+		Description: description-demon-insect
 		Queue: demon-demonden
 		BuildDuration: 160
 		BuildPaletteOrder: 10
@@ -63,6 +64,7 @@ demon-skeleton:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-demon-skeleton
 		Queue: demon-deathden
 		BuildDuration: 224
 		BuildPaletteOrder: 10
@@ -104,6 +106,7 @@ demon-mudman:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-demon-mudman
 		Queue: demon-deathden
 		BuildDuration: 400
 		BuildPaletteOrder: 20
@@ -146,6 +149,7 @@ demon-kelpa:
 	UsesPopulation:
 		Amount: 4
 	Buildable:
+		Description: description-demon-kelpa
 		Queue: demon-magicden
 		BuildDuration: 320
 		BuildPaletteOrder: 10
@@ -196,6 +200,7 @@ demon-kingdemon:
 	UsesPopulation:
 		Amount: 6
 	Buildable:
+		Description: description-demon-kingdemon
 		Queue: demon-hell
 		BuildDuration: 560
 		BuildPaletteOrder: 10
@@ -237,6 +242,7 @@ demon-devil:
 	UsesPopulation:
 		Amount: 30
 	Buildable:
+		Description: description-demon-devil
 		Queue: demon-demonden
 		BuildDuration: 2880
 		BuildPaletteOrder: 70
@@ -332,6 +338,7 @@ demon-deatheye:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-demon-deatheye
 		Queue: demon-flyden
 		BuildDuration: 560
 		BuildPaletteOrder: 10
@@ -360,6 +367,7 @@ demon-phantom:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-demon-phantom
 		Queue: demon-flyden
 		BuildDuration: 480
 		BuildPaletteOrder: 20
@@ -402,6 +410,7 @@ demon-darkbat:
 	UsesPopulation:
 		Amount: 3
 	Buildable:
+		Description: description-demon-darkbat
 		Queue: demon-flyden
 		BuildDuration: 480
 		BuildPaletteOrder: 30
@@ -439,6 +448,7 @@ demon-gargoyle:
 	UsesPopulation:
 		Amount: 6
 	Buildable:
+		Description: description-demon-gargoyle
 		Queue: demon-hell
 		BuildDuration: 960
 		BuildPaletteOrder: 20
@@ -474,6 +484,7 @@ demon-warlock:
 	UsesPopulation:
 		Amount: 3
 	Buildable:
+		Description: description-demon-warlock
 		Queue: demon-magicden
 		BuildDuration: 480
 		BuildPaletteOrder: 20

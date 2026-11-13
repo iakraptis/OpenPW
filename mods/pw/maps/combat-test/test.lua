@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local FirstHit, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, FirstHit, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -20,6 +20,8 @@ do
     --    the berries for the next step, not a whole one, not an enemy's.
     -- 6. Missiles (PwBullet): a tracking arrow hits a target that moved, and only it; a piercing sword hits each enemy
     --    on its path once, to full range, and passes allies; a fixed-endpoint arrow ignores its path and splashes.
+    -- 7. Attack (attack-move): a Soldier sent past an enemy House attacks it on the way.
+    -- 8. Patrol: a Soldier goes to the place and back, attacking an enemy beside its way, and goes on.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -30,9 +32,43 @@ do
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, At(20, 20), At(22, 14)) end)
         Later(5, MissileModes)
         Later(5, MeleeBlocked)
+        Later(5, AttackMove)
+        Later(5, Patrolling)
         Later(5, Voices)
         Later(200, Repairing)
         FinishWhenDone("COMBAT", 2500)
+    end
+
+    -- The command panel's Attack: the unit walks to the place and attacks the enemies it meets, buildings included.
+    AttackMove = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local house = Actor.Create("primitive-house", true, { Owner = foe, Location = At(14, 42) })
+        local soldier = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(4, 44) })
+        soldier.AttackMove(At(30, 44))
+        WaitFor("an attack-moving Soldier attacks the enemy House on its way", 600, function()
+            return house.IsDead or house.Health < house.MaxHealth
+        end)
+    end
+
+    -- The command panel's Patrol: back and forth between where the unit stood and the place, attack-moving.
+    Patrolling = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local start, far = At(4, 50), At(24, 50)
+        local enemy = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(14, 52) })
+        local soldier = Actor.Create("primitive-soldier", true, { Owner = me, Location = start })
+        enemy.Stance = "HoldFire"
+        PwTest.Patrol(soldier, far)
+        WaitFor("a patrolling Soldier attacks an enemy beside its way", 600, function()
+            return enemy.IsDead or enemy.Health < enemy.MaxHealth
+        end)
+        WaitFor("it reaches the far end", 1200, function() return (soldier.Location - far).Length <= 2 end, function(ok)
+            if not ok then return end
+            WaitFor("it comes back to where it started", 600, function() return (soldier.Location - start).Length <= 2 end, function(back)
+                if back then
+                    WaitFor("and sets out again", 600, function() return (soldier.Location - start).Length > 4 end)
+                end
+            end)
+        end)
     end
 
     -- A melee unit whose target has others on every cell in reach fights another enemy near it (PwMeleeAttack), and goes

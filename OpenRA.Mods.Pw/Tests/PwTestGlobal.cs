@@ -36,6 +36,9 @@ namespace OpenRA.Mods.Pw.Tests
 		public void OrderOn(Actor actor, string order, Actor target) =>
 			Resolve(actor, new Order(order, actor, Target.FromActor(target), false));
 
+		[Desc("Send a unit to patrol between where it is and a place, as the Patrol button and a click do.")]
+		public void Patrol(Actor unit, CPos cell) => Resolve(unit, PwPatrol.Patrol(unit, cell, false));
+
 		[Desc("Send a transport to unload at a place, as the Unload button and a click on the ground do.")]
 		public void UnloadAt(Actor transport, CPos cell) =>
 			Resolve(transport, new Order(PwUnloadAt.OrderID, transport, Target.FromCell(transport.World, cell), false));

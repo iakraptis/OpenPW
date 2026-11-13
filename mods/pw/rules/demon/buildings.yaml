@@ -13,6 +13,7 @@ demon-demonden:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-demon-demonden
 		BuildPaletteOrder: 10
 	Production:
 		Produces: demon-demonden
@@ -48,6 +49,7 @@ demon-tomb:
 	UnderConstruction:
 		Duration: 320
 	Buildable:
+		Description: description-demon-tomb
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: demon-tomb
@@ -80,6 +82,7 @@ demon-deathden:
 	UnderConstruction:
 		Duration: 880
 	Buildable:
+		Description: description-demon-deathden
 		BuildPaletteOrder: 30
 		Prerequisites: demon-demonden
 	Production:
@@ -117,6 +120,7 @@ demon-flyden:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-demon-flyden
 		BuildPaletteOrder: 40
 		Prerequisites: demon-deathden
 	Production:
@@ -154,6 +158,7 @@ demon-magicden:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-demon-magicden
 		BuildPaletteOrder: 50
 		Prerequisites: demon-deathden
 	Production:
@@ -191,6 +196,7 @@ demon-hell:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-demon-hell
 		BuildPaletteOrder: 60
 		Prerequisites: demon-magicden
 	Production:
@@ -224,6 +230,7 @@ demon-dirtyportal:
 	UnderConstruction:
 		Duration: 1280
 	Buildable:
+		Description: description-demon-dirtyportal
 		BuildPaletteOrder: 70
 		Prerequisites: demon-deathden
 	Production:
@@ -257,6 +264,7 @@ demon-highportal:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-demon-highportal
 		BuildPaletteOrder: 80
 		Prerequisites: demon-magicden
 	Production:
@@ -292,6 +300,7 @@ demon-volcano:
 	UnderConstruction:
 		Duration: 560
 	Buildable:
+		Description: description-demon-volcano
 		BuildPaletteOrder: 35
 		Prerequisites: demon-deathden
 	RenderSprites:

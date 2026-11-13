@@ -26,7 +26,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	// - a worker selected: its build list (Builder); a click enters placement mode;
 	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
 	// - the Chief: his ability (Fall out) with his mana;
-	// - units that can hunt: the Hunt toggle (PwHunter), in the first free slot;
+	// - armed units: Attack, then a click on the map: they walk there and attack whatever they meet (attack-move);
+	//   Patrol, then a click: they go back and forth between where they are and there, attacking the same way;
+	// - units that can hunt: the Hunt toggle (PwHunter), in the next free slot;
 	// - two or more meat eaters with meat: Share meat (they meet and split it evenly), in the next;
 	// - transports: Unload, then a click on the ground where they unload (PwUnloadAt), in the next;
 	// - Tyrano units: a merge per recipe the selection makes up (PwMerge), Split for merged units (PwMerged), and the
@@ -82,9 +84,22 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 							ShowSpell(slot, producer, spell);
 			}
 
+			// Attack (attack-move), for the selected armed units: in the first free slot (after the ability), not with a
+			// build list or training.
+			var attackers = selected.Where(a => a.Info.HasTraitInfo<IMoveInfo>() && a.Info.HasTraitInfo<AttackBaseInfo>()).ToArray();
+			var free = slots.FirstOrDefault(s => !s.Visible);
+			if (attackers.Length > 0 && queue == null && builder == null && free != null)
+				ShowAttack(free, attackers);
+
+			// Patrol, for the same units: in the next free slot.
+			var patrollers = attackers.Where(a => a.TraitOrDefault<PwPatrol>() != null).ToArray();
+			free = slots.FirstOrDefault(s => !s.Visible);
+			if (patrollers.Length > 0 && queue == null && builder == null && free != null)
+				ShowPatrol(free, patrollers);
+
 			// Hunting, for the selected units that can hunt: in the first free slot (after the build list or ability).
 			var hunters = selected.Where(a => a.TraitOrDefault<PwHunter>() is PwHunter h && !h.IsTraitDisabled).ToArray();
-			var free = slots.FirstOrDefault(s => !s.Visible);
+			free = slots.FirstOrDefault(s => !s.Visible);
 			if (hunters.Length > 0 && queue == null && free != null)
 				ShowHunt(free, hunters);
 
@@ -247,6 +262,41 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.OnClick = () => world.OrderGenerator = new UnloadAtOrderGenerator(transports);
 		}
 
+		// Then a click on the map: the units walk there and attack every enemy they meet on the way, buildings included
+		// (OpenRA's attack-move, as OpenSYW's Attack button). Lit while it waits for the click.
+		void ShowAttack(ButtonWidget slot, Actor[] attackers)
+		{
+			var icon = CommandIcon("command-attack");
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsDisabled = () => false;
+			slot.IsHighlighted = () => world.OrderGenerator is AttackMoveOrderGenerator;
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-attack");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-attack");
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () => world.OrderGenerator =
+				new AttackMoveOrderGenerator(attackers.Where(a => !a.IsDead), Game.Settings.Game.MouseButtonPreference.Action);
+		}
+
+		// Then a click on the map: the units go back and forth between where they are and there, attacking every enemy
+		// they meet (PwPatrol). Lit while it waits for the click.
+		void ShowPatrol(ButtonWidget slot, Actor[] patrollers)
+		{
+			var icon = CommandIcon("command-patrol");
+
+			slot.Visible = true;
+			slot.GetText = () => "";
+			slot.IsDisabled = () => false;
+			slot.IsHighlighted = () => world.OrderGenerator is PatrolOrderGenerator;
+			slot.GetTooltipText = () => FluentProvider.GetMessage("label-patrol");
+			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-patrol");
+			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
+			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
+			slot.OnClick = () => world.OrderGenerator = new PatrolOrderGenerator(patrollers);
+		}
+
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
 		void ShowHunt(ButtonWidget slot, Actor[] hunters)
 		{
@@ -295,11 +345,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 				Show(slot, actorInfo, cost, () => "");
 				var missing = Missing(buildable, techTree);
-				slot.GetTooltipDesc = () => !available
+
+				var purpose = Purpose(buildable);
+				slot.GetTooltipDesc = () => purpose + (!available
 					? FluentProvider.GetMessage("tooltip-build-needs", "needs", missing)
 					: resources.Cash + resources.Resources < cost
 					? FluentProvider.GetMessage("tooltip-not-enough-berries", "time", Seconds(actorInfo))
-					: FluentProvider.GetMessage("tooltip-build", "time", Seconds(actorInfo));
+					: FluentProvider.GetMessage("tooltip-build", "time", Seconds(actorInfo)));
 				slot.IsDisabled = () => !available || resources.Cash + resources.Resources < cost;
 				slot.OnClick = () => world.OrderGenerator = new BuildAtCellOrderGenerator(world, builderActor, actorInfo.Name);
 			}
@@ -335,11 +387,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					return queued.Count > 1 ? $"{percent}% ×{queued.Count}" : $"{percent}%";
 				});
 
-				var missing = Missing(actorInfo.TraitInfoOrDefault<BuildableInfo>(), techTree);
+				var buildable = actorInfo.TraitInfoOrDefault<BuildableInfo>();
+				var missing = Missing(buildable, techTree);
+				var purpose = Purpose(buildable);
 				slot.IsDisabled = () => !queue.CanBuild(actorInfo);
-				slot.GetTooltipDesc = () => queue.CanBuild(actorInfo)
+				slot.GetTooltipDesc = () => purpose + (queue.CanBuild(actorInfo)
 					? FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo))
-					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing);
+					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing));
 
 				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
 				// alone: the button calls OnClick from it.
@@ -352,6 +406,11 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				};
 			}
 		}
+
+		// What a building or unit is for (Buildable.Description, as OpenSYW's build palette), as the tooltip's first line;
+		// empty for what has none (research).
+		static string Purpose(BuildableInfo buildable) =>
+			string.IsNullOrEmpty(buildable?.Description) ? "" : FluentProvider.GetMessage(buildable.Description) + "\n";
 
 		// The buildings (or research) still missing for it, by name: the prerequisites the player doesn't meet yet.
 		string Missing(BuildableInfo buildable, TechTree techTree)

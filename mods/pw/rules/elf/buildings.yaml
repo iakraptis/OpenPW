@@ -15,6 +15,7 @@ elf-heaven:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-elf-heaven
 		BuildPaletteOrder: 10
 	Production:
 		Produces: elf-heaven
@@ -51,6 +52,7 @@ elf-elftree:
 	UnderConstruction:
 		Duration: 320
 	Buildable:
+		Description: description-elf-elftree
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: elf-elftree
@@ -84,6 +86,7 @@ elf-redhall:
 	UnderConstruction:
 		Duration: 880
 	Buildable:
+		Description: description-elf-redhall
 		BuildPaletteOrder: 30
 		Prerequisites: elf-heaven
 	Production:
@@ -122,6 +125,7 @@ elf-bluehall:
 	UnderConstruction:
 		Duration: 880
 	Buildable:
+		Description: description-elf-bluehall
 		BuildPaletteOrder: 40
 		Prerequisites: elf-heaven
 	Production:
@@ -160,6 +164,7 @@ elf-manahall:
 	UnderConstruction:
 		Duration: 960
 	Buildable:
+		Description: description-elf-manahall
 		BuildPaletteOrder: 50
 		Prerequisites: elf-redhall, elf-bluehall
 	Production:
@@ -198,6 +203,7 @@ elf-skyhall:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-elf-skyhall
 		BuildPaletteOrder: 60
 		Prerequisites: elf-manahall
 	Production:
@@ -232,6 +238,7 @@ elf-elflibrary:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-elf-elflibrary
 		BuildPaletteOrder: 70
 		Prerequisites: elf-redhall, elf-bluehall
 	Production:
@@ -266,6 +273,7 @@ elf-manalibrary:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-elf-manalibrary
 		BuildPaletteOrder: 80
 		Prerequisites: elf-manahall
 	Production:
@@ -300,6 +308,7 @@ elf-skylibrary:
 	UnderConstruction:
 		Duration: 1120
 	Buildable:
+		Description: description-elf-skylibrary
 		BuildPaletteOrder: 90
 		Prerequisites: elf-skyhall
 	Production:
@@ -336,6 +345,7 @@ elf-bubble:
 	UnderConstruction:
 		Duration: 480
 	Buildable:
+		Description: description-elf-bubble
 		BuildPaletteOrder: 35
 		Prerequisites: elf-elftree
 	RenderSprites:

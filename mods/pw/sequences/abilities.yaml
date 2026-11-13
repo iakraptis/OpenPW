@@ -48,6 +48,48 @@ command-share-meat-demon:
 		Filename: chrome/actions-demon.png
 		Start: 35
 
+# Attack (attack-move): the original's attack button (Action.trt 5, crossed swords).
+command-attack:
+	icon:
+		Filename: chrome/actions-primitive.png
+		Start: 5
+
+command-attack-tyrano:
+	icon:
+		Filename: chrome/actions-tyrano.png
+		Start: 5
+
+command-attack-elf:
+	icon:
+		Filename: chrome/actions-elf.png
+		Start: 5
+
+command-attack-demon:
+	icon:
+		Filename: chrome/actions-demon.png
+		Start: 5
+
+# Patrol: the original's back-and-forth arrows (Action.trt 9).
+command-patrol:
+	icon:
+		Filename: chrome/actions-primitive.png
+		Start: 9
+
+command-patrol-tyrano:
+	icon:
+		Filename: chrome/actions-tyrano.png
+		Start: 9
+
+command-patrol-elf:
+	icon:
+		Filename: chrome/actions-elf.png
+		Start: 9
+
+command-patrol-demon:
+	icon:
+		Filename: chrome/actions-demon.png
+		Start: 9
+
 # Unload at a place (transports): the original's ring with the arrow down (Action.trt 31), as the unload cursor.
 command-unload:
 	icon:

@@ -43,6 +43,8 @@
 	PwArmor:
 	RevealsShroud:
 	AttackMove:
+	# Back and forth between two places, attack-moving (the command panel's Patrol).
+	PwPatrol:
 	Guard:
 	Guardable:
 	MustBeDestroyed:
@@ -166,6 +168,7 @@
 	-Buildable:
 	-MustBeDestroyed:
 	-AttackMove:
+	-PwPatrol:
 	-Guard:
 	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
 	PwFleeWhenHit:
