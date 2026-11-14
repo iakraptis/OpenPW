@@ -40,6 +40,7 @@ elf-wizard:
 	PwArmor:
 		Value: 0
 	Mobile:
+		Locomotor: foot-worker
 		Speed: 144
 	RevealsShroud:
 		Range: 7c0

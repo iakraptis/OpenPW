@@ -70,6 +70,23 @@
 			Clear: 100
 			Ramp: 100
 			Water: 100
+	# Workers (BuildMan, Dinos, Wizard; the Insect hovers): as foot and hover, but several share a cell (OpenRA's
+	# sub-cells), so workers going to and from the bushes walk past each other instead of blocking. The original
+	# checks only terrain, map objects and building footprints for a step (Pw.exe 0x45cb3c, docs/formats/map.md):
+	# its units walk through each other.
+	Locomotor@FOOTWORKER:
+		Name: foot-worker
+		SharesCell: true
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 100
+	Locomotor@HOVERWORKER:
+		Name: hover-worker
+		SharesCell: true
+		TerrainSpeeds:
+			Clear: 100
+			Ramp: 100
+			Water: 100
 	Locomotor@WATER:
 		Name: water
 		TerrainSpeeds:

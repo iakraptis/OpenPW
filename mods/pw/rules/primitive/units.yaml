@@ -35,6 +35,7 @@ primitive-buildman:
 	PwArmor:
 		Value: 0
 	Mobile:
+		Locomotor: foot-worker
 		Speed: 160
 	RevealsShroud:
 		Range: 7c0

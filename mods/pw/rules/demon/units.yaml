@@ -40,6 +40,7 @@ demon-insect:
 	PwArmor:
 		Value: 0
 	Mobile:
+		Locomotor: hover-worker
 		Speed: 160
 	RevealsShroud:
 		Range: 8c0

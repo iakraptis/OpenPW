@@ -484,7 +484,8 @@
 		ValidTargets: Predator
 
 # Exit cells all around a footprint (corners included): a trained unit walks out to a random free cell along the
-# front (the bottom row, Priority 2), or to the sides and back when the front is blocked.
+# front (the bottom row, Priority 2), or to the sides and back when the front is blocked; when the whole ring is
+# taken, to the ring one cell further out (Priority 0), then the one after (Priority -1).
 ^Exits5x3:
 	Exit@0:
 		ExitCell: -1,3
@@ -533,6 +534,198 @@
 		ExitCell: 4,-1
 	Exit@19:
 		ExitCell: 5,-1
+	Exit@20:
+		ExitCell: -2,4
+		Priority: 0
+	Exit@21:
+		ExitCell: -1,4
+		Priority: 0
+	Exit@22:
+		ExitCell: 0,4
+		Priority: 0
+	Exit@23:
+		ExitCell: 1,4
+		Priority: 0
+	Exit@24:
+		ExitCell: 2,4
+		Priority: 0
+	Exit@25:
+		ExitCell: 3,4
+		Priority: 0
+	Exit@26:
+		ExitCell: 4,4
+		Priority: 0
+	Exit@27:
+		ExitCell: 5,4
+		Priority: 0
+	Exit@28:
+		ExitCell: 6,4
+		Priority: 0
+	Exit@29:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@30:
+		ExitCell: 6,3
+		Priority: 0
+	Exit@31:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@32:
+		ExitCell: 6,2
+		Priority: 0
+	Exit@33:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@34:
+		ExitCell: 6,1
+		Priority: 0
+	Exit@35:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@36:
+		ExitCell: 6,0
+		Priority: 0
+	Exit@37:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@38:
+		ExitCell: 6,-1
+		Priority: 0
+	Exit@39:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@40:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@41:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@42:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@43:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@44:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@45:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@46:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@47:
+		ExitCell: 6,-2
+		Priority: 0
+	Exit@48:
+		ExitCell: -3,5
+		Priority: -1
+	Exit@49:
+		ExitCell: -2,5
+		Priority: -1
+	Exit@50:
+		ExitCell: -1,5
+		Priority: -1
+	Exit@51:
+		ExitCell: 0,5
+		Priority: -1
+	Exit@52:
+		ExitCell: 1,5
+		Priority: -1
+	Exit@53:
+		ExitCell: 2,5
+		Priority: -1
+	Exit@54:
+		ExitCell: 3,5
+		Priority: -1
+	Exit@55:
+		ExitCell: 4,5
+		Priority: -1
+	Exit@56:
+		ExitCell: 5,5
+		Priority: -1
+	Exit@57:
+		ExitCell: 6,5
+		Priority: -1
+	Exit@58:
+		ExitCell: 7,5
+		Priority: -1
+	Exit@59:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@60:
+		ExitCell: 7,4
+		Priority: -1
+	Exit@61:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@62:
+		ExitCell: 7,3
+		Priority: -1
+	Exit@63:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@64:
+		ExitCell: 7,2
+		Priority: -1
+	Exit@65:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@66:
+		ExitCell: 7,1
+		Priority: -1
+	Exit@67:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@68:
+		ExitCell: 7,0
+		Priority: -1
+	Exit@69:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@70:
+		ExitCell: 7,-1
+		Priority: -1
+	Exit@71:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@72:
+		ExitCell: 7,-2
+		Priority: -1
+	Exit@73:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@74:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@75:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@76:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@77:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@78:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@79:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@80:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@81:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@82:
+		ExitCell: 6,-3
+		Priority: -1
+	Exit@83:
+		ExitCell: 7,-3
+		Priority: -1
 
 ^Exits4x2:
 	Exit@0:
@@ -573,6 +766,174 @@
 		ExitCell: 3,-1
 	Exit@15:
 		ExitCell: 4,-1
+	Exit@16:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@17:
+		ExitCell: -1,3
+		Priority: 0
+	Exit@18:
+		ExitCell: 0,3
+		Priority: 0
+	Exit@19:
+		ExitCell: 1,3
+		Priority: 0
+	Exit@20:
+		ExitCell: 2,3
+		Priority: 0
+	Exit@21:
+		ExitCell: 3,3
+		Priority: 0
+	Exit@22:
+		ExitCell: 4,3
+		Priority: 0
+	Exit@23:
+		ExitCell: 5,3
+		Priority: 0
+	Exit@24:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@25:
+		ExitCell: 5,2
+		Priority: 0
+	Exit@26:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@27:
+		ExitCell: 5,1
+		Priority: 0
+	Exit@28:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@29:
+		ExitCell: 5,0
+		Priority: 0
+	Exit@30:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@31:
+		ExitCell: 5,-1
+		Priority: 0
+	Exit@32:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@33:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@34:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@35:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@36:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@37:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@38:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@39:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@40:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@41:
+		ExitCell: -2,4
+		Priority: -1
+	Exit@42:
+		ExitCell: -1,4
+		Priority: -1
+	Exit@43:
+		ExitCell: 0,4
+		Priority: -1
+	Exit@44:
+		ExitCell: 1,4
+		Priority: -1
+	Exit@45:
+		ExitCell: 2,4
+		Priority: -1
+	Exit@46:
+		ExitCell: 3,4
+		Priority: -1
+	Exit@47:
+		ExitCell: 4,4
+		Priority: -1
+	Exit@48:
+		ExitCell: 5,4
+		Priority: -1
+	Exit@49:
+		ExitCell: 6,4
+		Priority: -1
+	Exit@50:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@51:
+		ExitCell: 6,3
+		Priority: -1
+	Exit@52:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@53:
+		ExitCell: 6,2
+		Priority: -1
+	Exit@54:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@55:
+		ExitCell: 6,1
+		Priority: -1
+	Exit@56:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@57:
+		ExitCell: 6,0
+		Priority: -1
+	Exit@58:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@59:
+		ExitCell: 6,-1
+		Priority: -1
+	Exit@60:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@61:
+		ExitCell: 6,-2
+		Priority: -1
+	Exit@62:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@63:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@64:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@65:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@66:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@67:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@68:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@69:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@70:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@71:
+		ExitCell: 6,-3
+		Priority: -1
 
 ^Exits4x3:
 	Exit@0:
@@ -617,6 +978,186 @@
 		ExitCell: 3,-1
 	Exit@17:
 		ExitCell: 4,-1
+	Exit@18:
+		ExitCell: -2,4
+		Priority: 0
+	Exit@19:
+		ExitCell: -1,4
+		Priority: 0
+	Exit@20:
+		ExitCell: 0,4
+		Priority: 0
+	Exit@21:
+		ExitCell: 1,4
+		Priority: 0
+	Exit@22:
+		ExitCell: 2,4
+		Priority: 0
+	Exit@23:
+		ExitCell: 3,4
+		Priority: 0
+	Exit@24:
+		ExitCell: 4,4
+		Priority: 0
+	Exit@25:
+		ExitCell: 5,4
+		Priority: 0
+	Exit@26:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@27:
+		ExitCell: 5,3
+		Priority: 0
+	Exit@28:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@29:
+		ExitCell: 5,2
+		Priority: 0
+	Exit@30:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@31:
+		ExitCell: 5,1
+		Priority: 0
+	Exit@32:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@33:
+		ExitCell: 5,0
+		Priority: 0
+	Exit@34:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@35:
+		ExitCell: 5,-1
+		Priority: 0
+	Exit@36:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@37:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@38:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@39:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@40:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@41:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@42:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@43:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@44:
+		ExitCell: -3,5
+		Priority: -1
+	Exit@45:
+		ExitCell: -2,5
+		Priority: -1
+	Exit@46:
+		ExitCell: -1,5
+		Priority: -1
+	Exit@47:
+		ExitCell: 0,5
+		Priority: -1
+	Exit@48:
+		ExitCell: 1,5
+		Priority: -1
+	Exit@49:
+		ExitCell: 2,5
+		Priority: -1
+	Exit@50:
+		ExitCell: 3,5
+		Priority: -1
+	Exit@51:
+		ExitCell: 4,5
+		Priority: -1
+	Exit@52:
+		ExitCell: 5,5
+		Priority: -1
+	Exit@53:
+		ExitCell: 6,5
+		Priority: -1
+	Exit@54:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@55:
+		ExitCell: 6,4
+		Priority: -1
+	Exit@56:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@57:
+		ExitCell: 6,3
+		Priority: -1
+	Exit@58:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@59:
+		ExitCell: 6,2
+		Priority: -1
+	Exit@60:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@61:
+		ExitCell: 6,1
+		Priority: -1
+	Exit@62:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@63:
+		ExitCell: 6,0
+		Priority: -1
+	Exit@64:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@65:
+		ExitCell: 6,-1
+		Priority: -1
+	Exit@66:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@67:
+		ExitCell: 6,-2
+		Priority: -1
+	Exit@68:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@69:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@70:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@71:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@72:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@73:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@74:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@75:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@76:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@77:
+		ExitCell: 6,-3
+		Priority: -1
 
 ^Exits5x2:
 	Exit@0:
@@ -662,6 +1203,186 @@
 		ExitCell: 4,-1
 	Exit@17:
 		ExitCell: 5,-1
+	Exit@18:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@19:
+		ExitCell: -1,3
+		Priority: 0
+	Exit@20:
+		ExitCell: 0,3
+		Priority: 0
+	Exit@21:
+		ExitCell: 1,3
+		Priority: 0
+	Exit@22:
+		ExitCell: 2,3
+		Priority: 0
+	Exit@23:
+		ExitCell: 3,3
+		Priority: 0
+	Exit@24:
+		ExitCell: 4,3
+		Priority: 0
+	Exit@25:
+		ExitCell: 5,3
+		Priority: 0
+	Exit@26:
+		ExitCell: 6,3
+		Priority: 0
+	Exit@27:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@28:
+		ExitCell: 6,2
+		Priority: 0
+	Exit@29:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@30:
+		ExitCell: 6,1
+		Priority: 0
+	Exit@31:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@32:
+		ExitCell: 6,0
+		Priority: 0
+	Exit@33:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@34:
+		ExitCell: 6,-1
+		Priority: 0
+	Exit@35:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@36:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@37:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@38:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@39:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@40:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@41:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@42:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@43:
+		ExitCell: 6,-2
+		Priority: 0
+	Exit@44:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@45:
+		ExitCell: -2,4
+		Priority: -1
+	Exit@46:
+		ExitCell: -1,4
+		Priority: -1
+	Exit@47:
+		ExitCell: 0,4
+		Priority: -1
+	Exit@48:
+		ExitCell: 1,4
+		Priority: -1
+	Exit@49:
+		ExitCell: 2,4
+		Priority: -1
+	Exit@50:
+		ExitCell: 3,4
+		Priority: -1
+	Exit@51:
+		ExitCell: 4,4
+		Priority: -1
+	Exit@52:
+		ExitCell: 5,4
+		Priority: -1
+	Exit@53:
+		ExitCell: 6,4
+		Priority: -1
+	Exit@54:
+		ExitCell: 7,4
+		Priority: -1
+	Exit@55:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@56:
+		ExitCell: 7,3
+		Priority: -1
+	Exit@57:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@58:
+		ExitCell: 7,2
+		Priority: -1
+	Exit@59:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@60:
+		ExitCell: 7,1
+		Priority: -1
+	Exit@61:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@62:
+		ExitCell: 7,0
+		Priority: -1
+	Exit@63:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@64:
+		ExitCell: 7,-1
+		Priority: -1
+	Exit@65:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@66:
+		ExitCell: 7,-2
+		Priority: -1
+	Exit@67:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@68:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@69:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@70:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@71:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@72:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@73:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@74:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@75:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@76:
+		ExitCell: 6,-3
+		Priority: -1
+	Exit@77:
+		ExitCell: 7,-3
+		Priority: -1
 
 ^Exits5x4:
 	Exit@0:
@@ -715,6 +1436,210 @@
 		ExitCell: 4,-1
 	Exit@21:
 		ExitCell: 5,-1
+	Exit@22:
+		ExitCell: -2,5
+		Priority: 0
+	Exit@23:
+		ExitCell: -1,5
+		Priority: 0
+	Exit@24:
+		ExitCell: 0,5
+		Priority: 0
+	Exit@25:
+		ExitCell: 1,5
+		Priority: 0
+	Exit@26:
+		ExitCell: 2,5
+		Priority: 0
+	Exit@27:
+		ExitCell: 3,5
+		Priority: 0
+	Exit@28:
+		ExitCell: 4,5
+		Priority: 0
+	Exit@29:
+		ExitCell: 5,5
+		Priority: 0
+	Exit@30:
+		ExitCell: 6,5
+		Priority: 0
+	Exit@31:
+		ExitCell: -2,4
+		Priority: 0
+	Exit@32:
+		ExitCell: 6,4
+		Priority: 0
+	Exit@33:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@34:
+		ExitCell: 6,3
+		Priority: 0
+	Exit@35:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@36:
+		ExitCell: 6,2
+		Priority: 0
+	Exit@37:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@38:
+		ExitCell: 6,1
+		Priority: 0
+	Exit@39:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@40:
+		ExitCell: 6,0
+		Priority: 0
+	Exit@41:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@42:
+		ExitCell: 6,-1
+		Priority: 0
+	Exit@43:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@44:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@45:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@46:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@47:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@48:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@49:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@50:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@51:
+		ExitCell: 6,-2
+		Priority: 0
+	Exit@52:
+		ExitCell: -3,6
+		Priority: -1
+	Exit@53:
+		ExitCell: -2,6
+		Priority: -1
+	Exit@54:
+		ExitCell: -1,6
+		Priority: -1
+	Exit@55:
+		ExitCell: 0,6
+		Priority: -1
+	Exit@56:
+		ExitCell: 1,6
+		Priority: -1
+	Exit@57:
+		ExitCell: 2,6
+		Priority: -1
+	Exit@58:
+		ExitCell: 3,6
+		Priority: -1
+	Exit@59:
+		ExitCell: 4,6
+		Priority: -1
+	Exit@60:
+		ExitCell: 5,6
+		Priority: -1
+	Exit@61:
+		ExitCell: 6,6
+		Priority: -1
+	Exit@62:
+		ExitCell: 7,6
+		Priority: -1
+	Exit@63:
+		ExitCell: -3,5
+		Priority: -1
+	Exit@64:
+		ExitCell: 7,5
+		Priority: -1
+	Exit@65:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@66:
+		ExitCell: 7,4
+		Priority: -1
+	Exit@67:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@68:
+		ExitCell: 7,3
+		Priority: -1
+	Exit@69:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@70:
+		ExitCell: 7,2
+		Priority: -1
+	Exit@71:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@72:
+		ExitCell: 7,1
+		Priority: -1
+	Exit@73:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@74:
+		ExitCell: 7,0
+		Priority: -1
+	Exit@75:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@76:
+		ExitCell: 7,-1
+		Priority: -1
+	Exit@77:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@78:
+		ExitCell: 7,-2
+		Priority: -1
+	Exit@79:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@80:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@81:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@82:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@83:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@84:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@85:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@86:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@87:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@88:
+		ExitCell: 6,-3
+		Priority: -1
+	Exit@89:
+		ExitCell: 7,-3
+		Priority: -1
 
 ^Exits6x4:
 	Exit@0:
@@ -773,6 +1698,222 @@
 		ExitCell: 5,-1
 	Exit@23:
 		ExitCell: 6,-1
+	Exit@24:
+		ExitCell: -2,5
+		Priority: 0
+	Exit@25:
+		ExitCell: -1,5
+		Priority: 0
+	Exit@26:
+		ExitCell: 0,5
+		Priority: 0
+	Exit@27:
+		ExitCell: 1,5
+		Priority: 0
+	Exit@28:
+		ExitCell: 2,5
+		Priority: 0
+	Exit@29:
+		ExitCell: 3,5
+		Priority: 0
+	Exit@30:
+		ExitCell: 4,5
+		Priority: 0
+	Exit@31:
+		ExitCell: 5,5
+		Priority: 0
+	Exit@32:
+		ExitCell: 6,5
+		Priority: 0
+	Exit@33:
+		ExitCell: 7,5
+		Priority: 0
+	Exit@34:
+		ExitCell: -2,4
+		Priority: 0
+	Exit@35:
+		ExitCell: 7,4
+		Priority: 0
+	Exit@36:
+		ExitCell: -2,3
+		Priority: 0
+	Exit@37:
+		ExitCell: 7,3
+		Priority: 0
+	Exit@38:
+		ExitCell: -2,2
+		Priority: 0
+	Exit@39:
+		ExitCell: 7,2
+		Priority: 0
+	Exit@40:
+		ExitCell: -2,1
+		Priority: 0
+	Exit@41:
+		ExitCell: 7,1
+		Priority: 0
+	Exit@42:
+		ExitCell: -2,0
+		Priority: 0
+	Exit@43:
+		ExitCell: 7,0
+		Priority: 0
+	Exit@44:
+		ExitCell: -2,-1
+		Priority: 0
+	Exit@45:
+		ExitCell: 7,-1
+		Priority: 0
+	Exit@46:
+		ExitCell: -2,-2
+		Priority: 0
+	Exit@47:
+		ExitCell: -1,-2
+		Priority: 0
+	Exit@48:
+		ExitCell: 0,-2
+		Priority: 0
+	Exit@49:
+		ExitCell: 1,-2
+		Priority: 0
+	Exit@50:
+		ExitCell: 2,-2
+		Priority: 0
+	Exit@51:
+		ExitCell: 3,-2
+		Priority: 0
+	Exit@52:
+		ExitCell: 4,-2
+		Priority: 0
+	Exit@53:
+		ExitCell: 5,-2
+		Priority: 0
+	Exit@54:
+		ExitCell: 6,-2
+		Priority: 0
+	Exit@55:
+		ExitCell: 7,-2
+		Priority: 0
+	Exit@56:
+		ExitCell: -3,6
+		Priority: -1
+	Exit@57:
+		ExitCell: -2,6
+		Priority: -1
+	Exit@58:
+		ExitCell: -1,6
+		Priority: -1
+	Exit@59:
+		ExitCell: 0,6
+		Priority: -1
+	Exit@60:
+		ExitCell: 1,6
+		Priority: -1
+	Exit@61:
+		ExitCell: 2,6
+		Priority: -1
+	Exit@62:
+		ExitCell: 3,6
+		Priority: -1
+	Exit@63:
+		ExitCell: 4,6
+		Priority: -1
+	Exit@64:
+		ExitCell: 5,6
+		Priority: -1
+	Exit@65:
+		ExitCell: 6,6
+		Priority: -1
+	Exit@66:
+		ExitCell: 7,6
+		Priority: -1
+	Exit@67:
+		ExitCell: 8,6
+		Priority: -1
+	Exit@68:
+		ExitCell: -3,5
+		Priority: -1
+	Exit@69:
+		ExitCell: 8,5
+		Priority: -1
+	Exit@70:
+		ExitCell: -3,4
+		Priority: -1
+	Exit@71:
+		ExitCell: 8,4
+		Priority: -1
+	Exit@72:
+		ExitCell: -3,3
+		Priority: -1
+	Exit@73:
+		ExitCell: 8,3
+		Priority: -1
+	Exit@74:
+		ExitCell: -3,2
+		Priority: -1
+	Exit@75:
+		ExitCell: 8,2
+		Priority: -1
+	Exit@76:
+		ExitCell: -3,1
+		Priority: -1
+	Exit@77:
+		ExitCell: 8,1
+		Priority: -1
+	Exit@78:
+		ExitCell: -3,0
+		Priority: -1
+	Exit@79:
+		ExitCell: 8,0
+		Priority: -1
+	Exit@80:
+		ExitCell: -3,-1
+		Priority: -1
+	Exit@81:
+		ExitCell: 8,-1
+		Priority: -1
+	Exit@82:
+		ExitCell: -3,-2
+		Priority: -1
+	Exit@83:
+		ExitCell: 8,-2
+		Priority: -1
+	Exit@84:
+		ExitCell: -3,-3
+		Priority: -1
+	Exit@85:
+		ExitCell: -2,-3
+		Priority: -1
+	Exit@86:
+		ExitCell: -1,-3
+		Priority: -1
+	Exit@87:
+		ExitCell: 0,-3
+		Priority: -1
+	Exit@88:
+		ExitCell: 1,-3
+		Priority: -1
+	Exit@89:
+		ExitCell: 2,-3
+		Priority: -1
+	Exit@90:
+		ExitCell: 3,-3
+		Priority: -1
+	Exit@91:
+		ExitCell: 4,-3
+		Priority: -1
+	Exit@92:
+		ExitCell: 5,-3
+		Priority: -1
+	Exit@93:
+		ExitCell: 6,-3
+		Priority: -1
+	Exit@94:
+		ExitCell: 7,-3
+		Priority: -1
+	Exit@95:
+		ExitCell: 8,-3
+		Priority: -1
 
 # An upgrade level (rules/<race>/upgrades.yaml, generated): researched by its building like a unit, never placed in the
 # world. Its icon is the "icon" sequence of its image (sequences/upgrades.yaml).
