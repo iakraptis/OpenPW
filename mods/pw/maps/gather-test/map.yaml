@@ -1,0 +1,104 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Gathering rate
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,88
+
+Bounds: 1,1,86,86
+
+Visibility: MissionSelector
+
+Categories: Test
+
+# Eight bases, two per race: one with the race's workers (cells shared, foot-worker / hover-worker), one with the
+# same workers on the plain foot / hover locomotors ("-solo" below, one unit a cell). Nobody is anyone's enemy.
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@PrimitiveShared:
+		Name: PrimitiveShared
+		Faction: primitive
+	PlayerReference@PrimitiveSolo:
+		Name: PrimitiveSolo
+		Faction: primitive
+	PlayerReference@TyranoShared:
+		Name: TyranoShared
+		Faction: tyrano
+	PlayerReference@TyranoSolo:
+		Name: TyranoSolo
+		Faction: tyrano
+	PlayerReference@ElfShared:
+		Name: ElfShared
+		Faction: elf
+	PlayerReference@ElfSolo:
+		Name: ElfSolo
+		Faction: elf
+	PlayerReference@DemonShared:
+		Name: DemonShared
+		Faction: demon
+	PlayerReference@DemonSolo:
+		Name: DemonSolo
+		Faction: demon
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 2,2
+
+Rules:
+	player:
+		# Fog off and the map explored: the test measures gathering, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in about a minute.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true
+	# The workers as they moved before cells were shared: one unit a cell.
+	primitive-buildman-solo:
+		Inherits: primitive-buildman
+		Mobile:
+			Locomotor: foot
+		RenderSprites:
+			Image: primitive-buildman
+	tyrano-dinos-solo:
+		Inherits: tyrano-dinos
+		Mobile:
+			Locomotor: foot
+		RenderSprites:
+			Image: tyrano-dinos
+	elf-wizard-solo:
+		Inherits: elf-wizard
+		Mobile:
+			Locomotor: foot
+		RenderSprites:
+			Image: elf-wizard
+	demon-insect-solo:
+		Inherits: demon-insect
+		Mobile:
+			Locomotor: hover
+		RenderSprites:
+			Image: demon-insect

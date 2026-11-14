@@ -628,6 +628,10 @@ dead.
     invisible), on the map and the minimap (`ExposureRadarWidget`); a box at the top left with each player's countdown
     (own red, allies orange, enemies green). A lobby checkbox; off in mission-selector maps unless `InMissions`
     (combat-test turns it on with a 100-tick delay).
+  - Worker movement and exits (2026-11-14, branch `qol`): the workers move on locomotors that share cells
+    (`foot-worker`, `hover-worker`, OpenRA's sub-cells, up to 5 a cell), so they pass each other at the bushes and
+    the drop-off; the original checks no units for a step (D, docs/formats/map.md). Production buildings have two
+    more rings of exit cells (Priority 0 and -1) for when the ring around the footprint is full.
   - Not done: the Intro slideshow.
 - [x] **AI** (2026-11-02, branches `bot`, `bot2`; `rules/ai.yaml`, `OpenRA.Mods.Pw/Traits/BotModules`): Normal and
       Hard bots after OpenSYW's. The modules read every actor's role from its traits, so a new faction plays as
