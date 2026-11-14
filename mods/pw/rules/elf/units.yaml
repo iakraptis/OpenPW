@@ -25,6 +25,7 @@ elf-wizard:
 		WorksFromRange: true
 		WorkCondition: building
 	Buildable:
+		Description: description-elf-wizard
 		Queue: elf-heaven
 		BuildDuration: 160
 		BuildPaletteOrder: 10
@@ -95,6 +96,7 @@ elf-redelf:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-elf-redelf
 		Queue: elf-redhall
 		BuildDuration: 224
 		BuildPaletteOrder: 10
@@ -147,6 +149,7 @@ elf-whiteelf:
 	UsesPopulation:
 		Amount: 3
 	Buildable:
+		Description: description-elf-whiteelf
 		Queue: elf-redhall
 		BuildDuration: 400
 		BuildPaletteOrder: 20
@@ -211,6 +214,7 @@ elf-ranger:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-elf-ranger
 		Queue: elf-bluehall
 		BuildDuration: 224
 		BuildPaletteOrder: 10
@@ -276,6 +280,7 @@ elf-blueelf:
 	UsesPopulation:
 		Amount: 4
 	Buildable:
+		Description: description-elf-blueelf
 		Queue: elf-bluehall
 		BuildDuration: 400
 		BuildPaletteOrder: 20
@@ -324,6 +329,7 @@ elf-unicorn:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-elf-unicorn
 		Queue: elf-manahall
 		BuildDuration: 256
 		BuildPaletteOrder: 10
@@ -380,6 +386,7 @@ elf-pixie:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-elf-pixie
 		Queue: elf-manahall
 		BuildDuration: 560
 		BuildPaletteOrder: 20
@@ -410,6 +417,7 @@ elf-manaspread:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-elf-manaspread
 		Queue: elf-manahall
 		BuildDuration: 320
 		BuildPaletteOrder: 30
@@ -459,6 +467,7 @@ elf-elfring:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-elf-elfring
 		Queue: elf-skyhall
 		BuildDuration: 400
 		BuildPaletteOrder: 10
@@ -501,6 +510,7 @@ elf-phoenix:
 	UsesPopulation:
 		Amount: 4
 	Buildable:
+		Description: description-elf-phoenix
 		Queue: elf-skyhall
 		BuildDuration: 480
 		BuildPaletteOrder: 20
@@ -537,6 +547,7 @@ elf-dragon:
 	UsesPopulation:
 		Amount: 6
 	Buildable:
+		Description: description-elf-dragon
 		Queue: elf-skyhall
 		BuildDuration: 800
 		BuildPaletteOrder: 30
@@ -573,6 +584,7 @@ elf-angelelf:
 	UsesPopulation:
 		Amount: 30
 	Buildable:
+		Description: description-elf-angelelf
 		Queue: elf-heaven
 		BuildDuration: 2880
 		BuildPaletteOrder: 70

@@ -22,6 +22,18 @@ dropdown-starting-units =
     .label = Starting Units
     .description = The units that players start the game with
 
+## PwExposure
+checkbox-no-hq-reveal =
+    .label = Reveal Without HQ
+    .description = A player without a main building for 5 minutes is shown to the enemy: their units and buildings as red markers
+
+label-no-hq-panel-title = No HQ: revealed in
+label-no-hq-entry = { $player }, { $race }: { $time }
+label-no-hq-entry-exposed = { $player }, { $race }: revealed
+notification-no-hq-exposed = { $player } has had no HQ for 5 minutes: their army is shown
+notification-no-hq-self-exposed = You have had no HQ for 5 minutes: the enemy sees your army
+notification-no-hq-hidden = { $player } has an HQ again: their army is hidden
+
 ## World
 options-starting-units =
     .unlabeled = Unlabeled
@@ -56,6 +68,12 @@ tooltip-ability-fall-out = Click, then click an enemy: wears its life down to 1.
 label-hunt-off = Hunt (off)
 label-hunt-on = Hunt (on)
 tooltip-hunt = While on, idle units hunt the wild creatures around them, the dangerous ones first, and pick up their meat.
+label-attack = Attack
+tooltip-attack = Click a place: they walk there and attack every enemy they meet on the way, buildings included. Shift+click queues it.
+
+label-patrol = Patrol
+tooltip-patrol = Click a place: they go back and forth between where they are and there, attacking every enemy they meet, until given another order. Shift+click queues it.
+
 label-unload = Unload
 tooltip-unload = Click the ground where the transports should land or stop and let their passengers out.
 tooltip-unload-empty = Nothing on board.

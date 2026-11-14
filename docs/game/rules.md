@@ -24,7 +24,7 @@ and speeds keep their original values without rescaling.
   `BerryBush.RegrowAmount/RegrowInterval`), instead of being used up for good.
 - A worker plays its gather animation once (`Buildman`: 48 steps), then carries **12 berries**, plus the
   gathering upgrade (+4) (C, `FUN_00476e88`: `12 + bonus[player][type]`). It delivers to the main building.
-  **Mod change:** a main building can't be placed right against a berry bush: one free cell between them
+  **Mod change:** a main building can't be placed near a berry bush: two free cells between them
   (`AcceptsBerries.BushClearance`, checked in `Builder.CanPlace` for players and the AI alike).
 - A **second resource** exists (`P_PLAYE` 0x194, 1,000 at start; type cost 0x194; upgrade cost +0x22c), but every
   unit, building and upgrade costs 0 of it in the shipped data. The mod can leave it out.
@@ -66,6 +66,13 @@ does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage k
   Trap, Tyrano TwinRhamphos and Ascomoid, Elf Pixie, Demon DeathEye), and the units whose detection research their
   owner has (Improve StoneTower Detection, Study Bubble Detection Secret, Learn Volcano Detection: the towers detect
   nothing before). Buildings detect once finished.
+- **Mod change (no HQ):** a player without a finished main building (Sanctuary, TyranoNest, Heaven, DemonDen) for
+  4,225 ticks (5 minutes at the default speed) is exposed: each enemy sees a red marker on every unit and building of
+  theirs it can't see itself, in the fog, in the shroud, or invisible out of detection. The marker shows where, on the
+  map and the minimap; it reveals nothing else, and an invisible unit still needs a detector to be attacked. A box at
+  the top left lists every player counting down, with name, race and time left (the viewer's own row red, allies'
+  orange, enemies' green). A finished main building hides them again and restarts the count (`PwExposure`; a lobby
+  checkbox, on by default; off in the campaign missions).
 
 ## Meat and healing
 

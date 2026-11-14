@@ -21,6 +21,7 @@ tyrano-dinos:
 	Builder:
 		Types: tyrano-tyranonest, tyrano-nest, tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-thrownest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos, tyrano-ascomoid
 	Buildable:
+		Description: description-tyrano-dinos
 		Queue: tyrano-tyranonest
 		BuildDuration: 160
 		BuildPaletteOrder: 10
@@ -59,6 +60,7 @@ tyrano-masos:
 	UsesPopulation:
 		Amount: 1
 	Buildable:
+		Description: description-tyrano-masos
 		Queue: tyrano-eggnest
 		BuildDuration: 160
 		BuildPaletteOrder: 10
@@ -98,6 +100,7 @@ tyrano-velocis:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-tyrano-velocis
 		Queue: tyrano-eggnest
 		BuildDuration: 224
 		BuildPaletteOrder: 20
@@ -185,6 +188,7 @@ tyrano-dilophos:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-tyrano-dilophos
 		Queue: tyrano-eggnest
 		BuildDuration: 256
 		BuildPaletteOrder: 30
@@ -233,6 +237,7 @@ tyrano-trices:
 	UsesPopulation:
 		Amount: 5
 	Buildable:
+		Description: description-tyrano-trices
 		Queue: tyrano-eggnest
 		BuildDuration: 400
 		BuildPaletteOrder: 40
@@ -274,6 +279,7 @@ tyrano-eggthrower:
 	UsesPopulation:
 		Amount: 4
 	Buildable:
+		Description: description-tyrano-eggthrower
 		Queue: tyrano-thrownest
 		BuildDuration: 480
 		BuildPaletteOrder: 20
@@ -314,6 +320,7 @@ tyrano-tyranos:
 	UsesPopulation:
 		Amount: 30
 	Buildable:
+		Description: description-tyrano-tyranos
 		Queue: tyrano-tyranonest
 		BuildDuration: 2880
 		BuildPaletteOrder: 70
@@ -352,6 +359,7 @@ tyrano-rhamphos:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-tyrano-rhamphos
 		Queue: tyrano-eggnest
 		BuildDuration: 288
 		BuildPaletteOrder: 50
@@ -434,6 +442,7 @@ tyrano-pteras:
 	UsesPopulation:
 		Amount: 4
 	Buildable:
+		Description: description-tyrano-pteras
 		Queue: tyrano-eggnest
 		BuildDuration: 480
 		BuildPaletteOrder: 60
@@ -472,6 +481,7 @@ tyrano-dsunguri:
 	UsesPopulation:
 		Amount: 2
 	Buildable:
+		Description: description-tyrano-dsunguri
 		Queue: tyrano-thrownest
 		BuildDuration: 480
 		BuildPaletteOrder: 10

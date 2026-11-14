@@ -102,6 +102,9 @@ world:
 	MapOptions:
 		TechLevelDropdownVisible: false
 	MapStartingLocations:
+	# Mod change: a player without a main building for 5 minutes is shown to the enemy as red markers (lobby option;
+	# not in the campaign).
+	PwExposure:
 	SpawnMapActors:
 	SpawnStartingUnits:
 	PathFinder:

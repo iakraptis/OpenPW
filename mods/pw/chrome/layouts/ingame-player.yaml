@@ -43,6 +43,29 @@ Container@PLAYER_WIDGETS:
 			Width: 118
 			Height: 127
 			WorldInteractionController: INTERACTION_CONTROLLER
+		# The exposed enemies' markers over the minimap (PwExposure); it draws where the radar draws the map.
+		ExposureRadar@EXPOSURE_RADAR:
+			Radar: RADAR
+		# The players without a main building and their time left (PwExposure), at the top left; InterfaceBarLogic
+		# sizes it to its rows and hides it when there are none.
+		ColorBlock@NO_HQ_PANEL:
+			Width: 200
+			Height: 40
+			Color: A07A45
+			Children:
+				ColorBlock@BACK:
+					X: 1
+					Y: 1
+					Color: 24180DE0
+				Label@TITLE:
+					Height: 18
+					Font: Bold
+					TextColor: FFFFFF
+					VAlign: Top
+				# One per player, cloned by InterfaceBarLogic and coloured by relationship.
+				Label@ROW:
+					Height: 16
+					Font: Regular
 		MenuButton@OPTIONS_BUTTON:
 			IgnoreChildMouseOver: true
 			Key: escape

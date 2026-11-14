@@ -94,7 +94,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		[Desc("Cells to keep free between its footprint and any berry bush when it is placed (Builder.CanPlace): it",
 			"can't be built right against the berries. 0 for none.")]
-		public readonly int BushClearance = 1;
+		public readonly int BushClearance = 2;
 	}
 
 	public class AcceptsBerries { }

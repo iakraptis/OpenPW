@@ -13,6 +13,7 @@ tyrano-tyranonest:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-tyrano-tyranonest
 		BuildPaletteOrder: 10
 	Production:
 		Produces: tyrano-tyranonest
@@ -48,6 +49,7 @@ tyrano-nest:
 	UnderConstruction:
 		Duration: 320
 	Buildable:
+		Description: description-tyrano-nest
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: tyrano-nest
@@ -80,6 +82,7 @@ tyrano-eggnest:
 	UnderConstruction:
 		Duration: 960
 	Buildable:
+		Description: description-tyrano-eggnest
 		BuildPaletteOrder: 30
 	Production:
 		Produces: tyrano-eggnest
@@ -115,6 +118,7 @@ tyrano-landnest:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-tyrano-landnest
 		BuildPaletteOrder: 40
 		Prerequisites: tyrano-eggnest
 	Production:
@@ -151,6 +155,7 @@ tyrano-skynest:
 	UnderConstruction:
 		Duration: 1440
 	Buildable:
+		Description: description-tyrano-skynest
 		BuildPaletteOrder: 50
 		Prerequisites: tyrano-eggnest
 	Production:
@@ -185,6 +190,7 @@ tyrano-thrownest:
 	UnderConstruction:
 		Duration: 960
 	Buildable:
+		Description: description-tyrano-thrownest
 		BuildPaletteOrder: 60
 		Prerequisites: tyrano-eggnest
 	Production:
@@ -221,6 +227,7 @@ tyrano-upgradenest:
 	UnderConstruction:
 		Duration: 960
 	Buildable:
+		Description: description-tyrano-upgradenest
 		BuildPaletteOrder: 70
 		Prerequisites: tyrano-eggnest
 	Production:
@@ -257,6 +264,7 @@ tyrano-landnisdos:
 	UnderConstruction:
 		Duration: 1760
 	Buildable:
+		Description: description-tyrano-landnisdos
 		BuildPaletteOrder: 80
 		Prerequisites: tyrano-landnest, tyrano-upgradenest
 	RenderSprites:
@@ -289,6 +297,7 @@ tyrano-skynisdos:
 	UnderConstruction:
 		Duration: 1760
 	Buildable:
+		Description: description-tyrano-skynisdos
 		BuildPaletteOrder: 90
 		Prerequisites: tyrano-skynest, tyrano-upgradenest
 	RenderSprites:
@@ -320,6 +329,7 @@ tyrano-ascomoid:
 	UnderConstruction:
 		Duration: 560
 	Buildable:
+		Description: description-tyrano-ascomoid
 		BuildPaletteOrder: 35
 		Prerequisites: tyrano-eggnest
 	RenderSprites:

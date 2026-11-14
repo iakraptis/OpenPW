@@ -70,6 +70,10 @@ Rules:
 		-ConquestVictoryConditions:
 	world:
 		-SpawnStartingUnits:
+		# The exposure rule (off in mission-selector maps) with a short delay, for its checks.
+		PwExposure:
+			InMissions: true
+			Delay: 100
 		LuaScript:
 			Scripts: testlib.lua, test.lua
 		# 5x speed: the test runs in a few seconds.

@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using OpenRA.Graphics;
@@ -44,6 +45,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly InterfaceBarWidget bar;
 		readonly RadarWidget radar;
 		readonly (Widget Icon, Widget Label)[] counters;
+		readonly PwExposure exposure;
+		readonly Widget noHQPanel, noHQBack;
+		readonly LabelWidget noHQTitle, noHQRowTemplate;
+		readonly List<LabelWidget> noHQRows = new();
 		readonly Widget selection, training, commands;
 		readonly SpriteWidget trainingIcon;
 		readonly ColorBlockWidget trainingProgressBack, trainingProgressFill;
@@ -123,6 +128,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			populationIcon.GetTooltipText = population.GetTooltipText;
 			counters = new (Widget, Widget)[] { (cashIcon, cash), (populationIcon, population) };
 
+			// The players without a main building and their time before being exposed (PwExposure), at the top left:
+			// one row each (name, race, time), the player's own red, allies' orange, enemies' green.
+			exposure = world.WorldActor.TraitOrDefault<PwExposure>();
+			noHQPanel = widget.Get("NO_HQ_PANEL");
+			noHQBack = noHQPanel.Get("BACK");
+			noHQTitle = noHQPanel.Get<LabelWidget>("TITLE");
+			noHQRowTemplate = noHQPanel.Get<LabelWidget>("ROW");
+			noHQPanel.RemoveChild(noHQRowTemplate);
+			var title = FluentProvider.GetMessage("label-no-hq-panel-title");
+			noHQTitle.GetText = () => title;
+			noHQPanel.IsVisible = () => noHQRows.Any(r => r.IsVisible());
+
 			worldRoot = Ui.Root.Get("WORLD_ROOT");
 			menuRoot = Ui.Root.Get("MENU_ROOT");
 			buttons[1].Button.OnClick = () => OpenMenuPanel(IngameInfoPanel.Objectives);
@@ -160,6 +177,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				icon.Bounds = new WidgetBounds(right - 110 - iconSize - 6, y, iconSize, iconSize);
 				label.Bounds = new WidgetBounds(right - 110, y + (iconSize - 20) / 2, 110, 20);
 			}
+
+			LayoutNoHQPanel();
 
 			// The selection panel takes the left panel, less the training column at its far right.
 			var left = bar.Area("left-panel");
@@ -277,6 +296,64 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		// (release-20250330), then its area is moved to the screen as its opening animation does.
 		static readonly MethodInfo RadarBoundsChanged = typeof(RadarWidget).GetMethod("MapBoundsChanged", BindingFlags.NonPublic | BindingFlags.Instance);
 		static readonly FieldInfo RadarMapRect = typeof(RadarWidget).GetField("mapRect", BindingFlags.NonPublic | BindingFlags.Instance);
+
+		void LayoutNoHQPanel()
+		{
+			var local = world.LocalPlayer;
+			var rows = exposure == null || !exposure.Enabled ? new List<(string Text, Color Color)>() : exposure.PlayersWithoutHQ
+				.Where(p => !p.Spectating)
+				.Select(p => (Player: p, Left: exposure.TicksLeft(p)))
+				.Where(e => e.Left >= 0)
+				.OrderBy(e => e.Left)
+				.Select(e => (FluentProvider.GetMessage(e.Left == 0 ? "label-no-hq-entry-exposed" : "label-no-hq-entry",
+					"player", e.Player.ResolvedPlayerName, "race", FluentProvider.GetMessage(e.Player.Faction.Name),
+					"time", PwExposure.FormatTime(e.Left, world.Timestep)), RowColor(local, e.Player)))
+				.ToList();
+
+			while (noHQRows.Count < rows.Count)
+			{
+				var row = (LabelWidget)noHQRowTemplate.Clone();
+				noHQPanel.AddChild(row);
+				noHQRows.Add(row);
+			}
+
+			var font = Game.Renderer.Fonts[noHQRowTemplate.Font];
+			var width = Game.Renderer.Fonts[noHQTitle.Font].Measure(noHQTitle.GetText()).X;
+			var lineHeight = font.Measure("Ag").Y + 2;
+			for (var i = 0; i < noHQRows.Count; i++)
+			{
+				var shown = i < rows.Count;
+				var (text, color) = shown ? rows[i] : ("", Color.White);
+				noHQRows[i].IsVisible = () => shown;
+				noHQRows[i].GetText = () => text;
+				noHQRows[i].GetColor = () => color;
+				if (shown)
+					width = Math.Max(width, font.Measure(text).X);
+			}
+
+			if (rows.Count == 0)
+				return;
+
+			width += 16;
+			noHQTitle.Bounds = new WidgetBounds(8, 4, width - 16, 18);
+			for (var i = 0; i < rows.Count; i++)
+				noHQRows[i].Bounds = new WidgetBounds(8, 24 + i * lineHeight, width - 16, lineHeight);
+
+			noHQPanel.Bounds = new WidgetBounds(8, 8, width, 24 + rows.Count * lineHeight + 6);
+			noHQBack.Bounds = new WidgetBounds(1, 1, width - 2, noHQPanel.Bounds.Height - 2);
+		}
+
+		// A row's colour: red for the viewer's own, orange for an ally's, green for an enemy's (white, spectating).
+		static Color RowColor(Player viewer, Player p)
+		{
+			if (viewer == null)
+				return Color.White;
+
+			if (p == viewer)
+				return Color.FromArgb(255, 64, 64);
+
+			return viewer.RelationshipWith(p) == PlayerRelationship.Ally ? Color.FromArgb(255, 160, 40) : Color.FromArgb(80, 220, 80);
+		}
 
 		void RefreshRadar()
 		{
