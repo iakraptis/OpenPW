@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local AttackMove, Exposure, FirstHit, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, Exposure, FirstHit, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -25,6 +25,8 @@ do
     -- 9. Exposure (PwExposure, its delay 100 ticks here): a player without a main building is exposed after the
     --    delay; its enemy then sees a marker on its invisible MudMan, not on the Soldier it already sees; a finished
     --    main building hides the player again.
+    -- 10. Melee reach (^Melee 1c512): eight Powermen in the eight cells around an enemy Giant all hit it, the
+    --    diagonal ones included; a Powerman holding its ground (Defend) two cells from an enemy never reaches it.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -36,6 +38,7 @@ do
         Later(5, MissileModes)
         Later(5, MeleeBlocked)
         Later(5, AttackMove)
+        Later(5, MeleeAround)
         Later(5, Patrolling)
         Later(5, Voices)
         Exposure()
@@ -51,6 +54,38 @@ do
         soldier.AttackMove(At(30, 44))
         WaitFor("an attack-moving Soldier attacks the enemy House on its way", 600, function()
             return house.IsDead or house.Health < house.MaxHealth
+        end)
+    end
+
+    MeleeAround = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local giant = Actor.Create("primitive-giant", true, { Owner = foe, Location = At(10, 36) })
+        local attackers, hitBy, count = { }, { }, 0
+        for dx = -1, 1 do
+            for dy = -1, 1 do
+                if dx ~= 0 or dy ~= 0 then
+                    attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(10 + dx, 36 + dy) })
+                end
+            end
+        end
+        Trigger.OnDamaged(giant, function(_, attacker)
+            if attacker and not hitBy[attacker] then
+                hitBy[attacker] = true
+                count = count + 1
+            end
+        end)
+
+        local far = Actor.Create("primitive-buildman", true, { Owner = foe, Location = At(20, 36) })
+        local holder = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(22, 36) })
+        Later(1, function()
+            giant.Stance = "HoldFire"
+            far.Stance = "HoldFire"
+            holder.Stance = "Defend"
+            for _, a in ipairs(attackers) do a.Attack(giant) end
+        end)
+        WaitFor("eight Powermen around an enemy all hit it, the diagonal ones too", 120, function() return count == 8 end)
+        Later(150, function()
+            Check(far.Health == far.MaxHealth, "a Powerman doesn't reach an enemy 2 cells away")
         end)
     end
 
@@ -106,8 +141,13 @@ do
         local other = Actor.Create("primitive-powerman-shield-of-peace", true, { Owner = foe, Location = At(49, 26) })
         local attacker = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(45, 30) })
         local blockers = { }
-        for _, cell in ipairs({ At(41, 30), At(39, 30), At(40, 31), At(40, 29) }) do
-            blockers[#blockers + 1] = Actor.Create("primitive-buildman", true, { Owner = me, Location = cell })
+        -- Every cell in reach of the target: the 8 around it.
+        for dx = -1, 1 do
+            for dy = -1, 1 do
+                if dx ~= 0 or dy ~= 0 then
+                    blockers[#blockers + 1] = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(40 + dx, 30 + dy) })
+                end
+            end
         end
 
         Later(2, function()
@@ -288,13 +328,16 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Defence: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Defence: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local FirstHit, Stealth, Tower, Trap, Unfinished, WorldLoaded, enemy, me
+    local Bubble, FirstHit, Stealth, Tower, Trap, Unfinished, WorldLoaded, enemy, me
     -- Defences. Enemies here belong to Creeps.
     -- 1. A StoneTower stones an enemy in range on its own: 40 damage minus armour.
     -- 2. A Trap snaps at an enemy beside it: 80 damage.
     -- 3. A StoneTower still under construction doesn't shoot, and doesn't count as a prerequisite yet.
     -- 4. Stealth: a Trap is invisible to the other players (not to its owner). Their Traps see it (over their sight,
     --    7 cells); their StoneTowers only once Improve StoneTower Detection is researched (then over 11 cells).
+    -- 5. Bubble: the Elf tower's 2 damage reaches flying units (a Death Eye, seen through a Pixie beside the tower),
+    --    and outpaces a wild creature's healing (1 HP every 32 ticks): a Velociraptor loses at least 10 HP net in 400
+    --    ticks (about 18; at the old 1 damage, about 3).
     WorldLoaded = function()
         me = Player.GetPlayer("Defence")
         enemy = Player.GetPlayer("Creeps")
@@ -304,6 +347,7 @@ do
         Later(5, Trap)
         Later(5, Unfinished)
         Later(5, Stealth)
+        Later(5, Bubble)
         FinishWhenDone("DEFENCE", 2000)
     end
 
@@ -322,6 +366,26 @@ do
                 Later(5, function()
                     Check(PwTest.CanSee(enemy, hidden), "their StoneTower 7 cells away reveals it after Improve StoneTower Detection")
                 end)
+            end)
+        end)
+    end
+
+    Bubble = function()
+        Actor.Create("elf-bubble", true, { Owner = me, Location = At(18, 41) })
+        local pixie = Actor.Create("elf-pixie", true, { Owner = me, Location = At(20, 43) })
+        local eye = Actor.Create("demon-deatheye", true, { Owner = enemy, Location = At(24, 41) })
+        Actor.Create("elf-bubble", true, { Owner = me, Location = At(18, 51) })
+        local raptor = Actor.Create("wild-velociraptor", true, { Owner = enemy, Location = At(23, 51) })
+        Later(1, function() pixie.Stance = "HoldFire" end)
+        FirstHit("the Bubble hits a flying Death Eye", eye, 2, 300)
+
+        local start
+        WaitFor("the Bubble hits a wild Velociraptor", 300, function() return raptor.Health < raptor.MaxHealth end, function(ok)
+            if not ok then return end
+            start = raptor.Health
+            Later(400, function()
+                local lost = raptor.IsDead and start or start - raptor.Health
+                Check(lost >= 10, "the Bubble outpaces a wild Velociraptor's healing (lost " .. lost .. " HP in 400 ticks)")
             end)
         end)
     end

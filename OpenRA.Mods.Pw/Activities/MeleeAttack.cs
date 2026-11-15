@@ -19,7 +19,8 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Activities
 {
-	// An order to attack, for PwMeleeAttack. A melee weapon reaches only the four cells beside its target and a unit does
+	// An order to attack, for PwMeleeAttack. A melee weapon reaches only the cells around its target (^Melee: 1.5 cells, the 8
+	// neighbours of a one-cell target) and a unit does
 	// not walk into a cell another holds; the engine's Attack gives up when none is free, which leaves the unit standing
 	// (and picking the same target again). This runs the engine's Attack as a child: while every cell in reach of the
 	// target is taken it fights the nearest enemy it can reach, or else waits, and then returns to its target.

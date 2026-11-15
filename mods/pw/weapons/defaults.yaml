@@ -15,10 +15,12 @@
 		DamageTypes: DefaultDeath
 		Spread: 100
 
-# Instant hits at touching range (the original's 32 px).
+# Instant hits at touching range: 1.5 cells, so the 8 cells around a target reach it, the diagonals (1.41 cells)
+# included, but not 2 cells away (Mod change: the original reaches by rectangles, .chr 0x370; at 1c256 only the 4 side
+# cells reached, so no more than 4 units could fight one).
 ^Melee:
 	Inherits: ^PwWeapon
-	Range: 1c256
+	Range: 1c512
 	Projectile: InstantHit
 	# The blow lands on the target itself: no graze for whoever stands beside it.
 	Warhead@1Dam: SubtractArmorDamage

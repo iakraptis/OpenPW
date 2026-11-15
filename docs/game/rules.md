@@ -20,8 +20,15 @@ and speeds keep their original values without rescaling.
 
 - **Berries** are the resource. Every player starts with 400 (`P_PLAYE` 0x144).
 - Berry bushes hold 4,000 and change art at 1,500, 1,000 and 500 left (C, `FUN_0045bb14`).
-  **Mod change (balance):** an empty bush stays on the map and slowly grows back (1 berry every 30 ticks,
-  `BerryBush.RegrowAmount/RegrowInterval`), instead of being used up for good.
+  **Mod change (balance):** an empty bush stays on the map and slowly grows back (1 berry every 60 ticks,
+  `BerryBush.RegrowAmount/RegrowInterval`; it was 1 every 30 until testers found it too fast), instead of being used
+  up for good.
+- **One worker gathers a bush at a time** (C, hand-written assembly in `Pw.exe`): a worker holds the bush for its
+  gather animation (a "taken" bit in its `MAP3` word, `0x10000000`, set at `0x45bb89` with a table of holders at
+  `0x54cb5c`/`0x54cb60`, freed at `0x45bc0b` when the animation ends, or at `0x45bc58` when it stops gathering).
+  Arriving at a held bush (`0x45b832`), it goes to the nearest free bush within 5 cells (`0x45ba99`, an 11 × 11
+  search) or waits there. Elf Wizards hold it while casting and let go before the berries fly (`0x45f5e8`). So a bush
+  yields at most 12 berries per gather animation. In the mod: `BerryBush.MaxGatherers: 1`, `GatherBerries`.
 - A worker plays its gather animation once (`Buildman`: 48 steps), then carries **12 berries**, plus the
   gathering upgrade (+4) (C, `FUN_00476e88`: `12 + bonus[player][type]`). It delivers to the main building.
   **Mod change:** a main building can't be placed near a berry bush: two free cells between them
@@ -47,6 +54,8 @@ Damage per hit (C, `0x457cc4`):
   weapon that hits ground units also hits hovering ones, except the Trap's (mask 1); the Phoenix's fire hits only air
   (mask 8). Hovering units move as ground units that can also cross water ([map.md](../formats/map.md)).
 - Attack range is `.chr` 0x1b0 (0x1b4 against air), plus the level bonus.
+  **Mod change:** melee weapons reach 1.5 cells (`^Melee` `Range: 1c512`), the 8 cells around a target, diagonals
+  included, so 8 units can fight one; at the 32 px of the records (1c256) only the 4 side cells reached.
 - The time between attacks is the attack delay at 0x13cc, reduced by the level bonus.
 
 **Poison.** The poison weapons (`JW2_12` "Poison arrows", record 20: the Dilophos and the wild Dilophosaurus;

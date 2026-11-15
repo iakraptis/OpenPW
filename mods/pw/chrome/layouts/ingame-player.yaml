@@ -2,7 +2,7 @@
 # that fits the window; InterfaceBarLogic places everything below on it every tick, so the positions and sizes here
 # are only starting values.
 Container@PLAYER_WIDGETS:
-	Logic: MenuButtonsChromeLogic, InterfaceBarLogic
+	Logic: MenuButtonsChromeLogic, InterfaceBarLogic, PwEndScreenLogic
 	Children:
 		LogicTicker@SIDEBAR_TICKER:
 		InterfaceBar@INTERFACE_BAR:

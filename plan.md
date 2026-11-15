@@ -632,6 +632,13 @@ dead.
     (`foot-worker`, `hover-worker`, OpenRA's sub-cells, up to 5 a cell), so they pass each other at the bushes and
     the drop-off; the original checks no units for a step (D, docs/formats/map.md). Production buildings have two
     more rings of exit cells (Priority 0 and -1) for when the ring around the footprint is full.
+  - Victory and defeat screens (2026-11-15, Mod change, `PwEndScreenWidget`, `PwEndScreenLogic`): when the local
+    player wins or loses, after the objectives' GameOverDelay, a full-window picture fades in on the UI root: per race
+    a painted victory picture (made with an image generator from the prompts in test_feedback.md, not original art),
+    for defeat a plain parchment, fitted to the window with a blurred copy in the margins. Its message panel (title,
+    line) is drawn into the picture by `tools/end_screens.py` (sheets `chrome/assets/end-<race>.png`,
+    `end-defeat.png`); the widget writes the elapsed time and "Click to continue". A click, Escape, Enter or Space
+    closes it and opens the in-game menu unless one is open.
   - Not done: the Intro slideshow.
 - [x] **AI** (2026-11-02, branches `bot`, `bot2`; `rules/ai.yaml`, `OpenRA.Mods.Pw/Traits/BotModules`): Normal and
       Hard bots after OpenSYW's. The modules read every actor's role from its traits, so a new faction plays as
@@ -729,6 +736,10 @@ dead.
 - Every format claim in `docs/formats` cites how it was confirmed (Ghidra address, preview, editor diff).
 - Before trusting `--check-yaml`, read OpenSY `Plan.md` §8.2: several missing world/player traits crash only at
   runtime (here so far: `GrantConditionOnPrerequisiteManager`, `PlayerRadarTerrain`).
+- Tester feedback is gathered in `test_feedback.md` (status per entry), then fixed. 2026-11-15: the Bubble tower's
+  damage (2) reaches flying units; one worker gathers a bush at a time (`BerryBush.MaxGatherers`, as the original);
+  melee reaches the 8 cells around a target (`^Melee` 1c512); bushes regrow at half the speed (1 berry every 60
+  ticks); victory and defeat screens.
 - Run only the test maps a change touches (`python run_tests.py --no-build --only a-test,b-test`); the whole suite
   (with the bot battle, up to 40,000 ticks) only when asked or before a merge. `make.cmd check` (style) and
   `make.cmd test` (YAML lint) before every commit.

@@ -166,3 +166,7 @@ tooltip-stat-construction = Under construction: a Buildman inside is building it
 ## The main menu
 button-main-menu-intro = Intro
 tooltip-main-menu-intro-unavailable = The intro is not available yet.
+
+## PwEndScreenWidget
+label-end-elapsed = Elapsed time { $time }
+label-end-continue = Click to continue
