@@ -116,6 +116,33 @@ strategic:
 		enemy_owned: 160, 119, 22, 22
 		player_owned: 160, 142, 22, 22
 
+# The victory screens, one per race, and the defeat screen (PwEndScreenWidget; drawn by tools/end_screens.py): the
+# picture with its message panel, and a blurred copy for the margins of wider windows.
+^EndScreen:
+	Regions:
+		picture: 0, 0, 1248, 832
+		back: 1280, 0, 256, 171
+
+end-primitive:
+	Inherits: ^EndScreen
+	Image: chrome/assets/end-primitive.png
+
+end-tyrano:
+	Inherits: ^EndScreen
+	Image: chrome/assets/end-tyrano.png
+
+end-demon:
+	Inherits: ^EndScreen
+	Image: chrome/assets/end-demon.png
+
+end-elf:
+	Inherits: ^EndScreen
+	Image: chrome/assets/end-elf.png
+
+end-defeat:
+	Inherits: ^EndScreen
+	Image: chrome/assets/end-defeat.png
+
 flags:
 	Image: chrome/assets/faction-flags.png
 	Regions:

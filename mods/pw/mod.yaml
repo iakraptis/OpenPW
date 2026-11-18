@@ -4,17 +4,24 @@ Metadata:
 	WindowTitle: mod-windowtitle
 
 # The converted Primitive Wars content (tilesets, art, sounds, maps) lives in the player's support folder; it is never
-# committed. install-assets.cmd (OpenRA.Mods.Pw/AssetInstaller) writes it from an original installation.
-FileSystem: DefaultFileSystem
-	Packages:
+# committed. The asset installer (OpenRA.Mods.Pw/AssetInstaller) writes it from an original installation: on first
+# launch the game finds it missing and opens the pw-content mod (PwContentLogic), which converts the player's copy;
+# developers can run install-assets.cmd instead.
+FileSystem: ContentInstallerFileSystem
+	SystemPackages:
 		^EngineDir
 		$pw: pw
 		^EngineDir|mods/common: common
 		~^SupportDir|Content/pw/: content
+	ContentPackages:
 		# Sounds (weapons, voices) are referred to by file name.
-		~content|sounds
+		content|sounds
 		# The music (music/pw.yaml) likewise.
-		~content|music
+		content|music
+	RequiredContentFiles:
+		# Written last by the installer: present only once a conversion has finished.
+		content|install-manifest.txt
+	ContentInstallerMod: pw-content
 
 MapFolders:
 	pw|maps: System

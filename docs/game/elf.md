@@ -15,7 +15,7 @@ weapon one's name).
 The Bubble tower's recorded attack value (25) does not reduce hit points in the original: its bubble traps the target
 instead. The mod applies a 36-tick immobilizing condition: the weapon's 36 impact frames (`JW2_12` `Bubble.wpn`,
 0x20c), one per tick as weapon frames advance (C, [effect.md](../formats/effect.md)); that the hold lasts as long as
-the animation is deduced (D). It deals 1 damage per hit as a design choice.
+the animation is deduced (D). It deals 2 damage per hit, ground and air units alike, as a design choice (Mod change).
 
 ## Units
 

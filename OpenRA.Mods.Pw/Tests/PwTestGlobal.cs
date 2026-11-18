@@ -64,6 +64,9 @@ namespace OpenRA.Mods.Pw.Tests
 			return construction?.Builder == worker && worker.IsInWorld;
 		}
 
+		[Desc("Workers holding a berry bush right now (gathering it), or -1 for anything else.")]
+		public int Gatherers(Actor bush) => bush.TraitOrDefault<BerryBush>()?.Gatherers ?? -1;
+
 		[Desc("Berries a worker is carrying, or -1 for anything else.")]
 		public int Carried(Actor worker) => worker.TraitOrDefault<BerryGatherer>()?.Carried ?? -1;
 

@@ -16,8 +16,7 @@ Visibility: MissionSelector
 
 Categories: Test
 
-# Eight bases, two per race: one with the race's workers (cells shared, foot-worker / hover-worker), one with the
-# same workers on the plain foot / hover locomotors ("-solo" below, one unit a cell). Nobody is anyone's enemy.
+# Four bases, one per race. Nobody is anyone's enemy.
 Players:
 	PlayerReference@Neutral:
 		Name: Neutral
@@ -30,29 +29,17 @@ Players:
 		LockFaction: True
 		NonCombatant: True
 		Faction: primitive
-	PlayerReference@PrimitiveShared:
-		Name: PrimitiveShared
+	PlayerReference@Primitive:
+		Name: Primitive
 		Faction: primitive
-	PlayerReference@PrimitiveSolo:
-		Name: PrimitiveSolo
-		Faction: primitive
-	PlayerReference@TyranoShared:
-		Name: TyranoShared
+	PlayerReference@Tyrano:
+		Name: Tyrano
 		Faction: tyrano
-	PlayerReference@TyranoSolo:
-		Name: TyranoSolo
-		Faction: tyrano
-	PlayerReference@ElfShared:
-		Name: ElfShared
+	PlayerReference@Elf:
+		Name: Elf
 		Faction: elf
-	PlayerReference@ElfSolo:
-		Name: ElfSolo
-		Faction: elf
-	PlayerReference@DemonShared:
-		Name: DemonShared
-		Faction: demon
-	PlayerReference@DemonSolo:
-		Name: DemonSolo
+	PlayerReference@Demon:
+		Name: Demon
 		Faction: demon
 
 Actors:
@@ -77,28 +64,3 @@ Rules:
 		MapOptions:
 			GameSpeed: test
 			GameSpeedDropdownLocked: true
-	# The workers as they moved before cells were shared: one unit a cell.
-	primitive-buildman-solo:
-		Inherits: primitive-buildman
-		Mobile:
-			Locomotor: foot
-		RenderSprites:
-			Image: primitive-buildman
-	tyrano-dinos-solo:
-		Inherits: tyrano-dinos
-		Mobile:
-			Locomotor: foot
-		RenderSprites:
-			Image: tyrano-dinos
-	elf-wizard-solo:
-		Inherits: elf-wizard
-		Mobile:
-			Locomotor: foot
-		RenderSprites:
-			Image: elf-wizard
-	demon-insect-solo:
-		Inherits: demon-insect
-		Mobile:
-			Locomotor: hover
-		RenderSprites:
-			Image: demon-insect

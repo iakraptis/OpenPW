@@ -1,0 +1,61 @@
+# Builds the Windows installer and portable zip (packaging/windows/package-windows.ps1). Pushing a tag such as v0.1
+# publishes them as a GitHub Release; running it by hand (Actions > Windows release > Run workflow) only uploads them
+# as a build artifact to try out.
+name: Windows release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Fetch the engine and build
+        shell: pwsh
+        run: ./make.cmd all
+
+      # The runner image no longer ships NSIS. Install it with the preinstalled Chocolatey, find makensis.exe wherever
+      # it landed and put its folder on the PATH for the next step.
+      - name: Install NSIS
+        shell: pwsh
+        run: |
+          choco install nsis -y --no-progress
+          $found = @("${env:ProgramFiles(x86)}\NSIS\makensis.exe", "$env:ProgramFiles\NSIS\makensis.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $found) { $found = (Get-ChildItem "$env:ProgramData\chocolatey" -Recurse -Filter makensis.exe -ErrorAction SilentlyContinue | Select-Object -First 1).FullName }
+          if (-not $found) { throw 'makensis.exe not found after installing NSIS' }
+          Write-Host "makensis: $found"
+          Split-Path $found | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "dev-$($env:GITHUB_SHA.Substring(0, 7))" }
+          powershell -ExecutionPolicy Bypass -File packaging/windows/package-windows.ps1 -Tag $tag -OutputDir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenPW-windows
+          path: dist/*
+
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          body: |
+            Windows: download the `.exe` installer (or the portable `.zip`) and run OpenPW.
+            On first launch it asks for your copy of Primitive Wars (the folder holding `Pw.exe`) and converts its
+            art, sounds, music and maps. The original game files are not included.

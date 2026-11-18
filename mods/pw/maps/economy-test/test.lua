@@ -10,13 +10,15 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Gathering: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Gathering: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local Beside, EmptyAndRegrow, ItemUnitsNotTrainable, SpreadOverExits, TrainAndGather, WorldLoaded, me, powerhouse, sanctuary, soldierhouse
+    local Beside, EmptyAndRegrow, ItemUnitsNotTrainable, OneAtATime, SpreadOverExits, TrainAndGather, WorldLoaded, me, powerhouse, sanctuary, soldierhouse
     -- Gathering berries. The local player (Multi0) is Primitive; GatheringBushNear lies below the Sanctuary, GatheringBushFar far to the right.
     -- 1. A Buildman fresh out of the Sanctuary takes a gather order as its first order and delivers berries.
     -- 2. An emptied bush stays on the map and grows its berries back.
     -- 3. Trained units walk out to different cells around the building, the front row first.
     -- 4. Workers deliver from a cell right beside the Sanctuary, on the side nearest to them.
     -- 5. Units with an item (Shield of Peace, ...) can't be trained; they come from equipping at the Blacksmith.
+    -- 6. One worker gathers a bush at a time (BerryBush.MaxGatherers 1, as the original): three sent to one bush,
+    --    never two gathering it at once; one finding it taken goes to the free bush 4 cells away.
     WorldLoaded = function()
         me = Player.GetPlayer("Gathering")
         me.Cash = 5000
@@ -28,6 +30,7 @@ do
         Later(5, EmptyAndRegrow)
         Later(5, ItemUnitsNotTrainable)
         Later(5, SpreadOverExits)
+        Later(5, OneAtATime)
         FinishWhenDone("GATHERING", 3000)
     end
 
@@ -60,6 +63,35 @@ do
                 Check(GatheringBushFar.IsInWorld and not GatheringBushFar.IsDead, "empty bush stays on the map")
                 WaitFor("empty bush grows berries back", 200, function() return PwTest.Berries(GatheringBushFar) > 0 end)
             end)
+        end)
+    end
+
+    OneAtATime = function()
+        local neutral = Player.GetPlayer("Neutral")
+        local taken = Actor.Create("berry-bush-2", true, { Owner = neutral, Location = At(2, 26) })
+        local free = Actor.Create("berry-bush-3", true, { Owner = neutral, Location = At(6, 26) })
+        local workers = { }
+        for i = 0, 2 do
+            workers[#workers + 1] = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(2 + i, 29) })
+        end
+
+        local most, ticks = 0, 0
+        local function Sample()
+            most = math.max(most, PwTest.Gatherers(taken))
+            ticks = ticks + 1
+            if ticks < 600 then
+                Later(1, Sample)
+                return
+            end
+
+            Check(most == 1, "never more than one worker gathers a bush at once (most at once: " .. most .. ")")
+            Check(PwTest.Berries(taken) < 4000, "the bush they were sent to is gathered")
+            Check(PwTest.Berries(free) < 4000, "a worker finding its bush taken gathers the free one 4 cells away")
+        end
+
+        Later(2, function()
+            for _, w in ipairs(workers) do PwTest.Gather(w, taken) end
+            Sample()
         end)
     end
 

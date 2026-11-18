@@ -126,7 +126,10 @@ AngelRing:
 		Image: weapon-angelring
 		Explosions: impact
 
-# Bubble: the Elf tower immobilizes a target for its 36 impact frames, one per tick (docs/formats/effect.md).
+# Bubble: the Elf tower immobilizes a target for its 36 impact frames, one per tick (docs/formats/effect.md), and
+# does 2 damage (Mod change: the original's bubble does none). The damage warhead names its targets: the bubble
+# replaces ^Arrow's Warhead@1Dam, and without ValidTargets this one fell back to the engine's Ground and Water, so the
+# tower never hurt flying units.
 BubbleShot:
 	Inherits: ^Arrow
 	ReloadDelay: 26
@@ -141,5 +144,6 @@ BubbleShot:
 		Range: 0c256
 		ValidTargets: Ground, Air
 	Warhead@2Dam: SubtractArmorDamage
-		Damage: 1
+		Damage: 2
+		ValidTargets: Ground, Air
 	Report: weapon-bubble-0.wav

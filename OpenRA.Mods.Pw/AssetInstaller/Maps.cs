@@ -81,7 +81,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 			}
 
-			TestMaps.Export(c);
+			if (c.TestMaps)
+				TestMaps.Export(c);
 		}
 
 		// The actor (image) name of each unit type of JW2_09.TRC (Units.ImageName); null for the empty types.

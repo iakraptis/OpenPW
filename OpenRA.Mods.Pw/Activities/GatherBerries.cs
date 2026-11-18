@@ -21,10 +21,18 @@ namespace OpenRA.Mods.Pw.Activities
 {
 	// The gathering loop: to the bush, gather (the worker's gather animation), to the main building, deliver, back.
 	// Workers gather and deliver from any cell around the bush or building (its sides and corners), the nearest free one,
-	// so several workers spread around it instead of queueing for one spot.
+	// so several workers spread around it instead of queueing for one spot. A worker holds the bush while it gathers
+	// (BerryBush.MaxGatherers, one at a time as in the original); finding it held, it goes to the nearest bush with
+	// room within OtherBushCells, or waits beside it (Pw.exe 0x45b832, 0x45ba99).
 	public class GatherBerries : Activity
 	{
 		const int MaxMoveAttempts = 3;
+
+		// How far a worker looks for another bush when its own is held: the original searches 5 cells around it.
+		const int OtherBushCells = 5;
+
+		// Ticks between looks for room while waiting at a held bush.
+		const int WaitTicks = 8;
 
 		readonly BerryGatherer gatherer;
 		readonly IMove move;
@@ -33,6 +41,8 @@ namespace OpenRA.Mods.Pw.Activities
 		WPos lastBushPosition;
 		int gatherTicks;
 		int moveAttempts;
+		int waitTicks;
+		Actor reserved;
 		int gatheringToken = Actor.InvalidConditionToken;
 		int flightToken = Actor.InvalidConditionToken;
 		BerryFlight berryFlight;
@@ -115,6 +125,23 @@ namespace OpenRA.Mods.Pw.Activities
 					return MoveBeside(self, bush);
 
 				moveAttempts = 0;
+
+				// Held by another worker: another bush with room nearby, or wait here.
+				if (!bush.Trait<BerryBush>().Reserve(self))
+				{
+					if (waitTicks-- > 0)
+						return false;
+
+					waitTicks = WaitTicks;
+					var other = OtherBush(self);
+					if (other != null)
+						bush = other;
+
+					return false;
+				}
+
+				reserved = bush;
+				waitTicks = 0;
 				gatherTicks = gatherer.Info.GatherTicks;
 				if (!string.IsNullOrEmpty(gatherer.Info.GatheringCondition))
 					gatheringToken = self.GrantCondition(gatherer.Info.GatheringCondition);
@@ -136,6 +163,7 @@ namespace OpenRA.Mods.Pw.Activities
 				return false;
 
 			var taken = bush.Trait<BerryBush>().Take(gatherer.TripAmount(self));
+			Release(self);
 
 			// The Wizard keeps casting and follows the berries until they reach the main building.
 			if (gatherer.Info.FliesBerries)
@@ -162,6 +190,24 @@ namespace OpenRA.Mods.Pw.Activities
 			StopGathering(self);
 			gatherer.Load(self, taken);
 			return false;
+		}
+
+		// The nearest bush with berries and room for this worker within OtherBushCells of it.
+		Actor OtherBush(Actor self)
+		{
+			return self.World.FindActorsInCircle(self.CenterPosition, WDist.FromCells(OtherBushCells))
+				.Where(a => a != bush && !a.IsDead && a.IsInWorld && a.TraitOrDefault<BerryBush>() is BerryBush b && !b.IsEmpty
+					&& b.HasRoom(self))
+				.OrderBy(a => (a.CenterPosition - self.CenterPosition).LengthSquared)
+				.FirstOrDefault();
+		}
+
+		void Release(Actor self)
+		{
+			if (reserved != null && !reserved.Disposed)
+				reserved.TraitOrDefault<BerryBush>()?.Release(self);
+
+			reserved = null;
 		}
 
 		// To the nearest free cell around the actor; when all are taken, as near to the nearest one as possible.
@@ -201,6 +247,7 @@ namespace OpenRA.Mods.Pw.Activities
 
 		void StopGathering(Actor self)
 		{
+			Release(self);
 			StopLightning();
 			if (gatheringToken != Actor.InvalidConditionToken)
 				gatheringToken = self.RevokeCondition(gatheringToken);

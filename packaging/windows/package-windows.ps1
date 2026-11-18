@@ -1,13 +1,12 @@
-# Builds the Windows release of OpenPW on Windows: a self-contained game folder (players need no .NET install), a
-# portable zip and an NSIS setup.exe. It does what the SDK's buildpackage.sh does, without the Linux tools that needs.
+# Builds the Windows release of OpenPW on Windows: a self-contained game folder (players need no .NET install), an
+# NSIS setup.exe and a portable zip. It does what the SDK's buildpackage.sh does, without the Linux tools that needs.
 #
 #   powershell -ExecutionPolicy Bypass -File packaging\windows\package-windows.ps1 [-Tag v0.1] [-OutputDir dist]
 #       [-NoInstaller] [-Makensis C:\path\to\makensis.exe]
 #
 # Needs the .NET 6 SDK (or newer) and, for the setup.exe, NSIS (winget install NSIS.NSIS). Only files under mods/ that
-# git does not ignore are packaged, so converted Primitive Wars assets can never end up in it: the game has none of
-# its art, sounds or maps until install-assets converts a copy into Support\Content\pw (update-portable.ps1 bundles
-# this PC's converted content into a portable folder for private testing).
+# git does not ignore are packaged, so converted Primitive Wars assets in a working copy can never end up in a
+# release; the players convert their own copy on first launch (mods/pw-content).
 param(
 	[string]$Tag = "dev-$(Get-Date -Format yyyyMMdd)",
 	[string]$OutputDir,
@@ -158,7 +157,10 @@ foreach ($file in 'AUTHORS', 'COPYING', 'IP2LOCATION-LITE-DB1.IPV6.BIN.ZIP', 'gl
 Set-Content -Path (Join-Path $build 'VERSION') -Value $config['ENGINE_VERSION'] -NoNewline -Encoding ascii
 Copy-Item -Recurse (Join-Path $engine 'glsl') (Join-Path $build 'glsl')
 New-Item -ItemType Directory (Join-Path $build 'mods') | Out-Null
-Copy-Item -Recurse (Join-Path $engine 'mods\common') (Join-Path $build 'mods\common')
+# common for every mod; common-content for the content installer screen (mods/pw-content).
+foreach ($mod in 'common', 'common-content') {
+	Copy-Item -Recurse (Join-Path $engine "mods\$mod") (Join-Path $build "mods\$mod")
+}
 
 Step 'Copying the mod (files git does not ignore, without the test maps)'
 Push-Location $root
@@ -171,8 +173,9 @@ finally { Pop-Location }
 
 $copied = 0
 foreach ($file in $tracked) {
-	# The automated test maps (start-test, combat-test, ...) need the test harness and would only clutter the map list.
-	if ($file -match '^mods/[^/]+/maps/[^/]+-test/') { continue }
+	# The automated test maps (start-test, combat-test, ...) need the test harness and would only clutter the map list;
+	# the Mod SDK's placeholder "Test Map" (maps/test) likewise.
+	if ($file -match '^mods/[^/]+/maps/([^/]+-test|test)/') { continue }
 	$target = Join-Path $build $file
 	New-Item -ItemType Directory -Force (Split-Path $target) | Out-Null
 	Copy-Item -LiteralPath (Join-Path $root $file) -Destination $target
@@ -180,9 +183,13 @@ foreach ($file in $tracked) {
 }
 Write-Host "    $copied files"
 
-$manifest = Join-Path $build "mods\$modId\mod.yaml"
-# WriteAllText: UTF-8 without the byte order mark Windows PowerShell's Set-Content would add.
-[IO.File]::WriteAllText($manifest, ((Get-Content -Raw $manifest) -replace '(?m)^(\tVersion:).*$', "`$1 $Tag"))
+foreach ($manifest in "mods\$modId\mod.yaml", "mods\$modId-content\mod.yaml") {
+	$path = Join-Path $build $manifest
+	if (Test-Path $path) {
+		# WriteAllText: UTF-8 without the byte order mark Windows PowerShell's Set-Content would add.
+		[IO.File]::WriteAllText($path, ((Get-Content -Raw $path) -replace '(?m)^(\tVersion:).*$', "`$1 $Tag"))
+	}
+}
 
 $portable = Join-Path $OutputDir "$($config['PACKAGING_INSTALLER_NAME'])-$Tag-x64-winportable.zip"
 Step "Packing $portable"
@@ -196,6 +203,15 @@ try {
 		$name = $file.FullName.Substring($build.Length + 1).Replace('\', '/')
 		[IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $name, [IO.Compression.CompressionLevel]::Optimal) | Out-Null
 	}
+
+	# The zip is portable: a Support folder beside the game holds its settings and the converted content instead of
+	# %APPDATA%\OpenRA (the engine uses one when it exists; Platform.InitializeSupportDir). Its settings ask for desktop
+	# OpenGL, as launch-game.cmd and the installer's shortcuts do: ANGLE, the engine's Windows default, crashed OpenPW
+	# at start. Not in the installed game, whose folder under Program Files isn't writable.
+	$entry = $zip.CreateEntry('Support/settings.yaml')
+	$writer = New-Object IO.StreamWriter($entry.Open(), (New-Object Text.UTF8Encoding($false)))
+	try { $writer.Write("Graphics:`n`tMode: PseudoFullscreen`n`tGLProfile: Modern`n") }
+	finally { $writer.Dispose() }
 }
 finally { $zip.Dispose() }
 

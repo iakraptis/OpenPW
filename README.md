@@ -1,7 +1,9 @@
 # OpenPW
 
 A restoration of **Primitive Wars** (Arxel Tribe, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
-engine, built with the OpenRA Mod SDK (engine `release-20250330`).
+engine, built with the OpenRA Mod SDK. The engine is downloaded automatically by the first build, from our fork
+[iakraptis/OpenRA](https://github.com/iakraptis/OpenRA) (branch `syw`: `release-20250330` plus our engine fixes,
+pinned by tag in `mod.config`).
 
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
 converts the art, sounds, terrain and maps from your own copy of the game.
@@ -25,10 +27,26 @@ Skirmish is playable with all four races, against other players or the AI:
 - Modern AI with no resource cheating.
 
 The campaign has begun: the first Primitive mission, Battle at Sellbaros, plays from the Missions menu with its
-briefing, narration, dialogue and script. Not yet: the other 47 missions, and an installer screen inside the game
-(the conversion runs from the command line).
+briefing, narration, dialogue and script. Not yet: the other 47 missions.
 The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
 original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
+
+## Installing
+
+Download the latest release from the [Releases](https://github.com/iakraptis/OpenPW/releases) page: the `.exe`
+installer, or the portable `.zip` (unzip it anywhere; it keeps its settings and converted files in its own `Support`
+folder). On first launch OpenPW asks for your copy of Primitive Wars (the folder holding `Pw.exe`; it looks in the
+usual places first) and converts its art, sounds, music and maps, which takes a minute or two. The original game
+files are not included.
+
+## Releasing
+
+Push a tag such as `v0.1` (`git tag v0.1 && git push origin v0.1`): the `Windows release` workflow
+(`.github/workflows/release-windows.yml`) builds the installer and the portable zip with
+`packaging/windows/package-windows.ps1` and publishes them as a GitHub Release. Run the workflow by hand (Actions >
+Windows release > Run workflow) to only build them as a downloadable artifact. Locally:
+`powershell -ExecutionPolicy Bypass -File packaging\windows\package-windows.ps1 -Tag v0.1 -OutputDir dist` (NSIS
+needed for the installer; `-NoInstaller` for the zip alone).
 
 ## Building and running
 
