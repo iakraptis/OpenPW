@@ -25,15 +25,19 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public readonly string Output;
 		public readonly string ModFolder;
 		public readonly bool WriteYaml;
+
+		// Our own test and battle maps (TestMaps): for the developers' runs only, not the players' (PwContentLogic).
+		public readonly bool TestMaps;
 		public readonly SortedSet<string> Written = new(StringComparer.Ordinal);
 		public readonly List<string> Warnings = new();
 
-		public InstallContext(GameFolder game, string output, string modFolder, bool writeYaml)
+		public InstallContext(GameFolder game, string output, string modFolder, bool writeYaml, bool testMaps = true)
 		{
 			Game = game;
 			Output = Path.GetFullPath(output);
 			ModFolder = Path.GetFullPath(modFolder);
 			WriteYaml = writeYaml;
+			TestMaps = testMaps;
 		}
 
 		public void WriteFile(string relative, byte[] data)

@@ -113,7 +113,11 @@ OpenPW/                        (git: github.com/iakraptis/OpenPW, formerly primw
   research/                    gitignored: probes, extracted dumps, Ghidra project, previews
 ```
 
-- Mod id **`pw`**, engine **`release-20250330`** (same as OpenSYW, so its C# compiles as a starting point).
+- Mod id **`pw`**, engine **`release-20250330`** (same as OpenSYW, so its C# compiles as a starting point). Since
+  2026-11-18 the engine comes from our fork, `iakraptis/OpenRA` branch `syw`, pinned by tag in `mod.config`
+  (`syw-20250330.1`: release-20250330 plus a fix that keeps the sub-pixel remainder in `Viewport.Scroll`, so
+  diagonal edge and keyboard scrolling at high frame rates is no longer truncated to nearly zero), shared with
+  OpenSYW.
 - The C# installer is the shipping converter. Python in `research/tools` is for exploration only; once a format is
   understood, port the reader to C# (`OpenRA.Mods.Pw/AssetInstaller/`) and document it in `docs/formats/`.
 - Ghidra: point a copy of `Run-SywAnalysis.ps1` at the OpenSY install (no second 1 GB download); keep the project
@@ -502,8 +506,13 @@ Started 2026-10-31: `install-assets.cmd` / `.sh` run `utility pw --install-asset
 lettered Menu buttons), `audio`, `effects`, `music`. Its map output matched the Python prototype byte for byte.
 - `OpenRA.Mods.Pw/AssetInstaller`: `TrcArchive`, then one stage per format (units, buildings, terrain, effects,
   chrome, audio, maps). Output to `^SupportDir/Content/pw/`, mounted with the same relative paths as `mods/pw/`.
-- Not done: a `mods/pw-content` first-launch screen (locate the folder holding `Pw.exe` and convert): the
-  installer runs from the command line only.
+- [x] First-launch screen (2026-11-18, as OpenSYW's): `mods/pw/mod.yaml` uses `ContentInstallerFileSystem`, so when
+  `Content/pw/install-manifest.txt` is missing the game opens the hidden `mods/pw-content` mod. Its screen
+  (`PwContentLogic`) finds the game (`PwContent.Detect`: "Primitive Wars" and similar names on every fixed drive, in
+  Games, Program Files, Desktop, Documents, Downloads, and next to OpenPW) or lets the player Browse for it
+  (`FolderPicker`, Windows), converts every stage on a background thread with a progress bar (without our test and
+  battle maps: `InstallContext.TestMaps`), then starts the game. Checked with the packaged zip: detection,
+  conversion, then the main menu.
 - Generated YAML (tilesets, sequences, cursors) stays in git; regenerate with `--write-yaml` and check it is
   unchanged.
 
@@ -699,8 +708,13 @@ dead.
   unit is (work, attack, death, fleeing) don't play for units hidden in the fog (`PwVoiced`, `UnderConstruction`).
 
 ### Phase 8: Release
-- Windows installer and portable zip (OpenSYW `packaging/`, GitHub release workflow). Only files that git tracks
-  under `mods/` are packaged.
+- [x] Windows installer and portable zip (2026-11-18, OpenSYW's `packaging/windows`): `package-windows.ps1` builds a
+  self-contained game (no .NET needed), the NSIS setup.exe and the zip. Only files git does not ignore under `mods/`
+  are packaged, without the test maps or the SDK's placeholder Test Map; the engine's `common-content` is included
+  for the content screen. The installer's shortcuts and its "Run OpenPW" pass `Graphics.GLProfile=Modern`; the zip
+  is portable (a `Support` folder with the same setting). Uninstalling asks whether to keep the converted content.
+- [x] GitHub Actions (`.github/workflows/release-windows.yml`): a pushed `v*` tag builds both and publishes a
+  GitHub Release; a manual run only uploads them as an artifact.
 
 ### Campaign (started 2026-11-07)
 - 48 scenarios in Jw2_06, 12 per race ([docs/formats/campaign.md](docs/formats/campaign.md)): the map sections with

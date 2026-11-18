@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OpenRA.Mods.Pw.AssetInstaller
 {
@@ -25,9 +26,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public static string Folder => Path.Combine(Platform.SupportDir, "Content", "pw");
 
 		public static IReadOnlyList<string> Run(string gamePath, string output, string modFolder, IEnumerable<Stage> stages,
-			bool writeYaml, bool mergeManifest, Action<Stage> progress = null)
+			bool writeYaml, bool mergeManifest, Action<Stage> progress = null, bool testMaps = true)
 		{
-			var context = new InstallContext(new GameFolder(gamePath), output, modFolder, writeYaml);
+			var context = new InstallContext(new GameFolder(gamePath), output, modFolder, writeYaml, testMaps);
 			foreach (var stage in stages)
 			{
 				progress?.Invoke(stage);
@@ -36,6 +37,69 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			context.WriteManifest(mergeManifest);
 			return context.Warnings;
+		}
+
+		// Folders where a copy of the game commonly sits: "Primitive Wars" and similar names at the root of every fixed
+		// drive, in Games and Program Files, in the user's Desktop, Downloads and Documents, and next to OpenPW itself
+		// (an installed copy, or a development checkout with the game beside the repository).
+		public static IEnumerable<string> Candidates()
+		{
+			var names = new[] { "Primitive Wars", "PrimitiveWars", "Primitive Wars - Legend of the Land", "Legend of the Land", "PW" };
+			var bases = new List<string>();
+
+			foreach (var drive in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Fixed && d.IsReady))
+			{
+				bases.Add(drive.RootDirectory.FullName);
+				bases.Add(Path.Combine(drive.RootDirectory.FullName, "Games"));
+			}
+
+			var special = new[]
+			{
+				Environment.SpecialFolder.ProgramFilesX86, Environment.SpecialFolder.ProgramFiles,
+				Environment.SpecialFolder.DesktopDirectory, Environment.SpecialFolder.MyDocuments, Environment.SpecialFolder.UserProfile
+			};
+
+			foreach (var folder in special)
+			{
+				var path = Environment.GetFolderPath(folder);
+				if (!string.IsNullOrEmpty(path))
+					bases.Add(path);
+			}
+
+			var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+			if (!string.IsNullOrEmpty(profile))
+				bases.Add(Path.Combine(profile, "Downloads"));
+
+			// Absolute: a development launch gives the engine folder as "..".
+			var engine = Path.GetFullPath(Platform.EngineDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			bases.Add(engine);
+			var parent = Path.GetDirectoryName(engine);
+			if (parent != null)
+			{
+				bases.Add(parent);
+				var grandparent = Path.GetDirectoryName(parent);
+				if (grandparent != null)
+					bases.Add(grandparent);
+			}
+
+			return bases.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(b => names.Select(n => Path.Combine(b, n)));
+		}
+
+		public static string Detect()
+		{
+			foreach (var candidate in Candidates())
+			{
+				try
+				{
+					if (GameFolder.IsGameFolder(candidate))
+						return candidate;
+				}
+				catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+				{
+				}
+			}
+
+			return null;
 		}
 	}
 }
