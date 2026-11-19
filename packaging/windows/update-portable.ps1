@@ -72,7 +72,13 @@ try {
 	$game = Join-Path $work 'game'
 	Add-Type -AssemblyName System.IO.Compression.FileSystem
 	[IO.Compression.ZipFile]::ExtractToDirectory((Resolve-Path $Zip).Path, $game)
+	# The release zip holds OpenPW\OpenPW.exe (the launcher) and the game in OpenPW\game; older zips held the game alone.
+	$inner = Join-Path $game 'OpenPW\game'
+	if (Test-Path (Join-Path $inner 'OpenPW.exe')) { $game = $inner }
 	if (-not (Test-Path (Join-Path $game 'OpenPW.exe'))) { throw "$Zip is not an OpenPW portable zip (no OpenPW.exe)." }
+	# The zip's own Support (its default settings) must not replace the testers' data in the folder; the defaults are
+	# written below only when the folder has none.
+	if (Test-Path (Join-Path $game 'Support')) { Remove-Item -Recurse -Force (Join-Path $game 'Support') }
 
 	Step "Updating the game in $Destination"
 	# Everything but Support mirrors the new game (files dropped from the game are removed here too); Support is the

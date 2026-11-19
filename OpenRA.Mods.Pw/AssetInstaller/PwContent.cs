@@ -70,16 +70,14 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			if (!string.IsNullOrEmpty(profile))
 				bases.Add(Path.Combine(profile, "Downloads"));
 
+			// The engine folder and three levels above it: an installed copy (OpenPW\), the portable zip (OpenPW\game\,
+			// unzipped beside the game) and a development checkout (primwars\engine\, the game beside the repository).
 			// Absolute: a development launch gives the engine folder as "..".
-			var engine = Path.GetFullPath(Platform.EngineDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-			bases.Add(engine);
-			var parent = Path.GetDirectoryName(engine);
-			if (parent != null)
+			var upFolder = Path.GetFullPath(Platform.EngineDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			for (var up = 0; up < 4 && !string.IsNullOrEmpty(upFolder); up++)
 			{
-				bases.Add(parent);
-				var grandparent = Path.GetDirectoryName(parent);
-				if (grandparent != null)
-					bases.Add(grandparent);
+				bases.Add(upFolder);
+				upFolder = Path.GetDirectoryName(upFolder);
 			}
 
 			return bases.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(b => names.Select(n => Path.Combine(b, n)));

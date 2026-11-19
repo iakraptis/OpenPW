@@ -194,26 +194,57 @@ foreach ($manifest in "mods\$modId\mod.yaml", "mods\$modId-content\mod.yaml") {
 $portable = Join-Path $OutputDir "$($config['PACKAGING_INSTALLER_NAME'])-$Tag-x64-winportable.zip"
 Step "Packing $portable"
 if (Test-Path $portable) { Remove-Item $portable }
+
+# The zip holds one folder: only the small OpenPW.exe (PortableLauncher.cs, which starts game\OpenPW.exe) and a readme
+# at its top, the game in game\. It is portable: game\Support beside the game holds its settings, the converted
+# content and the logs instead of %APPDATA%\OpenRA (the engine uses a Support folder when one exists beside it;
+# Platform.InitializeSupportDir). Its settings ask for desktop OpenGL, as launch-game.cmd and the installer's shortcuts
+# do: ANGLE, the engine's Windows default, crashed OpenPW at start. Not in the installed game, whose folder under
+# Program Files isn't writable.
+$top = $config['PACKAGING_INSTALLER_NAME']
+$launcher = Join-Path ([IO.Path]::GetTempPath()) "$launcherName-portable-$PID.exe"
+# The C# compiler of .NET Framework 4, which every Windows 10 and 11 PC (and the GitHub runner) has.
+$csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+& $csc /nologo /target:winexe /optimize+ "/win32icon:$icon" "/out:$launcher" (Join-Path $PSScriptRoot 'PortableLauncher.cs') | Out-Host
+if ($LASTEXITCODE -ne 0) { throw "csc failed with exit code $LASTEXITCODE" }
+
+$readme = @"
+$($config['PACKAGING_DISPLAY_NAME']) $Tag
+
+Run $launcherName.exe. Nothing needs installing: the game and its .NET runtime are in this folder.
+
+On first launch it asks for your copy of Primitive Wars (the folder holding Pw.exe) and converts its art, sounds,
+music and maps into game\Support\Content. The original game files are not included.
+
+Settings, replays and logs are kept in game\Support too, so deleting this folder removes everything.
+If Windows says "Windows protected your PC", click "More info", then "Run anyway".
+If the game crashes, please report it with the newest files from game\Support\Logs.
+"@
+
 # Entries written one by one: Compress-Archive and ZipFile.CreateFromDirectory both store backslashes in the paths
 # under Windows PowerShell, which other unzip tools mishandle.
 Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
+function Add-Text($zip, [string]$name, [string]$text) {
+	$writer = New-Object IO.StreamWriter($zip.CreateEntry($name).Open(), (New-Object Text.UTF8Encoding($false)))
+	try { $writer.Write($text) }
+	finally { $writer.Dispose() }
+}
+
 $zip = [IO.Compression.ZipFile]::Open($portable, [IO.Compression.ZipArchiveMode]::Create)
 try {
 	foreach ($file in Get-ChildItem -Recurse -File $build) {
-		$name = $file.FullName.Substring($build.Length + 1).Replace('\', '/')
+		$name = "$top/game/" + $file.FullName.Substring($build.Length + 1).Replace('\', '/')
 		[IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $name, [IO.Compression.CompressionLevel]::Optimal) | Out-Null
 	}
 
-	# The zip is portable: a Support folder beside the game holds its settings and the converted content instead of
-	# %APPDATA%\OpenRA (the engine uses one when it exists; Platform.InitializeSupportDir). Its settings ask for desktop
-	# OpenGL, as launch-game.cmd and the installer's shortcuts do: ANGLE, the engine's Windows default, crashed OpenPW
-	# at start. Not in the installed game, whose folder under Program Files isn't writable.
-	$entry = $zip.CreateEntry('Support/settings.yaml')
-	$writer = New-Object IO.StreamWriter($entry.Open(), (New-Object Text.UTF8Encoding($false)))
-	try { $writer.Write("Graphics:`n`tMode: PseudoFullscreen`n`tGLProfile: Modern`n") }
-	finally { $writer.Dispose() }
+	[IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $launcher, "$top/$launcherName.exe", [IO.Compression.CompressionLevel]::Optimal) | Out-Null
+	Add-Text $zip "$top/README.txt" ($readme -replace "(?<!`r)`n", "`r`n")
+	Add-Text $zip "$top/game/Support/settings.yaml" "Graphics:`n`tMode: PseudoFullscreen`n`tGLProfile: Modern`n"
 }
-finally { $zip.Dispose() }
+finally {
+	$zip.Dispose()
+	Remove-Item -Force $launcher -ErrorAction SilentlyContinue
+}
 
 if ($makensisPath) {
 	$setup = Join-Path $OutputDir "$($config['PACKAGING_INSTALLER_NAME'])-$Tag-x64.exe"
