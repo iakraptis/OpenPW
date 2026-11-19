@@ -77,6 +77,66 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var source = File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n");
 				c.WriteText($"maps/{battle.Name}/map.yaml", BattleYaml(source, battle.Title, battle.Races));
 			}
+
+			ExportPathing(c, testlib);
+		}
+
+		// pathing-test: a group of Powermen filing over a narrow ramp of (2) One vs One (MapTemplates/pathing-test). The
+		// map's objects stay; its wild creatures don't (they would fight the group).
+		static void ExportPathing(InstallContext c, byte[] testlib)
+		{
+			const string Name = "pathing-test";
+			var baseFolder = c.OutputPath($"maps/{DuelMap}");
+			if (!File.Exists(Path.Combine(baseFolder, "map.yaml")))
+			{
+				c.Warnings.Add($"{Name}: no converted map {DuelMap}");
+				return;
+			}
+
+			foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
+				c.WriteFile($"maps/{Name}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
+
+			c.WriteText($"maps/{Name}/test.lua", Encoding.UTF8.GetString(Template($"MapTemplates/{Name}/test.lua")).Replace("\r\n", "\n"));
+			c.WriteFile($"maps/{Name}/testlib.lua", testlib);
+
+			var source = File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n");
+			var lines = source.Split('\n');
+			string Field(string field) => lines.First(l => l.StartsWith(field + ":", System.StringComparison.Ordinal));
+			var s = new StringBuilder("MapFormat: 12\n\nRequiresMod: pw\n\nTitle: Test: Pathing\n\nAuthor: OpenPW\n\n");
+			s.Append($"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
+			s.Append("Players:\n");
+			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
+			s.Append("\tPlayerReference@Multi0:\n\t\tName: Multi0\n\t\tPlayable: True\n\t\tLockFaction: True\n\t\tNonCombatant: True\n\t\tFaction: primitive\n");
+			s.Append("\tPlayerReference@Group:\n\t\tName: Group\n\t\tFaction: primitive\n\t\tLockFaction: True\n");
+			s.Append("\nActors:\n\tSpawn0: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: 40,40\n");
+			for (var i = 0; i < lines.Length; i++)
+			{
+				if (!lines[i].StartsWith("\tObject", System.StringComparison.Ordinal))
+					continue;
+
+				s.Append(lines[i]).Append('\n');
+				while (i + 1 < lines.Length && lines[i + 1].StartsWith("\t\t", System.StringComparison.Ordinal))
+					s.Append(lines[++i]).Append('\n');
+			}
+
+			s.Append(@"
+Rules:
+	player:
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true
+".Replace("\r\n", "\n"));
+			c.WriteText($"maps/{Name}/map.yaml", s.ToString());
 		}
 
 		// The template with this battle's settings: its bots, whether it checks, its name.
