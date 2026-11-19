@@ -117,7 +117,11 @@ OpenPW/                        (git: github.com/iakraptis/OpenPW, formerly primw
   2026-11-18 the engine comes from our fork, `iakraptis/OpenRA` branch `syw`, pinned by tag in `mod.config`
   (`syw-20250330.1`: release-20250330 plus a fix that keeps the sub-pixel remainder in `Viewport.Scroll`, so
   diagonal edge and keyboard scrolling at high frame rates is no longer truncated to nearly zero), shared with
-  OpenSYW.
+  OpenSYW. `syw-20250330.2` (2026-11-19) adds: a unit's first path ignores other units (`Move.PathSearchOrder`
+  starts at `Immovable`), so a group sent over a narrow ramp files across instead of splitting off on detours (the
+  engine treated every unit as a wall, and the leading units made the ramp look closed). `pathing-test`, written by
+  the installer on (2) One VS One (`TestMaps.ExportPathing`), checks it: 12 Powermen across a two-cell ramp, all by
+  tick 400 (120 with the fix, 315 without) and none more than 10 cells from it (detours went 19).
 - The C# installer is the shipping converter. Python in `research/tools` is for exploration only; once a format is
   understood, port the reader to C# (`OpenRA.Mods.Pw/AssetInstaller/`) and document it in `docs/formats/`.
 - Ghidra: point a copy of `Run-SywAnalysis.ps1` at the OpenSY install (no second 1 GB download); keep the project
@@ -711,8 +715,10 @@ dead.
 - [x] Windows installer and portable zip (2026-11-18, OpenSYW's `packaging/windows`): `package-windows.ps1` builds a
   self-contained game (no .NET needed), the NSIS setup.exe and the zip. Only files git does not ignore under `mods/`
   are packaged, without the test maps or the SDK's placeholder Test Map; the engine's `common-content` is included
-  for the content screen. The installer's shortcuts and its "Run OpenPW" pass `Graphics.GLProfile=Modern`; the zip
-  is portable (a `Support` folder with the same setting). Uninstalling asks whether to keep the converted content.
+  for the content screen. The installer's shortcuts and its "Run OpenPW" pass `Graphics.GLProfile=Modern`. The zip
+  has the testers' layout: one `OpenPW` folder with only the small `OpenPW.exe` (`PortableLauncher.cs`) and a
+  README at its top and the game in `game\`, portable (`game\Support` with the same setting holds settings, converted
+  content and logs). Uninstalling asks whether to keep the converted content.
 - [x] GitHub Actions (`.github/workflows/release-windows.yml`): a pushed `v*` tag builds both and publishes a
   GitHub Release; a manual run only uploads them as an artifact.
 
