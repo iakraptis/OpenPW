@@ -143,7 +143,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					}
 					else
 					{
-						error = FluentProvider.GetMessage("pw-content-not-game-folder", "folder", chosen);
+						error = FluentProvider.GetMessage("pw-content-not-game-folder", "folder", chosen,
+							"missing", string.Join(", ", GameFolder.MissingArchives(chosen)));
 						state = State.Failed;
 					}
 				}

@@ -35,9 +35,10 @@ original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
 
 Download the latest release from the [Releases](https://github.com/iakraptis/OpenPW/releases) page: the `.exe`
 installer, or the portable `.zip` (unzip it anywhere; it keeps its settings and converted files in its own `Support`
-folder). On first launch OpenPW asks for your copy of Primitive Wars (the folder holding `Pw.exe`; it looks in the
-usual places first) and converts its art, sounds, music and maps, which takes a minute or two. The original game
-files are not included.
+folder). On first launch OpenPW asks for your copy of Primitive Wars and converts its art, sounds, music and maps,
+which takes a minute or two. Give it the folder the game is installed in, or a folder you copied the files of the CD
+into (the one holding the `Jw2_*.trc` files); it looks in the usual places first. The original game files are not
+included.
 
 ## Releasing
 

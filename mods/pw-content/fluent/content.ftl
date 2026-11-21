@@ -11,7 +11,7 @@ button-pw-content-quit = Quit
 
 ## PwContentLogic
 pw-content-not-found =
-    OpenPW needs the art, sounds and maps of the original Primitive Wars (2001). Click Browse and choose the folder of your copy of the game (the one holding Pw.exe).
+    OpenPW needs the art, sounds and maps of the original Primitive Wars (2001). Click Browse and choose the folder of your copy of the game: where it is installed, or a folder you copied the files of the CD into (the one holding the Jw2_*.trc files).
 pw-content-found =
     Found your copy of Primitive Wars. Click Install to convert its art, sounds, music and maps for OpenPW (it takes a minute or two).
 pw-content-installed =
@@ -19,5 +19,5 @@ pw-content-installed =
 pw-content-installing = Converting the game files...
 pw-content-failed = The conversion did not succeed.
 pw-content-converting = { $stage }
-pw-content-not-game-folder = { $folder } is not a Primitive Wars folder (Pw.exe and Jw2_03.trc are missing).
-pw-content-browse-title = Choose your Primitive Wars folder (the one holding Pw.exe)
+pw-content-not-game-folder = { $folder } is not a Primitive Wars folder (missing: { $missing }).
+pw-content-browse-title = Choose your Primitive Wars folder (the one holding the Jw2_*.trc files)
