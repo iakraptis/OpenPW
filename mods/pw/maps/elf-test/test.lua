@@ -4,7 +4,9 @@
 -- 3. Shield (WhiteElf, level 1, 60 mana): a friendly unit's shield soaks up 480 damage before it is hurt.
 -- 4. Teleport (Ranger, 65 mana): the Ranger is at the place at once.
 -- 5. Drop stone (BlueElf, level 1, 65 mana): 200 damage around the place.
--- 6. Cure (Unicorn): automatically heals a nearby friendly unit for its mana. Fake (after Study Fake): a harmless copy.
+-- 6. Cure (Unicorn): automatically heals a nearby friendly unit for its mana, as the original casts it: every 16 ticks,
+--    each cast 2 HP a tick for 15 ticks (so 62 to 90 HP in 48 ticks, not the 96 of 2 HP every tick). Fake (after
+--    Study Fake): a harmless copy.
 -- 7. Meteor (ManaSpread, after Study Meteor): it dies, meteors hurt the enemies there.
 -- 8. Resurrect (AngelElf, 80 mana): a unit that fell there comes back, the caster's own, at half health.
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
@@ -185,6 +187,11 @@ Unicorn = function()
     model.Stance = "HoldFire"
     Later(2, function()
         hurt.Health = 30
+        Later(48, function()
+            local healed = hurt.Health - 30
+            Check(healed >= 45 and healed <= 90,
+                "Cure heals in casts of 15 ticks every 16, not every tick (" .. healed .. " HP in 48 ticks)")
+        end)
         WaitFor("Cure automatically heals the RedElf to full", 200, function() return hurt.Health == hurt.MaxHealth end, function(ok)
             if not ok then return end
             Check(PwTest.Mana(unicorn) < 200, "automatic Cure spends mana (" .. PwTest.Mana(unicorn) .. " left)")

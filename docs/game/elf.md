@@ -92,7 +92,8 @@ The bots cast the Elf spells with `PwSpellBotModule` (rules/ai.yaml). They choos
 | Resurrect | where 2 or more units fell lately |
 | Teleport | the Ranger flees home below 35% health, with enemies near |
 
-Cure needs no orders: an idle Unicorn heals the unit Cure was last cast on, otherwise the most hurt ally in reach,
-2 HP for 1 mana a tick (`PwSpell.AutoHeal`); the AI leaves it to that. The research a spell needs (Study Fake,
+Cure needs no orders: every 16 ticks the Unicorn casts it on the unit Cure was last cast on, otherwise the most hurt
+ally in reach, healing 2 HP for 1 mana a tick for 15 ticks, as the original ([rules.md](rules.md), `PwSpell.AutoHeal`);
+the AI leaves it to that. The research a spell needs (Study Fake,
 Study Meteor) is started once the bot has the caster. The unarmed casters (Unicorn, ManaSpread) are trained by weight,
 stay out of the attack squads, and follow the bot's main group.

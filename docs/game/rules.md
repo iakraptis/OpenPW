@@ -248,12 +248,29 @@ the unit's update counts it down and clears the flag at 0 (C, `0x461b37`), every
 Elf spells in the mod (`PwSpell`): Thunder bolt 80 damage to a unit; Shield a 480-point damage shield on a friendly
 unit (the shield pool of `0x478db8`, drained by damage in `FUN_00457d4b`), Mass temper 160 for 300 ticks to the
 friendly units within 56 px; Teleport the Ranger to any explored place; Jump portal open 54 ticks (0x1e8, counted every
-tick, `0x478b6e`), throwing enemies that walk in every 4 ticks (`0x478a40`) 12 cells away (the landing is the mod's); Drop stone 200 within 64 px; Cure 2 HP a
-tick for 1 mana a tick; Fake a copy of a unit, the caster's own, harmless, gone after 960 ticks (Fake's 0x1ec 30 ×
+tick, `0x478b6e`), throwing enemies that walk in every 4 ticks (`0x478a40`) 12 cells away (the landing is the mod's); Drop stone 200 within 64 px; Cure (below); Fake a copy of a unit, the caster's own, harmless, gone after 960 ticks (Fake's 0x1ec 30 ×
 32: the original's timer for summoned units); Meteor 60 meteors of 30 within 64 px, falling within 80 px of the
 place 7 to 54 ticks after the cast, the ManaSpread lost; Resurrect the living units that died within 64 px of the place lately, the caster's own,
 at half health. The ManaSpread's passive (.chr 0x1f8 bit 0x4, and its name) gives nearby casters mana (the amounts
 are the mod's). Magic.trt holds 16 icons (records 0-15): Cure, record 18, takes Vanishing's.
+
+**Cure** (record 18, the Unicorn) is cast on its own, as a passive (C, `Pw.exe`, 2026-11-22):
+
+- Every 16 ticks, staggered between units (`(tick & 15) == (unit slot & 15)`, `0x457730`), a unit whose type has
+  flag 0x10 (`0x677440`) and more mana than one tick's cost looks for a target: an allied unit, not itself, of a
+  type that can be healed (`0x67743c` flag 0x10), hurt, within its range (`0x6773e4`, the Unicorn's 96 px). It
+  takes the one with the lowest per-type value read at `0x677408` (first found on ties; the mod takes the most
+  hurt). The routine is skipped while the unit has state flags 0xb0 (dead, stone, …).
+- It casts Cure at the target (`0x478db8`, 1 mana) and again at itself (`0x478cd5`: its 6-frame glow and the
+  sound, record 0x834). Each cast is its own spell object from a shared pool (`FUN_0047b1c0`); nothing limits how
+  many a caster has.
+- The target's Cure heals from its first tick, for 15 ticks (record 0x228 frames, `0x478839`): each tick, if the
+  caster has 1 mana and the target is hurt, 1 mana for 2 HP, capped at full health (`0x478649`; not raised by spell
+  power). So one target at a time, 15 ticks out of every 16.
+
+In the mod (`PwSpell` `AutoHeal`): the same rhythm and amounts, on the unit the player last ordered it on while
+that one is hurt and in range, otherwise the most hurt. Not copied: a Unicorn turned to stone still heals. Mod
+change: the sound at half volume, not restarted while it plays.
 
 ## Kill points (Demon)
 

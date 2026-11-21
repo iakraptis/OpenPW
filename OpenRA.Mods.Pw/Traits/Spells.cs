@@ -44,9 +44,13 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Whose units its area effects reach.")]
 		public readonly PlayerRelationship AffectsRelationships = PlayerRelationship.Enemy | PlayerRelationship.Neutral;
 
-		[Desc("While the caster is idle, it heals on its own (Cure): the unit last cast on while it is hurt and in Range,",
-			"otherwise the most hurt one it can target, Heal HP for ManaPerStep mana every tick.")]
+		[Desc("The caster casts it on its own every AutoHealInterval ticks, whatever it is doing, while it has more mana ",
+			"than ManaPerStep (Cure, as Pw.exe 0x457730): on the unit it was last ordered to cast on while that is hurt ",
+			"and in Range, otherwise on the most hurt one it can target. Each cast heals for its Steps.")]
 		public readonly bool AutoHeal = false;
+
+		[Desc("Ticks between AutoHeal casts (the original's every 16 ticks, staggered between units).")]
+		public readonly int AutoHealInterval = 16;
 
 		[Desc("Kill points spent (spell record 0x1e0).")]
 		public readonly int Cost = 0;
@@ -155,6 +159,13 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public readonly string Sound = null;
 
+		[Desc("Volume of Sound, 1 = as recorded.")]
+		public readonly float SoundVolume = 1f;
+
+		[Desc("Sound is not started again while the caster's last one is still playing (AutoHeal casts come faster ",
+			"than Cure's sound lasts).")]
+		public readonly bool SoundOnce = false;
+
 		[VoiceReference]
 		public readonly string Voice = "Action";
 
@@ -166,10 +177,11 @@ namespace OpenRA.Mods.Pw.Traits
 		public const string OrderID = "PwSpell";
 
 		public readonly PwSpellInfo Info;
-		Actor autoHealTarget;
 
-		// AutoHeal: the unit the spell was last cast on, healed first.
+		// AutoHeal: the unit the player last cast it on, healed first; ticks to the next cast (-1: not started).
 		Actor preferred;
+		int autoHealCountdown = -1;
+		ISound sound;
 
 		public PwSpell(PwSpellInfo info)
 		{
@@ -211,15 +223,28 @@ namespace OpenRA.Mods.Pw.Traits
 		string IOrderVoice.VoicePhraseForOrder(Actor self, Order order) =>
 			order.OrderString == OrderID && order.TargetString == Info.Name ? Info.Voice : null;
 
+		// AutoHeal, as Pw.exe's passive routine (0x457730): every AutoHealInterval ticks, staggered between units by
+		// their number, a caster with more mana than one step costs casts on one hurt ally in Range (not itself). Each
+		// cast then heals its target for Steps ticks (0x478649), one at a time: the next cast comes as the last ends.
+		// The original picks the target by a per-type value (0x677408); this picks the most hurt.
 		void ITick.Tick(Actor self)
 		{
-			if (!Info.AutoHeal || !self.IsIdle || !IsReady(self))
-			{
-				autoHealTarget = null;
+			if (!Info.AutoHeal)
 				return;
-			}
 
-			bool Hurt(Actor a) => CanTarget(self, a) && a.TraitOrDefault<IHealth>() is IHealth health && health.HP < health.MaxHP;
+			var interval = Math.Max(1, Info.AutoHealInterval);
+			if (autoHealCountdown < 0)
+				autoHealCountdown = (int)(self.ActorID % (uint)interval);
+
+			if (autoHealCountdown-- > 0)
+				return;
+
+			autoHealCountdown = interval - 1;
+			if (self.IsDead || !self.IsInWorld || !IsReady(self) || (self.TraitOrDefault<PwMana>()?.Mana ?? 0) <= Info.ManaPerStep)
+				return;
+
+			bool Hurt(Actor a) => a != self && CanTarget(self, a) && a.TraitOrDefault<IHealth>() is IHealth health
+				&& health.HP < health.MaxHP;
 			if (preferred != null && (!Hurt(preferred)
 				|| (preferred.CenterPosition - self.CenterPosition).HorizontalLengthSquared > Info.Range.LengthSquared))
 				preferred = null;
@@ -227,37 +252,17 @@ namespace OpenRA.Mods.Pw.Traits
 			var target = preferred ?? self.World.FindActorsInCircle(self.CenterPosition, Info.Range)
 				.Where(Hurt)
 				.OrderBy(a => (long)a.Trait<IHealth>().HP * 100 / a.Trait<IHealth>().MaxHP)
+				.ThenBy(a => a.ActorID)
 				.FirstOrDefault();
 
-			if (target == null)
-			{
-				autoHealTarget = null;
-				return;
-			}
-
-			// The cue when it turns to a new patient, only where the viewer can see it.
-			var viewer = self.World.RenderPlayer;
-			if (autoHealTarget != target && (viewer == null || target.CanBeViewedByPlayer(viewer)))
-			{
-				autoHealTarget = target;
-				if (Info.Sound != null)
-					Game.Sound.Play(SoundType.World, Info.Sound, target.CenterPosition);
-
-				if (Info.Image != null)
-					ShowEffect(self.World, target, target.CenterPosition);
-			}
-
-			var mana = self.TraitOrDefault<PwMana>();
-			if (mana?.Spend(Info.ManaPerStep) != true)
-				return;
-
-			var health = target.Trait<IHealth>();
-			var heal = Power(self, Info.Heal);
-			health.InflictDamage(target, self, new Damage(-Math.Min(heal, health.MaxHP - health.HP)), true);
+			if (target != null)
+				Cast(self, Target.FromActor(target), ordered: false);
 		}
 
 		// Called by CastSpell once the caster is in range, facing the target.
-		public void Release(Actor self, Target target)
+		public void Release(Actor self, Target target) => Cast(self, target, ordered: true);
+
+		void Cast(Actor self, Target target, bool ordered)
 		{
 			if (!IsReady(self))
 				return;
@@ -270,12 +275,17 @@ namespace OpenRA.Mods.Pw.Traits
 
 			var pos = target.CenterPosition;
 			var victim = Info.Target == PwSpellTarget.Unit ? target.Actor : null;
-			if (Info.AutoHeal && victim != null)
+			if (ordered && Info.AutoHeal && victim != null)
 				preferred = victim;
 
 			var world = self.World;
-			if (Info.Sound != null)
-				Game.Sound.Play(SoundType.World, Info.Sound, pos);
+
+			// A cast on its own is heard only where the viewer sees the caster (it mustn't give away a Unicorn in the
+			// fog).
+			var viewer = world.RenderPlayer;
+			var heard = ordered || viewer == null || self.CanBeViewedByPlayer(viewer);
+			if (Info.Sound != null && heard && (!Info.SoundOnce || sound == null || sound.Complete))
+				sound = Game.Sound.Play(SoundType.World, Info.Sound, pos, Info.SoundVolume);
 
 			if (Info.Image != null && Info.PortalTicks == 0)
 			{
@@ -359,9 +369,16 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void Step(Actor self, Actor victim, WPos pos, int damage, int heal)
 		{
-			// Cure goes on while the caster lives and has the mana.
-			if (Info.ManaPerStep > 0 && (self.IsDead || self.TraitOrDefault<PwMana>()?.Spend(Info.ManaPerStep) != true))
-				return;
+			// Cure goes on while the caster lives and has the mana, and spends it only on a unit that is still hurt
+			// (Pw.exe 0x478649).
+			if (Info.ManaPerStep > 0)
+			{
+				if (self.IsDead || (heal > 0 && damage == 0 && !Reached(self, victim, pos).Any(a => a.Trait<IHealth>().HP < a.Trait<IHealth>().MaxHP)))
+					return;
+
+				if (self.TraitOrDefault<PwMana>()?.Spend(Info.ManaPerStep) != true)
+					return;
+			}
 
 			if (Info.Scatter > WDist.Zero)
 			{
