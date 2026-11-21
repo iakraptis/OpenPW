@@ -281,7 +281,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () => world.OrderGenerator =
-				new AttackMoveOrderGenerator(world, attackers.Where(a => !a.IsDead));
+				new PwAttackMoveOrderGenerator(world, attackers.Where(a => !a.IsDead));
 		}
 
 		// Then a click on the map: the units go back and forth between where they are and there, attacking every enemy
