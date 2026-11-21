@@ -28,10 +28,10 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int ScanInterval = 30;
 
 		[Desc("By player (internal name): the units to train and how many of each to have waiting for the next attack.")]
-		public readonly Dictionary<string, Dictionary<string, int>> Train = new();
+		public readonly Dictionary<string, Dictionary<string, int>> Train = [];
 
 		[Desc("By player (internal name): units waiting before they attack together.")]
-		public readonly Dictionary<string, int> AttackSize = new();
+		public readonly Dictionary<string, int> AttackSize = [];
 
 		[Desc("Units waiting before they attack, for a player AttackSize does not list.")]
 		public readonly int DefaultAttackSize = 10;
@@ -43,7 +43,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		readonly World world;
 		readonly Player player;
-		readonly HashSet<Actor> attacking = new();
+		readonly HashSet<Actor> attacking = [];
 		HashSet<Actor> placed;
 		int ticks;
 

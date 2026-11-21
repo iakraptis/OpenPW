@@ -11,6 +11,7 @@
 
 using System;
 using System.Linq;
+using System.Numerics;
 using OpenRA.FileFormats;
 using OpenRA.Graphics;
 using OpenRA.Primitives;
@@ -38,14 +39,14 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			public int Side, Top, Bottom;
 
 			// Released and pressed: fill gradient (top, bottom), lit edge, shaded edge.
-			public float3[] Fill, FillPressed;
-			public float3 Light, LightPressed, Dark, Outline;
+			public Vector3[] Fill, FillPressed;
+			public Vector3 Light, LightPressed, Dark, Outline;
 
 			// Halo around the released word, none if null.
-			public float3? Glow;
+			public Vector3? Glow;
 		}
 
-		static float3 C(int r, int g, int b) => new(r, g, b);
+		static Vector3 C(int r, int g, int b) => new(r, g, b);
 
 		static readonly (string Race, Style Style)[] Styles =
 		{
@@ -114,16 +115,16 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			c.WriteFile($"chrome/bar-{race}-menu.png", new Png(sheet, SpriteFrameType.Rgba32, SheetWidth, SheetHeight).Save());
 		}
 
-		static float3[,] Button(Style s, byte[] bar, int sheetWidth, float[,] word, bool pressed)
+		static Vector3[,] Button(Style s, byte[] bar, int sheetWidth, float[,] word, bool pressed)
 		{
 			var (w, h) = (s.Width, s.Height);
-			var rgb = new float3[h, w];
+			var rgb = new Vector3[h, w];
 			for (var y = 0; y < h; y++)
 			{
 				for (var x = 0; x < w; x++)
 				{
 					var o = 4 * ((s.Y + y) * sheetWidth + s.X + x);
-					rgb[y, x] = new float3(bar[o], bar[o + 1], bar[o + 2]);
+					rgb[y, x] = new Vector3(bar[o], bar[o + 1], bar[o + 2]);
 				}
 			}
 
@@ -139,7 +140,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				edge = Blur(edge, 1);
 				for (var y = 0; y < h; y++)
 					for (var x = 0; x < w; x++)
-						rgb[y, x] = Mix(0.72f * rgb[y, x], float3.Zero, edge[y, x] * 0.6f);
+						rgb[y, x] = Mix(0.72f * rgb[y, x], Vector3.Zero, edge[y, x] * 0.6f);
 
 				m = Shift(word, 1, 1);
 			}
@@ -255,7 +256,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return m;
 		}
 
-		static float3 Mix(float3 a, float3 b, float t) => (1 - t) * a + t * b;
+		static Vector3 Mix(Vector3 a, Vector3 b, float t) => (1 - t) * a + t * b;
 
 		// out(x, y) = a(x - dx, y - dy), zero outside.
 		static float[,] Shift(float[,] a, int dx, int dy)

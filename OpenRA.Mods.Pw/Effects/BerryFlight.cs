@@ -27,9 +27,7 @@ namespace OpenRA.Mods.Pw.Effects
 		readonly int speed;
 		readonly string palette;
 		readonly Animation anim;
-		WPos pos;
-
-		public WPos Position => pos;
+		public WPos Position { get; private set; }
 		public bool IsComplete { get; private set; }
 
 		public BerryFlight(World world, WPos from, Actor dropOff, Player owner, int amount, string image, string sequence, string palette, int speed)
@@ -40,10 +38,10 @@ namespace OpenRA.Mods.Pw.Effects
 			this.amount = amount;
 			this.speed = speed;
 			this.palette = palette;
-			pos = from;
+			Position = from;
 			anim = new Animation(world, image);
 			anim.PlayRepeating(sequence);
-			world.ScreenMap.Add(this, pos, anim.Image);
+			world.ScreenMap.Add(this, Position, anim.Image);
 		}
 
 		public void Tick(World world)
@@ -55,7 +53,7 @@ namespace OpenRA.Mods.Pw.Effects
 				return;
 			}
 
-			var to = dropOff.CenterPosition - pos;
+			var to = dropOff.CenterPosition - Position;
 			if (to.HorizontalLength <= speed)
 			{
 				if (dropOff.Owner == owner)
@@ -65,8 +63,8 @@ namespace OpenRA.Mods.Pw.Effects
 				return;
 			}
 
-			pos += to * speed / to.Length;
-			world.ScreenMap.Update(this, pos, anim.Image);
+			Position += to * speed / to.Length;
+			world.ScreenMap.Update(this, Position, anim.Image);
 		}
 
 		void Remove()
@@ -80,10 +78,10 @@ namespace OpenRA.Mods.Pw.Effects
 
 		public IEnumerable<IRenderable> Render(WorldRenderer wr)
 		{
-			if (world.FogObscures(pos))
+			if (world.FogObscures(Position))
 				return SpriteRenderable.None;
 
-			return anim.Render(pos, wr.Palette(palette));
+			return anim.Render(Position, wr.Palette(palette));
 		}
 	}
 }

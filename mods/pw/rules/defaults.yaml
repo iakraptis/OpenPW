@@ -1918,7 +1918,6 @@
 # An upgrade level (rules/<race>/upgrades.yaml, generated): researched by its building like a unit, never placed in the
 # world. Its icon is the "icon" sequence of its image (sequences/upgrades.yaml).
 ^Upgrade:
-	AlwaysVisible:
 	Interactable:
 	Buildable:
 		BuildDurationModifier: 100

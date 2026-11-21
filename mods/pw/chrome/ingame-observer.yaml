@@ -93,14 +93,16 @@ Container@OBSERVER_WIDGETS:
 							Height: 23
 							X: 2
 							Y: 5
-						Label@LABEL:
+						LabelWithTooltip@LABEL:
 							X: 34
-							Width: PARENT_WIDTH
+							Width: PARENT_WIDTH - 36 - 16
 							Height: 25
 							Shadow: True
+							TooltipContainer: TOOLTIP_CONTAINER
+							TooltipTemplate: SIMPLE_TOOLTIP
 						Label@NOFLAG_LABEL:
 							X: 5
-							Width: PARENT_WIDTH
+							Width: PARENT_WIDTH - 7 - 16
 							Height: 25
 							Shadow: True
 				Container@REPLAY_PLAYER:

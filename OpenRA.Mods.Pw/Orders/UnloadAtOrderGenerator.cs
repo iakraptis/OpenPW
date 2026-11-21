@@ -18,8 +18,9 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Orders
 {
-	// Targeting mode after the Unload button: a left click on explored ground sends every selected transport there to
-	// unload (PwUnloadAt; Shift queues it); a right click cancels. The cursor is the ring of loading and unloading.
+	// Targeting mode after the Unload button: a confirming click on explored ground sends every selected transport there
+	// to unload (PwUnloadAt; Shift queues it); the other button cancels (TargetingButtons). The cursor is the ring of
+	// loading and unloading.
 	public class UnloadAtOrderGenerator : IOrderGenerator
 	{
 		readonly Actor[] transports;
@@ -33,15 +34,17 @@ namespace OpenRA.Mods.Pw.Orders
 
 		bool CanTarget(World world, CPos cell) => world.Map.Contains(cell) && Live.Any(t => t.Owner.Shroud.IsExplored(cell));
 
+		MouseButton IOrderGenerator.ActionButton => TargetingButtons.Confirm;
+
 		IEnumerable<Order> IOrderGenerator.Order(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			if (mi.Button == MouseButton.Right && mi.Event == MouseInputEvent.Up)
+			if (TargetingButtons.IsCancel(mi))
 			{
 				world.CancelInputMode();
 				yield break;
 			}
 
-			if (mi.Button != MouseButton.Left || mi.Event != MouseInputEvent.Down || !CanTarget(world, cell))
+			if (!TargetingButtons.IsConfirm(mi) || !CanTarget(world, cell))
 				yield break;
 
 			world.CancelInputMode();

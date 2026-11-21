@@ -113,8 +113,10 @@ OpenPW/                        (git: github.com/iakraptis/OpenPW, formerly primw
   research/                    gitignored: probes, extracted dumps, Ghidra project, previews
 ```
 
-- Mod id **`pw`**, engine **`release-20250330`** (same as OpenSYW, so its C# compiles as a starting point). Since
-  2026-11-18 the engine comes from our fork, `iakraptis/OpenRA` branch `syw`, pinned by tag in `mod.config`
+- Mod id **`pw`**. Engine since 2026-11-21 (§8): upstream OpenRA **bleed** `4cc9a9f` on .NET 10, from our fork
+  `iakraptis/OpenRA` branch `jmods` (bleed plus our fixes), pinned by commit in `mod.config`. The narrow ramp fix
+  below is ported there; bleed scrolls in floating point, so the scrolling fix isn't needed. Before that:
+  **`release-20250330`** (same as OpenSYW, so its C# compiled as a starting point); from 2026-11-18 the engine comes from our fork, `iakraptis/OpenRA` branch `syw`, pinned by tag in `mod.config`
   (`syw-20250330.1`: release-20250330 plus a fix that keeps the sub-pixel remainder in `Viewport.Scroll`, so
   diagonal edge and keyboard scrolling at high frame rates is no longer truncated to nearly zero), shared with
   OpenSYW. `syw-20250330.2` (2026-11-19) adds: a unit's first path ignores other units (`Move.PathSearchOrder`
@@ -789,3 +791,19 @@ dead.
 3. The launcher asks for **desktop OpenGL** (`Graphics.GLProfile=Modern`): on Windows the engine otherwise picks
    ANGLE, whose texture readback crashed the game at start.
 4. Bots are **trait-driven**, so they play future factions without code changes.
+
+## 8. Decisions (2026-11-20): engine update to bleed
+
+1. The engine moves from `release-20250330` to upstream OpenRA **bleed** (`4cc9a9f`, 2026-11-17; no release since),
+   on **.NET 10**, for the headless mode and the RL bridge built on bleed (`../OpenRA/plan.md`). Done 2026-11-21 on
+   branch `engine-bleed`. Until the engine session's tag, OpenPW uses our fork's branch `jmods`: bleed plus the narrow
+   ramp fix (`Move.PathSearchOrder` starts at `Immovable`).
+2. **Mouse buttons:** PW's targeting modes (abilities and spells, build placement, Patrol, Unload) follow the
+   player's mouse control style as the engine's `ConfirmOrder`: right confirms under the default Modern style, left
+   under Classic; the other button cancels. They confirm on the button's release (`Orders/TargetingButtons.cs`).
+3. Engine changes that `--check-yaml` doesn't catch, met on the way: the tile size is set per tileset (`General:
+   TileSize`; `MapGrid.TileSize` is ignored and the default is 24x24); `mod.yaml` server traits must exist
+   (`LobbySettingsNotification` is gone); `DamageNotifier` replaces `BaseAttackNotifier` and needs PW's `Structure`
+   target type; YAML files must end with exactly one newline.
+4. Stability checks run the suite without the balance battles (`battle-*`); baseline in
+   `test-results/baseline-release-20250330/`.

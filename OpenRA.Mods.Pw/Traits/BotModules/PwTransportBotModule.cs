@@ -73,7 +73,7 @@ namespace OpenRA.Mods.Pw.Traits
 		int ticks, stepStarted, nextPlan, lastOrders;
 		Actor transport, target;
 		CPos pickup, drop;
-		List<Actor> passengers = new();
+		List<Actor> passengers = [];
 
 		public PwTransportBotModule(Actor self, PwTransportBotModuleInfo info)
 			: base(info)
@@ -212,7 +212,7 @@ namespace OpenRA.Mods.Pw.Traits
 			transport = t;
 			var cargo = t.Info.TraitInfo<CargoInfo>();
 			var room = t.TraitOrDefault<PwTransportCapacity>()?.Capacity(t) ?? cargo.MaxWeight;
-			passengers = new List<Actor>();
+			passengers = [];
 			foreach (var s in soldiers.OrderBy(s => (s.Location - pickup).LengthSquared))
 			{
 				var p = s.Info.TraitInfo<PassengerInfo>();

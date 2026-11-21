@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -113,7 +114,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				}
 
 				if (files.Count > 0)
-					yaml.Append($"\t\t{voice}: {string.Join(", ", files)}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\t{voice}: {string.Join(", ", files)}\n");
 			}
 
 			// Buildings have no sounds of their own: they play global sounds (JW2_05, written by the audio stage as
@@ -123,10 +124,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var select = BitConverter.ToInt32(chr.Record, 0x244c);
 				var destroyed = BitConverter.ToInt32(chr.Record, 0x2458);
 				if (select >= 0)
-					yaml.Append($"\t\tSelect: ui-{select:D2}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\tSelect: ui-{select:D2}\n");
 
 				if (destroyed >= 0)
-					yaml.Append($"\t\tDie: ui-{destroyed:D2}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\tDie: ui-{destroyed:D2}\n");
 			}
 
 			// The engine appends DefaultVariant to each listed name.
@@ -171,12 +172,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			{
 				var x = -16 * chr.Int(0x330);
 				var y = -16 * chr.Int(0x334);
-				yaml.Append($"\t\tOffset: {x}, {y}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t\tOffset: {x}, {y}\n");
 			}
 
 			// Flying units (move class 3, .chr 0x17c) draw over everything on the ground, buildings included.
 			if (chr.Int(0x17c) == 3)
-				yaml.Append($"\t\tZOffset: {AirZOffset}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t\tZOffset: {AirZOffset}\n");
 
 			for (var g = 0; g < ChrFile.Groups; g++)
 			{
@@ -189,9 +190,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				{
 					// Construction stages, then the finished building.
 					if (count > 1)
-						yaml.Append($"\tmake:\n\t\tStart: {groupStart[g]}\n\t\tLength: {count - 1}\n");
+						yaml.Append(CultureInfo.InvariantCulture, $"\tmake:\n\t\tStart: {groupStart[g]}\n\t\tLength: {count - 1}\n");
 
-					yaml.Append($"\tidle:\n\t\tStart: {groupStart[g] + count - 1}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\tidle:\n\t\tStart: {groupStart[g] + count - 1}\n");
 					continue;
 				}
 
@@ -199,7 +200,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				if (!Directional(chr, g))
 				{
 					var list = steps.Length > 0 ? steps.Select(s => groupStart[g] + Math.Min(s, count - 1)) : Enumerable.Range(groupStart[g], count);
-					yaml.Append($"\t{name}:\n\t\tFrames: {string.Join(", ", list)}\n\t\tLength: {list.Count()}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t{name}:\n\t\tFrames: {string.Join(", ", list)}\n\t\tLength: {list.Count()}\n");
 					continue;
 				}
 
@@ -213,7 +214,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					all.AddRange(blockSteps.Select(s => first + Math.Clamp(s, 0, Math.Max(0, length - 1))));
 				}
 
-				yaml.Append($"\t{name}:\n\t\tFacings: -8\n\t\tLength: {all.Count / 8}\n\t\tFrames: {string.Join(", ", all)}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t{name}:\n\t\tFacings: -8\n\t\tLength: {all.Count / 8}\n\t\tFrames: {string.Join(", ", all)}\n");
 
 				if (image == "elf-wizard" && g == 2)
 				{
@@ -234,7 +235,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 						gatherFrames.AddRange(gatherSteps.Select(s => first + Math.Clamp(s, 0, Math.Max(0, length - 1))));
 					}
 
-					yaml.Append($"\tgather:\n\t\tFacings: -8\n\t\tLength: {gatherFrames.Count / 8}\n\t\tFrames: {string.Join(", ", gatherFrames)}\n");
+					yaml.Append(CultureInfo.InvariantCulture,
+						$"\tgather:\n\t\tFacings: -8\n\t\tLength: {gatherFrames.Count / 8}\n\t\tFrames: {string.Join(", ", gatherFrames)}\n");
 
 					var flightFrames = new List<int>();
 					foreach (var (block, mirrored) in Facings)
@@ -245,16 +247,17 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 						flightFrames.Add(first + Math.Clamp(steps[middle], 0, Math.Max(0, length - 1)));
 					}
 
-					yaml.Append($"\tgather-flight:\n\t\tFacings: -8\n\t\tLength: 1\n\t\tFrames: {string.Join(", ", flightFrames)}\n");
+					yaml.Append(CultureInfo.InvariantCulture,
+						$"\tgather-flight:\n\t\tFacings: -8\n\t\tLength: 1\n\t\tFrames: {string.Join(", ", flightFrames)}\n");
 				}
 			}
 
 			// The build icon: the type's portrait (Chrome.cs writes the sheet, one frame per type). Its own zero offset,
 			// as the image's Defaults carry the building footprint offset.
-			yaml.Append($"\ticon:\n\t\tFilename: chrome/portraits.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
+			yaml.Append(CultureInfo.InvariantCulture, $"\ticon:\n\t\tFilename: chrome/portraits.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
 
 			// The selection panel's portrait: the larger one (Char_middle, 50x50).
-			yaml.Append($"\tportrait:\n\t\tFilename: chrome/portraits-large.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
+			yaml.Append(CultureInfo.InvariantCulture, $"\tportrait:\n\t\tFilename: chrome/portraits-large.png\n\t\tStart: {type}\n\t\tOffset: 0, 0\n");
 			return yaml.Append('\n').ToString();
 		}
 

@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwSpellBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("The spells (PwSpell.Name) the bot casts; empty: all of them.")]
-		public readonly HashSet<string> Spells = new();
+		public readonly HashSet<string> Spells = [];
 
 		[Desc("Ticks between checks.")]
 		public readonly int ScanInterval = 20;

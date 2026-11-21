@@ -24,10 +24,10 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwRaceMusicInfo : TraitInfo, Requires<MusicPlaylistInfo>
 	{
 		[Desc("The tune played at the start of a game, by faction.")]
-		public readonly Dictionary<string, string> Start = new();
+		public readonly Dictionary<string, string> Start = [];
 
 		[Desc("The tracks played in turn after the start tune, by faction.")]
-		public readonly Dictionary<string, string[]> Battle = new();
+		public readonly Dictionary<string, string[]> Battle = [];
 
 		[Desc("A track the map may define (a campaign mission's narration), played before the start tune.")]
 		public readonly string Intro = "intro";

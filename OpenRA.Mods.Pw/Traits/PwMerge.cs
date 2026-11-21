@@ -122,7 +122,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public const string OrderID = "PwSplit";
 
-		readonly List<Actor> parts = new();
+		readonly List<Actor> parts = [];
 
 		public IReadOnlyList<Actor> Parts => parts;
 

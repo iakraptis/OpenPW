@@ -10,6 +10,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Numerics;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Primitives;
@@ -72,8 +73,8 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public readonly PwExposureInfo Info;
 		readonly World world;
-		readonly Dictionary<Player, int> withoutHQ = new();
-		readonly HashSet<Player> withHQ = new();
+		readonly Dictionary<Player, int> withoutHQ = [];
+		readonly HashSet<Player> withHQ = [];
 
 		public bool Enabled { get; }
 
@@ -206,11 +207,11 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public void Render(WorldRenderer wr)
 		{
-			var c = wr.Viewport.WorldToViewPx(wr.ScreenPosition(Pos));
+			var c = wr.Viewport.WorldToViewPx(new Vector3(wr.ScreenPosition(Pos), 0));
 			var h = size / 2;
 			var r = Game.Renderer.RgbaColorRenderer;
-			r.FillRect(new float3(c.X - h - 1, c.Y - h - 1, 0), new float3(c.X + h + 1, c.Y + h + 1, 0), Color.Black);
-			r.FillRect(new float3(c.X - h, c.Y - h, 0), new float3(c.X + h, c.Y + h, 0), color);
+			r.FillRect(new Vector3(c.X - h - 1, c.Y - h - 1, 0), new Vector3(c.X + h + 1, c.Y + h + 1, 0), Color.Black);
+			r.FillRect(new Vector3(c.X - h, c.Y - h, 0), new Vector3(c.X + h, c.Y + h, 0), color);
 		}
 
 		public void RenderDebugGeometry(WorldRenderer wr) { }

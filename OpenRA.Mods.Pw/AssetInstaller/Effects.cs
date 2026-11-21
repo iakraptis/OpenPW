@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -46,28 +47,28 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		// Smoke art: its palette holds only reds, which are the smoke's density, not colours (the Giant's bomb). It is
 		// drawn as black of that opacity, so it darkens the ground beneath (dark green smoke on grass, as in the game).
-		static readonly HashSet<string> Smoke = new() { "weapon-throw-bomb" };
+		static readonly HashSet<string> Smoke = ["weapon-throw-bomb"];
 
 		// Glowing art (fire, sparks, magic) is painted on black, which the game shows as light added to what lies beneath:
 		// drawn with Screen blending, its black adds nothing (drawn opaque it showed black halos and outlines). Every
 		// impact glows except these solid ones (debris, spikes, egg shell, bubble; the smoke darkens instead).
-		static readonly HashSet<string> SolidImpacts = new()
-		{
+		static readonly HashSet<string> SolidImpacts =
+		[
 			"weapon-throw-bomb", "weapon-stone", "weapon-trap", "weapon-egg-throw", "weapon-bubble"
-		};
+		];
 
 		// Projectiles are solid (arrows, spears, stones) except these fireballs and magic shots.
-		static readonly HashSet<string> GlowingFlights = new()
-		{
+		static readonly HashSet<string> GlowingFlights =
+		[
 			"weapon-shoot-sword-sprit", "weapon-phantom-fire", "weapon-wizard-firebolt", "weapon-redbolt", "weapon-whitebolt",
 			"weapon-angelring", "weapon-kingdemon-fire", "weapon-noise-wave"
-		};
+		];
 
 		// Shots that leave their flight art behind them as a trail: every tick, an object at the shot's position that
 		// plays the flight frames once, two ticks each (Pw.exe 0x477252, case 32 of the effect table at 0x47743c: the
 		// KingDemon's fire, a line of flames that sweeps forward; the flames themselves do no damage). Their "trail"
 		// sequence is that animation.
-		static readonly HashSet<string> Trails = new() { "weapon-kingdemon-fire" };
+		static readonly HashSet<string> Trails = ["weapon-kingdemon-fire"];
 
 		static Color[] SmokePalette(Color[] palette) =>
 			palette.Select(c => c.A == 0 ? c : Color.FromArgb(c.R * c.A / 255, 0, 0, 0)).ToArray();
@@ -90,7 +91,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					continue;
 
 				c.WriteFile($"effects/{image}.png", Units.Sheet(frames, Smoke.Contains(image) ? SmokePalette(palette) : palette));
-				sequences.Append($"{image}:\n\tDefaults:\n\t\tFilename: effects/{image}.png\n");
+				sequences.Append(CultureInfo.InvariantCulture, $"{image}:\n\tDefaults:\n\t\tFilename: effects/{image}.png\n");
 				if (flight > 0)
 				{
 					if (directional && flight % 8 == 0)
@@ -104,7 +105,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 						var east = frames[flightStart + 2 * n].Frame;
 						var shift = north.Height * 2 >= north.Width * 3 && east.Width * 2 >= east.Height * 3 ? 0 : 7;
 						var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + shift) % 8 * n, n)).Select(f => f + flightStart);
-						sequences.Append($"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
+						sequences.Append(CultureInfo.InvariantCulture, $"\tflight:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
 							$"\t\tTick: {FrameTick}\n");
 					}
 					else
@@ -126,11 +127,11 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var impactLook = $"\t\tScale: {impactScale}\n\t\tTick: {FrameTick}\n" + impactBlend;
 
 				if (impact > 0)
-					sequences.Append($"\timpact:\n\t\tStart: {flightStart + flight}\n\t\tLength: {impact}\n{impactLook}");
+					sequences.Append(CultureInfo.InvariantCulture, $"\timpact:\n\t\tStart: {flightStart + flight}\n\t\tLength: {impact}\n{impactLook}");
 
 				// Art with neither (melee sparks, the trap snap): all of it as the impact.
 				if (flight <= 0 && impact <= 0)
-					sequences.Append($"\timpact:\n\t\tLength: {frames.Count}\n{impactLook}");
+					sequences.Append(CultureInfo.InvariantCulture, $"\timpact:\n\t\tLength: {frames.Count}\n{impactLook}");
 
 				sequences.Append('\n');
 			}
@@ -155,13 +156,13 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		}
 
 		// Spell art that is solid, not glowing light on black: the flying berries, the dropped stone, the gas cloud.
-		static readonly HashSet<string> SolidSpellParts = new()
-		{
+		static readonly HashSet<string> SolidSpellParts =
+		[
 			"spell-berry-fly/flight", "spell-drop-stone/effect", "spell-noxious-gas/effect"
-		};
+		];
 
 		// Caster frames drawn in 8 directions.
-		static readonly HashSet<string> DirectionalCasts = new() { "spell-berry-fly", "spell-elf-build" };
+		static readonly HashSet<string> DirectionalCasts = ["spell-berry-fly", "spell-elf-build"];
 
 		// A spell record's frames are, in order: the caster's (the Wizard's glow while it works its magic, the
 		// ManaSpread's swirl), 0x208 flight frames, and 0x20c effect frames at the target, which are three variants of
@@ -182,7 +183,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				if (length <= 0)
 					return;
 
-				yaml.Append($"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {FrameTick}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t{name}:\n\t\tStart: {start}\n\t\tLength: {length}\n\t\tTick: {FrameTick}\n");
 				if (!SolidSpellParts.Contains($"{image}/{solidKey}"))
 					yaml.Append(Glow);
 			}
@@ -192,7 +193,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			{
 				var n = cast / 8;
 				var order = Enumerable.Range(0, 8).SelectMany(d => Enumerable.Range((d + 7) % 8 * n, n));
-				yaml.Append($"\tcast:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
+				yaml.Append(CultureInfo.InvariantCulture, $"\tcast:\n\t\tFacings: -8\n\t\tLength: {n}\n\t\tFrames: {string.Join(", ", order)}\n" +
 					$"\t\tTick: {FrameTick}\n{Glow}");
 			}
 			else

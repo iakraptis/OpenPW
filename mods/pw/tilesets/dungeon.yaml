@@ -1,6 +1,7 @@
 General:
 	Name: Dungeon
 	Id: DUNGEON
+	TileSize: 32, 32
 	EditorTemplateOrder: Terrain
 	Palette:
 

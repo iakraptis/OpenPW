@@ -238,7 +238,7 @@ namespace OpenRA.Mods.Pw.Activities
 		static IEnumerable<CPos> Around(Actor actor)
 		{
 			var building = actor.Info.TraitInfoOrDefault<BuildingInfo>();
-			var footprint = building != null ? building.Tiles(actor.Location).ToHashSet() : new HashSet<CPos> { actor.Location };
+			var footprint = building != null ? building.Tiles(actor.Location).ToHashSet() : [actor.Location];
 			return footprint
 				.SelectMany(c => CVec.Directions.Select(d => c + d))
 				.Where(c => !footprint.Contains(c))

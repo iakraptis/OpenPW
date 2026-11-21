@@ -17,9 +17,9 @@ using OpenRA.Orders;
 
 namespace OpenRA.Mods.Pw.Orders
 {
-	// Targeting mode after the Patrol button: a left click on explored ground sends every selected unit that can patrol
-	// back and forth between where it is and there (PwPatrol; Shift queues it); a right click cancels. The cursor is the
-	// attack-move one, a patrol being attack-moves.
+	// Targeting mode after the Patrol button: a confirming click on explored ground sends every selected unit that can
+	// patrol back and forth between where it is and there (PwPatrol; Shift queues it); the other button cancels
+	// (TargetingButtons). The cursor is the attack-move one, a patrol being attack-moves.
 	public class PatrolOrderGenerator : IOrderGenerator
 	{
 		readonly Actor[] units;
@@ -33,15 +33,17 @@ namespace OpenRA.Mods.Pw.Orders
 
 		bool CanTarget(World world, CPos cell) => world.Map.Contains(cell) && Live.Any(u => u.Owner.Shroud.IsExplored(cell));
 
+		MouseButton IOrderGenerator.ActionButton => TargetingButtons.Confirm;
+
 		IEnumerable<Order> IOrderGenerator.Order(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			if (mi.Button == MouseButton.Right && mi.Event == MouseInputEvent.Up)
+			if (TargetingButtons.IsCancel(mi))
 			{
 				world.CancelInputMode();
 				yield break;
 			}
 
-			if (mi.Button != MouseButton.Left || mi.Event != MouseInputEvent.Down || !CanTarget(world, cell))
+			if (!TargetingButtons.IsConfirm(mi) || !CanTarget(world, cell))
 				yield break;
 
 			var queued = mi.Modifiers.HasModifier(Modifiers.Shift);

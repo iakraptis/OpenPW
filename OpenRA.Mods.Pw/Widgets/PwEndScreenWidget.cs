@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Numerics;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Widgets;
 using OpenRA.Primitives;
@@ -81,14 +82,14 @@ namespace OpenRA.Mods.Pw.Widgets
 
 			// The margins: the blurred copy covering the window.
 			var backScale = Math.Max(size.Width / back.Size.X, size.Height / back.Size.Y);
-			renderer.DrawSprite(back, new float3((size.Width - back.Size.X * backScale) / 2, (size.Height - back.Size.Y * backScale) / 2, 0),
-				backScale, float3.Ones, alpha);
+			renderer.DrawSprite(back, new Vector3((size.Width - back.Size.X * backScale) / 2, (size.Height - back.Size.Y * backScale) / 2, 0),
+				backScale, Vector3.One, alpha);
 
 			// The picture, as large as fits, centred.
 			var scale = Math.Min(size.Width / (float)PictureWidth, size.Height / (float)PictureHeight);
 			var x = (size.Width - PictureWidth * scale) / 2;
 			var y = (size.Height - PictureHeight * scale) / 2;
-			renderer.DrawSprite(picture, new float3(x, y, 0), scale, float3.Ones, alpha);
+			renderer.DrawSprite(picture, new Vector3(x, y, 0), scale, Vector3.One, alpha);
 
 			if (alpha < 1)
 				return;
@@ -104,7 +105,7 @@ namespace OpenRA.Mods.Pw.Widgets
 		static void DrawCentred(SpriteFont font, string text, float centreX, float centreY, Color color)
 		{
 			var measure = font.Measure(text);
-			font.DrawTextWithContrast(text, new float2(centreX - measure.X / 2f, centreY - measure.Y / 2f), color, Color.Black, 2);
+			font.DrawTextWithContrast(text, new Vector2(centreX - measure.X / 2f, centreY - measure.Y / 2f), color, Color.Black, 2);
 		}
 
 		bool Ready => Game.RunTime - shownAt >= IgnoreInputMilliseconds;

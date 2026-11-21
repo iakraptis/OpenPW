@@ -46,14 +46,14 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Share of a building type in the base (relative weights; 0 never builds it). Types not listed use",
 			"DefaultShare, defences DefenseShare.")]
-		public readonly Dictionary<string, int> BuildingShares = new();
+		public readonly Dictionary<string, int> BuildingShares = [];
 
 		public readonly int DefaultShare = 10;
 		public readonly int DefenseShare = 6;
 
 		[Desc("Most buildings of a type. Types not listed: DefenseLimit for defences, 1 for the others (a destroyed one",
 			"is built again).")]
-		public readonly Dictionary<string, int> BuildingLimits = new();
+		public readonly Dictionary<string, int> BuildingLimits = [];
 
 		public readonly int DefenseLimit = 3;
 
@@ -78,7 +78,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Defences built by the berry bushes nearest the base, each type until this many of it stand within",
 			"GuardRadius of them (the Primitive Trap). They come after the guard spots' towers and don't count as one.")]
-		public readonly Dictionary<string, int> BushDefenses = new();
+		public readonly Dictionary<string, int> BushDefenses = [];
 
 		[Desc("Ticks after which the bot builds a second main building (drop-off) by berry bushes no drop-off of its own",
 			"serves, the nearest group of them; 0: never. Its main building becomes a guard spot too.")]
@@ -205,8 +205,8 @@ namespace OpenRA.Mods.Pw.Traits
 				.Select(t => world.Map.Rules.Actors[t])
 				.Where(i =>
 				{
-					var prerequisites = i.TraitInfoOrDefault<BuildableInfo>()?.Prerequisites;
-					return prerequisites == null || prerequisites.Length == 0 || techTree.HasPrerequisites(prerequisites);
+					var prerequisites = i.TraitInfoOrDefault<BuildableInfo>()?.Prerequisites ?? [];
+					return prerequisites.Length == 0 || techTree.HasPrerequisites(prerequisites);
 				})
 				.ToList();
 

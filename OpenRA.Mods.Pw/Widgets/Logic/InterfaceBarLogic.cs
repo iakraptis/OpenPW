@@ -48,7 +48,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly PwExposure exposure;
 		readonly Widget noHQPanel, noHQBack;
 		readonly LabelWidget noHQTitle, noHQRowTemplate;
-		readonly List<LabelWidget> noHQRows = new();
+		readonly List<LabelWidget> noHQRows = [];
 		readonly Widget selection, training, commands;
 		readonly SpriteWidget trainingIcon;
 		readonly ColorBlockWidget trainingProgressBack, trainingProgressFill;
@@ -293,14 +293,14 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 		// The engine's radar works out where it draws (and takes clicks) when it starts, from where it was then; after
 		// it moves or resizes with the bar it must do so again. Its refresh is private: called through reflection
-		// (release-20250330), then its area is moved to the screen as its opening animation does.
+		// (checked on bleed 4cc9a9f), then its area is moved to the screen as its opening animation does.
 		static readonly MethodInfo RadarBoundsChanged = typeof(RadarWidget).GetMethod("MapBoundsChanged", BindingFlags.NonPublic | BindingFlags.Instance);
 		static readonly FieldInfo RadarMapRect = typeof(RadarWidget).GetField("mapRect", BindingFlags.NonPublic | BindingFlags.Instance);
 
 		void LayoutNoHQPanel()
 		{
 			var local = world.LocalPlayer;
-			var rows = exposure == null || !exposure.Enabled ? new List<(string Text, Color Color)>() : exposure.PlayersWithoutHQ
+			var rows = exposure == null || !exposure.Enabled ? [] : exposure.PlayersWithoutHQ
 				.Where(p => !p.Spectating)
 				.Select(p => (Player: p, Left: exposure.TicksLeft(p)))
 				.Where(e => e.Left >= 0)
@@ -312,7 +312,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			while (noHQRows.Count < rows.Count)
 			{
-				var row = (LabelWidget)noHQRowTemplate.Clone();
+				var row = noHQRowTemplate.Clone();
 				noHQPanel.AddChild(row);
 				noHQRows.Add(row);
 			}

@@ -47,7 +47,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		public const string OrderID = "PwHunt";
 
-		readonly Dictionary<Actor, int> givenUp = new();
+		readonly Dictionary<Actor, int> givenUp = [];
 		int scanTicks, token = Actor.InvalidConditionToken;
 		Actor prey;
 

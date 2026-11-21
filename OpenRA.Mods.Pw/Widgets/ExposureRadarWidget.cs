@@ -9,6 +9,7 @@
  */
 #endregion
 
+using System.Numerics;
 using System.Reflection;
 using OpenRA.Mods.Common.Widgets;
 using OpenRA.Mods.Pw.Traits;
@@ -58,7 +59,7 @@ namespace OpenRA.Mods.Pw.Widgets
 				var uv = a.Location.ToMPos(world.Map);
 				var x = mapRect.X + scale * (uv.U - bounds.Left + 0.5f) - size / 2;
 				var y = mapRect.Y + scale * (uv.V - bounds.Top + 0.5f) - size / 2;
-				r.FillRect(new float3(x, y, 0), new float3(x + size, y + size, 0), exposure.Info.MarkerColor);
+				r.FillRect(new Vector3(x, y, 0), new Vector3(x + size, y + size, 0), exposure.Info.MarkerColor);
 			}
 		}
 

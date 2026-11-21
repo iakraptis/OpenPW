@@ -80,7 +80,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			back.OnClick = () =>
 			{
 				if (IsInstalled())
-					Game.RunAfterTick(() => Game.InitializeMod(GameMod, new Arguments()));
+					Game.RunAfterTick(() => Game.InitializeMod(Game.Mods[GameMod], new Arguments()));
 				else
 					Game.Exit();
 			};
@@ -161,7 +161,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					state = State.Failed;
 				}
 				else
-					Game.RunAfterTick(() => Game.InitializeMod(GameMod, new Arguments()));
+					Game.RunAfterTick(() => Game.InitializeMod(Game.Mods[GameMod], new Arguments()));
 			}
 		}
 	}

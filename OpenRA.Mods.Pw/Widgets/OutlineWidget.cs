@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Numerics;
 using OpenRA.Primitives;
 using OpenRA.Widgets;
 
@@ -65,7 +66,7 @@ namespace OpenRA.Mods.Pw.Widgets
 
 			// The frame, glowing between 65% and full strength.
 			var glow = 0.825f + 0.175f * (float)Math.Sin(2 * Math.PI * phase);
-			renderer.DrawRect(new float3(left, top, 0), new float3(right, bottom, 0), Thickness,
+			renderer.DrawRect(new Vector3(left, top, 0), new Vector3(right, bottom, 0), Thickness,
 				Color.FromArgb((int)(Color.A * glow), Color.R, Color.G, Color.B));
 
 			// The running light: its head at the phase's share of the way round (clockwise from the top left corner), its
@@ -76,17 +77,17 @@ namespace OpenRA.Mods.Pw.Widgets
 			if (length <= 0)
 				return;
 
-			float3 At(float d)
+			Vector3 At(float d)
 			{
 				d = (d % length + length) % length;
 				if (d < w)
-					return new float3(left + d, top, 0);
+					return new Vector3(left + d, top, 0);
 				if (d < w + h)
-					return new float3(right, top + d - w, 0);
+					return new Vector3(right, top + d - w, 0);
 				if (d < 2 * w + h)
-					return new float3(right - (d - w - h), bottom, 0);
+					return new Vector3(right - (d - w - h), bottom, 0);
 
-				return new float3(left, bottom - (d - 2 * w - h), 0);
+				return new Vector3(left, bottom - (d - 2 * w - h), 0);
 			}
 
 			var head = phase * length;

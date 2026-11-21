@@ -1,6 +1,7 @@
 General:
 	Name: Test
 	Id: TEST
+	TileSize: 32, 32
 	EditorTemplateOrder: Terrain
 	Palette:
 

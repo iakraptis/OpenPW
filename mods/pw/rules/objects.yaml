@@ -1424,4 +1424,3 @@ berry-bush-3:
 	Inherits: ^BerryBush
 	RenderSprites:
 		Image: berry-bush-3
-

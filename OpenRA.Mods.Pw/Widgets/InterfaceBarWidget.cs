@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Numerics;
 using OpenRA.Graphics;
 using OpenRA.Primitives;
 using OpenRA.Widgets;
@@ -147,24 +148,24 @@ namespace OpenRA.Mods.Pw.Widgets
 
 			var b = RenderBounds;
 			var renderer = Game.Renderer.RgbaSpriteRenderer;
-			var scale = new float3(Scale, Scale, 1);
+			var scale = new Vector3(Scale, Scale, 1);
 			var x = (float)b.X;
 
-			renderer.DrawSprite(leftFixed, new float3(x, Top, 0), scale);
+			renderer.DrawSprite(leftFixed, new Vector3(x, Top, 0), scale);
 			x += leftFixed.Bounds.Width * Scale;
 			for (var i = 0; i < leftTiles; i++, x += leftTileWidth)
-				renderer.DrawSprite(leftTile, new float3(x, Top, 0), new float3(leftTileWidth / leftTile.Bounds.Width, Scale, 1));
+				renderer.DrawSprite(leftTile, new Vector3(x, Top, 0), new Vector3(leftTileWidth / leftTile.Bounds.Width, Scale, 1));
 
-			renderer.DrawSprite(leftJoin, new float3(x, Top, 0), scale);
-			renderer.DrawSprite(center, new float3(centerLeft, Top, 0), scale);
+			renderer.DrawSprite(leftJoin, new Vector3(x, Top, 0), scale);
+			renderer.DrawSprite(center, new Vector3(centerLeft, Top, 0), scale);
 
 			x = centerLeft + center.Bounds.Width * Scale;
-			renderer.DrawSprite(rightJoin, new float3(x, Top, 0), scale);
+			renderer.DrawSprite(rightJoin, new Vector3(x, Top, 0), scale);
 			x += rightJoin.Bounds.Width * Scale;
 			for (var i = 0; i < rightTiles; i++, x += rightTileWidth)
-				renderer.DrawSprite(rightTile, new float3(x, Top, 0), new float3(rightTileWidth / rightTile.Bounds.Width, Scale, 1));
+				renderer.DrawSprite(rightTile, new Vector3(x, Top, 0), new Vector3(rightTileWidth / rightTile.Bounds.Width, Scale, 1));
 
-			renderer.DrawSprite(rightFixed, new float3(b.Right - rightFixed.Bounds.Width * Scale, Top, 0), scale);
+			renderer.DrawSprite(rightFixed, new Vector3(b.Right - rightFixed.Bounds.Width * Scale, Top, 0), scale);
 		}
 
 		// The bar's solid part: the lower panels from their top edge (region solid-sides), the middle from its own

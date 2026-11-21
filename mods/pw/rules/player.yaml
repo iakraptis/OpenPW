@@ -1,5 +1,4 @@
 ^baseplayer:
-	AlwaysVisible:
 	# Fog of war and an unexplored map, as in the original (both can be changed in the lobby).
 	Shroud:
 		FogCheckboxEnabled: true
@@ -23,8 +22,11 @@ player:
 	MissionObjectives:
 		WinNotification: Win
 		LoseNotification: Lose
-	# Buildings under attack: the race's spoken warning (notifications/pw.yaml).
-	BaseAttackNotifier:
+	# Buildings under attack: the race's spoken warning (notifications/pw.yaml). Buildings are the Structure target
+	# type (^Building).
+	DamageNotifier:
+		ValidTargets: Structure
+		Notification: BaseAttack
 	ConquestVictoryConditions:
 
 editorplayer:

@@ -50,7 +50,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		};
 
 		// Unit types that only the campaign places and the mod has no actor for yet (Alien1-3, the plants, the Treant).
-		static readonly HashSet<int> Unsupported = new() { 83, 84, 85, 160, 161, 162, 163 };
+		static readonly HashSet<int> Unsupported = [83, 84, 85, 160, 161, 162, 163];
 
 		static readonly string[] Colors = { "E02020", "2050E0", "20C020", "E0C020", "20C0C0", "C020C0", "E08020", "A0A0A0" };
 
@@ -88,7 +88,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			foreach (var e in archive.Entries)
 			{
 				if (Regex.IsMatch(e.Name, @"^[A-Z]\d\d_S\.MP3$", RegexOptions.IgnoreCase))
-					scenarios[e.Name[..3].ToUpperInvariant()] = current = new List<TrcArchive.Entry>();
+					scenarios[e.Name[..3].ToUpperInvariant()] = current = [];
 
 				current?.Add(e);
 			}
@@ -111,7 +111,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			// The players: the local one (P_PLAYE +0) and every one that owns something, by the race most of it belongs to.
 			var human = BitConverter.ToInt32(playe, 0);
-			var owners = units.Where(u => u.Owner < Players).Select(u => u.Owner).Append(human).Distinct().OrderBy(o => o).ToList();
+			var owners = units.Where(u => u.Owner < Players).Select(u => u.Owner).Append(human).Distinct().Order().ToList();
 			var races = owners.ToDictionary(o => o, o => units.Where(u => u.Owner == o && Units.Race(u.Type) != "wild")
 				.GroupBy(u => Units.Race(u.Type)).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault() ?? "primitive");
 			var names = new Dictionary<int, string>();
@@ -139,21 +139,22 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append("\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
-			s.Append($"\t\tEnemies: {string.Join(", ", owners.Select(o => names[o]))}\n");
+			s.Append(CultureInfo.InvariantCulture, $"\t\tEnemies: {string.Join(", ", owners.Select(o => names[o]))}\n");
 			foreach (var o in owners)
 			{
-				s.Append($"\tPlayerReference@{names[o]}:\n\t\tName: {names[o]}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tPlayerReference@{names[o]}:\n\t\tName: {names[o]}\n");
 				if (o == human)
 					s.Append("\t\tPlayable: True\n\t\tAllowBots: False\n\t\tRequired: True\n\t\tLockSpawn: True\n\t\tLockTeam: True\n\t\tLockColor: True\n");
 				else
 					s.Append("\t\tBot: campaign\n");
 
-				s.Append($"\t\tFaction: {races[o]}\n\t\tLockFaction: True\n\t\tColor: {Colors[o]}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\tFaction: {races[o]}\n\t\tLockFaction: True\n\t\tColor: {Colors[o]}\n");
 				var allies = owners.Where(x => Allied(o, x)).Select(x => names[x]).ToList();
 				if (allies.Count > 0)
-					s.Append($"\t\tAllies: {string.Join(", ", allies)}\n");
+					s.Append(CultureInfo.InvariantCulture, $"\t\tAllies: {string.Join(", ", allies)}\n");
 
-				s.Append($"\t\tEnemies: {string.Join(", ", owners.Where(x => x != o && !Allied(o, x)).Select(x => names[x]).Append("Creeps"))}\n");
+				s.Append(CultureInfo.InvariantCulture,
+					$"\t\tEnemies: {string.Join(", ", owners.Where(x => x != o && !Allied(o, x)).Select(x => names[x]).Append("Creeps"))}\n");
 			}
 
 			// The camera starts over the human's units, where the one spawn point is (the engine wants one per playable
@@ -164,13 +165,13 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				: (X: map.Width / 2, Y: map.Height / 2);
 
 			s.Append("\nActors:\n");
-			s.Append($"\tSpawn0: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {camera.X},{camera.Y}\n");
+			s.Append(CultureInfo.InvariantCulture, $"\tSpawn0: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {camera.X},{camera.Y}\n");
 			Maps.AppendObjects(s, map);
 			foreach (var u in units)
 			{
-				s.Append($"\tUnit{u.Slot}: {u.Actor}\n\t\tOwner: {names[u.Owner]}\n\t\tLocation: {u.X},{u.Y}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tUnit{u.Slot}: {u.Actor}\n\t\tOwner: {names[u.Owner]}\n\t\tLocation: {u.X},{u.Y}\n");
 				if (u.Type < 96 || u.Type >= 160)
-					s.Append($"\t\tFacing: {u.Facing}\n");
+					s.Append(CultureInfo.InvariantCulture, $"\t\tFacing: {u.Facing}\n");
 			}
 
 			// Unit availability, P_UB: a byte per player and type. A type nobody of its race may build is taken off the build
@@ -179,7 +180,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				.Where(t => Units.Race(t) != "wild" && image(t) != null
 					&& owners.Any(o => races[o] == Units.Race(t))
 					&& owners.Where(o => races[o] == Units.Race(t)).All(o => availability[o * 170 + t] == 0))
-				.OrderBy(t => t).Select(image).ToList();
+				.Order().Select(image).ToList();
 
 			// The computer players play their original scripts (JW2_16 <prefix>_<player>.txt) with the campaign AI
 			// (rules/campaign-ai.yaml, PwCampaignBotModule): what they train, and how many wait before they attack.
@@ -191,19 +192,19 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			s.Append("\t\tPwCampaignBotModule@campaign:\n\t\t\tTrain:\n");
 			foreach (var (player, plan) in ai.Where(a => a.Value.Train.Count > 0))
 			{
-				s.Append($"\t\t\t\t{player}:\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}:\n");
 				foreach (var (type, count) in plan.Train)
-					s.Append($"\t\t\t\t\t{type}: {count}\n");
+					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t\t{type}: {count}\n");
 			}
 
 			s.Append("\t\t\tAttackSize:\n");
 			foreach (var (player, plan) in ai)
-				s.Append($"\t\t\t\t{player}: {plan.AttackSize}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {plan.AttackSize}\n");
 			s.Append("\tworld:\n\t\t-SpawnStartingUnits:\n\t\tLuaScript:\n\t\t\tScripts: pw|scripts/campaign.lua, mission.lua\n");
-			s.Append($"\t\tMissionData:\n\t\t\tBriefing: {YamlLine(briefing)}\n");
+			s.Append(CultureInfo.InvariantCulture, $"\t\tMissionData:\n\t\t\tBriefing: {YamlLine(briefing)}\n");
 			s.Append("\t\tObjectivesPanel:\n\t\t\tPanelName: MISSION_OBJECTIVES\n");
 			foreach (var actor in disabled)
-				s.Append($"\t{actor}:\n\t\tBuildable:\n\t\t\tPrerequisites: ~disabled\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t{actor}:\n\t\tBuildable:\n\t\t\tPrerequisites: ~disabled\n");
 
 			// The narrations of the intro and the ending story, as hidden music tracks of the map: music is streamed, a
 			// sound would be decoded whole and stall the game. PwRaceMusic plays "intro" first; the script plays "outro".
@@ -244,13 +245,15 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var s = new StringBuilder($"-- Generated by install-assets (OpenRA.Mods.Pw/AssetInstaller/Campaign.cs) from JW2_06.TRC scenario {prefix};\n" +
 				"-- run by scripts/campaign.lua. Locations are pixel rectangles of the original map; teams list placed units.\n\n");
 			s.Append("Mission = {\n");
-			s.Append($"\tHuman = {Lua(names[human])},\n");
-			s.Append($"\tPlayers = {{ {string.Join(", ", names.OrderBy(n => n.Key).Select(n => $"[{Int(n.Key)}] = {Lua(n.Value)}"))} }},\n");
+			s.Append(CultureInfo.InvariantCulture, $"\tHuman = {Lua(names[human])},\n");
+			s.Append(CultureInfo.InvariantCulture,
+				$"\tPlayers = {{ {string.Join(", ", names.OrderBy(n => n.Key).Select(n => $"[{Int(n.Key)}] = {Lua(n.Value)}"))} }},\n");
 
 			// P_PLAYE 0x144: starting berries per player.
-			s.Append($"\tCash = {{ {string.Join(", ", owners.Select(o => $"{names[o]} = {Int(BitConverter.ToInt32(playe, 0x144 + 4 * o))}"))} }},\n");
-			s.Append($"\tObjective = {Lua(objective)},\n\tEnding = {Lua(ending)},\n");
-			s.Append($"\tCamera = {{ {Int(camera.X)}, {Int(camera.Y)} }},\n");
+			s.Append(CultureInfo.InvariantCulture,
+				$"\tCash = {{ {string.Join(", ", owners.Select(o => $"{names[o]} = {Int(BitConverter.ToInt32(playe, 0x144 + 4 * o))}"))} }},\n");
+			s.Append(CultureInfo.InvariantCulture, $"\tObjective = {Lua(objective)},\n\tEnding = {Lua(ending)},\n");
+			s.Append(CultureInfo.InvariantCulture, $"\tCamera = {{ {Int(camera.X)}, {Int(camera.Y)} }},\n");
 
 			s.Append("\tLocations = {\n");
 			for (var i = 0; i < Locations; i++)
@@ -258,7 +261,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var o = LocationsAt + i * LocationSize + 0x24;
 				var rect = Enumerable.Range(0, 4).Select(k => BitConverter.ToInt32(script, o + 4 * k)).ToArray();
 				if (rect.Any(v => v != 0))
-					s.Append($"\t\t[{Int(i)}] = {{ {string.Join(", ", rect.Select(Int))} }},\n");
+					s.Append(CultureInfo.InvariantCulture, $"\t\t[{Int(i)}] = {{ {string.Join(", ", rect.Select(Int))} }},\n");
 			}
 
 			s.Append("\t},\n\tTeams = {\n");
@@ -270,7 +273,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 				var members = Enumerable.Range(0, 20).Select(k => BitConverter.ToInt32(script, o + 0x2c + 4 * k))
 					.Where(placed.Contains).Select(slot => Lua($"Unit{slot}"));
-				s.Append($"\t\t[{Int(i)}] = {{ {string.Join(", ", members)} }},\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\t[{Int(i)}] = {{ {string.Join(", ", members)} }},\n");
 			}
 
 			// The first 32 triggers, then the teams and locations, then 224 more (T01 has an older script without them).
@@ -287,16 +290,17 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				var conditionArgs = new[] { 8, 0x11c, 0x230, 0x344 }.Select(k => BitConverter.ToInt32(script, condition + k));
 				var actionArgs = new[] { 8, 0x25c, 0x4b0, 0x704, 0x958 }.Select(k => BitConverter.ToInt32(script, action + k));
 				var actionType = BitConverter.ToInt32(script, action);
-				s.Append($"\t\t[{Int(i)}] = {{ Name = {Lua(Text(script, t + 0x1b4a, 0x80))},\n");
-				s.Append($"\t\t\tCondition = {{ Type = {Int(BitConverter.ToInt32(script, condition))}, {string.Join(", ", conditionArgs.Select(Int))} }},\n");
-				s.Append($"\t\t\tAction = {{ Type = {Int(actionType)}, {string.Join(", ", actionArgs.Select(Int))} }}");
+				s.Append(CultureInfo.InvariantCulture, $"\t\t[{Int(i)}] = {{ Name = {Lua(Text(script, t + 0x1b4a, 0x80))},\n");
+				s.Append(CultureInfo.InvariantCulture,
+					$"\t\t\tCondition = {{ Type = {Int(BitConverter.ToInt32(script, condition))}, {string.Join(", ", conditionArgs.Select(Int))} }},\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\t\tAction = {{ Type = {Int(actionType)}, {string.Join(", ", actionArgs.Select(Int))} }}");
 
 				// Only these actions show their text; the others keep stale text from the editor.
 				if (actionType == TransmissionAction || actionType == ObjectivesAction)
 				{
 					var raw = Text(script, action + 0x58, 0x800);
 					var (speaker, message) = Transmission(raw);
-					s.Append($",\n\t\t\tSpeaker = {Lua(speaker)}, Text = {Lua(message)}, Duration = {Int(raw.Length / 2 + 80)}");
+					s.Append(CultureInfo.InvariantCulture, $",\n\t\t\tSpeaker = {Lua(speaker)}, Text = {Lua(message)}, Duration = {Int(raw.Length / 2 + 80)}");
 				}
 
 				s.Append(" },\n");

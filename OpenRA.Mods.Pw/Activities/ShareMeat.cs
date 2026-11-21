@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.Activities
 		public readonly CPos MeetingPoint;
 		public readonly int Deadline;
 		readonly List<Actor> members;
-		readonly HashSet<Actor> arrived = new();
+		readonly HashSet<Actor> arrived = [];
 
 		public bool Done { get; private set; }
 

@@ -43,7 +43,7 @@ namespace OpenRA.Mods.Pw.Projectiles
 		const int ActorSearchPadding = 1024;
 
 		readonly PwBulletInfo info;
-		readonly HashSet<Actor> hitActors = new();
+		readonly HashSet<Actor> hitActors = [];
 		readonly WVec targetOffset;
 
 		// The original hands a tracking shot without splash straight to its target (Pw.exe 0x4770f7 passes the target
