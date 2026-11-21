@@ -269,8 +269,10 @@ are the mod's). Magic.trt holds 16 icons (records 0-15): Cure, record 18, takes 
   power). So one target at a time, 15 ticks out of every 16.
 
 In the mod (`PwSpell` `AutoHeal`): the same rhythm and amounts, on the unit the player last ordered it on while
-that one is hurt and in range, otherwise the most hurt. Not copied: a Unicorn turned to stone still heals. Mod
-change: the sound at half volume, not restarted while it plays.
+that one is hurt and in range, otherwise the most hurt; not while turned to stone (also not stunned or bubbled:
+`PauseOnCondition`). Mod changes: the sound at half volume, not restarted while it plays; the casting on its own can
+be turned off and on with a right click on Cure's button, which glows while it is on (order `PwSpellAutoCast`); off,
+Cure is cast only when ordered.
 
 ## Kill points (Demon)
 

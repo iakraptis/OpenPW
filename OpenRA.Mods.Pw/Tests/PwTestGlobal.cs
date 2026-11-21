@@ -216,6 +216,22 @@ namespace OpenRA.Mods.Pw.Tests
 		public void CastOn(Actor caster, string spell, Actor target) =>
 			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromActor(target)));
 
+		[Desc("Turn a spell's casting on its own (Cure) on or off, as a right click on its button.")]
+		public void SetAutoCast(Actor caster, string spell, bool on) =>
+			Resolve(caster, PwSpell.SetAutoCast(caster, spell, on));
+
+		[Desc("Whether the caster casts a spell on its own (its button glows).")]
+		public bool AutoCast(Actor caster, string spell) =>
+			caster.TraitsImplementing<PwSpell>().Any(s => s.Info.Name == spell && s.AutoCast);
+
+		[Desc("Turn a unit to stone for some ticks, as Stone curse does (its petrified condition).")]
+		public void Petrify(Actor unit, int ticks)
+		{
+			var stone = unit.TraitsImplementing<ExternalCondition>()
+				.FirstOrDefault(c => c.Info.Condition == "petrified" && c.CanGrantCondition(unit));
+			stone?.GrantCondition(unit, unit, ticks);
+		}
+
 		[Desc("Demon: cast a spell on a place.")]
 		public void CastAt(Actor caster, string spell, CPos cell) =>
 			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromCell(caster.World, cell)));

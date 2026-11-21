@@ -94,6 +94,6 @@ The bots cast the Elf spells with `PwSpellBotModule` (rules/ai.yaml). They choos
 
 Cure needs no orders: every 16 ticks the Unicorn casts it on the unit Cure was last cast on, otherwise the most hurt
 ally in reach, healing 2 HP for 1 mana a tick for 15 ticks, as the original ([rules.md](rules.md), `PwSpell.AutoHeal`);
-the AI leaves it to that. The research a spell needs (Study Fake,
+the AI leaves it to that. The player can turn that off with a right click on its button (it glows while on). The research a spell needs (Study Fake,
 Study Meteor) is started once the bot has the caster. The unarmed casters (Unicorn, ManaSpread) are trained by weight,
 stay out of the attack squads, and follow the bot's main group.

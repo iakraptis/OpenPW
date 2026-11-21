@@ -84,7 +84,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				// A Demon's spells: each with its kill point cost, usable from its level on.
 				if (producer != null)
 					foreach (var spell in producer.TraitsImplementing<PwSpell>())
-						if (slots.FirstOrDefault(s => !s.Visible) is ButtonWidget slot)
+						if (slots.FirstOrDefault(s => !s.Visible) is SlotButtonWidget slot)
 							ShowSpell(slot, producer, spell);
 			}
 
@@ -463,13 +463,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.OnClick = () => world.OrderGenerator = new AbilityOrderGenerator(caster, PwFallOut.OrderID, PwFallOut.CanTarget);
 		}
 
-		void ShowSpell(ButtonWidget slot, Actor caster, PwSpell spell)
+		// A spell: a click casts it (on a unit or place: then a click on the map). A spell the caster also casts on its
+		// own (Cure) glows while that is on, and a right click turns it off and on.
+		void ShowSpell(SlotButtonWidget slot, Actor caster, PwSpell spell)
 		{
 			var info = spell.Info;
 			var icon = info.Icon != null ? CommandIcon(info.Icon) : null;
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.IsHighlighted = () => false;
+			slot.IsHighlighted = () => info.AutoHeal && spell.AutoCast;
+			if (info.AutoHeal)
+				slot.OnRightClick = () => world.IssueOrder(PwSpell.SetAutoCast(caster, info.Name, !spell.AutoCast));
+
 			var cost = info.Cost > 0 ? info.Cost : Math.Max(info.ManaCost, info.ManaPerStep);
 			slot.GetTooltipText = () => FluentProvider.GetMessage($"spell-{info.Name}", "cost", cost);
 			slot.GetTooltipDesc = () => spell.IsUnlocked(caster)

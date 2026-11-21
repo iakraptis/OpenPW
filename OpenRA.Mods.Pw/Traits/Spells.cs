@@ -30,7 +30,7 @@ namespace OpenRA.Mods.Pw.Traits
 		"the units around the target (at a random point within Scatter of it each step); Shield; PetrifyTicks of ",
 		"stone; Teleport the caster; a jump portal (PortalTicks); an Illusion of the target unit; Resurrect the dead; ",
 		"Summon units; KillsCaster.")]
-	public class PwSpellInfo : TraitInfo, Requires<IHealthInfo>
+	public class PwSpellInfo : PausableConditionalTraitInfo, Requires<IHealthInfo>
 	{
 		[FieldLoader.Require]
 		[Desc("Identifies the spell in its order; also the fluent label spell-<Name> and tooltip spell-<Name>-desc.")]
@@ -51,6 +51,10 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Ticks between AutoHeal casts (the original's every 16 ticks, staggered between units).")]
 		public readonly int AutoHealInterval = 16;
+
+		[Desc("AutoHeal starts on. The player turns it off and on with a right click on the spell's button (order ",
+			"PwSpellAutoCast); off, the spell is only cast when ordered.")]
+		public readonly bool AutoCastByDefault = true;
 
 		[Desc("Kill points spent (spell record 0x1e0).")]
 		public readonly int Cost = 0;
@@ -172,21 +176,28 @@ namespace OpenRA.Mods.Pw.Traits
 		public override object Create(ActorInitializer init) { return new PwSpell(this); }
 	}
 
-	public class PwSpell : IResolveOrder, IOrderVoice, ITick
+	public class PwSpell : PausableConditionalTrait<PwSpellInfo>, IResolveOrder, IOrderVoice, ITick, ISync
 	{
 		public const string OrderID = "PwSpell";
-
-		public readonly PwSpellInfo Info;
+		public const string AutoCastOrderID = "PwSpellAutoCast";
 
 		// AutoHeal: the unit the player last cast it on, healed first; ticks to the next cast (-1: not started).
 		Actor preferred;
 		int autoHealCountdown = -1;
 		ISound sound;
 
+		// AutoHeal on (the button glows): the caster casts on its own. Off: only when ordered.
+		[VerifySync]
+		public bool AutoCast { get; private set; }
+
 		public PwSpell(PwSpellInfo info)
+			: base(info)
 		{
-			Info = info;
+			AutoCast = info.AutoCastByDefault;
 		}
+
+		public static Order SetAutoCast(Actor self, string name, bool on) =>
+			new(AutoCastOrderID, self, false) { TargetString = name, ExtraData = on ? 1u : 0u };
 
 		public static Order Cast(Actor self, string name, Target target) =>
 			new(OrderID, self, target, false) { TargetString = name };
@@ -196,7 +207,8 @@ namespace OpenRA.Mods.Pw.Traits
 			&& (Info.Prerequisites.Length == 0 || self.Owner.PlayerActor.Trait<TechTree>().HasPrerequisites(Info.Prerequisites));
 
 		// Kill points must stay above zero; mana must cover the cost.
-		public bool IsReady(Actor self) => IsUnlocked(self) && self.Trait<IHealth>().HP > Info.Cost
+		// Paused (PauseOnCondition: turned to stone, …) it can't be cast at all.
+		public bool IsReady(Actor self) => IsUnlocked(self) && !IsTraitDisabled && !IsTraitPaused && self.Trait<IHealth>().HP > Info.Cost
 			&& (Info.ManaCost + Info.ManaPerStep == 0 || (self.TraitOrDefault<PwMana>()?.Mana ?? 0) >= Math.Max(Info.ManaCost, Info.ManaPerStep));
 
 		public bool CanTarget(Actor self, Actor target) =>
@@ -207,6 +219,12 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void IResolveOrder.ResolveOrder(Actor self, Order order)
 		{
+			if (order.OrderString == AutoCastOrderID && order.TargetString == Info.Name && Info.AutoHeal)
+			{
+				AutoCast = order.ExtraData != 0;
+				return;
+			}
+
 			if (order.OrderString != OrderID || order.TargetString != Info.Name || !IsReady(self))
 				return;
 
@@ -229,7 +247,7 @@ namespace OpenRA.Mods.Pw.Traits
 		// The original picks the target by a per-type value (0x677408); this picks the most hurt.
 		void ITick.Tick(Actor self)
 		{
-			if (!Info.AutoHeal)
+			if (!Info.AutoHeal || !AutoCast)
 				return;
 
 			var interval = Math.Max(1, Info.AutoHealInterval);

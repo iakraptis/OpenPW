@@ -16,6 +16,9 @@
 --     whose cash nothing else touches).
 -- 13. The Bubble tower deals 2 damage and traps the target in its bubble for 36 ticks.
 -- 14. Cast on a unit, Cure heals that one first, though another is more hurt.
+-- 15. Cure casts on its own by default (its button glows); turned off (a right click), it doesn't heal on its own,
+--     a cast by hand still heals once, and turned on again it heals.
+-- 16. A Unicorn turned to stone doesn't heal; it does again once the stone wears off.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -37,6 +40,8 @@ WorldLoaded = function()
     Later(5, BerryFly)
     Later(5, Bubble)
     Later(5, CurePreferred)
+    Later(5, CureAutoCastOff)
+    Later(5, CureStone)
     FinishWhenDone("ELF", 4000)
 end
 
@@ -55,6 +60,45 @@ CurePreferred = function()
                 if ok then Check(worse.Health < worse.MaxHealth, "the more hurt one waits its turn") end
                 WaitFor("then the other", 200, function() return worse.Health == worse.MaxHealth end)
             end)
+    end)
+end
+
+CureAutoCastOff = function()
+    local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(7, 6) })
+    local hurt = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(9, 6) })
+    hurt.Stance = "HoldFire"
+    Later(2, function()
+        Check(PwTest.AutoCast(unicorn, "cure"), "Cure casts on its own by default (its button glows)")
+        PwTest.SetAutoCast(unicorn, "cure", false)
+        Check(not PwTest.AutoCast(unicorn, "cure"), "a right click turns that off")
+        hurt.Health = 30
+        Later(60, function()
+            Check(hurt.Health < 40, "with it off, Cure doesn't heal on its own (" .. hurt.Health .. " HP)")
+            local before = hurt.Health
+            PwTest.CastOn(unicorn, "cure", hurt)
+            WaitFor("cast by hand, it still heals", 60, function() return hurt.Health > before end, function(ok)
+                if not ok then return end
+                Later(40, function()
+                    Check(hurt.Health <= before + 32, "a cast by hand heals once, for 15 ticks (" .. hurt.Health - before .. " HP)")
+                    PwTest.SetAutoCast(unicorn, "cure", true)
+                    WaitFor("turned on again, it heals on its own to full", 300, function() return hurt.Health == hurt.MaxHealth end)
+                end)
+            end)
+        end)
+    end)
+end
+
+CureStone = function()
+    local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(28, 10) })
+    local hurt = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(30, 10) })
+    hurt.Stance = "HoldFire"
+    Later(2, function()
+        PwTest.Petrify(unicorn, 100)
+        hurt.Health = 30
+        Later(60, function()
+            Check(hurt.Health < 40, "a Unicorn turned to stone doesn't heal (" .. hurt.Health .. " HP)")
+            WaitFor("once the stone wears off, it heals again", 300, function() return hurt.Health > 60 end)
+        end)
     end)
 end
 
