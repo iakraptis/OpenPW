@@ -572,7 +572,7 @@ Container@PLAYER_WIDGETS:
 			Width: 322
 			Height: 80
 			Children:
-				Button@SLOT_0:
+				SlotButton@SLOT_0:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -598,7 +598,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_1:
+				SlotButton@SLOT_1:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -624,7 +624,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_2:
+				SlotButton@SLOT_2:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -650,7 +650,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_3:
+				SlotButton@SLOT_3:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -676,7 +676,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_4:
+				SlotButton@SLOT_4:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -702,7 +702,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_5:
+				SlotButton@SLOT_5:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -728,7 +728,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_6:
+				SlotButton@SLOT_6:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -754,7 +754,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_7:
+				SlotButton@SLOT_7:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -780,7 +780,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_8:
+				SlotButton@SLOT_8:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -806,7 +806,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_9:
+				SlotButton@SLOT_9:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -832,7 +832,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_10:
+				SlotButton@SLOT_10:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40
@@ -858,7 +858,7 @@ Container@PLAYER_WIDGETS:
 							Align: Center
 							Font: TinyBold
 							Contrast: true
-				Button@SLOT_11:
+				SlotButton@SLOT_11:
 					IgnoreChildMouseOver: true
 					Width: 40
 					Height: 40

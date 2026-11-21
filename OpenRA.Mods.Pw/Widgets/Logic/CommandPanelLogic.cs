@@ -24,7 +24,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 {
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
-	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
+	// - one producing building selected: what it trains; click queues one, right click (or Shift+click) cancels one.
 	// - the Chief: his ability (Fall out) with his mana;
 	// - armed units: Attack, then a click on the map: they walk there and attack whatever they meet (attack-move);
 	//   Patrol, then a click: they go back and forth between where they are and there, attacking the same way;
@@ -38,13 +38,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	public class CommandPanelLogic : ChromeLogic
 	{
 		readonly World world;
-		readonly ButtonWidget[] slots;
+		readonly SlotButtonWidget[] slots;
 
 		[ObjectCreator.UseCtor]
 		public CommandPanelLogic(Widget widget, World world)
 		{
 			this.world = world;
-			slots = widget.Children.OfType<ButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
+			slots = widget.Children.OfType<SlotButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
 			{
 				var s = slot;
@@ -62,6 +62,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var producer = selected.Length == 1 ? selected[0] : null;
 			var finished = producer?.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 			var queue = finished ? producer?.TraitsImplementing<ProductionQueue>().FirstOrDefault(q => q.Enabled) : null;
+
+			// Only training takes the right button (ShowTraining); in every other use a right click passes through.
+			foreach (var slot in slots)
+				slot.OnRightClick = null;
 
 			if (builder != null)
 				ShowBuildList(builder);
@@ -395,8 +399,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					? FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo))
 					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing));
 
-				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
-				// alone: the button calls OnClick from it.
+				// Click queues one; right click, or Shift+click, cancels one (the last of its kind in the queue: the one
+				// in training when it is the only one, and its cost comes back). OnMouseUp is left alone: the button
+				// calls OnClick from it.
 				slot.OnClick = () =>
 				{
 					if (Game.GetModifierKeys().HasModifier(Modifiers.Shift))
@@ -404,6 +409,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					else
 						world.IssueOrder(Order.StartProduction(producer, name, 1));
 				};
+				slot.OnRightClick = () => world.IssueOrder(Order.CancelProduction(producer, name, 1));
 			}
 		}
 
