@@ -14,7 +14,6 @@ FileSystem: DefaultFileSystem
 		$pw-content: pwcontent
 
 Rules:
-	content|rules.yaml
 
 Cursors:
 	content|cursors.yaml
