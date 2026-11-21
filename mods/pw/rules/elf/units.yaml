@@ -350,19 +350,28 @@ elf-unicorn:
 		Range: 9c0
 	PwMana:
 		Max: 200
-	# Record 18: automatically heals the most injured nearby ally, 2 HP for 1 mana each tick.
+	# Record 18, as in Pw.exe: every 16 ticks, whatever it is doing, the Unicorn casts on one hurt ally within 96 px
+	# (not itself), for 1 mana; the cast heals 2 HP for 1 mana a tick for 15 ticks (the effect's frames). Ordered on a
+	# unit, it heals that one first. Mod change: its sound at half volume, and not restarted while it plays; a right
+	# click on its button turns the casting on its own off and on. Not while turned to stone (nor stunned, bubbled).
 	PwSpell@CURE:
 		Name: cure
+		PauseOnCondition: petrified || stunned || bubbled
 		Target: Unit
 		TargetRelationships: Ally
 		Range: 3c0
 		AutoHeal: true
+		AutoHealInterval: 16
+		ManaCost: 1
 		ManaPerStep: 1
 		Heal: 2
-		Steps: 1
+		Steps: 15
+		StepInterval: 1
 		Image: spell-cure
 		Icon: ability-cure
 		Sound: spell-cure-0.wav
+		SoundVolume: 0.5
+		SoundOnce: true
 	# Record 8: a harmless copy of a unit appears, the Unicorn's own, for 960 ticks; 80 mana, after Study Fake.
 	PwSpell@FAKE:
 		Name: fake

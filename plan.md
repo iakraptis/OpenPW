@@ -798,9 +798,11 @@ dead.
    on **.NET 10**, for the headless mode and the RL bridge built on bleed (`../OpenRA/plan.md`). Done 2026-11-21 on
    branch `engine-bleed`. Until the engine session's tag, OpenPW uses our fork's branch `jmods`: bleed plus the narrow
    ramp fix (`Move.PathSearchOrder` starts at `Immovable`).
-2. **Mouse buttons:** PW's targeting modes (abilities and spells, build placement, Patrol, Unload) follow the
-   player's mouse control style as the engine's `ConfirmOrder`: right confirms under the default Modern style, left
-   under Classic; the other button cancels. They confirm on the button's release (`Orders/TargetingButtons.cs`).
+2. **Mouse buttons:** PW's targeting modes (abilities and spells, build placement, Attack, Patrol, Unload) confirm
+   with the **left** button and cancel with the right one, under every mouse control style (the engine's
+   `SupportPower`; `Orders/TargetingButtons.cs`, `PwAttackMoveOrderGenerator`). They confirm on the button's release.
+   A right click on a unit in a building's training list cancels one (`SlotButtonWidget`). (Changed 2026-11-22 on
+   branch `train_cancel`; from 2026-11-21 they had followed the mouse style as `ConfirmOrder`, right under Modern.)
 3. Engine changes that `--check-yaml` doesn't catch, met on the way: the tile size is set per tileset (`General:
    TileSize`; `MapGrid.TileSize` is ignored and the default is 24x24); `mod.yaml` server traits must exist
    (`LobbySettingsNotification` is gone); `DamageNotifier` replaces `BaseAttackNotifier` and needs PW's `Structure`

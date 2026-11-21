@@ -41,6 +41,9 @@ namespace OpenRA.Mods.Pw.Traits
 		public static Order Patrol(Actor unit, CPos cell, bool queued) =>
 			new(OrderID, unit, Target.FromCell(unit.World, cell), queued);
 
+		// Patrolling now: its legs (attack-moves) run inside the Patrol activity, so that stays the current one.
+		public static bool IsPatrolling(Actor unit) => unit.CurrentActivity is Patrol;
+
 		void IResolveOrder.ResolveOrder(Actor self, Order order)
 		{
 			if (order.OrderString != OrderID || order.Target.Type != TargetType.Terrain)

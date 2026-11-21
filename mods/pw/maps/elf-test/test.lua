@@ -4,7 +4,9 @@
 -- 3. Shield (WhiteElf, level 1, 60 mana): a friendly unit's shield soaks up 480 damage before it is hurt.
 -- 4. Teleport (Ranger, 65 mana): the Ranger is at the place at once.
 -- 5. Drop stone (BlueElf, level 1, 65 mana): 200 damage around the place.
--- 6. Cure (Unicorn): automatically heals a nearby friendly unit for its mana. Fake (after Study Fake): a harmless copy.
+-- 6. Cure (Unicorn): automatically heals a nearby friendly unit for its mana, as the original casts it: every 16 ticks,
+--    each cast 2 HP a tick for 15 ticks (so 62 to 90 HP in 48 ticks, not the 96 of 2 HP every tick). Fake (after
+--    Study Fake): a harmless copy.
 -- 7. Meteor (ManaSpread, after Study Meteor): it dies, meteors hurt the enemies there.
 -- 8. Resurrect (AngelElf, 80 mana): a unit that fell there comes back, the caster's own, at half health.
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
@@ -14,6 +16,9 @@
 --     whose cash nothing else touches).
 -- 13. The Bubble tower deals 2 damage and traps the target in its bubble for 36 ticks.
 -- 14. Cast on a unit, Cure heals that one first, though another is more hurt.
+-- 15. Cure casts on its own by default (its button glows); turned off (a right click), it doesn't heal on its own,
+--     a cast by hand still heals once, and turned on again it heals.
+-- 16. A Unicorn turned to stone doesn't heal; it does again once the stone wears off.
 WorldLoaded = function()
     me = Player.GetPlayer("Multi0")
     enemy = Player.GetPlayer("Enemy")
@@ -35,6 +40,8 @@ WorldLoaded = function()
     Later(5, BerryFly)
     Later(5, Bubble)
     Later(5, CurePreferred)
+    Later(5, CureAutoCastOff)
+    Later(5, CureStone)
     FinishWhenDone("ELF", 4000)
 end
 
@@ -53,6 +60,45 @@ CurePreferred = function()
                 if ok then Check(worse.Health < worse.MaxHealth, "the more hurt one waits its turn") end
                 WaitFor("then the other", 200, function() return worse.Health == worse.MaxHealth end)
             end)
+    end)
+end
+
+CureAutoCastOff = function()
+    local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(7, 6) })
+    local hurt = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(9, 6) })
+    hurt.Stance = "HoldFire"
+    Later(2, function()
+        Check(PwTest.AutoCast(unicorn, "cure"), "Cure casts on its own by default (its button glows)")
+        PwTest.SetAutoCast(unicorn, "cure", false)
+        Check(not PwTest.AutoCast(unicorn, "cure"), "a right click turns that off")
+        hurt.Health = 30
+        Later(60, function()
+            Check(hurt.Health < 40, "with it off, Cure doesn't heal on its own (" .. hurt.Health .. " HP)")
+            local before = hurt.Health
+            PwTest.CastOn(unicorn, "cure", hurt)
+            WaitFor("cast by hand, it still heals", 60, function() return hurt.Health > before end, function(ok)
+                if not ok then return end
+                Later(40, function()
+                    Check(hurt.Health <= before + 32, "a cast by hand heals once, for 15 ticks (" .. hurt.Health - before .. " HP)")
+                    PwTest.SetAutoCast(unicorn, "cure", true)
+                    WaitFor("turned on again, it heals on its own to full", 300, function() return hurt.Health == hurt.MaxHealth end)
+                end)
+            end)
+        end)
+    end)
+end
+
+CureStone = function()
+    local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(28, 10) })
+    local hurt = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(30, 10) })
+    hurt.Stance = "HoldFire"
+    Later(2, function()
+        PwTest.Petrify(unicorn, 100)
+        hurt.Health = 30
+        Later(60, function()
+            Check(hurt.Health < 40, "a Unicorn turned to stone doesn't heal (" .. hurt.Health .. " HP)")
+            WaitFor("once the stone wears off, it heals again", 300, function() return hurt.Health > 60 end)
+        end)
     end)
 end
 
@@ -185,6 +231,11 @@ Unicorn = function()
     model.Stance = "HoldFire"
     Later(2, function()
         hurt.Health = 30
+        Later(48, function()
+            local healed = hurt.Health - 30
+            Check(healed >= 45 and healed <= 90,
+                "Cure heals in casts of 15 ticks every 16, not every tick (" .. healed .. " HP in 48 ticks)")
+        end)
         WaitFor("Cure automatically heals the RedElf to full", 200, function() return hurt.Health == hurt.MaxHealth end, function(ok)
             if not ok then return end
             Check(PwTest.Mana(unicorn) < 200, "automatic Cure spends mana (" .. PwTest.Mana(unicorn) .. " left)")

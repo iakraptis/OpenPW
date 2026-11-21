@@ -11,16 +11,16 @@
 
 namespace OpenRA.Mods.Pw.Orders
 {
-	// The mouse buttons of PW's targeting modes (abilities and spells, worker build placement, Patrol, Unload). They
-	// follow the player's mouse control style as the engine's ConfirmOrder: the right button confirms under the default
-	// Modern style, the left one under Classic, and the other button cancels.
+	// The mouse buttons of PW's targeting modes (abilities and spells, worker build placement, Patrol, Unload, and
+	// Attack through PwAttackMoveOrderGenerator): the left button confirms and the right one cancels, under every mouse
+	// control style. That is the engine's SupportPower (its ConfirmOrder would confirm with the right button under the
+	// default Modern style).
 	//
-	// A mode confirms on the button's release, not its press. A mode ends when it confirms, so the release of a press
-	// that confirmed would reach the default order generator, and a right release there gives the selected units a
-	// contextual order (move, attack) that replaces the one just given.
+	// A mode confirms on the button's release, not its press: a mode ends when it confirms, so the release of a press
+	// that confirmed would reach the default order generator, which can give the selected units another order with it.
 	static class TargetingButtons
 	{
-		const MouseActionType ActionType = MouseActionType.ConfirmOrder;
+		public const MouseActionType ActionType = MouseActionType.SupportPower;
 
 		public static MouseButton Confirm => Game.Settings.Game.ResolveActionButton(ActionType);
 

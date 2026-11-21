@@ -24,7 +24,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 {
 	// The command panel's slot buttons (SLOT_0, SLOT_1, …, each with an ICON sprite and a PROGRESS label):
 	// - a worker selected: its build list (Builder); a click enters placement mode;
-	// - one producing building selected: what it trains; click queues one, Shift+click cancels one.
+	// - one producing building selected: what it trains; click queues one, right click (or Shift+click) cancels one.
 	// - the Chief: his ability (Fall out) with his mana;
 	// - armed units: Attack, then a click on the map: they walk there and attack whatever they meet (attack-move);
 	//   Patrol, then a click: they go back and forth between where they are and there, attacking the same way;
@@ -38,13 +38,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 	public class CommandPanelLogic : ChromeLogic
 	{
 		readonly World world;
-		readonly ButtonWidget[] slots;
+		readonly SlotButtonWidget[] slots;
 
 		[ObjectCreator.UseCtor]
 		public CommandPanelLogic(Widget widget, World world)
 		{
 			this.world = world;
-			slots = widget.Children.OfType<ButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
+			slots = widget.Children.OfType<SlotButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
 			{
 				var s = slot;
@@ -63,6 +63,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var finished = producer?.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 			var queue = finished ? producer?.TraitsImplementing<ProductionQueue>().FirstOrDefault(q => q.Enabled) : null;
 
+			// Only training takes the right button (ShowTraining); in every other use a right click passes through.
+			foreach (var slot in slots)
+				slot.OnRightClick = null;
+
 			if (builder != null)
 				ShowBuildList(builder);
 			else if (queue != null)
@@ -80,7 +84,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 				// A Demon's spells: each with its kill point cost, usable from its level on.
 				if (producer != null)
 					foreach (var spell in producer.TraitsImplementing<PwSpell>())
-						if (slots.FirstOrDefault(s => !s.Visible) is ButtonWidget slot)
+						if (slots.FirstOrDefault(s => !s.Visible) is SlotButtonWidget slot)
 							ShowSpell(slot, producer, spell);
 			}
 
@@ -253,7 +257,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.IsHighlighted = () => world.OrderGenerator is UnloadAtOrderGenerator;
+			slot.IsHighlighted = () => false;
 			slot.IsDisabled = () => !Loaded();
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-unload");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage(Loaded() ? "tooltip-unload" : "tooltip-unload-empty");
@@ -271,17 +275,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Visible = true;
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
-			slot.IsHighlighted = () => world.OrderGenerator is AttackMoveOrderGenerator;
+			slot.IsHighlighted = () => false;
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-attack");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-attack");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () => world.OrderGenerator =
-				new AttackMoveOrderGenerator(world, attackers.Where(a => !a.IsDead));
+				new PwAttackMoveOrderGenerator(world, attackers.Where(a => !a.IsDead));
 		}
 
 		// Then a click on the map: the units go back and forth between where they are and there, attacking every enemy
-		// they meet (PwPatrol). Lit while it waits for the click.
+		// they meet (PwPatrol). Lit while they are all patrolling, as Hunt is while they hunt (a one-off order such as
+		// Attack or Unload isn't lit).
 		void ShowPatrol(ButtonWidget slot, Actor[] patrollers)
 		{
 			var icon = CommandIcon("command-patrol");
@@ -289,7 +294,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Visible = true;
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
-			slot.IsHighlighted = () => world.OrderGenerator is PatrolOrderGenerator;
+			slot.IsHighlighted = () => patrollers.All(p => p.IsDead || PwPatrol.IsPatrolling(p));
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-patrol");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-patrol");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
@@ -395,8 +400,9 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					? FluentProvider.GetMessage("tooltip-train", "time", Seconds(actorInfo))
 					: FluentProvider.GetMessage("tooltip-build-needs", "needs", missing));
 
-				// Click queues one, Shift+click cancels one (buttons only take the left mouse button). OnMouseUp is left
-				// alone: the button calls OnClick from it.
+				// Click queues one; right click, or Shift+click, cancels one (the last of its kind in the queue: the one
+				// in training when it is the only one, and its cost comes back). OnMouseUp is left alone: the button
+				// calls OnClick from it.
 				slot.OnClick = () =>
 				{
 					if (Game.GetModifierKeys().HasModifier(Modifiers.Shift))
@@ -404,6 +410,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 					else
 						world.IssueOrder(Order.StartProduction(producer, name, 1));
 				};
+				slot.OnRightClick = () => world.IssueOrder(Order.CancelProduction(producer, name, 1));
 			}
 		}
 
@@ -456,13 +463,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.OnClick = () => world.OrderGenerator = new AbilityOrderGenerator(caster, PwFallOut.OrderID, PwFallOut.CanTarget);
 		}
 
-		void ShowSpell(ButtonWidget slot, Actor caster, PwSpell spell)
+		// A spell: a click casts it (on a unit or place: then a click on the map). A spell the caster also casts on its
+		// own (Cure) glows while that is on, and a right click turns it off and on.
+		void ShowSpell(SlotButtonWidget slot, Actor caster, PwSpell spell)
 		{
 			var info = spell.Info;
 			var icon = info.Icon != null ? CommandIcon(info.Icon) : null;
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.IsHighlighted = () => false;
+			slot.IsHighlighted = () => info.AutoHeal && spell.AutoCast;
+			if (info.AutoHeal)
+				slot.OnRightClick = () => world.IssueOrder(PwSpell.SetAutoCast(caster, info.Name, !spell.AutoCast));
+
 			var cost = info.Cost > 0 ? info.Cost : Math.Max(info.ManaCost, info.ManaPerStep);
 			slot.GetTooltipText = () => FluentProvider.GetMessage($"spell-{info.Name}", "cost", cost);
 			slot.GetTooltipDesc = () => spell.IsUnlocked(caster)
