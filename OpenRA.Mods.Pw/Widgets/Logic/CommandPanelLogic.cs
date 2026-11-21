@@ -257,7 +257,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			slot.Visible = true;
 			slot.GetText = () => "";
-			slot.IsHighlighted = () => world.OrderGenerator is UnloadAtOrderGenerator;
+			slot.IsHighlighted = () => false;
 			slot.IsDisabled = () => !Loaded();
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-unload");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage(Loaded() ? "tooltip-unload" : "tooltip-unload-empty");
@@ -275,7 +275,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Visible = true;
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
-			slot.IsHighlighted = () => world.OrderGenerator is AttackMoveOrderGenerator;
+			slot.IsHighlighted = () => false;
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-attack");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-attack");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
@@ -285,7 +285,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		}
 
 		// Then a click on the map: the units go back and forth between where they are and there, attacking every enemy
-		// they meet (PwPatrol). Lit while it waits for the click.
+		// they meet (PwPatrol). Lit while they are all patrolling, as Hunt is while they hunt (a one-off order such as
+		// Attack or Unload isn't lit).
 		void ShowPatrol(ButtonWidget slot, Actor[] patrollers)
 		{
 			var icon = CommandIcon("command-patrol");
@@ -293,7 +294,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.Visible = true;
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
-			slot.IsHighlighted = () => world.OrderGenerator is PatrolOrderGenerator;
+			slot.IsHighlighted = () => patrollers.All(p => p.IsDead || PwPatrol.IsPatrolling(p));
 			slot.GetTooltipText = () => FluentProvider.GetMessage("label-patrol");
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-patrol");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
