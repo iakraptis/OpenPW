@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// Our own test and battle maps (TestMaps): for the developers' runs only, not the players' (PwContentLogic).
 		public readonly bool TestMaps;
 		public readonly SortedSet<string> Written = new(StringComparer.Ordinal);
-		public readonly List<string> Warnings = new();
+		public readonly List<string> Warnings = [];
 
 		public InstallContext(GameFolder game, string output, string modFolder, bool writeYaml, bool testMaps = true)
 		{
@@ -63,7 +63,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// --write-yaml it is written there.
 		public void RepoYaml(string relative, string text)
 		{
-			text = text.Replace("\r\n", "\n");
+			// One final newline, no blank line after it: the engine's YAML check (since bleed) wants files as its own
+			// writer formats them.
+			text = text.Replace("\r\n", "\n").TrimEnd('\n') + "\n";
 			var path = Path.Combine(ModFolder, relative.Replace('/', Path.DirectorySeparatorChar));
 			var current = File.Exists(path) ? File.ReadAllText(path).Replace("\r\n", "\n") : null;
 			if (current == text)

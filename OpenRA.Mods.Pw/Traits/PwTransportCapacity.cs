@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwTransportCapacity : ITick
 	{
 		// The engine's Cargo has a fixed capacity and only counts its passengers' weight (a private field set when the
-		// transport is created), so the ballast goes there. Checked against the engine release in use (release-20250330).
+		// transport is created), so the ballast goes there. Checked against the engine in use (bleed 4cc9a9f).
 		static readonly FieldInfo TotalWeight = typeof(Cargo).GetField("totalWeight", BindingFlags.NonPublic | BindingFlags.Instance)
 			?? throw new InvalidOperationException("Cargo.totalWeight not found: PwTransportCapacity needs updating for this engine.");
 

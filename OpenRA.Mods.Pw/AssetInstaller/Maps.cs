@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -350,7 +351,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public static void AppendObjects(StringBuilder s, Source map)
 		{
 			for (var i = 0; i < map.Objects.Count; i++)
-				s.Append($"\tObject{i}: {map.Objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {map.Objects[i].X},{map.Objects[i].Y}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tObject{i}: {map.Objects[i].Actor}\n\t\tOwner: Neutral\n\t\tLocation: {map.Objects[i].X},{map.Objects[i].Y}\n");
 		}
 
 		// MAP1 bits 29-31: walkable, water, buildable (docs/formats/map.md).
@@ -480,19 +481,19 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append("\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
-			s.Append($"\t\tEnemies: {string.Join(", ", multi)}\n");
+			s.Append(CultureInfo.InvariantCulture, $"\t\tEnemies: {string.Join(", ", multi)}\n");
 			foreach (var m in multi)
-				s.Append($"\tPlayerReference@{m}:\n\t\tName: {m}\n\t\tPlayable: True\n\t\tFaction: Random\n\t\tEnemies: Creeps\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tPlayerReference@{m}:\n\t\tName: {m}\n\t\tPlayable: True\n\t\tFaction: Random\n\t\tEnemies: Creeps\n");
 
 			s.Append("\nActors:\n");
 			for (var i = 0; i < starts.Count; i++)
-				s.Append($"\tActor{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tActor{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
 
 			AppendObjects(s, map);
 			for (var i = 0; i < creatures.Count; i++)
 			{
 				var (actor, x, y, facing) = creatures[i];
-				s.Append($"\tCreature{i}: {actor}\n\t\tOwner: Creeps\n\t\tLocation: {x},{y}\n\t\tFacing: {facing}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tCreature{i}: {actor}\n\t\tOwner: Creeps\n\t\tLocation: {x},{y}\n\t\tFacing: {facing}\n");
 			}
 
 			return s.ToString();

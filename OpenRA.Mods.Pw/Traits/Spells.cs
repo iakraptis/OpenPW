@@ -16,7 +16,6 @@ using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Effects;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Mods.Pw.Activities;
-using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -453,13 +452,13 @@ namespace OpenRA.Mods.Pw.Traits
 			if (cell == null)
 				return;
 
-			var copy = w.CreateActor(original.Info.Name, new TypeDictionary
-			{
+			var copy = w.CreateActor(original.Info.Name,
+			[
 				new LocationInit(cell.Value),
 				new CenterPositionInit(w.Map.CenterOfCell(cell.Value) + new WVec(0, 0, original.CenterPosition.Z)),
 				new OwnerInit(self.Owner),
 				new FacingInit(original.TraitOrDefault<IFacing>()?.Facing ?? WAngle.Zero),
-			});
+			]);
 			copy.TraitsImplementing<ExternalCondition>()
 				.FirstOrDefault(c => c.Info.Condition == Info.IllusionCondition && c.CanGrantCondition(self))
 				?.GrantCondition(copy, self);
@@ -481,13 +480,13 @@ namespace OpenRA.Mods.Pw.Traits
 				if (cell == null)
 					continue;
 
-				w.CreateActor(grave.Type, new TypeDictionary
-				{
+				w.CreateActor(grave.Type,
+				[
 					new LocationInit(cell.Value),
 					new OwnerInit(self.Owner),
 					new FacingInit(grave.Facing),
 					new HealthInit(Info.ResurrectHealth),
-				});
+				]);
 			}
 		}
 
@@ -510,12 +509,12 @@ namespace OpenRA.Mods.Pw.Traits
 					return;
 
 				taken.Add(cell.Value);
-				w.CreateActor(type, new TypeDictionary
-				{
+				w.CreateActor(type,
+				[
 					new LocationInit(cell.Value),
 					new OwnerInit(self.Owner),
 					new FacingInit(self.TraitOrDefault<IFacing>()?.Facing ?? WAngle.Zero),
-				});
+				]);
 			}
 		}
 	}
@@ -612,7 +611,7 @@ namespace OpenRA.Mods.Pw.Traits
 		}
 
 		readonly PwGraveyardInfo info;
-		readonly List<Grave> graves = new();
+		readonly List<Grave> graves = [];
 
 		public PwGraveyard(PwGraveyardInfo info)
 		{

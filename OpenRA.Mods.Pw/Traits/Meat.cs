@@ -15,7 +15,6 @@ using System.Linq;
 using OpenRA.Mods.Common.Orders;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Mods.Pw.Activities;
-using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -101,12 +100,12 @@ namespace OpenRA.Mods.Pw.Traits
 			var actor = info.Actors[amount < 500 ? 0 : amount < 1000 ? 1 : amount < 2500 ? 2 : 3];
 			var cell = self.Location;
 			var owner = self.World.WorldActor.Owner;
-			self.World.AddFrameEndTask(w => w.CreateActor(actor, new TypeDictionary
-			{
+			self.World.AddFrameEndTask(w => w.CreateActor(actor,
+			[
 				new LocationInit(cell),
 				new OwnerInit(owner),
 				new PwMeatAmountInit(amount),
-			}));
+			]));
 		}
 	}
 

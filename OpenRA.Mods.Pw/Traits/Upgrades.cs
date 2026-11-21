@@ -27,7 +27,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int Level = 1;
 
 		[Desc("Unit types it improves. Empty for player-wide upgrades.")]
-		public readonly HashSet<string> Units = new();
+		public readonly HashSet<string> Units = [];
 
 		[Desc("Most mana added (PwMana).")]
 		public readonly int Mana = 0;
@@ -84,8 +84,8 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwUpgrades : ITechTreePrerequisite
 	{
 		readonly Actor self;
-		readonly HashSet<string> researched = new();
-		readonly List<PwUpgradeInfo> done = new();
+		readonly HashSet<string> researched = [];
+		readonly List<PwUpgradeInfo> done = [];
 
 		public PwUpgrades(Actor self)
 		{

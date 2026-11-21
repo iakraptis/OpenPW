@@ -42,10 +42,10 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int DefaultUnitWeight = 10;
 
 		[Desc("Weights of units in the mix by type (0 never trains it). Units not listed use DefaultUnitWeight.")]
-		public readonly Dictionary<string, int> UnitWeights = new();
+		public readonly Dictionary<string, int> UnitWeights = [];
 
 		[Desc("Most units of a type the bot keeps.")]
-		public readonly Dictionary<string, int> UnitLimits = new();
+		public readonly Dictionary<string, int> UnitLimits = [];
 
 		[Desc("Cash kept back after paying for an army unit (workers and research may use it).")]
 		public readonly int CashReserve = 0;

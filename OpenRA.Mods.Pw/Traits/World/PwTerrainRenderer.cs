@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Terrain;
 using OpenRA.Mods.Common.Traits;
@@ -28,7 +29,7 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		[FieldLoader.Require]
 		[Desc("Original tileset (.trt, 3600 RGB565 tiles of 32x32) per tileset id.")]
-		public readonly Dictionary<string, string> Tilesets = new();
+		public readonly Dictionary<string, string> Tilesets = [];
 
 		[Desc("Map package file with the original cell data.")]
 		public readonly string TerrainFile = "terrain.bin";
@@ -63,9 +64,9 @@ namespace OpenRA.Mods.Pw.Traits
 		readonly PwTerrainRendererInfo info;
 		readonly DefaultTerrain terrainInfo;
 		readonly DefaultTileCache tileCache;
-		readonly Dictionary<(uint Ground, uint Overlay, int Variant, int Odd), Sprite> cache = new();
-		readonly Dictionary<(int Frame, int Variant), Sprite> liquidSprites = new();
-		readonly List<(CPos Cell, int Variant)> liquidCells = new();
+		readonly Dictionary<(uint Ground, uint Overlay, int Variant, int Odd), Sprite> cache = [];
+		readonly Dictionary<(int Frame, int Variant), Sprite> liquidSprites = [];
+		readonly List<(CPos Cell, int Variant)> liquidCells = [];
 		ushort[] tiles;
 		SheetBuilder sheetBuilder;
 		TerrainSpriteLayer spriteLayer;
@@ -420,7 +421,7 @@ namespace OpenRA.Mods.Pw.Traits
 		Rectangle ITiledTerrainRenderer.TemplateBounds(TerrainTemplateInfo template)
 		{
 			var sprite = tileCache.TileSprite(new TerrainTile(template.Id, 0));
-			var size = world.Map.Grid.TileSize;
+			var size = world.Map.Rules.TerrainInfo.TileSize;
 			return new Rectangle(-size.Width / 2, -size.Height / 2,
 				Math.Max(size.Width, (int)sprite.Size.X) * template.Size.X, Math.Max(size.Height, (int)sprite.Size.Y) * template.Size.Y);
 		}
@@ -429,14 +430,25 @@ namespace OpenRA.Mods.Pw.Traits
 		{
 			var sprite = tileCache.TileSprite(new TerrainTile(t.Id, 0), 0);
 			var palette = wr.Palette((t as DefaultTerrainTemplateInfo)?.Palette ?? terrainInfo.Palette);
-			yield return new UISpriteRenderable(sprite, WPos.Zero, origin - (0.5f * scale * sprite.Size.XY).ToInt2(), 0, palette, scale);
+			yield return new UISpriteRenderable(sprite, WPos.Zero, origin.ToVector2() - 0.5f * scale * new Vector2(sprite.Size.X, sprite.Size.Y), 0, palette, scale);
 		}
 
 		IEnumerable<IRenderable> ITiledTerrainRenderer.RenderPreview(WorldRenderer wr, TerrainTemplateInfo t, WPos origin)
 		{
 			var sprite = tileCache.TileSprite(new TerrainTile(t.Id, 0), 0);
 			var palette = wr.Palette((t as DefaultTerrainTemplateInfo)?.Palette ?? terrainInfo.Palette);
-			yield return new SpriteRenderable(sprite, origin, WVec.Zero, 0, palette, 1f, 1f, float3.Ones, TintModifiers.None, false);
+			yield return new SpriteRenderable(sprite, origin, WVec.Zero, 0, palette, 1f, 1f, Vector3.One, TintModifiers.None, false);
+		}
+
+		// One tile (same as TerrainRenderer).
+		IEnumerable<IRenderable> ITiledTerrainRenderer.RenderPreview(WorldRenderer wr, TerrainTile tile, WPos origin)
+		{
+			if (!terrainInfo.Templates.TryGetValue(tile.Type, out var template) || !template.Contains(tile.Index))
+				yield break;
+
+			var sprite = tileCache.TileSprite(tile, 0);
+			var palette = wr.Palette((template as DefaultTerrainTemplateInfo)?.Palette ?? terrainInfo.Palette);
+			yield return new SpriteRenderable(sprite, origin, WVec.Zero, 0, palette, 1f, 1f, Vector3.One, TintModifiers.None, false);
 		}
 
 		// Lookup tables from Pw.exe (docs/formats/map.md): mask tile per shape and variant (0x5356c8), overlay tile per

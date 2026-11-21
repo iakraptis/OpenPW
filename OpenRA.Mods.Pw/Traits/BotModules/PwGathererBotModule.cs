@@ -43,7 +43,7 @@ namespace OpenRA.Mods.Pw.Traits
 		readonly Player player;
 
 		// The bush each worker was last sent to, to spread the next ones.
-		readonly Dictionary<Actor, Actor> sentTo = new();
+		readonly Dictionary<Actor, Actor> sentTo = [];
 		int ticks;
 
 		public PwGathererBotModule(Actor self, PwGathererBotModuleInfo info)

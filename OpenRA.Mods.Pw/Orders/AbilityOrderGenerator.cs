@@ -18,8 +18,9 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Orders
 {
-	// Targeting mode after an ability button (the Chief's Fall out, a Demon spell): a left click on a valid unit (or,
-	// for a spell on a place, on explored ground) gives the order to the caster; a right click cancels.
+	// Targeting mode after an ability button (the Chief's Fall out, a Demon spell): a confirming click on a valid unit
+	// (or, for a spell on a place, on explored ground) gives the order to the caster; the other button cancels. The
+	// buttons follow the mouse control style (TargetingButtons).
 	public class AbilityOrderGenerator : IOrderGenerator
 	{
 		readonly Actor caster;
@@ -53,15 +54,17 @@ namespace OpenRA.Mods.Pw.Orders
 		Actor TargetAt(World world, MouseInput mi) =>
 			world.ScreenMap.ActorsAtMouse(mi).Select(a => a.Actor).FirstOrDefault(a => canTarget(caster, a));
 
+		MouseButton IOrderGenerator.ActionButton => TargetingButtons.Confirm;
+
 		IEnumerable<Order> IOrderGenerator.Order(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			if (mi.Button == MouseButton.Right && mi.Event == MouseInputEvent.Up)
+			if (TargetingButtons.IsCancel(mi))
 			{
 				world.CancelInputMode();
 				yield break;
 			}
 
-			if (mi.Button != MouseButton.Left || mi.Event != MouseInputEvent.Down || CasterGone)
+			if (!TargetingButtons.IsConfirm(mi) || CasterGone)
 				yield break;
 
 			var queued = mi.Modifiers.HasModifier(Modifiers.Shift);

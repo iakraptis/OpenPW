@@ -16,7 +16,6 @@ using OpenRA.Mods.Common;
 using OpenRA.Mods.Common.Orders;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Mods.Pw.Activities;
-using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -185,14 +184,14 @@ namespace OpenRA.Mods.Pw.Traits
 			var faction = self.Owner.Faction.InternalName;
 			world.AddFrameEndTask(w =>
 			{
-				var site = w.CreateActor(order.TargetString, new TypeDictionary
-				{
+				var site = w.CreateActor(order.TargetString,
+				[
 					new LocationInit(cell),
 					new OwnerInit(self.Owner),
 					new FactionInit(faction),
 					new HealthInit(1),
 					new UnderConstructionInit(),
-				});
+				]);
 
 				self.QueueActivity(false, new ConstructBuilding(site, this));
 			});

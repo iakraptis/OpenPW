@@ -23,7 +23,8 @@ using OpenRA.Widgets;
 namespace OpenRA.Mods.Pw.Orders
 {
 	// Placement mode after a build palette button: shows the footprint under the cursor (white where it fits, red
-	// where it does not) and sends the chosen worker to build there on a left click. Right click cancels.
+	// where it does not) and sends the chosen worker to build there on a confirming click; the other button cancels
+	// (TargetingButtons).
 	// Ported from OpenSYW.
 	public class BuildAtCellOrderGenerator : IOrderGenerator
 	{
@@ -43,15 +44,17 @@ namespace OpenRA.Mods.Pw.Orders
 
 		bool BuilderGone => builder.IsDead || builder.Disposed || !builder.IsInWorld;
 
+		MouseButton IOrderGenerator.ActionButton => TargetingButtons.Confirm;
+
 		IEnumerable<Order> IOrderGenerator.Order(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			if (mi.Button == MouseButton.Right && mi.Event == MouseInputEvent.Up)
+			if (TargetingButtons.IsCancel(mi))
 			{
 				world.CancelInputMode();
 				yield break;
 			}
 
-			if (mi.Button != MouseButton.Left || mi.Event != MouseInputEvent.Down)
+			if (!TargetingButtons.IsConfirm(mi))
 				yield break;
 
 			if (BuilderGone)

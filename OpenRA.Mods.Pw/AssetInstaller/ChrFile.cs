@@ -50,7 +50,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var at = RecordSize + 0x400;
 			for (var g = 0; g < Groups; g++)
 			{
-				Frames[g] = new List<Frame>();
+				Frames[g] = [];
 				var count = Int(0x2214 + 4 * g);
 				for (var i = 0; i < count; i++)
 				{
@@ -60,7 +60,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			for (var g = 0; g < Sounds.Length; g++)
 			{
-				Sounds[g] = new List<byte[]>();
+				Sounds[g] = [];
 				var count = Int(0x2424 + 4 * g);
 				for (var i = 0; i < count; i++)
 				{

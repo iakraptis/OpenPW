@@ -48,7 +48,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class BerryBush : INotifyCreated, ITick
 	{
 		readonly BerryBushInfo info;
-		readonly List<Actor> gatherers = new();
+		readonly List<Actor> gatherers = [];
 		int regrowTicks;
 
 		public int Remaining { get; private set; }

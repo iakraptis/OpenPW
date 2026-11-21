@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OpenRA.Mods.Pw.AssetInstaller
@@ -55,12 +56,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 						frames.Add((v, false));
 
 					c.WriteFile($"objects/{image}.png", Units.Sheet(frames, Units.ConvertPalette(palette, false)));
-					sequences.Append($"{image}:\n\tDefaults:\n\t\tFilename: objects/{image}.png\n\t\tOffset: {DoodadOffset}\n");
+					sequences.Append(CultureInfo.InvariantCulture, $"{image}:\n\tDefaults:\n\t\tFilename: objects/{image}.png\n\t\tOffset: {DoodadOffset}\n");
 					for (var v = 0; v < variants.Count; v++)
 					{
-						sequences.Append($"\tv{v}:\n\t\tStart: {v}\n");
-						rules.Append($"{DoodadActor(tileset, n, v)}:\n\tInherits: ^Doodad\n\tRenderSprites:\n\t\tImage: {image}\n");
-						rules.Append($"\tWithSpriteBody:\n\t\tSequence: v{v}\n\tMapEditorData:\n\t\tRequireTilesets: {Terrain.Tilesets[t].Id}\n\n");
+						sequences.Append(CultureInfo.InvariantCulture, $"\tv{v}:\n\t\tStart: {v}\n");
+						rules.Append(CultureInfo.InvariantCulture, $"{DoodadActor(tileset, n, v)}:\n\tInherits: ^Doodad\n\tRenderSprites:\n\t\tImage: {image}\n");
+						rules.Append(CultureInfo.InvariantCulture, $"\tWithSpriteBody:\n\t\tSequence: v{v}\n\tMapEditorData:\n\t\tRequireTilesets: {Terrain.Tilesets[t].Id}\n\n");
 					}
 
 					sequences.Append('\n');
@@ -81,9 +82,9 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 				var image = BushActor(v);
 				c.WriteFile($"objects/{image}.png", Units.Sheet(frames, Units.ConvertPalette(palette, false)));
-				sequences.Append($"{image}:\n\tDefaults:\n\t\tFilename: objects/{image}.png\n\t\tOffset: {BushOffset}\n");
+				sequences.Append(CultureInfo.InvariantCulture, $"{image}:\n\tDefaults:\n\t\tFilename: objects/{image}.png\n\t\tOffset: {BushOffset}\n");
 				sequences.Append("\tidle:\n\t\tStart: 0\n\t\tLength: 4\n\n");
-				rules.Append($"{image}:\n\tInherits: ^BerryBush\n\tRenderSprites:\n\t\tImage: {image}\n\n");
+				rules.Append(CultureInfo.InvariantCulture, $"{image}:\n\tInherits: ^BerryBush\n\tRenderSprites:\n\t\tImage: {image}\n\n");
 			}
 
 			// Items on the ground (Blacksmith items before a unit picks them up): JW2_07 I<nn>.spz, one per Item.itm record,
@@ -99,7 +100,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 			c.WriteFile("objects/items.png", Units.Sheet(items, itemPalette));
 			for (var i = 0; i < ItemCount; i++)
-				sequences.Append($"{ItemImage(i)}:\n\tidle:\n\t\tFilename: objects/items.png\n\t\tStart: {i}\n" +
+				sequences.Append(CultureInfo.InvariantCulture, $"{ItemImage(i)}:\n\tidle:\n\t\tFilename: objects/items.png\n\t\tStart: {i}\n" +
 					$"\ticon:\n\t\tFilename: chrome/items-primitive.png\n\t\tStart: {i}\n\n");
 
 			c.RepoYaml("sequences/objects.yaml", sequences.ToString());

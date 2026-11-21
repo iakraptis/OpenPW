@@ -1,6 +1,7 @@
 General:
 	Name: Ruin
 	Id: RUIN
+	TileSize: 32, 32
 	EditorTemplateOrder: Terrain
 	Palette:
 

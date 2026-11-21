@@ -31,7 +31,7 @@ namespace OpenRA.Mods.Pw.Activities
 		public readonly int Deadline;
 		readonly string into;
 		readonly List<Actor> parts;
-		readonly HashSet<Actor> arrived = new();
+		readonly HashSet<Actor> arrived = [];
 
 		public bool Done { get; private set; }
 

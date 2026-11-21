@@ -10,6 +10,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -103,7 +104,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var lines = source.Split('\n');
 			string Field(string field) => lines.First(l => l.StartsWith(field + ":", System.StringComparison.Ordinal));
 			var s = new StringBuilder("MapFormat: 12\n\nRequiresMod: pw\n\nTitle: Test: Pathing\n\nAuthor: OpenPW\n\n");
-			s.Append($"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
+			s.Append(CultureInfo.InvariantCulture,
+				$"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append("\tPlayerReference@Multi0:\n\t\tName: Multi0\n\t\tPlayable: True\n\t\tLockFaction: True\n\t\tNonCombatant: True\n\t\tFaction: primitive\n");
@@ -181,18 +183,21 @@ Rules:
 
 			var bots = races.Select(BotName).ToArray();
 			var s = new StringBuilder($"MapFormat: 12\n\nRequiresMod: pw\n\nTitle: {title}\n\nAuthor: OpenPW\n\n");
-			s.Append($"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
+			s.Append(CultureInfo.InvariantCulture,
+				$"{Field("Tileset")}\n\n{Field("MapSize")}\n\n{Field("Bounds")}\n\nVisibility: MissionSelector\n\nCategories: Test\n\n");
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
-			s.Append($"\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n\t\tEnemies: {string.Join(", ", bots)}\n");
+			s.Append(CultureInfo.InvariantCulture,
+				$"\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n\t\tEnemies: {string.Join(", ", bots)}\n");
 
 			// The local player only watches.
 			s.Append("\tPlayerReference@Multi0:\n\t\tName: Multi0\n\t\tPlayable: True\n\t\tLockFaction: True\n\t\tNonCombatant: True\n\t\tFaction: primitive\n");
 			for (var i = 0; i < bots.Length; i++)
 			{
 				var enemies = bots.Where(b => b != bots[i]).Append("Creeps");
-				s.Append($"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: easy\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
-				s.Append($"\t\tColor: {Colors[races[i]]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
+				s.Append(CultureInfo.InvariantCulture,
+					$"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: easy\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t\tColor: {Colors[races[i]]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 
 			// Each bot's start: what StartingUnits gives a player of its race (rules/world.yaml), at its spawn point.
@@ -201,14 +206,14 @@ Rules:
 			{
 				var (x, y) = starts[i];
 				var (_, main, worker) = Races[races[i]];
-				s.Append($"\t{bots[i]}Main: {main}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x},{y}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\t{bots[i]}Main: {main}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x},{y}\n");
 				for (var w = 0; w < 4; w++)
-					s.Append($"\t{bots[i]}Worker{w}: {worker}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");
+					s.Append(CultureInfo.InvariantCulture, $"\t{bots[i]}Worker{w}: {worker}\n\t\tOwner: {bots[i]}\n\t\tLocation: {x + w},{y + 5}\n");
 			}
 
 			// The spawn points stay: the watching player is given one (it gets no starting units, SpawnStartingUnits is off).
 			for (var i = 0; i < starts.Count; i++)
-				s.Append($"\tSpawn{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
+				s.Append(CultureInfo.InvariantCulture, $"\tSpawn{i}: mpspawn\n\t\tOwner: Neutral\n\t\tLocation: {starts[i].X},{starts[i].Y}\n");
 
 			foreach (var line in actors)
 				s.Append(line).Append('\n');

@@ -54,10 +54,10 @@ namespace OpenRA.Mods.Pw.Traits
 
 		readonly World world;
 		readonly Player player;
-		readonly Dictionary<Actor, Role> roles = new();
+		readonly Dictionary<Actor, Role> roles = [];
 
 		// The unit each escort was last told to guard.
-		readonly Dictionary<Actor, Actor> guarding = new();
+		readonly Dictionary<Actor, Actor> guarding = [];
 		int ticks;
 
 		public PwDetectorBotModule(Actor self, PwDetectorBotModuleInfo info)

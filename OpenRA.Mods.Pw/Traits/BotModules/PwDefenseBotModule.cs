@@ -48,7 +48,7 @@ namespace OpenRA.Mods.Pw.Traits
 		readonly Player player;
 
 		// When each attacker was last answered.
-		readonly Dictionary<Actor, int> answered = new();
+		readonly Dictionary<Actor, int> answered = [];
 		int ticks;
 
 		public PwDefenseBotModule(Actor self, PwDefenseBotModuleInfo info)

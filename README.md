@@ -1,9 +1,9 @@
 # OpenPW
 
 A restoration of **Primitive Wars** (Arxel Tribe, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
-engine, built with the OpenRA Mod SDK. The engine is downloaded automatically by the first build, from our fork
-[iakraptis/OpenRA](https://github.com/iakraptis/OpenRA) (branch `syw`: `release-20250330` plus our engine fixes,
-pinned by tag in `mod.config`).
+engine, built with the OpenRA Mod SDK. The engine is downloaded automatically by the first build: a commit of
+upstream OpenRA `bleed`, pinned in `mod.config` (to become a tag on our fork
+[iakraptis/OpenRA](https://github.com/iakraptis/OpenRA) with our engine fixes).
 
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
 converts the art, sounds, terrain and maps from your own copy of the game.
@@ -50,7 +50,7 @@ needed for the installer; `-NoInstaller` for the zip alone).
 
 ## Building and running
 
-Requires the .NET SDK (6.0 or newer).
+Requires the .NET 10 SDK.
 
 ```
 make.cmd all          # fetch the engine into ./engine and build (Linux/macOS: make)

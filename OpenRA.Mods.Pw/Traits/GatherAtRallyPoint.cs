@@ -30,7 +30,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class GatherAtRallyPoint : INotifyCreated, INotifyIdle, IResolveOrder
 	{
 		readonly GatherAtRallyPointInfo info;
-		CPos? rally;
+		readonly CPos? rally;
 		Actor bush;
 
 		public GatherAtRallyPoint(ActorInitializer init, GatherAtRallyPointInfo info)

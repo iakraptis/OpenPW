@@ -12,7 +12,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenRA.Mods.Common.Traits;
-using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -57,7 +56,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 	public class PwRespawner : ITick
 	{
-		readonly List<(string Actor, Player Owner, CPos Home, int Due)> pending = new();
+		readonly List<(string Actor, Player Owner, CPos Home, int Due)> pending = [];
 		int now;
 
 		public void Schedule(string actor, Player owner, CPos home, int delay)
@@ -83,12 +82,12 @@ namespace OpenRA.Mods.Pw.Traits
 				if (!world.Map.Contains(cell))
 					cell = home;
 
-				world.AddFrameEndTask(w => w.CreateActor(actor, new TypeDictionary
-				{
+				world.AddFrameEndTask(w => w.CreateActor(actor,
+				[
 					new LocationInit(cell),
 					new OwnerInit(owner),
 					new PwHomeInit(home),
-				}));
+				]));
 			}
 		}
 	}

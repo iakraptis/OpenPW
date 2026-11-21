@@ -43,10 +43,8 @@ ServerTraits:
 	SkirmishLogic
 	PlayerPinger
 	MasterServerPinger
-	LobbySettingsNotification
 
 MapGrid:
-	TileSize: 32, 32
 	Type: Rectangular
 
 SpriteFormats: PngSheet

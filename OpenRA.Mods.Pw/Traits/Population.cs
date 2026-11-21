@@ -11,7 +11,6 @@
 
 using System.Linq;
 using OpenRA.Mods.Common.Traits;
-using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -131,11 +130,11 @@ namespace OpenRA.Mods.Pw.Traits
 			else
 			{
 				var cell = PwItemPlacement.Cell(Actor);
-				Actor.World.AddFrameEndTask(w => w.CreateActor(unit.Name, new TypeDictionary
-				{
+				Actor.World.AddFrameEndTask(w => w.CreateActor(unit.Name,
+				[
 					new OwnerInit(Actor.Owner),
 					new LocationInit(cell),
-				}));
+				]));
 			}
 
 			EndProduction(done);

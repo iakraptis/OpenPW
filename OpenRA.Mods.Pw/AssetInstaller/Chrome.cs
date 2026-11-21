@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using OpenRA.FileFormats;
@@ -113,12 +114,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			yaml.Append("Cursors:\n\tcursors/cursors.png:\n");
 			void Add(string name, int start, int length)
 			{
-				yaml.Append($"\t\t{name}:\n\t\t\tStart: {start}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t\t{name}:\n\t\t\tStart: {start}\n");
 				if (length > 1)
-					yaml.Append($"\t\t\tLength: {length}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\t\tLength: {length}\n");
 
 				// OpenRA measures the hotspot from the centre of the frame, the original from its top-left corner.
-				yaml.Append($"\t\t\tX: {hotspots[start].X - CursorSize / 2}\n\t\t\tY: {hotspots[start].Y - CursorSize / 2}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t\t\tX: {hotspots[start].X - CursorSize / 2}\n\t\t\tY: {hotspots[start].Y - CursorSize / 2}\n");
 			}
 
 			foreach (var (name, start, length) in Cursors)
@@ -209,11 +210,11 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				if (name == "")
 					name = "version";
 
-				yaml.Append($"\t\tarea-{name}: {Int(6)}, {Int(7)}, {Int(8) - Int(6) + 1}, {Int(9) - Int(7) + 1}\n");
+				yaml.Append(CultureInfo.InvariantCulture, $"\t\tarea-{name}: {Int(6)}, {Int(7)}, {Int(8) - Int(6) + 1}, {Int(9) - Int(7) + 1}\n");
 				if (name == "bg")
 				{
 					Blit(frames[0], 0, 0);
-					yaml.Append($"\t\tbackground: 0, 0, {frames[0].Width}, {frames[0].Height}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\tbackground: 0, 0, {frames[0].Width}, {frames[0].Height}\n");
 					top = frames[0].Height;
 					continue;
 				}
@@ -229,7 +230,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					var left = state * (frame.Width + 1);
 					Blit(frame, left, top);
 					var suffix = state == 0 ? "" : "-" + names[state];
-					yaml.Append($"\t\t{name}{suffix}: {left}, {top}, {frame.Width}, {frame.Height}\n");
+					yaml.Append(CultureInfo.InvariantCulture, $"\t\t{name}{suffix}: {left}, {top}, {frame.Width}, {frame.Height}\n");
 					height = Math.Max(height, frame.Height);
 				}
 

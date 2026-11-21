@@ -1,6 +1,7 @@
 General:
 	Name: Jungle
 	Id: JUNGLE
+	TileSize: 32, 32
 	EditorTemplateOrder: Terrain
 	Palette:
 

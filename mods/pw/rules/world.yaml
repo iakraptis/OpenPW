@@ -13,7 +13,6 @@
 		ShroudPalette: greyscale
 		FogPalette: greyscale
 	ActorMap:
-	AlwaysVisible:
 	ControlGroups:
 	Faction@Random:
 		InternalName: Random

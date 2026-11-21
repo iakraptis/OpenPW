@@ -27,7 +27,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwMergeBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("The merged types to make, each with the most the bot keeps at once (0: no limit).")]
-		public readonly Dictionary<string, int> Into = new();
+		public readonly Dictionary<string, int> Into = [];
 
 		[Desc("Ticks between checks.")]
 		public readonly int ScanInterval = 40;
