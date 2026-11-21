@@ -33,15 +33,30 @@ Directory entry (32 bytes):
 - Checksum: for most uncompressed entries, the low 16 bits of the sum of the bytes (400/400 entries in the small
   archives, 159/170 in `Jw2_09`). Compressed entries store `0x20000 | x`, where the low byte of `x` matches the
   unpacked sum. Not needed for reading.
-- `Pw.exe` lists the archive names in a table of 74-byte records at `0x58c523`. It references `JW2_08.TRC`, which
-  is not part of the release we have; the game runs without it. `JW2_04` and `JW2_13` are not referenced.
-- `JW2_08.TRC` is the **video archive** (see below). Only its directory has been seen: a 544-byte copy (16 entries,
-  no entry data) that came with a second, stripped copy of the game (2026-11-21).
+- `Pw.exe` lists the archive names in a table of 74-byte records at `0x58c523`. It references `JW2_08.TRC`, the
+  video archive (below), which the setup leaves on the CD; the installed game runs without it. `JW2_04` is not
+  referenced, and `JW2_13` is the setup's own archive (below).
+
+## The CD and the installed game
+
+The retail CD (one data track, ISO 9660; checked 2026-11-21) holds `Setup.exe`, `Autorun.inf`, `Readme.txt`,
+`manual/PWManual.pdf`, `programming/PROGRAMMING.pdf`, the 17 skirmish maps (`Maps/`, `Maps/Rank/`) and
+`Jw2_01`…`Jw2_17` without `JW2_04`. Compared with an installed copy:
+
+- `Jw2_02`, `03`, `05`, `06`, `07`, `09`…`12`, `14`…`17` and the maps are byte-identical. `Jw2_01` differs only in
+  `Mousec.dat` (122 bytes, the cursor table; the installer doesn't use it).
+- **`JW2_13.TRC`** is what `Setup.exe` unpacks into the game folder: `Pw.exe` (the retail exe), `Binkw32.dll`,
+  `Ijl11.dll`, `Mss32.dll`, `Mp3dec.asi`, `Pwhelp.chm`, and three masked entries, which are `MapEditor.exe`,
+  `Auto Patch Client.exe` and `UnInstall.exe` (each byte-identical to the installed file).
+- **`JW2_08.TRC`** (the videos) is on the CD only; the setup doesn't copy it.
+
+So the installer accepts either an installed copy or the CD's files copied to a folder: it needs only the archives
+it reads (`GameFolder.RequiredArchives`), not `Pw.exe`.
 
 ## `JW2_08.TRC`: the videos
 
-Bink videos, about 380 MB in all, none compressed. Known from the directory alone; their data has never been seen.
-Names as stored (12 bytes, masked ones all `0xCC`); sizes in bytes.
+Bink videos (`BIKi`), 380 MB in all, none compressed; on the retail CD (checked: every entry starts with a Bink
+header). Names as stored (12 bytes, masked ones all `0xCC`); sizes in bytes.
 
 | # | Name | Size | Likely content |
 |---:|---|---:|---|
@@ -64,8 +79,8 @@ Names as stored (12 bytes, masked ones all `0xCC`); sizes in bytes.
 
 The names use the campaign scenarios' race letters and numbers (`P01`…`P12`, `E`, `T`, `D`: 12 missions a race,
 [campaign.md](campaign.md)), so each race's campaign has a video at its first, middle and last mission. This is read
-from the names; when `Pw.exe` plays them is not confirmed. Our copies have no video, and the missions play without
-them.
+from the names; when `Pw.exe` plays them is not confirmed (the game probably reads them from the CD). OpenPW doesn't
+use them: OpenRA can't play Bink.
 
 ## Confirmed by
 

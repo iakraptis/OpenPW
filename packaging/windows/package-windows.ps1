@@ -213,8 +213,9 @@ $($config['PACKAGING_DISPLAY_NAME']) $Tag
 
 Run $launcherName.exe. Nothing needs installing: the game and its .NET runtime are in this folder.
 
-On first launch it asks for your copy of Primitive Wars (the folder holding Pw.exe) and converts its art, sounds,
-music and maps into game\Support\Content. The original game files are not included.
+On first launch it asks for your copy of Primitive Wars and converts its art, sounds, music and maps into
+game\Support\Content: the folder the game is installed in, or a folder you copied the files of the CD into (the one
+holding the Jw2_*.trc files). The original game files are not included.
 
 Settings, replays and logs are kept in game\Support too, so deleting this folder removes everything.
 If Windows says "Windows protected your PC", click "More info", then "Run anyway".
