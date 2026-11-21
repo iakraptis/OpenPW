@@ -39,7 +39,7 @@ function Invoke-Checked([string]$exe, [string[]]$arguments) {
 	if ($LASTEXITCODE -ne 0) { throw "$exe failed with exit code $LASTEXITCODE" }
 }
 
-if (-not (Test-Path (Join-Path $engine 'OpenRA.sln'))) {
+if (-not (Test-Path (Join-Path $engine 'OpenRA.slnx'))) {
 	throw "Engine not found in $engine. Run make.cmd first."
 }
 
