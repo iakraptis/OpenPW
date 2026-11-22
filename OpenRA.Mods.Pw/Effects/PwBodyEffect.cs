@@ -20,8 +20,9 @@ using OpenRA.Primitives;
 namespace OpenRA.Mods.Pw.Effects
 {
 	// A dead unit (PwBody): its die animation, facing the way it fell, then the animation's last frame lying on the
-	// ground for a while, or a grey dot where it fell (Marker: flyers and the Wizard, whose art leaves no body). It goes
-	// when its time is up, or at once when Resurrect raises it (its grave is taken).
+	// ground for a while, or an unseen mark where it fell (Marker: flyers and the Wizard, whose art leaves no body), shown
+	// as a grey dot only to a player who can raise it (owns a Resurrect caster). It goes when its time is up, or at once
+	// when Resurrect raises it (its grave is taken).
 	public class PwBodyEffect : IEffect, ISpatiallyPartitionable, IEffectAnnotation
 	{
 		// Below the units standing at the same place.
@@ -84,7 +85,8 @@ namespace OpenRA.Mods.Pw.Effects
 
 		public IEnumerable<IRenderable> RenderAnnotation(WorldRenderer wr)
 		{
-			if (!marker || !Fallen || world.FogObscures(pos))
+			if (!marker || !Fallen || world.FogObscures(pos)
+				|| !world.WorldActor.Trait<PwGraveyard>().CanRaise(world, world.RenderPlayer))
 				return SpriteRenderable.None;
 
 			// On the ground under where it fell (a flyer dies in the air).

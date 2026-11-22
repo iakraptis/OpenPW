@@ -111,7 +111,8 @@ the body is no longer drawn (unit 0x6c = 1, `FUN_004597ca`) and the unit leaves 
 leaves no body. While a unit falls or lies, Resurrect can raise it. The mod draws it with `PwBody` (on `^Unit`)
 and doubles every body's time (640 and 960 ticks: about 45 seconds for most at the default speed). Mod change: the
 flyers (flying machines too), the Rhamphos, the ManaSpread and the Wizard, whose art leaves nothing lying, leave a
-grey dot for 640 ticks that Resurrect can raise; the BowMachine still leaves nothing.
+mark for 640 ticks that Resurrect can raise, drawn as a grey dot only for a player who owns an AngelElf;
+the BowMachine still leaves nothing.
 
 ## Repairs
 

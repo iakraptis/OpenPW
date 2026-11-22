@@ -73,7 +73,7 @@
 		DefaultAttackSequence: attack
 	# Dead, it falls (its die animation, facing the way it fell) and its body lies for 640 ticks, about 45 seconds
 	# (mod change: twice the original's 320, .chr 0x13d0), while Resurrect can raise it (Pw.exe 0x460ac0). Flyers and
-	# the Wizard leave a grey dot instead, the BowMachine nothing, a Fake copy nothing.
+	# the Wizard leave an unseen mark instead, the BowMachine nothing, a Fake copy nothing.
 	PwBody:
 		RequiresCondition: !illusion
 	WithDeathAnimation@ILLUSION:
@@ -206,7 +206,8 @@
 ^WildFlyer:
 	Inherits: ^Wild
 	PwTakeOff:
-	# Its art leaves no body (.chr 0x13d0 = 0): a grey dot marks where it fell, which Resurrect can raise (mod change).
+	# Its art leaves no body (.chr 0x13d0 = 0): an unseen mark where it fell, which Resurrect can raise, shown as a
+	# grey dot only to a player with an AngelElf (mod change).
 	PwBody:
 		Marker: true
 	# The flight loops all the time, standing or moving, with no idle animation: hovering, an aircraft is idle and
@@ -341,8 +342,8 @@
 # that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
 # (not ^Machine), since these targetables replace the ground one.
 ^AirMovement:
-	# Its art leaves no body (.chr 0x13d0 = 0 for every flyer): a grey dot marks where it fell, which Resurrect can
-	# raise (mod change).
+	# Its art leaves no body (.chr 0x13d0 = 0 for every flyer): an unseen mark where it fell, which Resurrect can
+	# raise, shown as a grey dot only to a player with an AngelElf (mod change).
 	PwBody:
 		Marker: true
 	Targetable@AIR:

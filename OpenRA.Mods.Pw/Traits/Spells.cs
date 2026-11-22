@@ -672,6 +672,11 @@ namespace OpenRA.Mods.Pw.Traits
 		readonly PwGraveyardInfo info;
 		readonly List<Grave> graves = [];
 
+		// CanRaise, worked out once a tick: the player and the answer.
+		int raiseTick = -1;
+		Player raisePlayer;
+		bool raiseAnswer;
+
 		public PwGraveyard(PwGraveyardInfo info)
 		{
 			this.info = info;
@@ -699,6 +704,23 @@ namespace OpenRA.Mods.Pw.Traits
 			Open(world, viewer)
 				.Where(g => (g.Position - pos).HorizontalLengthSquared <= radius.LengthSquared)
 				.MinByOrDefault(g => (g.Position - pos).HorizontalLengthSquared);
+
+		// The player owns a unit with Resurrect (an AngelElf): the marks of the dead that leave no body are shown to it.
+		public bool CanRaise(World world, Player player)
+		{
+			if (player == null)
+				return false;
+
+			if (raiseTick != world.WorldTick || raisePlayer != player)
+			{
+				raiseTick = world.WorldTick;
+				raisePlayer = player;
+				raiseAnswer = world.ActorsWithTrait<PwSpell>()
+					.Any(p => p.Actor.Owner == player && p.Trait.Info.Resurrect && !p.Actor.IsDead);
+			}
+
+			return raiseAnswer;
+		}
 
 		public void Take(Grave grave)
 		{
