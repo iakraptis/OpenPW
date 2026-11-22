@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Ticks from death to return. Each creature sets the original's (Pw.exe 0x460b69): its fall, its body ",
 			"(.chr 0x13d0) and its type's wait (.chr 0x18c), counted from the death so the mod's longer bodies don't ",
 			"delay it.")]
-		public readonly int Delay = 1690;
+		public readonly int Delay = PwTime.Ticks(1690);
 
 		public override object Create(ActorInitializer init) { return new PwRespawns(init, this); }
 	}

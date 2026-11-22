@@ -23,7 +23,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwGathererBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks for idle workers.")]
-		public readonly int ScanInterval = 40;
+		public readonly int ScanInterval = PwTime.Ticks(40);
 
 		[Desc("Workers sent to one bush before the next bush is preferred (each one more counts as this many cells further).")]
 		public readonly int CrowdPenalty = 6;

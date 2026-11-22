@@ -203,9 +203,9 @@ Rules:
 		-ConquestVictoryConditions:
 		# The second base and the attack escorts without the long waits.
 		PwBaseBuilderBotModule@medium:
-			ExpansionDelay: 300
+			ExpansionDelay: 600
 		PwDetectorBotModule@medium:
-			EscortDelay: 100
+			EscortDelay: 200
 	world:
 		-SpawnStartingUnits:
 		LuaScript:

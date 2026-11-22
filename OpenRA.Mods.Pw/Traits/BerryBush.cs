@@ -33,7 +33,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Ticks between regrowths (60 ticks: about 4 seconds at the default speed, a worker's 12 berries in 50 ",
 			"seconds; Mod change, the original's bushes never grow back).")]
-		public readonly int RegrowInterval = 60;
+		public readonly int RegrowInterval = PwTime.Ticks(60);
 
 		[Desc("Workers gathering it at once (0: no limit). The original lets one at a time: a worker holds the bush for ",
 			"its gather animation (Pw.exe 0x45bb89, freed at 0x45bc0b); the others wait or go to another bush.")]

@@ -1,5 +1,7 @@
 -- Shared by the test maps. Each check logs "ok - ..." or "check failed - ..."; only the final line says
 -- "<NAME> TEST PASS" or "<NAME> TEST FAIL", so one run reports every failed check.
+-- Times are original ticks (tickrate-plan.md): Later, WaitFor and FinishWhenDone turn them into world ticks
+-- (PwTime.Ticks); Now is the original ticks since the start.
 failures = { }
 checks = 0
 waiters = { }
@@ -16,18 +18,20 @@ Check = function(ok, message)
     end
 end
 
--- Run fn after delay ticks.
+Now = function() return PwTime.Now end
+
+-- Run fn after delay original ticks.
 Later = function(delay, fn)
     scheduled = scheduled + 1
-    Trigger.AfterDelay(delay, function()
+    Trigger.AfterDelay(math.max(1, PwTime.Ticks(delay)), function()
         scheduled = scheduled - 1
         fn()
     end)
 end
 
--- Wait until cond() is true (a passed check) or timeout ticks pass (a failed check), then run andThen(ok).
+-- Wait until cond() is true (a passed check) or timeout original ticks pass (a failed check), then run andThen(ok).
 WaitFor = function(message, timeout, cond, andThen)
-    waiters[#waiters + 1] = { message = message, deadline = DateTime.GameTime + timeout, cond = cond, andThen = andThen }
+    waiters[#waiters + 1] = { message = message, deadline = DateTime.GameTime + PwTime.Ticks(timeout), cond = cond, andThen = andThen }
 end
 
 -- Track a callback the engine will call later (production done, ...): the test doesn't finish while it's
@@ -45,10 +49,10 @@ Expect = function(message, fn)
     end
 end
 
--- Finish once no waits or scheduled steps are left (or at the deadline tick).
+-- Finish once no waits or scheduled steps are left (or at the deadline, an original tick).
 FinishWhenDone = function(name, deadline)
     testName = name
-    testDeadline = deadline
+    testDeadline = PwTime.Ticks(deadline)
 end
 
 Contains = function(list, value)

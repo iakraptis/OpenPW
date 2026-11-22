@@ -282,7 +282,7 @@ namespace OpenRA.Mods.Pw.Traits
 				return;
 
 			// Pw.exe 0x468bc9: the liquid steps through frames 0-5 and back, 4 ticks each.
-			var frame = LiquidFrames[world.WorldTick / 4 % LiquidFrames.Length];
+			var frame = LiquidFrames[world.WorldTick / PwTime.Ticks(4) % LiquidFrames.Length];
 			if (frame == liquidFrame)
 				return;
 

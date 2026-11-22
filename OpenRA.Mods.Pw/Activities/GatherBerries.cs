@@ -32,7 +32,7 @@ namespace OpenRA.Mods.Pw.Activities
 		const int OtherBushCells = 5;
 
 		// Ticks between looks for room while waiting at a held bush.
-		const int WaitTicks = 8;
+		const int WaitTicks = 8 * PwTime.TicksPerOriginal;
 
 		readonly BerryGatherer gatherer;
 		readonly IMove move;

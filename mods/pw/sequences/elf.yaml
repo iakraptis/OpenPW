@@ -3,7 +3,7 @@
 elf-wizard:
 	Defaults:
 		Filename: units/elf-wizard.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -44,7 +44,7 @@ elf-wizard:
 elf-redelf:
 	Defaults:
 		Filename: units/elf-redelf.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -73,7 +73,7 @@ elf-redelf:
 elf-whiteelf:
 	Defaults:
 		Filename: units/elf-whiteelf.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 9
@@ -102,7 +102,7 @@ elf-whiteelf:
 elf-ranger:
 	Defaults:
 		Filename: units/elf-ranger.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 12
@@ -131,7 +131,7 @@ elf-ranger:
 elf-blueelf:
 	Defaults:
 		Filename: units/elf-blueelf.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 51
@@ -160,7 +160,7 @@ elf-blueelf:
 elf-unicorn:
 	Defaults:
 		Filename: units/elf-unicorn.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 58
@@ -189,7 +189,7 @@ elf-unicorn:
 elf-pixie:
 	Defaults:
 		Filename: units/elf-pixie.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -210,7 +210,7 @@ elf-pixie:
 elf-manaspread:
 	Defaults:
 		Filename: units/elf-manaspread.png
-		Tick: 40
+		Tick: 80
 	walk:
 		Facings: -8
 		Length: 32
@@ -233,7 +233,7 @@ elf-manaspread:
 elf-elfring:
 	Defaults:
 		Filename: units/elf-elfring.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -254,7 +254,7 @@ elf-elfring:
 elf-dragon:
 	Defaults:
 		Filename: units/elf-dragon.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -279,7 +279,7 @@ elf-dragon:
 elf-phoenix:
 	Defaults:
 		Filename: units/elf-phoenix.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -304,7 +304,7 @@ elf-phoenix:
 elf-angelelf:
 	Defaults:
 		Filename: units/elf-angelelf.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -329,7 +329,7 @@ elf-angelelf:
 elf-heaven:
 	Defaults:
 		Filename: units/elf-heaven.png
-		Tick: 40
+		Tick: 80
 		Offset: -96, -64
 	idle:
 		Start: 0
@@ -348,7 +348,7 @@ elf-heaven:
 elf-elftree:
 	Defaults:
 		Filename: units/elf-elftree.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	idle:
 		Start: 0
@@ -364,7 +364,7 @@ elf-elftree:
 elf-bubble:
 	Defaults:
 		Filename: units/elf-bubble.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -16
 	idle:
 		Start: 0
@@ -383,7 +383,7 @@ elf-bubble:
 elf-redhall:
 	Defaults:
 		Filename: units/elf-redhall.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	idle:
 		Start: 0
@@ -402,7 +402,7 @@ elf-redhall:
 elf-bluehall:
 	Defaults:
 		Filename: units/elf-bluehall.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	idle:
 		Start: 0
@@ -418,7 +418,7 @@ elf-bluehall:
 elf-manahall:
 	Defaults:
 		Filename: units/elf-manahall.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	idle:
 		Start: 0
@@ -434,7 +434,7 @@ elf-manahall:
 elf-skyhall:
 	Defaults:
 		Filename: units/elf-skyhall.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	idle:
 		Start: 0
@@ -453,7 +453,7 @@ elf-skyhall:
 elf-elflibrary:
 	Defaults:
 		Filename: units/elf-elflibrary.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	idle:
 		Start: 0
@@ -469,7 +469,7 @@ elf-elflibrary:
 elf-skylibrary:
 	Defaults:
 		Filename: units/elf-skylibrary.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	idle:
 		Start: 0
@@ -485,7 +485,7 @@ elf-skylibrary:
 elf-manalibrary:
 	Defaults:
 		Filename: units/elf-manalibrary.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	idle:
 		Start: 0

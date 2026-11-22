@@ -5,7 +5,7 @@ elf-upgrade-gathering-amount-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-heaven
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 100
 		Prerequisites: ~!elf-upgrade-gathering-amount-1
 	Valued:
@@ -23,7 +23,7 @@ elf-upgrade-bubble-detection-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-heaven
-		BuildDuration: 720
+		BuildDuration: 1440
 		BuildPaletteOrder: 110
 		Prerequisites: ~!elf-upgrade-bubble-detection-secret-1
 	Valued:
@@ -40,7 +40,7 @@ elf-upgrade-level-up-exp-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-heaven
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 120
 		Prerequisites: ~!elf-upgrade-level-up-exp-1
 	Valued:
@@ -57,7 +57,7 @@ elf-upgrade-level-up-exp-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-heaven
-		BuildDuration: 1280
+		BuildDuration: 2560
 		BuildPaletteOrder: 121
 		Prerequisites: ~elf-upgrade-level-up-exp-1, ~!elf-upgrade-level-up-exp-2
 	Valued:
@@ -74,7 +74,7 @@ elf-upgrade-level-up-exp-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-heaven
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 122
 		Prerequisites: ~elf-upgrade-level-up-exp-2, ~!elf-upgrade-level-up-exp-3
 	Valued:
@@ -91,7 +91,7 @@ elf-upgrade-elf-weapon-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 130
 		Prerequisites: ~!elf-upgrade-elf-weapon-secret-1
 	Valued:
@@ -109,7 +109,7 @@ elf-upgrade-elf-weapon-secret-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 131
 		Prerequisites: ~elf-upgrade-elf-weapon-secret-1, ~!elf-upgrade-elf-weapon-secret-2
 	Valued:
@@ -127,7 +127,7 @@ elf-upgrade-elf-weapon-secret-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 132
 		Prerequisites: ~elf-upgrade-elf-weapon-secret-2, ~!elf-upgrade-elf-weapon-secret-3
 	Valued:
@@ -145,7 +145,7 @@ elf-upgrade-elf-armor-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 140
 		Prerequisites: ~!elf-upgrade-elf-armor-secret-1
 	Valued:
@@ -163,7 +163,7 @@ elf-upgrade-elf-armor-secret-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 141
 		Prerequisites: ~elf-upgrade-elf-armor-secret-1, ~!elf-upgrade-elf-armor-secret-2
 	Valued:
@@ -181,7 +181,7 @@ elf-upgrade-elf-armor-secret-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 142
 		Prerequisites: ~elf-upgrade-elf-armor-secret-2, ~!elf-upgrade-elf-armor-secret-3
 	Valued:
@@ -199,7 +199,7 @@ elf-upgrade-blueelf-movement-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-elflibrary
-		BuildDuration: 1920
+		BuildDuration: 3840
 		BuildPaletteOrder: 150
 		Prerequisites: ~!elf-upgrade-blueelf-movement-secret-1
 	Valued:
@@ -217,7 +217,7 @@ elf-upgrade-elfring-movement-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 160
 		Prerequisites: ~!elf-upgrade-elfring-movement-secret-1
 	Valued:
@@ -235,7 +235,7 @@ elf-upgrade-divine-being-s-weapon-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 170
 		Prerequisites: ~!elf-upgrade-divine-being-s-weapon-secret-1
 	Valued:
@@ -253,7 +253,7 @@ elf-upgrade-divine-being-s-weapon-secret-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 171
 		Prerequisites: ~elf-upgrade-divine-being-s-weapon-secret-1, ~!elf-upgrade-divine-being-s-weapon-secret-2
 	Valued:
@@ -271,7 +271,7 @@ elf-upgrade-divine-being-s-weapon-secret-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 172
 		Prerequisites: ~elf-upgrade-divine-being-s-weapon-secret-2, ~!elf-upgrade-divine-being-s-weapon-secret-3
 	Valued:
@@ -289,7 +289,7 @@ elf-upgrade-divine-being-s-armor-secret-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 180
 		Prerequisites: ~!elf-upgrade-divine-being-s-armor-secret-1
 	Valued:
@@ -307,7 +307,7 @@ elf-upgrade-divine-being-s-armor-secret-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 181
 		Prerequisites: ~elf-upgrade-divine-being-s-armor-secret-1, ~!elf-upgrade-divine-being-s-armor-secret-2
 	Valued:
@@ -325,7 +325,7 @@ elf-upgrade-divine-being-s-armor-secret-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-skylibrary
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 182
 		Prerequisites: ~elf-upgrade-divine-being-s-armor-secret-2, ~!elf-upgrade-divine-being-s-armor-secret-3
 	Valued:
@@ -343,7 +343,7 @@ elf-upgrade-fake-unicorn-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-manalibrary
-		BuildDuration: 1920
+		BuildDuration: 3840
 		BuildPaletteOrder: 190
 		Prerequisites: ~!elf-upgrade-fake-unicorn-1
 	Valued:
@@ -361,7 +361,7 @@ elf-upgrade-meteor-manaspread-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-manalibrary
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 200
 		Prerequisites: ~!elf-upgrade-meteor-manaspread-1
 	Valued:
@@ -379,7 +379,7 @@ elf-upgrade-mana-potion-secret-all-of-elf-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: elf-manalibrary
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 210
 		Prerequisites: ~!elf-upgrade-mana-potion-secret-all-of-elf-1
 	Valued:

@@ -348,7 +348,13 @@ function Tick()
 		return
 	end
 
-	Now = DateTime.GameTime
+	-- The triggers' times are original ticks (two world ticks each, tickrate-plan.md): they run once an original tick,
+	-- as the original's did.
+	if DateTime.GameTime % PwTime.TicksPerOriginal ~= 0 then
+		return
+	end
+
+	Now = PwTime.Now
 
 	-- Losing everything loses; beating every enemy wins, or, with a trigger waiting for it, lets that trigger run.
 	if Human.HasNoRequiredUnits() then

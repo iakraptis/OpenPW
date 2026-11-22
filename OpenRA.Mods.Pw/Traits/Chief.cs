@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.Traits
 			"its most (Pw.exe 0x46090a, on game ticks whose counter is a multiple of 16).")]
 		public readonly int RegenAmount = 1;
 
-		public readonly int RegenInterval = 16;
+		public readonly int RegenInterval = PwTime.Ticks(16);
 
 		public override object Create(ActorInitializer init) { return new PwMana(init.Self, this); }
 	}
@@ -49,8 +49,8 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public void Give(int amount) => Mana = Math.Min(Max, Mana + amount);
 
-		// A share of its most, in percent (a unit Resurrect raises).
-		public void SetShare(int percent) => Mana = Max * percent / 100;
+		// A share of its most, in percent (a unit Resurrect raises), and an amount besides (the tests).
+		public void SetShare(int percent, int extra = 0) => Mana = Math.Min(Max, Max * percent / 100 + extra);
 
 		public bool Spend(int amount)
 		{
@@ -79,7 +79,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public readonly int Amount = 1;
 
-		public readonly int Interval = 8;
+		public readonly int Interval = PwTime.Ticks(8);
 
 		public override object Create(ActorInitializer init) { return new PwManaAura(this); }
 	}
@@ -164,7 +164,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwFallOutVictimInfo : TraitInfo, Requires<IHealthInfo>
 	{
 		public readonly int Damage = 1;
-		public readonly int Interval = 1;
+		public readonly int Interval = PwTime.Ticks(1);
 
 		[GrantedConditionReference]
 		public readonly string Condition = "fallout";

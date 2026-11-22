@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwExposureInfo : TraitInfo, ILobbyOptions
 	{
 		[Desc("Ticks without a main building before the player is exposed: 5 minutes at the default speed (71 ms).")]
-		public readonly int Delay = 4225;
+		public readonly int Delay = PwTime.Ticks(4225);
 
 		[Desc("Also in maps for the mission selector (the campaign keeps the original rules; the test maps opt in).")]
 		public readonly bool InMissions = false;

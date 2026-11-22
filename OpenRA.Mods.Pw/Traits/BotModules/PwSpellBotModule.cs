@@ -32,7 +32,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly HashSet<string> Spells = [];
 
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 20;
+		public readonly int ScanInterval = PwTime.Ticks(20);
 
 		[Desc("How far beyond a spell's range a caster looks for a target, in cells (it walks up to cast).")]
 		public readonly int ExtraRange = 3;

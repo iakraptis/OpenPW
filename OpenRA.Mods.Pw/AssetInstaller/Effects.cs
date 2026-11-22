@@ -41,9 +41,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		const string Ripple = "\t\tAlpha: 0.2\n";
 
 		// Effect art advances one frame per tick (all effects are updated once a game tick, 0x456aaa): weapons in flight
-		// (0x4773bc) and at the impact (0x477563), spells in every part (0x478131, 0x478844, ...). 40 ms in sequence
-		// ticks. The records have no frame delays (0x214-0x21c are blit modes).
-		const int FrameTick = 40;
+		// (0x4773bc) and at the impact (0x477563), spells in every part (0x478131, 0x478844, ...): 40 sequence ms per
+		// world tick, PwTime.TicksPerOriginal world ticks per original tick. The records have no frame delays (0x214-0x21c
+		// are blit modes).
+		const int FrameTick = 40 * PwTime.TicksPerOriginal;
 
 		// Smoke art: its palette holds only reds, which are the smoke's density, not colours (the Giant's bomb). It is
 		// drawn as black of that opacity, so it darkens the ground beneath (dark green smoke on grass, as in the game).
@@ -119,7 +120,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 					if (Trails.Contains(image))
 						sequences.Append("\ttrail:\n" + (flightStart > 0 ? $"\t\tStart: {flightStart}\n" : "") +
-							$"\t\tLength: {flight}\n\t\tTick: 80\n" + (GlowingFlights.Contains(image) ? Glow : ""));
+							$"\t\tLength: {flight}\n\t\tTick: {2 * FrameTick}\n" + (GlowingFlights.Contains(image) ? Glow : ""));
 				}
 
 				var impactScale = image == "weapon-bubble" ? "0.25" : ImpactScale;

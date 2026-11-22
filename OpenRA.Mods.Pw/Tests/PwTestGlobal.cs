@@ -232,6 +232,14 @@ namespace OpenRA.Mods.Pw.Tests
 			stone?.GrantCondition(unit, unit, ticks);
 		}
 
+		[Desc("Set a unit's mana (PwMana).")]
+		public void SetMana(Actor actor, int mana) => actor.TraitOrDefault<PwMana>()?.SetShare(0, mana);
+
+		[Desc("Bodies lying within a cell of the cell's centre that Resurrect could raise (PwGraveyard), as the player sees.")]
+		public int Bodies(Player player, CPos cell) =>
+			player.World.WorldActor.Trait<PwGraveyard>().Open(player.World, player)
+				.Count(g => (g.Position - player.World.Map.CenterOfCell(cell)).HorizontalLengthSquared <= WDist.FromCells(1).LengthSquared);
+
 		[Desc("Demon: cast a spell on a place.")]
 		public void CastAt(Actor caster, string spell, CPos cell) =>
 			Resolve(caster, PwSpell.Cast(caster, spell, Target.FromCell(caster.World, cell)));

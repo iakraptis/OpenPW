@@ -37,13 +37,13 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int RaidArmy = 10;
 
 		[Desc("Ticks between plans while no trip is running.")]
-		public readonly int ScanInterval = 100;
+		public readonly int ScanInterval = PwTime.Ticks(100);
 
 		[Desc("Ticks a step (flying to the pickup, loading, travelling, unloading) may take before the trip is dropped.")]
-		public readonly int StepTimeout = 1500;
+		public readonly int StepTimeout = PwTime.Ticks(1500);
 
 		[Desc("Ticks to wait after a trip (or a dropped one) before planning the next.")]
-		public readonly int Cooldown = 750;
+		public readonly int Cooldown = PwTime.Ticks(750);
 
 		[Desc("How far from the base soldiers are picked up, and from the target to look for a landing, in cells.")]
 		public readonly int BaseRadius = 16;
@@ -60,10 +60,10 @@ namespace OpenRA.Mods.Pw.Traits
 		enum Phase { Idle, ToPickup, Loading, Travelling, Unloading }
 
 		// Ticks between progress checks of a running trip.
-		const int StepInterval = 25;
+		const int StepInterval = 25 * PwTime.TicksPerOriginal;
 
 		// Orders are repeated this often while a step waits (the squad manager may have sent a passenger elsewhere).
-		const int ReorderInterval = 150;
+		const int ReorderInterval = 150 * PwTime.TicksPerOriginal;
 
 		readonly World world;
 		readonly Player player;

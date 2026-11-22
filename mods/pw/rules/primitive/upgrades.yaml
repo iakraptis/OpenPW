@@ -5,7 +5,7 @@ primitive-upgrade-gathering-amount-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 100
 		Prerequisites: ~!primitive-upgrade-gathering-amount-1
 	Valued:
@@ -23,7 +23,7 @@ primitive-upgrade-stonetower-detection-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 720
+		BuildDuration: 1440
 		BuildPaletteOrder: 110
 		Prerequisites: ~!primitive-upgrade-stonetower-detection-1
 	Valued:
@@ -40,7 +40,7 @@ primitive-upgrade-fall-out-for-chief-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 120
 		Prerequisites: ~!primitive-upgrade-fall-out-for-chief-1
 	Valued:
@@ -58,7 +58,7 @@ primitive-upgrade-level-up-exp-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 130
 		Prerequisites: ~!primitive-upgrade-level-up-exp-1
 	Valued:
@@ -75,7 +75,7 @@ primitive-upgrade-level-up-exp-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 1280
+		BuildDuration: 2560
 		BuildPaletteOrder: 131
 		Prerequisites: ~primitive-upgrade-level-up-exp-1, ~!primitive-upgrade-level-up-exp-2
 	Valued:
@@ -92,7 +92,7 @@ primitive-upgrade-level-up-exp-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-sanctuary
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 132
 		Prerequisites: ~primitive-upgrade-level-up-exp-2, ~!primitive-upgrade-level-up-exp-3
 	Valued:
@@ -109,7 +109,7 @@ primitive-upgrade-powerman-movement-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 1920
+		BuildDuration: 3840
 		BuildPaletteOrder: 140
 		Prerequisites: ~!primitive-upgrade-powerman-movement-1
 	Valued:
@@ -127,7 +127,7 @@ primitive-upgrade-ground-primitive-weapon-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 150
 		Prerequisites: ~!primitive-upgrade-ground-primitive-weapon-1
 	Valued:
@@ -145,7 +145,7 @@ primitive-upgrade-ground-primitive-weapon-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 151
 		Prerequisites: ~primitive-upgrade-ground-primitive-weapon-1, ~!primitive-upgrade-ground-primitive-weapon-2
 	Valued:
@@ -163,7 +163,7 @@ primitive-upgrade-ground-primitive-weapon-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 152
 		Prerequisites: ~primitive-upgrade-ground-primitive-weapon-2, ~!primitive-upgrade-ground-primitive-weapon-3
 	Valued:
@@ -181,7 +181,7 @@ primitive-upgrade-ground-primitive-armor-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 160
 		Prerequisites: ~!primitive-upgrade-ground-primitive-armor-1
 	Valued:
@@ -199,7 +199,7 @@ primitive-upgrade-ground-primitive-armor-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 161
 		Prerequisites: ~primitive-upgrade-ground-primitive-armor-1, ~!primitive-upgrade-ground-primitive-armor-2
 	Valued:
@@ -217,7 +217,7 @@ primitive-upgrade-ground-primitive-armor-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 162
 		Prerequisites: ~primitive-upgrade-ground-primitive-armor-2, ~!primitive-upgrade-ground-primitive-armor-3
 	Valued:
@@ -235,7 +235,7 @@ primitive-upgrade-bowmachine-weapon-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 170
 		Prerequisites: ~!primitive-upgrade-bowmachine-weapon-1
 	Valued:
@@ -253,7 +253,7 @@ primitive-upgrade-bowmachine-weapon-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 171
 		Prerequisites: ~primitive-upgrade-bowmachine-weapon-1, ~!primitive-upgrade-bowmachine-weapon-2
 	Valued:
@@ -271,7 +271,7 @@ primitive-upgrade-bowmachine-weapon-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 172
 		Prerequisites: ~primitive-upgrade-bowmachine-weapon-2, ~!primitive-upgrade-bowmachine-weapon-3
 	Valued:
@@ -289,7 +289,7 @@ primitive-upgrade-bowmachine-armor-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 180
 		Prerequisites: ~!primitive-upgrade-bowmachine-armor-1
 	Valued:
@@ -307,7 +307,7 @@ primitive-upgrade-bowmachine-armor-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 181
 		Prerequisites: ~primitive-upgrade-bowmachine-armor-1, ~!primitive-upgrade-bowmachine-armor-2
 	Valued:
@@ -325,7 +325,7 @@ primitive-upgrade-bowmachine-armor-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-landincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 182
 		Prerequisites: ~primitive-upgrade-bowmachine-armor-2, ~!primitive-upgrade-bowmachine-armor-3
 	Valued:
@@ -343,7 +343,7 @@ primitive-upgrade-suqadron-movement-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 1920
+		BuildDuration: 3840
 		BuildPaletteOrder: 190
 		Prerequisites: ~!primitive-upgrade-suqadron-movement-1
 	Valued:
@@ -361,7 +361,7 @@ primitive-upgrade-revolover-transportation-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 1680
+		BuildDuration: 3360
 		BuildPaletteOrder: 200
 		Prerequisites: ~!primitive-upgrade-revolover-transportation-1
 	Valued:
@@ -379,7 +379,7 @@ primitive-upgrade-primitive-air-machine-weapon-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 210
 		Prerequisites: ~!primitive-upgrade-primitive-air-machine-weapon-1
 	Valued:
@@ -397,7 +397,7 @@ primitive-upgrade-primitive-air-machine-weapon-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 211
 		Prerequisites: ~primitive-upgrade-primitive-air-machine-weapon-1, ~!primitive-upgrade-primitive-air-machine-weapon-2
 	Valued:
@@ -415,7 +415,7 @@ primitive-upgrade-primitive-air-machine-weapon-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 212
 		Prerequisites: ~primitive-upgrade-primitive-air-machine-weapon-2, ~!primitive-upgrade-primitive-air-machine-weapon-3
 	Valued:
@@ -433,7 +433,7 @@ primitive-upgrade-primitive-air-machine-armor-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 220
 		Prerequisites: ~!primitive-upgrade-primitive-air-machine-armor-1
 	Valued:
@@ -451,7 +451,7 @@ primitive-upgrade-primitive-air-machine-armor-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 221
 		Prerequisites: ~primitive-upgrade-primitive-air-machine-armor-1, ~!primitive-upgrade-primitive-air-machine-armor-2
 	Valued:
@@ -469,7 +469,7 @@ primitive-upgrade-primitive-air-machine-armor-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: primitive-skyincreaser
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 222
 		Prerequisites: ~primitive-upgrade-primitive-air-machine-armor-2, ~!primitive-upgrade-primitive-air-machine-armor-3
 	Valued:

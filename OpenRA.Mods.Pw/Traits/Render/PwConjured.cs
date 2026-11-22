@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Pw.Traits.Render
 		public readonly float MinAlpha = 0.25f;
 
 		[Desc("Ticks the destroyed building takes to fade out.")]
-		public readonly int FadeOutTicks = 48;
+		public readonly int FadeOutTicks = PwTime.Ticks(48);
 
 		[SequenceReference]
 		[Desc("The building's sequence shown while it fades out.")]

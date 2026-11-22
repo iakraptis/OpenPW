@@ -1,8 +1,9 @@
 # The actor template tree (plan.md §3.1). Templates hold behaviour, never balance: HP, attack, armour, cost, speed,
 # sight and build time live on the concrete actors, with the values from docs/game/<race>.md.
 #
-# Units in the original are measured in pixels and ticks; here 1 px = 32 WDist (a 32 px cell is 1c0) and one tick
-# is one world tick (the game speeds in mod.yaml are the original ones).
+# Units in the original are measured in pixels and ticks; here 1 px = 32 WDist (a 32 px cell is 1c0) and one original
+# tick is two world ticks (PwTime, tickrate-plan.md): durations in the rules are twice the original's, speeds per tick
+# half. Comments quote the original's ticks (docs/game).
 
 # Everything that takes part in a game.
 ^ExistsInWorld:
@@ -67,6 +68,8 @@
 	PwItemUser:
 	Tooltip:
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: stand
 		StandSequences: stand
 		MoveSequence: walk
@@ -116,7 +119,7 @@
 		Modifier: 0
 		RequiresCondition: illusion
 	KillsSelf@ILLUSION:
-		Delay: 960
+		Delay: 1920
 		RequiresCondition: illusion
 	MapEditorData:
 		Categories: Units
@@ -143,8 +146,12 @@
 	GatherAtRallyPoint:
 	# One body at a time: gathering, carrying a basket of berries, or the plain infantry body.
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		RequiresCondition: !gathering && !carrying
 	WithInfantryBody@CARRY:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: stand-carry-b
 		StandSequences: stand-carry-b
 		MoveSequence: walk-carry-b
@@ -183,9 +190,10 @@
 	PwDropsMeat:
 	PwRespawns:
 	Wanders:
+		ReduceMoveRadiusDelay: 10
 		WanderMoveRadius: 4
-		MinMoveDelay: 150
-		MaxMoveDelay: 600
+		MinMoveDelay: 300
+		MaxMoveDelay: 1200
 	MapEditorData:
 		Categories: Wildlife
 
@@ -198,6 +206,8 @@
 	Targetable@PREDATOR:
 		TargetTypes: Predator
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 		InitialStance: AttackAnything
 		InitialStanceAI: AttackAnything
 		ScanRadius: 3
@@ -214,6 +224,8 @@
 	# busy on alternate ticks, and each idle tick restarted the loop (the wings froze on the first frame).
 	-WithInfantryBody:
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		StandSequences: walk
 		MoveSequence: walk
 		DefaultAttackSequence: walk
@@ -226,10 +238,11 @@
 		TargetTypes: Ground, Beast, Wild
 		RequiresCondition: !airborne
 	Aircraft:
+		AltitudeVelocity: 0c22
 		# The art draws the flight height and the shadow itself: fly just high enough to count as airborne.
 		CruiseAltitude: 16
 		CanHover: true
-		TurnSpeed: 64
+		TurnSpeed: 32
 		AirborneCondition: airborne
 		Repulsable: false
 	HiddenUnderFog:
@@ -241,6 +254,7 @@
 ^WildSwimmer:
 	Inherits: ^Wild
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: water
 
 # Constructed: Bowmachine, flying machines. Repaired, not healed.
@@ -271,6 +285,8 @@
 	-WithInfantryBody:
 	PwTakeOff:
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		StandSequences: walk
 		MoveSequence: walk
 		DefaultAttackSequence: attack
@@ -286,6 +302,7 @@
 
 ^HoverMovement:
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: hover
 		AlwaysTurnInPlace: true
 		PauseOnCondition: petrified || stunned || bubbled
@@ -301,6 +318,8 @@
 	PwLiving:
 	-WithInfantryBody:
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		StandSequences: walk
 		MoveSequence: walk
 		DefaultAttackSequence: attack
@@ -322,18 +341,21 @@
 # Movement mixins (§3.1.1): Mobile needs the world's PathFinder and the named Locomotor.
 ^FootMovement:
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: foot
 		AlwaysTurnInPlace: true
 		PauseOnCondition: petrified || stunned || bubbled
 
 ^HeavyMovement:
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: heavy
 		AlwaysTurnInPlace: true
 		PauseOnCondition: petrified || stunned || bubbled
 
 ^WheeledMovement:
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: wheeled
 		AlwaysTurnInPlace: true
 		PauseOnCondition: petrified || stunned || bubbled
@@ -353,11 +375,12 @@
 		TargetTypes: Ground, Machine
 		RequiresCondition: !airborne
 	Aircraft:
+		AltitudeVelocity: 0c22
 		# The art draws the flight height and the shadow itself: fly just high enough to count as airborne.
 		CruiseAltitude: 16
 		CanHover: true
 		VTOL: true
-		TurnSpeed: 64
+		TurnSpeed: 32
 		AirborneCondition: airborne
 		PauseOnCondition: petrified || stunned || bubbled
 	HiddenUnderFog:
@@ -372,6 +395,8 @@
 		FacingTolerance: 128
 		PauseOnCondition: petrified || stunned || bubbled
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 		# Units scan 5 cells and go for enemies they see, as OpenSYW's infantry do.
 		ScanRadius: 5
 		InitialStance: AttackAnything
@@ -384,6 +409,7 @@
 	PwHunter:
 		HuntingCondition: hunting
 	PwWithTextDecoration@HUNTING:
+		BlinkInterval: 10
 		Text: H
 		Font: TinyBold
 		Color: FFD700
@@ -402,6 +428,8 @@
 		FacingTolerance: 128
 		PauseOnCondition: petrified || stunned || bubbled
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
@@ -410,6 +438,7 @@
 	PwHunter:
 		HuntingCondition: hunting
 	PwWithTextDecoration@HUNTING:
+		BlinkInterval: 10
 		Text: H
 		Font: TinyBold
 		Color: FFD700
@@ -491,6 +520,8 @@
 	AttackOmni:
 		RequiresCondition: !constructing
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground, Air
 		InvalidTargets: Wild
@@ -2003,6 +2034,7 @@
 # with its sight range.
 ^Invisible:
 	Cloak:
+		CloakDelay: 60
 		CloakStyle: Alpha
 		CloakedAlpha: 0.55
 		DetectionTypes: Invisible
@@ -2053,8 +2085,12 @@
 ^Disguisable:
 	Inherits: ^DisguiseBase
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		RequiresCondition: !disguised
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: stand
 		StandSequences: stand
 		MoveSequence: walk
@@ -2064,14 +2100,20 @@
 	PwMeleeAttack:
 		RequiresCondition: !disguised
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 		RequiresCondition: !disguised
 
 # Flyers: the creature's art loops its flight, as theirs does (^LivingFlyer).
 ^DisguisableFlyer:
 	Inherits: ^DisguiseBase
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		RequiresCondition: !disguised
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		StandSequences: walk
 		MoveSequence: walk
 		DefaultAttackSequence: walk
@@ -2082,6 +2124,8 @@
 	AttackAircraft:
 		RequiresCondition: !disguised
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 		RequiresCondition: !disguised
 
 # Hoverers (the Rhamphos): the flyers' looping art, a ground attack.
@@ -2090,6 +2134,8 @@
 	PwMeleeAttack:
 		RequiresCondition: !disguised
 	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
 		RequiresCondition: !disguised
 
 # Map decoration from the original maps (rules/objects.yaml, generated): drawn only, its cells are already blocked by

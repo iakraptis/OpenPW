@@ -5,7 +5,7 @@ demon-upgrade-gathering-amount-skill-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-demonden
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 100
 		Prerequisites: ~!demon-upgrade-gathering-amount-skill-1
 	Valued:
@@ -23,7 +23,7 @@ demon-upgrade-volcano-detection-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-demonden
-		BuildDuration: 720
+		BuildDuration: 1440
 		BuildPaletteOrder: 110
 		Prerequisites: ~!demon-upgrade-volcano-detection-1
 	Valued:
@@ -40,7 +40,7 @@ demon-upgrade-level-up-exp-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-demonden
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 120
 		Prerequisites: ~!demon-upgrade-level-up-exp-1
 	Valued:
@@ -57,7 +57,7 @@ demon-upgrade-level-up-exp-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-demonden
-		BuildDuration: 1280
+		BuildDuration: 2560
 		BuildPaletteOrder: 121
 		Prerequisites: ~demon-upgrade-level-up-exp-1, ~!demon-upgrade-level-up-exp-2
 	Valued:
@@ -74,7 +74,7 @@ demon-upgrade-level-up-exp-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-demonden
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 122
 		Prerequisites: ~demon-upgrade-level-up-exp-2, ~!demon-upgrade-level-up-exp-3
 	Valued:
@@ -91,7 +91,7 @@ demon-upgrade-ground-demon-weapon-skill-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 130
 		Prerequisites: ~!demon-upgrade-ground-demon-weapon-skill-1
 	Valued:
@@ -109,7 +109,7 @@ demon-upgrade-ground-demon-weapon-skill-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 131
 		Prerequisites: ~demon-upgrade-ground-demon-weapon-skill-1, ~!demon-upgrade-ground-demon-weapon-skill-2
 	Valued:
@@ -127,7 +127,7 @@ demon-upgrade-ground-demon-weapon-skill-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 132
 		Prerequisites: ~demon-upgrade-ground-demon-weapon-skill-2, ~!demon-upgrade-ground-demon-weapon-skill-3
 	Valued:
@@ -145,7 +145,7 @@ demon-upgrade-ground-demon-armor-skill-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 140
 		Prerequisites: ~!demon-upgrade-ground-demon-armor-skill-1
 	Valued:
@@ -163,7 +163,7 @@ demon-upgrade-ground-demon-armor-skill-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 141
 		Prerequisites: ~demon-upgrade-ground-demon-armor-skill-1, ~!demon-upgrade-ground-demon-armor-skill-2
 	Valued:
@@ -181,7 +181,7 @@ demon-upgrade-ground-demon-armor-skill-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 142
 		Prerequisites: ~demon-upgrade-ground-demon-armor-skill-2, ~!demon-upgrade-ground-demon-armor-skill-3
 	Valued:
@@ -199,7 +199,7 @@ demon-upgrade-air-demon-weapon-skill-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 150
 		Prerequisites: ~!demon-upgrade-air-demon-weapon-skill-1
 	Valued:
@@ -217,7 +217,7 @@ demon-upgrade-air-demon-weapon-skill-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 151
 		Prerequisites: ~demon-upgrade-air-demon-weapon-skill-1, ~!demon-upgrade-air-demon-weapon-skill-2
 	Valued:
@@ -235,7 +235,7 @@ demon-upgrade-air-demon-weapon-skill-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 152
 		Prerequisites: ~demon-upgrade-air-demon-weapon-skill-2, ~!demon-upgrade-air-demon-weapon-skill-3
 	Valued:
@@ -253,7 +253,7 @@ demon-upgrade-air-demon-armor-skill-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 160
 		Prerequisites: ~!demon-upgrade-air-demon-armor-skill-1
 	Valued:
@@ -271,7 +271,7 @@ demon-upgrade-air-demon-armor-skill-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 161
 		Prerequisites: ~demon-upgrade-air-demon-armor-skill-1, ~!demon-upgrade-air-demon-armor-skill-2
 	Valued:
@@ -289,7 +289,7 @@ demon-upgrade-air-demon-armor-skill-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-dirtyportal
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 162
 		Prerequisites: ~demon-upgrade-air-demon-armor-skill-2, ~!demon-upgrade-air-demon-armor-skill-3
 	Valued:
@@ -307,7 +307,7 @@ demon-upgrade-skeleton-attack-range-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-highportal
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 170
 		Prerequisites: ~!demon-upgrade-skeleton-attack-range-1
 	Valued:
@@ -325,7 +325,7 @@ demon-upgrade-deatheye-sight-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-highportal
-		BuildDuration: 1240
+		BuildDuration: 2480
 		BuildPaletteOrder: 180
 		Prerequisites: ~!demon-upgrade-deatheye-sight-1
 	Valued:
@@ -343,7 +343,7 @@ demon-upgrade-phantom-movement-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: demon-highportal
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 190
 		Prerequisites: ~!demon-upgrade-phantom-movement-1
 	Valued:

@@ -14,7 +14,7 @@ primitive-buildman:
 		XpPerLevel: 10
 		AttackGain: 18
 		ArmorGain: 9
-		AttackDelay: 19
+		AttackDelay: 38
 	UsesPopulation:
 		Amount: 1
 	Builder:
@@ -22,7 +22,7 @@ primitive-buildman:
 	Buildable:
 		Description: description-primitive-buildman
 		Queue: primitive-sanctuary
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: primitive-buildman
@@ -35,13 +35,14 @@ primitive-buildman:
 	PwArmor:
 		Value: 0
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: foot-worker
-		Speed: 160
+		Speed: 80
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: BuildManHit
 
 primitive-powerman:
@@ -56,14 +57,14 @@ primitive-powerman:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 22
+		AttackDelay: 44
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-primitive-powerman
 		Queue: primitive-powerhouse
-		BuildDuration: 256
+		BuildDuration: 512
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: primitive-powerman
@@ -76,12 +77,13 @@ primitive-powerman:
 	PwArmor:
 		Value: 3
 	Mobile:
-		Speed: 222
+		TurnSpeed: 256
+		Speed: 111
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
-		FireDelay: 4
+		FireDelay: 8
 		Weapon: PowerManHit
 
 primitive-giant:
@@ -96,14 +98,14 @@ primitive-giant:
 		XpPerLevel: 16
 		AttackGain: 31
 		ArmorGain: 27
-		AttackDelay: 27
+		AttackDelay: 54
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 4
 	Buildable:
 		Description: description-primitive-giant
 		Queue: primitive-powerhouse
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 30
 		Prerequisites: primitive-landincreaser
 	RenderSprites:
@@ -117,12 +119,13 @@ primitive-giant:
 	PwArmor:
 		Value: 5
 	Mobile:
-		Speed: 168
+		TurnSpeed: 256
+		Speed: 84
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: ThrowBomb
 
 primitive-soldier:
@@ -137,14 +140,14 @@ primitive-soldier:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 11
+		AttackDelay: 22
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-primitive-soldier
 		Queue: primitive-soldierhouse
-		BuildDuration: 256
+		BuildDuration: 512
 		BuildPaletteOrder: 40
 	RenderSprites:
 		Image: primitive-soldier
@@ -157,12 +160,13 @@ primitive-soldier:
 	PwArmor:
 		Value: 2
 	Mobile:
-		Speed: 187
+		TurnSpeed: 256
+		Speed: 94
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 13 of its attack animation (.chr 0x247c).
-		FireDelay: 13
+		FireDelay: 26
 		Weapon: SoldierArrow
 
 primitive-knight:
@@ -177,14 +181,14 @@ primitive-knight:
 		XpPerLevel: 18
 		AttackGain: 41
 		ArmorGain: 18
-		AttackDelay: 34
+		AttackDelay: 68
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 5
 	Buildable:
 		Description: description-primitive-knight
 		Queue: primitive-soldierhouse
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 50
 		Prerequisites: primitive-blacksmith
 	RenderSprites:
@@ -198,12 +202,13 @@ primitive-knight:
 	PwArmor:
 		Value: 5
 	Mobile:
-		Speed: 181
+		TurnSpeed: 256
+		Speed: 91
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: ShootSword
 
 primitive-bowmachine:
@@ -222,7 +227,7 @@ primitive-bowmachine:
 	Buildable:
 		Description: description-primitive-bowmachine
 		Queue: primitive-blacksmith
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 60
 	RenderSprites:
 		Image: primitive-bowmachine
@@ -235,12 +240,13 @@ primitive-bowmachine:
 	PwArmor:
 		Value: 3
 	Mobile:
-		Speed: 112
+		TurnSpeed: 256
+		Speed: 56
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: BowMachineArrow
 
 primitive-chief:
@@ -255,14 +261,14 @@ primitive-chief:
 		XpPerLevel: 30
 		AttackGain: 45
 		ArmorGain: 18
-		AttackDelay: 21
+		AttackDelay: 42
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 30
 	Buildable:
 		Description: description-primitive-chief
 		Queue: primitive-sanctuary
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 70
 		Prerequisites: primitive-powerhouse, primitive-soldierhouse, primitive-skyhouse, primitive-blacksmith, primitive-landincreaser, primitive-skyincreaser
 	RenderSprites:
@@ -276,12 +282,13 @@ primitive-chief:
 	PwArmor:
 		Value: 40
 	Mobile:
-		Speed: 218
+		TurnSpeed: 256
+		Speed: 109
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes twice, on steps 5 and 12 of its attack animation (.chr 0x247c; the second is ChiefHit's burst).
-		FireDelay: 5
+		FireDelay: 10
 		Weapon: ChiefHit
 	# Fall out (aimed: wears the target's life down to 1) for 80 of his 100 mana, once researched.
 	PwMana:
@@ -298,7 +305,7 @@ primitive-powerman-shield-of-peace:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 18
-		AttackDelay: 20
+		AttackDelay: 40
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	-Buildable:
 	RenderSprites:
@@ -312,12 +319,13 @@ primitive-powerman-shield-of-peace:
 	PwArmor:
 		Value: 10
 	Mobile:
-		Speed: 222
+		TurnSpeed: 256
+		Speed: 111
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
-		FireDelay: 4
+		FireDelay: 8
 		Weapon: PowerManShieldHit
 
 primitive-soldier-fire-arrow:
@@ -326,7 +334,7 @@ primitive-soldier-fire-arrow:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 22
+		AttackDelay: 44
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	-Buildable:
 	RenderSprites:
@@ -340,12 +348,13 @@ primitive-soldier-fire-arrow:
 	PwArmor:
 		Value: 2
 	Mobile:
-		Speed: 187
+		TurnSpeed: 256
+		Speed: 94
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 13 of its attack animation (.chr 0x247c).
-		FireDelay: 13
+		FireDelay: 26
 		Weapon: FireArrow
 
 primitive-soldier-venom-arrow:
@@ -354,7 +363,7 @@ primitive-soldier-venom-arrow:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 22
+		AttackDelay: 44
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	-Buildable:
 	RenderSprites:
@@ -368,12 +377,13 @@ primitive-soldier-venom-arrow:
 	PwArmor:
 		Value: 2
 	Mobile:
-		Speed: 187
+		TurnSpeed: 256
+		Speed: 94
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 13 of its attack animation (.chr 0x247c).
-		FireDelay: 13
+		FireDelay: 26
 		Weapon: VenomArrow
 
 primitive-knight-spear-of-justice:
@@ -382,7 +392,7 @@ primitive-knight-spear-of-justice:
 		XpPerLevel: 18
 		AttackGain: 41
 		ArmorGain: 18
-		AttackDelay: 36
+		AttackDelay: 72
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 0, 0, 0
 	-Buildable:
 	RenderSprites:
@@ -396,12 +406,13 @@ primitive-knight-spear-of-justice:
 	PwArmor:
 		Value: 5
 	Mobile:
-		Speed: 208
+		TurnSpeed: 256
+		Speed: 104
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: SpearOfJustice
 
 # Flying machines (docs/game/primitive.md). They don't gain levels (.chr 0x1f4 bit 1 clear).
@@ -415,7 +426,7 @@ primitive-revolver:
 	Buildable:
 		Description: description-primitive-revolver
 		Queue: primitive-blacksmith
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 50
 		Prerequisites: primitive-skyhouse
 	RenderSprites:
@@ -427,7 +438,8 @@ primitive-revolver:
 	Health:
 		HP: 300
 	Aircraft:
-		Speed: 187
+		AltitudeVelocity: 0c22
+		Speed: 94
 		IdleBehavior: Land
 		LandableTerrainTypes: Clear, Ramp
 	RevealsShroud:
@@ -439,6 +451,9 @@ primitive-revolver:
 	# Room for 10 (.chr 0x188 on a transport, deduced), 18 with Improve Revolver Transportation (+8); passengers
 	# weigh their transport size. Landed to load.
 	Cargo:
+		AfterLoadDelay: 16
+		BeforeUnloadDelay: 16
+		AfterUnloadDelay: 50
 		Types: Ground
 		MaxWeight: 18
 		UnloadVoice: Action
@@ -447,6 +462,8 @@ primitive-revolver:
 	PwTransportCapacity:
 		Capacity: 10
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: stand
 		StandSequences: stand
 		MoveSequence: walk
@@ -463,7 +480,7 @@ primitive-squadron:
 	Buildable:
 		Description: description-primitive-squadron
 		Queue: primitive-skyhouse
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: primitive-squadron
@@ -474,14 +491,17 @@ primitive-squadron:
 	Health:
 		HP: 150
 	Aircraft:
-		Speed: 256
+		AltitudeVelocity: 0c22
+		Speed: 128
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 9 of its attack animation (.chr 0x247c).
-		FireDelay: 9
+		FireDelay: 18
 		Weapon: SquadronShot
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: walk
 		StandSequences: walk
 
@@ -496,7 +516,7 @@ primitive-flattop:
 	Buildable:
 		Description: description-primitive-flattop
 		Queue: primitive-skyhouse
-		BuildDuration: 1040
+		BuildDuration: 2080
 		BuildPaletteOrder: 20
 		Prerequisites: primitive-skyincreaser
 	RenderSprites:
@@ -510,13 +530,16 @@ primitive-flattop:
 	PwArmor:
 		Value: 10
 	Aircraft:
-		Speed: 166
+		AltitudeVelocity: 0c22
+		Speed: 83
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: PhantomFire
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: walk
 		StandSequences: walk

@@ -3,7 +3,7 @@
 primitive-buildman:
 	Defaults:
 		Filename: units/primitive-buildman.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 12
@@ -56,7 +56,7 @@ primitive-buildman:
 primitive-powerman:
 	Defaults:
 		Filename: units/primitive-powerman.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -85,7 +85,7 @@ primitive-powerman:
 primitive-giant:
 	Defaults:
 		Filename: units/primitive-giant.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 30
@@ -114,7 +114,7 @@ primitive-giant:
 primitive-soldier:
 	Defaults:
 		Filename: units/primitive-soldier.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -143,7 +143,7 @@ primitive-soldier:
 primitive-knight:
 	Defaults:
 		Filename: units/primitive-knight.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 54
@@ -172,7 +172,7 @@ primitive-knight:
 primitive-revolver:
 	Defaults:
 		Filename: units/primitive-revolver.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	stand:
 		Frames: 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9
@@ -196,7 +196,7 @@ primitive-revolver:
 primitive-bowmachine:
 	Defaults:
 		Filename: units/primitive-bowmachine.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 50
@@ -225,7 +225,7 @@ primitive-bowmachine:
 primitive-squadron:
 	Defaults:
 		Filename: units/primitive-squadron.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -251,7 +251,7 @@ primitive-squadron:
 primitive-flattop:
 	Defaults:
 		Filename: units/primitive-flattop.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -277,7 +277,7 @@ primitive-flattop:
 primitive-chief:
 	Defaults:
 		Filename: units/primitive-chief.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 61
@@ -306,7 +306,7 @@ primitive-chief:
 primitive-powerman-shield-of-peace:
 	Defaults:
 		Filename: units/primitive-powerman-shield-of-peace.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -335,7 +335,7 @@ primitive-powerman-shield-of-peace:
 primitive-soldier-fire-arrow:
 	Defaults:
 		Filename: units/primitive-soldier-fire-arrow.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 12
@@ -364,7 +364,7 @@ primitive-soldier-fire-arrow:
 primitive-soldier-venom-arrow:
 	Defaults:
 		Filename: units/primitive-soldier-venom-arrow.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 12
@@ -393,7 +393,7 @@ primitive-soldier-venom-arrow:
 primitive-knight-spear-of-justice:
 	Defaults:
 		Filename: units/primitive-knight-spear-of-justice.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 54
@@ -422,7 +422,7 @@ primitive-knight-spear-of-justice:
 primitive-kalma:
 	Defaults:
 		Filename: units/primitive-kalma.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -440,7 +440,7 @@ primitive-kalma:
 primitive-sanctuary:
 	Defaults:
 		Filename: units/primitive-sanctuary.png
-		Tick: 40
+		Tick: 80
 		Offset: -96, -64
 	make:
 		Start: 0
@@ -459,7 +459,7 @@ primitive-sanctuary:
 primitive-house:
 	Defaults:
 		Filename: units/primitive-house.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -16
 	make:
 		Start: 0
@@ -478,7 +478,7 @@ primitive-house:
 primitive-stonetower:
 	Defaults:
 		Filename: units/primitive-stonetower.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	make:
 		Start: 0
@@ -500,7 +500,7 @@ primitive-stonetower:
 primitive-powerhouse:
 	Defaults:
 		Filename: units/primitive-powerhouse.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -519,7 +519,7 @@ primitive-powerhouse:
 primitive-soldierhouse:
 	Defaults:
 		Filename: units/primitive-soldierhouse.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -538,7 +538,7 @@ primitive-soldierhouse:
 primitive-skyhouse:
 	Defaults:
 		Filename: units/primitive-skyhouse.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -560,7 +560,7 @@ primitive-skyhouse:
 primitive-blacksmith:
 	Defaults:
 		Filename: units/primitive-blacksmith.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -582,7 +582,7 @@ primitive-blacksmith:
 primitive-landincreaser:
 	Defaults:
 		Filename: units/primitive-landincreaser.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -601,7 +601,7 @@ primitive-landincreaser:
 primitive-skyincreaser:
 	Defaults:
 		Filename: units/primitive-skyincreaser.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -620,7 +620,7 @@ primitive-skyincreaser:
 primitive-trap:
 	Defaults:
 		Filename: units/primitive-trap.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -16
 	make:
 		Start: 0

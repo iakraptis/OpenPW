@@ -5,7 +5,7 @@ tyrano-upgrade-gathering-amount-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-tyranonest
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 100
 		Prerequisites: ~!tyrano-upgrade-gathering-amount-1
 	Valued:
@@ -23,7 +23,7 @@ tyrano-upgrade-disguise-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-tyranonest
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 110
 		Prerequisites: ~!tyrano-upgrade-disguise-1
 	Valued:
@@ -40,7 +40,7 @@ tyrano-upgrade-level-up-exp-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-tyranonest
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 120
 		Prerequisites: ~!tyrano-upgrade-level-up-exp-1
 	Valued:
@@ -57,7 +57,7 @@ tyrano-upgrade-level-up-exp-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-tyranonest
-		BuildDuration: 1280
+		BuildDuration: 2560
 		BuildPaletteOrder: 121
 		Prerequisites: ~tyrano-upgrade-level-up-exp-1, ~!tyrano-upgrade-level-up-exp-2
 	Valued:
@@ -74,7 +74,7 @@ tyrano-upgrade-level-up-exp-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-tyranonest
-		BuildDuration: 1440
+		BuildDuration: 2880
 		BuildPaletteOrder: 122
 		Prerequisites: ~tyrano-upgrade-level-up-exp-2, ~!tyrano-upgrade-level-up-exp-3
 	Valued:
@@ -91,7 +91,7 @@ tyrano-upgrade-ground-dinos-mutation-weapon-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 130
 		Prerequisites: ~!tyrano-upgrade-ground-dinos-mutation-weapon-1
 	Valued:
@@ -109,7 +109,7 @@ tyrano-upgrade-ground-dinos-mutation-weapon-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 131
 		Prerequisites: ~tyrano-upgrade-ground-dinos-mutation-weapon-1, ~!tyrano-upgrade-ground-dinos-mutation-weapon-2
 	Valued:
@@ -127,7 +127,7 @@ tyrano-upgrade-ground-dinos-mutation-weapon-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 132
 		Prerequisites: ~tyrano-upgrade-ground-dinos-mutation-weapon-2, ~!tyrano-upgrade-ground-dinos-mutation-weapon-3, tyrano-landnisdos
 	Valued:
@@ -145,7 +145,7 @@ tyrano-upgrade-ground-dinos-mutation-weapon-4:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 3840
+		BuildDuration: 7680
 		BuildPaletteOrder: 133
 		Prerequisites: ~tyrano-upgrade-ground-dinos-mutation-weapon-3, ~!tyrano-upgrade-ground-dinos-mutation-weapon-4, tyrano-landnisdos
 	Valued:
@@ -163,7 +163,7 @@ tyrano-upgrade-ground-dinos-mutation-weapon-5:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 4320
+		BuildDuration: 8640
 		BuildPaletteOrder: 134
 		Prerequisites: ~tyrano-upgrade-ground-dinos-mutation-weapon-4, ~!tyrano-upgrade-ground-dinos-mutation-weapon-5, tyrano-landnisdos
 	Valued:
@@ -181,7 +181,7 @@ tyrano-upgrade-ground-dino-mutation-armor-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 140
 		Prerequisites: ~!tyrano-upgrade-ground-dino-mutation-armor-1
 	Valued:
@@ -199,7 +199,7 @@ tyrano-upgrade-ground-dino-mutation-armor-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 141
 		Prerequisites: ~tyrano-upgrade-ground-dino-mutation-armor-1, ~!tyrano-upgrade-ground-dino-mutation-armor-2
 	Valued:
@@ -217,7 +217,7 @@ tyrano-upgrade-ground-dino-mutation-armor-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 142
 		Prerequisites: ~tyrano-upgrade-ground-dino-mutation-armor-2, ~!tyrano-upgrade-ground-dino-mutation-armor-3, tyrano-landnisdos
 	Valued:
@@ -235,7 +235,7 @@ tyrano-upgrade-ground-dino-mutation-armor-4:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 3840
+		BuildDuration: 7680
 		BuildPaletteOrder: 143
 		Prerequisites: ~tyrano-upgrade-ground-dino-mutation-armor-3, ~!tyrano-upgrade-ground-dino-mutation-armor-4, tyrano-landnisdos
 	Valued:
@@ -253,7 +253,7 @@ tyrano-upgrade-ground-dino-mutation-armor-5:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-landnest
-		BuildDuration: 4320
+		BuildDuration: 8640
 		BuildPaletteOrder: 144
 		Prerequisites: ~tyrano-upgrade-ground-dino-mutation-armor-4, ~!tyrano-upgrade-ground-dino-mutation-armor-5, tyrano-landnisdos
 	Valued:
@@ -271,7 +271,7 @@ tyrano-upgrade-air-dino-mutation-weapon-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 150
 		Prerequisites: ~!tyrano-upgrade-air-dino-mutation-weapon-1
 	Valued:
@@ -289,7 +289,7 @@ tyrano-upgrade-air-dino-mutation-weapon-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 151
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-weapon-1, ~!tyrano-upgrade-air-dino-mutation-weapon-2
 	Valued:
@@ -307,7 +307,7 @@ tyrano-upgrade-air-dino-mutation-weapon-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 152
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-weapon-2, ~!tyrano-upgrade-air-dino-mutation-weapon-3, tyrano-skynisdos
 	Valued:
@@ -325,7 +325,7 @@ tyrano-upgrade-air-dino-mutation-weapon-4:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 3840
+		BuildDuration: 7680
 		BuildPaletteOrder: 153
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-weapon-3, ~!tyrano-upgrade-air-dino-mutation-weapon-4, tyrano-skynisdos
 	Valued:
@@ -343,7 +343,7 @@ tyrano-upgrade-air-dino-mutation-weapon-5:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 4320
+		BuildDuration: 8640
 		BuildPaletteOrder: 154
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-weapon-4, ~!tyrano-upgrade-air-dino-mutation-weapon-5, tyrano-skynisdos
 	Valued:
@@ -361,7 +361,7 @@ tyrano-upgrade-air-dino-mutation-armor-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 160
 		Prerequisites: ~!tyrano-upgrade-air-dino-mutation-armor-1
 	Valued:
@@ -379,7 +379,7 @@ tyrano-upgrade-air-dino-mutation-armor-2:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 161
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-armor-1, ~!tyrano-upgrade-air-dino-mutation-armor-2
 	Valued:
@@ -397,7 +397,7 @@ tyrano-upgrade-air-dino-mutation-armor-3:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 3360
+		BuildDuration: 6720
 		BuildPaletteOrder: 162
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-armor-2, ~!tyrano-upgrade-air-dino-mutation-armor-3, tyrano-skynisdos
 	Valued:
@@ -415,7 +415,7 @@ tyrano-upgrade-air-dino-mutation-armor-4:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 3840
+		BuildDuration: 7680
 		BuildPaletteOrder: 163
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-armor-3, ~!tyrano-upgrade-air-dino-mutation-armor-4, tyrano-skynisdos
 	Valued:
@@ -433,7 +433,7 @@ tyrano-upgrade-air-dino-mutation-armor-5:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-skynest
-		BuildDuration: 4320
+		BuildDuration: 8640
 		BuildPaletteOrder: 164
 		Prerequisites: ~tyrano-upgrade-air-dino-mutation-armor-4, ~!tyrano-upgrade-air-dino-mutation-armor-5, tyrano-skynisdos
 	Valued:
@@ -451,7 +451,7 @@ tyrano-upgrade-dilophos-movement-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-upgradenest
-		BuildDuration: 1920
+		BuildDuration: 3840
 		BuildPaletteOrder: 170
 		Prerequisites: ~!tyrano-upgrade-dilophos-movement-1
 	Valued:
@@ -469,7 +469,7 @@ tyrano-upgrade-trices-movement-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-upgradenest
-		BuildDuration: 2400
+		BuildDuration: 4800
 		BuildPaletteOrder: 180
 		Prerequisites: ~!tyrano-upgrade-trices-movement-1
 	Valued:
@@ -487,7 +487,7 @@ tyrano-upgrade-mutant-morphosis-1:
 	Inherits: ^Upgrade
 	Buildable:
 		Queue: tyrano-upgradenest
-		BuildDuration: 1680
+		BuildDuration: 3360
 		BuildPaletteOrder: 190
 		Prerequisites: ~!tyrano-upgrade-mutant-morphosis-1, tyrano-skynisdos
 	Valued:

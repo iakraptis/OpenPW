@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 	// - Colours: the player colour ramp (palette 245-254) moves into PlayerColorShift's hue band (rules/palettes.yaml),
 	//   other pixels in that band are nudged out of it; index 1 (shadow) becomes half-transparent black.
 	// - Directions: a group stores N, NE, E, SE, S; SW, W and NW are written as mirrored copies of SE, E, NE.
-	// - Timing: each sequence lists the original frame per animation step (one game tick each, Tick 40 = one world tick).
+	// - Timing: each sequence lists the original frame per animation step (one original tick each; Tick 40 is one world tick).
 	public static class Units
 	{
 		const int SheetWidth = 2048;
@@ -164,7 +164,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			c.WriteFile($"units/{image}.png", Sheet(frames, palette));
 
 			var building = type >= 96;
-			var yaml = new StringBuilder($"{image}:\n\tDefaults:\n\t\tFilename: units/{image}.png\n\t\tTick: 40\n");
+			var yaml = new StringBuilder($"{image}:\n\tDefaults:\n\t\tFilename: units/{image}.png\n\t\tTick: {40 * PwTime.TicksPerOriginal}\n");
 
 			// The original anchors a building at its footprint's top-left corner (.chr 0x330/0x334, in 32 px cells);
 			// OpenRA draws it around the footprint's centre.

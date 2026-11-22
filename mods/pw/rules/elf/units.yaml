@@ -21,7 +21,7 @@ elf-wizard:
 		XpPerLevel: 10
 		AttackGain: 18
 		ArmorGain: 9
-		AttackDelay: 23
+		AttackDelay: 46
 	UsesPopulation:
 		Amount: 1
 	Builder:
@@ -31,7 +31,7 @@ elf-wizard:
 	Buildable:
 		Description: description-elf-wizard
 		Queue: elf-heaven
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: elf-wizard
@@ -44,13 +44,14 @@ elf-wizard:
 	PwArmor:
 		Value: 0
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: foot-worker
-		Speed: 144
+		Speed: 72
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		# Strikes on step 9 of its attack animation (.chr 0x247c).
-		FireDelay: 9
+		FireDelay: 18
 		Weapon: WizardFirebolt
 	BerryGatherer:
 		FliesBerries: true
@@ -67,6 +68,8 @@ elf-wizard:
 		Palette: effect
 		RequiresCondition: building
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		RequiresCondition: !gathering && !carrying && !building
 	WithFacingSpriteBody@GATHER:
 		Sequence: gather
@@ -80,6 +83,8 @@ elf-wizard:
 		RequiresCondition: berry-flight
 	# It never carries (^Worker's carrying body needs art it hasn't got).
 	WithInfantryBody@CARRY:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: stand
 		StandSequences: stand
 		MoveSequence: walk
@@ -96,14 +101,14 @@ elf-redelf:
 		XpPerLevel: 12
 		AttackGain: 27
 		ArmorGain: 27
-		AttackDelay: 17
+		AttackDelay: 34
 		SpellPower: 0, 0, 12, 24, 36, 48, 60, 72, 84, 100
 	UsesPopulation:
 		Amount: 1
 	Buildable:
 		Description: description-elf-redelf
 		Queue: elf-redhall
-		BuildDuration: 224
+		BuildDuration: 448
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: elf-redelf
@@ -116,12 +121,13 @@ elf-redelf:
 	PwArmor:
 		Value: 2
 	Mobile:
-		Speed: 171
+		TurnSpeed: 256
+		Speed: 86
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: RedBolt
 	PwMana:
 		Max: 100
@@ -132,7 +138,7 @@ elf-redelf:
 		ManaCost: 40
 		MinLevel: 1
 		Damage: 80
-		Delay: 4
+		Delay: 8
 		Image: spell-thunder-bolt
 		Icon: ability-thunder-bolt
 		Sound: spell-thunder-bolt-0.wav
@@ -149,14 +155,14 @@ elf-whiteelf:
 		XpPerLevel: 16
 		AttackGain: 27
 		ArmorGain: 27
-		AttackDelay: 18
+		AttackDelay: 36
 		SpellPower: 0, 0, 0, 0, 16, 32, 48, 64, 80, 100
 	UsesPopulation:
 		Amount: 3
 	Buildable:
 		Description: description-elf-whiteelf
 		Queue: elf-redhall
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 20
 		Prerequisites: elf-elflibrary
 	RenderSprites:
@@ -170,12 +176,13 @@ elf-whiteelf:
 	PwArmor:
 		Value: 3
 	Mobile:
-		Speed: 203
+		TurnSpeed: 256
+		Speed: 102
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 10 of its attack animation (.chr 0x247c).
-		FireDelay: 10
+		FireDelay: 20
 		Weapon: WhiteBolt
 	PwMana:
 		Max: 100
@@ -197,7 +204,7 @@ elf-whiteelf:
 		ManaCost: 50
 		MinLevel: 3
 		Shield: 160
-		ShieldTicks: 300
+		ShieldTicks: 600
 		Radius: 1c768
 		Image: spell-mass-temper
 		Icon: ability-mass-temper
@@ -214,14 +221,14 @@ elf-ranger:
 		XpPerLevel: 12
 		AttackGain: 18
 		ArmorGain: 18
-		AttackDelay: 19
+		AttackDelay: 38
 		SpellPower: 0, 0, 0, 18, 36, 48, 60, 72, 84, 100
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-elf-ranger
 		Queue: elf-bluehall
-		BuildDuration: 224
+		BuildDuration: 448
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: elf-ranger
@@ -234,12 +241,13 @@ elf-ranger:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 171
+		TurnSpeed: 256
+		Speed: 86
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 5 of its attack animation (.chr 0x247c).
-		FireDelay: 5
+		FireDelay: 10
 		Weapon: RangerHit
 	PwMana:
 		Max: 100
@@ -260,8 +268,8 @@ elf-ranger:
 		Target: Ground
 		ManaCost: 65
 		MinLevel: 3
-		PortalTicks: 54
-		StepInterval: 4
+		PortalTicks: 108
+		StepInterval: 8
 		Radius: 1c512
 		Image: spell-jump-portal
 		Icon: ability-jump-portal
@@ -280,14 +288,14 @@ elf-blueelf:
 		XpPerLevel: 16
 		AttackGain: 27
 		ArmorGain: 18
-		AttackDelay: 26
+		AttackDelay: 52
 		SpellPower: 0, 0, 12, 24, 36, 48, 60, 72, 84, 100
 	UsesPopulation:
 		Amount: 4
 	Buildable:
 		Description: description-elf-blueelf
 		Queue: elf-bluehall
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 20
 		Prerequisites: elf-elflibrary
 	RenderSprites:
@@ -301,12 +309,13 @@ elf-blueelf:
 	PwArmor:
 		Value: 5
 	Mobile:
-		Speed: 251
+		TurnSpeed: 256
+		Speed: 126
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 8 of its attack animation (.chr 0x247c).
-		FireDelay: 8
+		FireDelay: 16
 		Weapon: BlueElfHit
 	PwMana:
 		Max: 100
@@ -317,7 +326,7 @@ elf-blueelf:
 		ManaCost: 65
 		MinLevel: 1
 		Damage: 200
-		Delay: 3
+		Delay: 6
 		Radius: 2c0
 		Image: spell-drop-stone
 		Icon: ability-drop-stone
@@ -336,7 +345,7 @@ elf-unicorn:
 	Buildable:
 		Description: description-elf-unicorn
 		Queue: elf-manahall
-		BuildDuration: 256
+		BuildDuration: 512
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: elf-unicorn
@@ -349,7 +358,8 @@ elf-unicorn:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 162
+		TurnSpeed: 256
+		Speed: 81
 	RevealsShroud:
 		Range: 9c0
 	PwMana:
@@ -365,12 +375,12 @@ elf-unicorn:
 		TargetRelationships: Ally
 		Range: 3c0
 		AutoHeal: true
-		AutoHealInterval: 16
+		AutoHealInterval: 32
 		ManaCost: 1
 		ManaPerStep: 1
 		Heal: 2
 		Steps: 15
-		StepInterval: 1
+		StepInterval: 2
 		Image: spell-cure
 		Icon: ability-cure
 		Sound: spell-cure-0.wav
@@ -402,7 +412,7 @@ elf-pixie:
 	Buildable:
 		Description: description-elf-pixie
 		Queue: elf-manahall
-		BuildDuration: 560
+		BuildDuration: 1120
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: elf-pixie
@@ -415,10 +425,13 @@ elf-pixie:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 176
+		AltitudeVelocity: 0c22
+		Speed: 88
 	RevealsShroud:
 		Range: 10c0
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 
 # The ManaSpread, unarmed: it refills the mana of the casters around it (PwManaAura) and, once researched, gives
@@ -437,7 +450,7 @@ elf-manaspread:
 	Buildable:
 		Description: description-elf-manaspread
 		Queue: elf-manahall
-		BuildDuration: 320
+		BuildDuration: 640
 		BuildPaletteOrder: 30
 		Prerequisites: elf-manalibrary
 	RenderSprites:
@@ -451,8 +464,9 @@ elf-manaspread:
 	PwArmor:
 		Value: 0
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: foot
-		Speed: 144
+		Speed: 72
 	RevealsShroud:
 		Range: 6c0
 	PwMana:
@@ -467,8 +481,8 @@ elf-manaspread:
 		Damage: 30
 		Steps: 60
 		StepInterval: 0
-		Delay: 7
-		RandomDelay: 48
+		Delay: 14
+		RandomDelay: 96
 		Radius: 2c0
 		Scatter: 2c512
 		KillsCaster: true
@@ -487,7 +501,7 @@ elf-elfring:
 	Buildable:
 		Description: description-elf-elfring
 		Queue: elf-skyhall
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: elf-elfring
@@ -500,18 +514,24 @@ elf-elfring:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 208
+		AltitudeVelocity: 0c22
+		Speed: 104
 		IdleBehavior: Land
 		LandableTerrainTypes: Clear, Ramp
 	RevealsShroud:
 		Range: 8c0
 	Cargo:
+		AfterLoadDelay: 16
+		BeforeUnloadDelay: 16
+		AfterUnloadDelay: 50
 		Types: Ground
 		MaxWeight: 8
 		UnloadVoice: Action
 	# Unload at a place (the command panel's Unload button).
 	PwUnloadAt:
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 
 # Fire at flyers only.
@@ -523,14 +543,14 @@ elf-phoenix:
 		XpPerLevel: 12
 		AttackGain: 45
 		ArmorGain: 27
-		AttackDelay: 25
+		AttackDelay: 50
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 4
 	Buildable:
 		Description: description-elf-phoenix
 		Queue: elf-skyhall
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: elf-phoenix
@@ -543,12 +563,13 @@ elf-phoenix:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 224
+		AltitudeVelocity: 0c22
+		Speed: 112
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 11 of its attack animation (.chr 0x247c).
-		FireDelay: 11
+		FireDelay: 22
 		Weapon: PhoenixFire
 
 # Fire on the ground below.
@@ -560,14 +581,14 @@ elf-dragon:
 		XpPerLevel: 20
 		AttackGain: 45
 		ArmorGain: 36
-		AttackDelay: 38
+		AttackDelay: 76
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 6
 	Buildable:
 		Description: description-elf-dragon
 		Queue: elf-skyhall
-		BuildDuration: 800
+		BuildDuration: 1600
 		BuildPaletteOrder: 30
 	RenderSprites:
 		Image: elf-dragon
@@ -580,12 +601,13 @@ elf-dragon:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 160
+		AltitudeVelocity: 0c22
+		Speed: 80
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 12 of its attack animation (.chr 0x247c).
-		FireDelay: 12
+		FireDelay: 24
 		Weapon: DragonFire
 
 # Resurrect from the start.
@@ -597,14 +619,14 @@ elf-angelelf:
 		XpPerLevel: 30
 		AttackGain: 54
 		ArmorGain: 18
-		AttackDelay: 26
+		AttackDelay: 52
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 30
 	Buildable:
 		Description: description-elf-angelelf
 		Queue: elf-heaven
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 70
 		Prerequisites: elf-redhall, elf-bluehall, elf-manahall, elf-skyhall, elf-elflibrary, elf-skylibrary, elf-manalibrary
 	RenderSprites:
@@ -618,12 +640,13 @@ elf-angelelf:
 	PwArmor:
 		Value: 35
 	Aircraft:
-		Speed: 160
+		AltitudeVelocity: 0c22
+		Speed: 80
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 8 of its attack animation (.chr 0x247c).
-		FireDelay: 8
+		FireDelay: 16
 		Weapon: AngelRing
 	PwMana:
 		Max: 100

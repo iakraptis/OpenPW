@@ -26,7 +26,7 @@ namespace OpenRA.Mods.Pw.Projectiles
 	public class PwLightningBoltInfo : IProjectileInfo
 	{
 		[Desc("Ticks the bolt stays visible.")]
-		public readonly int Duration = 6;
+		public readonly int Duration = PwTime.Ticks(6);
 
 		[Desc("Straight pieces the bolt is made of.")]
 		public readonly int Segments = 8;

@@ -5,12 +5,12 @@
 # The Wizard (the worker) shoots a little firebolt.
 WizardFirebolt:
 	Inherits: ^Arrow
-	ReloadDelay: 34
+	ReloadDelay: 68
 	Range: 4c0
 	Projectile: PwBullet
 		Image: weapon-wizard-firebolt
 		Sequences: flight
-		Speed: 352
+		Speed: 176
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 9
 	Report: weapon-wizard-firebolt-0.wav
@@ -21,12 +21,12 @@ WizardFirebolt:
 
 RedBolt:
 	Inherits: ^Arrow
-	ReloadDelay: 27
+	ReloadDelay: 54
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-redbolt
 		Sequences: flight
-		Speed: 416
+		Speed: 208
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 20
 	Report: weapon-redbolt-0.wav
@@ -37,12 +37,12 @@ RedBolt:
 
 WhiteBolt:
 	Inherits: ^Arrow
-	ReloadDelay: 30
+	ReloadDelay: 60
 	Range: 7c0
 	Projectile: PwBullet
 		Image: weapon-whitebolt
 		Sequences: flight
-		Speed: 480
+		Speed: 240
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-whitebolt-0.wav
@@ -53,7 +53,7 @@ WhiteBolt:
 
 RangerHit:
 	Inherits: ^Melee
-	ReloadDelay: 25
+	ReloadDelay: 50
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-ranger-hit-0.wav
@@ -64,7 +64,7 @@ RangerHit:
 
 BlueElfHit:
 	Inherits: ^Melee
-	ReloadDelay: 38
+	ReloadDelay: 76
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 45
 	Report: weapon-blueelf-hit-0.wav
@@ -76,12 +76,12 @@ BlueElfHit:
 # Dragon: fire on the ground below, splashing 64 px.
 DragonFire:
 	Inherits: ^PwWeapon
-	ReloadDelay: 54
+	ReloadDelay: 108
 	Range: 10c0
 	Projectile: PwBullet
 		Image: weapon-dragonfire
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 70
@@ -98,12 +98,12 @@ DragonFire:
 PhoenixFire:
 	Inherits: ^PwWeapon
 	ValidTargets: Air
-	ReloadDelay: 41
+	ReloadDelay: 82
 	Range: 7c0
 	Projectile: PwBullet
 		Image: weapon-phonixfire
 		Sequences: flight
-		Speed: 480
+		Speed: 240
 		Mode: 4
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Air
@@ -112,12 +112,12 @@ PhoenixFire:
 
 AngelRing:
 	Inherits: ^Arrow
-	ReloadDelay: 38
+	ReloadDelay: 76
 	Range: 7c0
 	Projectile: PwBullet
 		Image: weapon-angelring
 		Sequences: flight
-		Speed: 480
+		Speed: 240
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 140
 	Report: weapon-angelring-0.wav
@@ -132,15 +132,15 @@ AngelRing:
 # tower never hurt flying units.
 BubbleShot:
 	Inherits: ^Arrow
-	ReloadDelay: 26
+	ReloadDelay: 52
 	Range: 9c0
 	Projectile: PwBullet
 		Image: weapon-bubble
 		Sequences: flight
-		Speed: 640
+		Speed: 320
 	Warhead@1Dam: GrantExternalCondition
 		Condition: bubbled
-		Duration: 36
+		Duration: 72
 		Range: 0c256
 		ValidTargets: Ground, Air
 	Warhead@2Dam: SubtractArmorDamage

@@ -122,4 +122,4 @@ Rules:
 		RenderSprites:
 			Image: wild-galimimus
 		PwRespawns:
-			Delay: 100
+			Delay: 200

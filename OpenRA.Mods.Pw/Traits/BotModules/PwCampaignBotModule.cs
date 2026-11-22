@@ -25,7 +25,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwCampaignBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 30;
+		public readonly int ScanInterval = PwTime.Ticks(30);
 
 		[Desc("By player (internal name): the units to train and how many of each to have waiting for the next attack.")]
 		public readonly Dictionary<string, Dictionary<string, int>> Train = [];

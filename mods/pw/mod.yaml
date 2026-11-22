@@ -57,52 +57,53 @@ SpriteSequenceFormat: DefaultSpriteSequence
 
 DefaultOrderGenerator: UnitOrderGenerator
 
-# Primitive Wars runs its game logic in ticks of these lengths (Pw.exe 0x563ac4, docs/game/rules.md); the default
-# is 71 ms. All durations and speeds in the rules are original ticks, so they need no rescaling.
+# Primitive Wars runs its game logic in ticks of 71 ms at normal speed (Pw.exe 0x563ac4, docs/game/rules.md). The mod
+# runs two world ticks for each (tickrate-plan.md, PwTime): 36 ms at normal speed, close to OpenRA's 40, with every
+# timing kept. The rules hold world ticks: durations are twice the original's, speeds half; docs/game keeps the
+# original's.
 # OrderLatency: in a multiplayer game an order is carried out this many network frames after it is given, so that every
-# player runs it on the same tick; a skirmish keeps 3 ticks (engine fork). NetFrameInterval: ticks per network frame (engine fork,
-# GameSpeed.NetFrameInterval; the engine's default is 3). PW's ticks are long (the original's 71 ms), so a frame is one
-# tick (an order waits at most one tick to be sent) and OrderLatency gives about 0.4 s at each speed, as the engine's
-# own mods have (RA: 0.36-0.48 s): Timestep x OrderLatency. Fewer would feel quicker but stall more on a slow line.
+# player runs it on the same tick; a skirmish keeps 3 ticks (engine fork). NetFrameInterval: ticks per network frame,
+# the engine's 3. OrderLatency gives about 0.4 s at each speed, as the engine's own mods have (RA: 0.36-0.48 s):
+# Timestep x NetFrameInterval x OrderLatency. Fewer would feel quicker but stall more on a slow line.
 GameSpeeds:
 	DefaultSpeed: default
 	Speeds:
 		fastest:
 			Name: options-game-speed.fastest
-			Timestep: 45
-			OrderLatency: 9
-			NetFrameInterval: 1
+			Timestep: 23
+			OrderLatency: 6
+			NetFrameInterval: 3
 		faster:
 			Name: options-game-speed.faster
-			Timestep: 55
-			OrderLatency: 7
-			NetFrameInterval: 1
+			Timestep: 28
+			OrderLatency: 5
+			NetFrameInterval: 3
 		fast:
 			Name: options-game-speed.fast
-			Timestep: 62
-			OrderLatency: 6
-			NetFrameInterval: 1
+			Timestep: 31
+			OrderLatency: 4
+			NetFrameInterval: 3
 		default:
 			Name: options-game-speed.normal
-			Timestep: 71
-			OrderLatency: 6
-			NetFrameInterval: 1
+			Timestep: 36
+			OrderLatency: 4
+			NetFrameInterval: 3
 		slower:
 			Name: options-game-speed.slower
-			Timestep: 100
-			OrderLatency: 4
-			NetFrameInterval: 1
+			Timestep: 50
+			OrderLatency: 3
+			NetFrameInterval: 3
 		slowest:
 			Name: options-game-speed.slowest
-			Timestep: 142
-			OrderLatency: 3
-			NetFrameInterval: 1
+			Timestep: 71
+			OrderLatency: 2
+			NetFrameInterval: 3
 		# The automated test maps only (5x normal): selected by their map options.
 		test:
 			Name: options-game-speed-test
-			Timestep: 14
+			Timestep: 7
 			OrderLatency: 3
-			NetFrameInterval: 1
+			NetFrameInterval: 3
 
 Include: mod.content.yaml
 Include: mod.chrome.yaml

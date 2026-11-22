@@ -39,7 +39,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public const string OrderID = "PwMerge";
 
 		// Ticks the units have to meet before the merge is given up.
-		const int MeetTimeout = 400;
+		const int MeetTimeout = 400 * PwTime.TicksPerOriginal;
 
 		public readonly PwMergeInfo Info;
 

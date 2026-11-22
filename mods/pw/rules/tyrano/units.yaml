@@ -15,7 +15,7 @@ tyrano-dinos:
 		XpPerLevel: 10
 		AttackGain: 18
 		ArmorGain: 18
-		AttackDelay: 23
+		AttackDelay: 46
 	UsesPopulation:
 		Amount: 1
 	Builder:
@@ -23,7 +23,7 @@ tyrano-dinos:
 	Buildable:
 		Description: description-tyrano-dinos
 		Queue: tyrano-tyranonest
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: tyrano-dinos
@@ -36,13 +36,14 @@ tyrano-dinos:
 	PwArmor:
 		Value: 0
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: foot-worker
-		Speed: 160
+		Speed: 80
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: DinosHit
 
 tyrano-masos:
@@ -56,14 +57,14 @@ tyrano-masos:
 		XpPerLevel: 8
 		AttackGain: 18
 		ArmorGain: 9
-		AttackDelay: 12
+		AttackDelay: 24
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 1
 	Buildable:
 		Description: description-tyrano-masos
 		Queue: tyrano-eggnest
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: tyrano-masos
@@ -76,12 +77,13 @@ tyrano-masos:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 242
+		TurnSpeed: 256
+		Speed: 121
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: MasosHit
 
 tyrano-velocis:
@@ -96,14 +98,14 @@ tyrano-velocis:
 		XpPerLevel: 14
 		AttackGain: 45
 		ArmorGain: 27
-		AttackDelay: 20
+		AttackDelay: 40
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-tyrano-velocis
 		Queue: tyrano-eggnest
-		BuildDuration: 224
+		BuildDuration: 448
 		BuildPaletteOrder: 20
 	RenderSprites:
 		Image: tyrano-velocis
@@ -116,17 +118,20 @@ tyrano-velocis:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 174
+		TurnSpeed: 256
+		Speed: 87
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: VelocisHit
 	# Two combine into a TwinVelocis.
 	PwMerge:
 		Into: tyrano-twinvelocis
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-velociraptor
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-velocis-disguised.name
@@ -144,7 +149,7 @@ tyrano-twinvelocis:
 		XpPerLevel: 18
 		AttackGain: 27
 		ArmorGain: 18
-		AttackDelay: 28
+		AttackDelay: 56
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 4
@@ -156,16 +161,17 @@ tyrano-twinvelocis:
 		Cost: 0
 	# The mod's health (the original's 350): as much as its two parts, so merging isn't a loss.
 	Health:
-		HP: 400
+		HP: 375
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 261
+		TurnSpeed: 256
+		Speed: 131
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 10 of its attack animation (.chr 0x247c).
-		FireDelay: 10
+		FireDelay: 20
 		Weapon: TwinVelocisHit
 	# Made of two Velocis; needs a LandNest (.chr 0x1fc).
 	PwMerged:
@@ -185,13 +191,13 @@ tyrano-dilophos:
 		XpPerLevel: 14
 		AttackGain: 45
 		ArmorGain: 27
-		AttackDelay: 19
+		AttackDelay: 38
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-tyrano-dilophos
 		Queue: tyrano-eggnest
-		BuildDuration: 256
+		BuildDuration: 512
 		BuildPaletteOrder: 30
 		Prerequisites: tyrano-landnest
 	RenderSprites:
@@ -205,17 +211,20 @@ tyrano-dilophos:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 171
+		TurnSpeed: 256
+		Speed: 86
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: PoisonSpit
 	# With a Pteras and a Trices it mutates into a Mutant.
 	PwMerge:
 		Into: tyrano-mutant
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-dilophosaurus
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-dilophos-disguised.name
@@ -233,14 +242,14 @@ tyrano-trices:
 		XpPerLevel: 18
 		AttackGain: 36
 		ArmorGain: 36
-		AttackDelay: 31
+		AttackDelay: 62
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 5
 	Buildable:
 		Description: description-tyrano-trices
 		Queue: tyrano-eggnest
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 40
 		Prerequisites: tyrano-landnisdos
 	RenderSprites:
@@ -254,17 +263,20 @@ tyrano-trices:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 160
+		TurnSpeed: 256
+		Speed: 80
 	RevealsShroud:
 		Range: 9c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: CarrnosBoomerang
 	# With a Dilophos and a Pteras it mutates into a Mutant.
 	PwMerge:
 		Into: tyrano-mutant
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-triceratops
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-trices-disguised.name
@@ -282,7 +294,7 @@ tyrano-eggthrower:
 	Buildable:
 		Description: description-tyrano-eggthrower
 		Queue: tyrano-thrownest
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 20
 		Prerequisites: tyrano-landnest
 	RenderSprites:
@@ -296,12 +308,13 @@ tyrano-eggthrower:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 100
+		TurnSpeed: 256
+		Speed: 50
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 15 of its attack animation (.chr 0x247c).
-		FireDelay: 15
+		FireDelay: 30
 		Weapon: EggThrow
 
 # Its bite reaches flyers too (the weapon's target mask), so it picks them as targets like a ranged unit.
@@ -316,14 +329,14 @@ tyrano-tyranos:
 		XpPerLevel: 30
 		AttackGain: 54
 		ArmorGain: 18
-		AttackDelay: 31
+		AttackDelay: 62
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 30
 	Buildable:
 		Description: description-tyrano-tyranos
 		Queue: tyrano-tyranonest
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 70
 		Prerequisites: tyrano-eggnest, tyrano-landnest, tyrano-skynest, tyrano-upgradenest, tyrano-landnisdos, tyrano-skynisdos
 	RenderSprites:
@@ -337,12 +350,13 @@ tyrano-tyranos:
 	PwArmor:
 		Value: 35
 	Mobile:
-		Speed: 264
+		TurnSpeed: 256
+		Speed: 132
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: TyranosHit
 
 # The Rhamphos hovers (.chr 0x17c = 2, ^LivingHoverer): over ground and water, not over cliffs; ground weapons reach it.
@@ -359,14 +373,14 @@ tyrano-rhamphos:
 		XpPerLevel: 14
 		AttackGain: 27
 		ArmorGain: 27
-		AttackDelay: 26
+		AttackDelay: 52
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-tyrano-rhamphos
 		Queue: tyrano-eggnest
-		BuildDuration: 288
+		BuildDuration: 576
 		BuildPaletteOrder: 50
 		Prerequisites: tyrano-skynest
 	RenderSprites:
@@ -380,17 +394,20 @@ tyrano-rhamphos:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 224
+		TurnSpeed: 256
+		Speed: 112
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: RhamphosArrow
 	# Two combine into a TwinRhamphos.
 	PwMerge:
 		Into: tyrano-twinrhamphos
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-rhamphorhynchus
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-rhamphos-disguised.name
@@ -419,15 +436,20 @@ tyrano-twinrhamphos:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 256
+		AltitudeVelocity: 0c22
+		Speed: 128
 	RevealsShroud:
 		Range: 10c0
 	PwMerged:
 		From: tyrano-rhamphos, tyrano-rhamphos
 	# No attack animation (it has no attack).
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-pteranodon
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-twinrhamphos-disguised.name
@@ -442,14 +464,14 @@ tyrano-pteras:
 		XpPerLevel: 14
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 29
+		AttackDelay: 58
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 4
 	Buildable:
 		Description: description-tyrano-pteras
 		Queue: tyrano-eggnest
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 60
 		Prerequisites: tyrano-skynisdos
 	RenderSprites:
@@ -463,17 +485,20 @@ tyrano-pteras:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 224
+		AltitudeVelocity: 0c22
+		Speed: 112
 	RevealsShroud:
 		Range: 11c0
 	Armament:
 		# Strikes on step 9 of its attack animation (.chr 0x247c).
-		FireDelay: 9
+		FireDelay: 18
 		Weapon: PterasAxe
 	# With a Dilophos and a Trices it mutates into a Mutant.
 	PwMerge:
 		Into: tyrano-mutant
 	PwWithDisguiseBody@DISGUISE:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		Image: wild-pteranodon
 	Tooltip@DISGUISE:
 		Name: actor-tyrano-pteras-disguised.name
@@ -488,7 +513,7 @@ tyrano-dsunguri:
 	Buildable:
 		Description: description-tyrano-dsunguri
 		Queue: tyrano-thrownest
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 10
 		Prerequisites: tyrano-skynest
 	RenderSprites:
@@ -502,12 +527,16 @@ tyrano-dsunguri:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 224
+		AltitudeVelocity: 0c22
+		Speed: 112
 		IdleBehavior: Land
 		LandableTerrainTypes: Clear, Ramp
 	RevealsShroud:
 		Range: 10c0
 	Cargo:
+		AfterLoadDelay: 16
+		BeforeUnloadDelay: 16
+		AfterUnloadDelay: 50
 		Types: Ground
 		MaxWeight: 12
 		UnloadVoice: Action
@@ -515,6 +544,8 @@ tyrano-dsunguri:
 	PwUnloadAt:
 	# No attack animation (it has no attack).
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 
 # Made of a Dilophos, a Pteras and a Trices, once Mutant Morphosis is researched; "as powerful as Tyranos".
@@ -527,7 +558,7 @@ tyrano-mutant:
 		XpPerLevel: 30
 		AttackGain: 36
 		ArmorGain: 36
-		AttackDelay: 48
+		AttackDelay: 96
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 11
@@ -539,16 +570,17 @@ tyrano-mutant:
 		Cost: 0
 	# The mod's health (the original's 550): more than its three parts' 730, so merging isn't a loss.
 	Health:
-		HP: 900
+		HP: 780
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 184
+		AltitudeVelocity: 0c22
+		Speed: 92
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 8 of its attack animation (.chr 0x247c).
-		FireDelay: 8
+		FireDelay: 16
 		Weapon: MutantArrow
 	PwMerged:
 		From: tyrano-dilophos, tyrano-pteras, tyrano-trices

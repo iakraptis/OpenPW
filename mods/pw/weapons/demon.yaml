@@ -4,18 +4,18 @@
 
 InsectHit:
 	Inherits: ^Melee
-	ReloadDelay: 26
+	ReloadDelay: 52
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 10
 
 SkeletonArrow:
 	Inherits: ^Arrow
-	ReloadDelay: 32
+	ReloadDelay: 64
 	Range: 5c0
 	Projectile: PwBullet
 		Image: weapon-skeleton-arrows
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 22
 	Report: weapon-skeleton-arrows-0.wav
@@ -26,7 +26,7 @@ SkeletonArrow:
 
 MudManHit:
 	Inherits: ^Melee
-	ReloadDelay: 37
+	ReloadDelay: 74
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 70
 	Report: weapon-mudman-hit-0.wav
@@ -36,7 +36,7 @@ MudManHit:
 # found; the bolt here is the mod's (PwLightningBolt).
 RedEye:
 	Inherits: ^Arrow
-	ReloadDelay: 44
+	ReloadDelay: 88
 	Range: 10c0
 	Projectile: PwLightningBolt
 	Warhead@1Dam: SubtractArmorDamage
@@ -56,7 +56,7 @@ RedEye:
 # Soldier's rectangle gives the melee 1c256. The fire then lands where the target stood (FUN_0047ac00).
 CelberosFire:
 	Inherits: ^PwWeapon
-	ReloadDelay: 40
+	ReloadDelay: 80
 	Range: 2c0
 	Projectile: InstantHit
 	Warhead@1Dam: SubtractArmorDamage
@@ -75,12 +75,12 @@ CelberosFire:
 # 0x477252); only the front does damage.
 KingDemonFire:
 	Inherits: ^PwWeapon
-	ReloadDelay: 47
+	ReloadDelay: 94
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-kingdemon-fire
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 		Mode: 4
 		TrailImage: weapon-kingdemon-fire
 		TrailSequences: trail
@@ -96,12 +96,12 @@ KingDemonFire:
 # Darkbat: a sound wave at ground or air.
 NoiseWave:
 	Inherits: ^Arrow
-	ReloadDelay: 44
+	ReloadDelay: 88
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-noise-wave
 		Sequences: flight
-		Speed: 640
+		Speed: 320
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 26
 	Report: weapon-noise-wave-0.wav
@@ -114,7 +114,7 @@ NoiseWave:
 # Devil: the apocalypse strikes its target at once, ground or air.
 Apocalypse:
 	Inherits: ^Arrow
-	ReloadDelay: 41
+	ReloadDelay: 82
 	Range: 7c0
 	Projectile: InstantHit
 	Warhead@1Dam: SubtractArmorDamage
@@ -128,7 +128,7 @@ Apocalypse:
 # The zombies Rise death raises.
 ZombieHit:
 	Inherits: ^Melee
-	ReloadDelay: 29
+	ReloadDelay: 58
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 
@@ -136,12 +136,12 @@ ZombieHit:
 VolcanoShot:
 	Inherits: ^Thrown
 	ValidTargets: Ground, Air
-	ReloadDelay: 24
+	ReloadDelay: 48
 	Range: 9c0
 	Projectile: PwBullet
 		Image: weapon-volcano
 		Sequences: flight
-		Speed: 640
+		Speed: 320
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 40

@@ -28,10 +28,10 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwDetectorBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 50;
+		public readonly int ScanInterval = PwTime.Ticks(50);
 
 		[Desc("Ticks after which attack waves get a detector.")]
-		public readonly int EscortDelay = 9000;
+		public readonly int EscortDelay = PwTime.Ticks(9000);
 
 		[Desc("How far the edge post is from the base centre, in cells.")]
 		public readonly int EdgeDistance = 10;

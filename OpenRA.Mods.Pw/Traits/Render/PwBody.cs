@@ -33,7 +33,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly bool IsPlayerPalette = true;
 
 		[Desc("Ticks the body lies after the die animation.")]
-		public readonly int Ticks = 640;
+		public readonly int Ticks = PwTime.Ticks(640);
 
 		[Desc("Its art ends with nothing to leave lying (flyers, the Wizard): once fallen, an unseen mark that Resurrect ",
 			"can raise, shown as a grey dot only to a player who owns a Resurrect caster (a mod addition: in the original ",
