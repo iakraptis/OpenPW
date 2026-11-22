@@ -6,22 +6,22 @@ spell-fall-out:
 	cast:
 		Start: 0
 		Length: 11
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 11
 		Length: 19
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-2:
 		Start: 30
 		Length: 19
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-3:
 		Start: 49
 		Length: 19
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-thunder-bolt:
@@ -30,7 +30,7 @@ spell-thunder-bolt:
 	effect:
 		Start: 0
 		Length: 10
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-shield:
@@ -39,22 +39,22 @@ spell-shield:
 	cast:
 		Start: 0
 		Length: 18
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 18
 		Length: 13
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-2:
 		Start: 31
 		Length: 13
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-3:
 		Start: 44
 		Length: 13
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-mass-temper:
@@ -63,12 +63,12 @@ spell-mass-temper:
 	cast:
 		Start: 0
 		Length: 18
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 18
 		Length: 13
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-teleport:
@@ -77,12 +77,12 @@ spell-teleport:
 	cast:
 		Start: 0
 		Length: 20
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 20
 		Length: 20
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-jump-portal:
@@ -91,12 +91,12 @@ spell-jump-portal:
 	cast:
 		Start: 0
 		Length: 17
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 17
 		Length: 11
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-drop-stone:
@@ -105,12 +105,12 @@ spell-drop-stone:
 	cast:
 		Start: 0
 		Length: 31
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 31
 		Length: 27
-		Tick: 40
+		Tick: 80
 
 spell-vanishing:
 	Defaults:
@@ -118,7 +118,7 @@ spell-vanishing:
 	effect:
 		Start: 0
 		Length: 25
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-fake:
@@ -127,12 +127,12 @@ spell-fake:
 	cast:
 		Start: 0
 		Length: 16
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 16
 		Length: 9
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-meteo:
@@ -141,22 +141,22 @@ spell-meteo:
 	cast:
 		Start: 0
 		Length: 30
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 30
 		Length: 21
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-2:
 		Start: 51
 		Length: 21
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-3:
 		Start: 72
 		Length: 21
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-resurrect:
@@ -165,17 +165,17 @@ spell-resurrect:
 	cast:
 		Start: 0
 		Length: 26
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	flight:
 		Start: 26
 		Length: 16
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 42
 		Length: 19
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-stone-curse:
@@ -184,22 +184,22 @@ spell-stone-curse:
 	cast:
 		Start: 0
 		Length: 16
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 16
 		Length: 18
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-2:
 		Start: 34
 		Length: 18
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-3:
 		Start: 52
 		Length: 18
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-suicide:
@@ -208,7 +208,7 @@ spell-suicide:
 	effect:
 		Start: 0
 		Length: 17
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-noxious-gas:
@@ -217,12 +217,12 @@ spell-noxious-gas:
 	cast:
 		Start: 0
 		Length: 13
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 13
 		Length: 21
-		Tick: 40
+		Tick: 80
 
 spell-quake:
 	Defaults:
@@ -230,7 +230,7 @@ spell-quake:
 	effect:
 		Start: 0
 		Length: 31
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-rise-death:
@@ -239,12 +239,12 @@ spell-rise-death:
 	cast:
 		Start: 0
 		Length: 30
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 30
 		Length: 28
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-berry-fly:
@@ -254,12 +254,12 @@ spell-berry-fly:
 		Facings: -8
 		Length: 5
 		Frames: 35, 36, 37, 38, 39, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	flight:
 		Start: 40
 		Length: 16
-		Tick: 40
+		Tick: 80
 
 spell-elf-build:
 	Defaults:
@@ -268,12 +268,12 @@ spell-elf-build:
 		Facings: -8
 		Length: 5
 		Frames: 35, 36, 37, 38, 39, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 40
 		Length: 9
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-cure:
@@ -282,22 +282,22 @@ spell-cure:
 	cast:
 		Start: 0
 		Length: 6
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 6
 		Length: 15
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-2:
 		Start: 21
 		Length: 15
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect-3:
 		Start: 36
 		Length: 15
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-egg-mine:
@@ -306,12 +306,12 @@ spell-egg-mine:
 	flight:
 		Start: 0
 		Length: 2
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 2
 		Length: 12
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-mana-fill:
@@ -320,7 +320,7 @@ spell-mana-fill:
 	effect:
 		Start: 0
 		Length: 21
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-morale:
@@ -329,7 +329,7 @@ spell-morale:
 	effect:
 		Start: 0
 		Length: 10
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 
 spell-level-up:
@@ -338,10 +338,10 @@ spell-level-up:
 	cast:
 		Start: 0
 		Length: 47
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen
 	effect:
 		Start: 0
 		Length: 47
-		Tick: 40
+		Tick: 80
 		BlendMode: Screen

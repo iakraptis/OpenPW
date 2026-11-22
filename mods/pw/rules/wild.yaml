@@ -8,10 +8,10 @@ wild-tyranosaurus:
 	# Back 10098 ticks after it dies (about 11 min 57 s), as the original:
 	# fall 18 + body 480 (.chr 0x13d0) + wait 9600 (.chr 0x18c).
 	PwRespawns:
-		Delay: 10098
+		Delay: 20196
 	# Its body lies 960 ticks (mod change: twice the original's 480, .chr 0x13d0, as every body).
 	PwBody:
-		Ticks: 960
+		Ticks: 1920
 	# Mod change: it sees invisible units within 10 cells (no wild creature is a detector in the original, .chr 0x1f8).
 	DetectCloaked:
 		Range: 10c0
@@ -25,12 +25,13 @@ wild-tyranosaurus:
 	PwDropsMeat:
 		Amount: 400
 	Mobile:
-		Speed: 172
+		TurnSpeed: 256
+		Speed: 86
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		Weapon: TyranosaurusBite
-		FireDelay: 7
+		FireDelay: 14
 
 wild-triceratops:
 	Inherits: ^Wild
@@ -38,7 +39,7 @@ wild-triceratops:
 	# Back 6094 ticks after it dies (about 7 min 13 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 5760 (.chr 0x18c).
 	PwRespawns:
-		Delay: 6094
+		Delay: 12188
 	Tooltip:
 		Name: actor-wild-triceratops.name
 	Health:
@@ -50,12 +51,13 @@ wild-triceratops:
 	PwArmor:
 		Value: 15
 	Mobile:
-		Speed: 128
+		TurnSpeed: 256
+		Speed: 64
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		Weapon: TriceratopsBite
-		FireDelay: 9
+		FireDelay: 18
 
 wild-ceratosaurus:
 	Inherits: ^Wild
@@ -63,7 +65,7 @@ wild-ceratosaurus:
 	# Back 4174 ticks after it dies (about 4 min 56 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 3840 (.chr 0x18c).
 	PwRespawns:
-		Delay: 4174
+		Delay: 8348
 	Tooltip:
 		Name: actor-wild-ceratosaurus.name
 	Health:
@@ -73,12 +75,13 @@ wild-ceratosaurus:
 	PwDropsMeat:
 		Amount: 200
 	Mobile:
-		Speed: 130
+		TurnSpeed: 256
+		Speed: 65
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		Weapon: CeratosaurusBite
-		FireDelay: 10
+		FireDelay: 20
 
 wild-pachycephalosaurus:
 	Inherits: ^Wild
@@ -86,7 +89,7 @@ wild-pachycephalosaurus:
 	# Back 3210 ticks after it dies (about 3 min 48 s), as the original:
 	# fall 10 + body 320 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
 	PwRespawns:
-		Delay: 3210
+		Delay: 6420
 	Tooltip:
 		Name: actor-wild-pachycephalosaurus.name
 	Health:
@@ -96,12 +99,13 @@ wild-pachycephalosaurus:
 	PwDropsMeat:
 		Amount: 200
 	Mobile:
-		Speed: 148
+		TurnSpeed: 256
+		Speed: 74
 	RevealsShroud:
 		Range: 5c0
 	Armament:
 		Weapon: PachycephalosaurusBite
-		FireDelay: 7
+		FireDelay: 14
 
 wild-dilophosaurus:
 	Inherits: ^Wild
@@ -109,7 +113,7 @@ wild-dilophosaurus:
 	# Back 3214 ticks after it dies (about 3 min 48 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
 	PwRespawns:
-		Delay: 3214
+		Delay: 6428
 	# Mod change: it sees invisible units within 7 cells (no wild creature is a detector in the original, .chr 0x1f8).
 	DetectCloaked:
 		Range: 7c0
@@ -123,12 +127,13 @@ wild-dilophosaurus:
 	PwDropsMeat:
 		Amount: 150
 	Mobile:
-		Speed: 256
+		TurnSpeed: 256
+		Speed: 128
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		Weapon: DilophosaurusSpit
-		FireDelay: 6
+		FireDelay: 12
 
 wild-velociraptor:
 	Inherits: ^Wild
@@ -136,7 +141,7 @@ wild-velociraptor:
 	# Back 2254 ticks after it dies (about 2 min 40 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
 	PwRespawns:
-		Delay: 2254
+		Delay: 4508
 	Tooltip:
 		Name: actor-wild-velociraptor.name
 	Health:
@@ -146,19 +151,20 @@ wild-velociraptor:
 	PwDropsMeat:
 		Amount: 120
 	Mobile:
-		Speed: 320
+		TurnSpeed: 256
+		Speed: 160
 	RevealsShroud:
 		Range: 6c0
 	Armament:
 		Weapon: VelociraptorBite
-		FireDelay: 6
+		FireDelay: 12
 
 wild-brachiosaurus:
 	Inherits: ^Wild
 	# Back 8014 ticks after it dies (about 9 min 29 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 7680 (.chr 0x18c).
 	PwRespawns:
-		Delay: 8014
+		Delay: 16028
 	Tooltip:
 		Name: actor-wild-brachiosaurus.name
 	Health:
@@ -168,10 +174,13 @@ wild-brachiosaurus:
 	PwDropsMeat:
 		Amount: 500
 	Mobile:
-		Speed: 88
+		TurnSpeed: 256
+		Speed: 44
 	RevealsShroud:
 		Range: 10c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-stegosaurus:
@@ -179,7 +188,7 @@ wild-stegosaurus:
 	# Back 6094 ticks after it dies (about 7 min 13 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 5760 (.chr 0x18c).
 	PwRespawns:
-		Delay: 6094
+		Delay: 12188
 	Tooltip:
 		Name: actor-wild-stegosaurus.name
 	Health:
@@ -189,10 +198,13 @@ wild-stegosaurus:
 	PwDropsMeat:
 		Amount: 200
 	Mobile:
-		Speed: 86
+		TurnSpeed: 256
+		Speed: 43
 	RevealsShroud:
 		Range: 6c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-parasaurolophus:
@@ -200,7 +212,7 @@ wild-parasaurolophus:
 	# Back 5134 ticks after it dies (about 6 min 5 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 4800 (.chr 0x18c).
 	PwRespawns:
-		Delay: 5134
+		Delay: 10268
 	Tooltip:
 		Name: actor-wild-parasaurolophus.name
 	Health:
@@ -210,10 +222,13 @@ wild-parasaurolophus:
 	PwDropsMeat:
 		Amount: 150
 	Mobile:
-		Speed: 130
+		TurnSpeed: 256
+		Speed: 65
 	RevealsShroud:
 		Range: 8c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-saltasaurus:
@@ -221,7 +236,7 @@ wild-saltasaurus:
 	# Back 4174 ticks after it dies (about 4 min 56 s), as the original:
 	# fall 14 + body 320 (.chr 0x13d0) + wait 3840 (.chr 0x18c).
 	PwRespawns:
-		Delay: 4174
+		Delay: 8348
 	Tooltip:
 		Name: actor-wild-saltasaurus.name
 	Health:
@@ -231,10 +246,13 @@ wild-saltasaurus:
 	PwDropsMeat:
 		Amount: 125
 	Mobile:
-		Speed: 92
+		TurnSpeed: 256
+		Speed: 46
 	RevealsShroud:
 		Range: 8c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-protoceratops:
@@ -242,7 +260,7 @@ wild-protoceratops:
 	# Back 1290 ticks after it dies (about 1 min 32 s), as the original:
 	# fall 10 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
 	PwRespawns:
-		Delay: 1290
+		Delay: 2580
 	Tooltip:
 		Name: actor-wild-protoceratops.name
 	Health:
@@ -252,10 +270,13 @@ wild-protoceratops:
 	PwDropsMeat:
 		Amount: 70
 	Mobile:
-		Speed: 160
+		TurnSpeed: 256
+		Speed: 80
 	RevealsShroud:
 		Range: 6c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-galimimus:
@@ -263,7 +284,7 @@ wild-galimimus:
 	# Back 1290 ticks after it dies (about 1 min 32 s), as the original:
 	# fall 10 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
 	PwRespawns:
-		Delay: 1290
+		Delay: 2580
 	Tooltip:
 		Name: actor-wild-galimimus.name
 	Health:
@@ -273,10 +294,13 @@ wild-galimimus:
 	PwDropsMeat:
 		Amount: 40
 	Mobile:
-		Speed: 192
+		TurnSpeed: 256
+		Speed: 96
 	RevealsShroud:
 		Range: 8c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-psittacosaurus:
@@ -284,7 +308,7 @@ wild-psittacosaurus:
 	# Back 970 ticks after it dies (about 1 min 9 s), as the original:
 	# fall 10 + body 320 (.chr 0x13d0) + wait 640 (.chr 0x18c).
 	PwRespawns:
-		Delay: 970
+		Delay: 1940
 	Tooltip:
 		Name: actor-wild-psittacosaurus.name
 	Health:
@@ -294,10 +318,13 @@ wild-psittacosaurus:
 	PwDropsMeat:
 		Amount: 20
 	Mobile:
-		Speed: 224
+		TurnSpeed: 256
+		Speed: 112
 	RevealsShroud:
 		Range: 5c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-pteranodon:
@@ -305,7 +332,7 @@ wild-pteranodon:
 	# Back 2886 ticks after it dies (about 3 min 25 s), as the original:
 	# fall 6 + body 0 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
 	PwRespawns:
-		Delay: 2886
+		Delay: 5772
 	Tooltip:
 		Name: actor-wild-pteranodon.name
 	Health:
@@ -315,7 +342,8 @@ wild-pteranodon:
 	PwDropsMeat:
 		Amount: 100
 	Aircraft:
-		Speed: 224
+		AltitudeVelocity: 0c22
+		Speed: 112
 	RevealsShroud:
 		Range: 10c0
 
@@ -324,7 +352,7 @@ wild-rhamphorhynchus:
 	# Back 1926 ticks after it dies (about 2 min 17 s), as the original:
 	# fall 6 + body 0 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
 	PwRespawns:
-		Delay: 1926
+		Delay: 3852
 	Tooltip:
 		Name: actor-wild-rhamphorhynchus.name
 	Health:
@@ -334,7 +362,8 @@ wild-rhamphorhynchus:
 	PwDropsMeat:
 		Amount: 50
 	Aircraft:
-		Speed: 192
+		AltitudeVelocity: 0c22
+		Speed: 96
 	RevealsShroud:
 		Range: 10c0
 
@@ -343,7 +372,7 @@ wild-plesiosaurs:
 	# Back 2245 ticks after it dies (about 2 min 39 s), as the original:
 	# fall 5 + body 320 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
 	PwRespawns:
-		Delay: 2245
+		Delay: 4490
 	Tooltip:
 		Name: actor-wild-plesiosaurs.name
 	Health:
@@ -353,10 +382,13 @@ wild-plesiosaurs:
 	PwDropsMeat:
 		Amount: 0
 	Mobile:
-		Speed: 128
+		TurnSpeed: 256
+		Speed: 64
 	RevealsShroud:
 		Range: 8c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: stand
 
 wild-peleneustes:
@@ -364,7 +396,7 @@ wild-peleneustes:
 	# Back 1285 ticks after it dies (about 1 min 31 s), as the original:
 	# fall 5 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
 	PwRespawns:
-		Delay: 1285
+		Delay: 2570
 	Tooltip:
 		Name: actor-wild-peleneustes.name
 	Health:
@@ -374,10 +406,13 @@ wild-peleneustes:
 	PwDropsMeat:
 		Amount: 0
 	Mobile:
-		Speed: 96
+		TurnSpeed: 256
+		Speed: 48
 	RevealsShroud:
 		Range: 7c0
 	WithInfantryBody:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		IdleSequences: walk
 		StandSequences: walk
 		DefaultAttackSequence: walk
@@ -388,10 +423,10 @@ wild-picatyrano:
 	# Back 10098 ticks after it dies (about 11 min 57 s), as the original:
 	# fall 18 + body 480 (.chr 0x13d0) + wait 9600 (.chr 0x18c).
 	PwRespawns:
-		Delay: 10098
+		Delay: 20196
 	# Its body lies 960 ticks (mod change: twice the original's 480, .chr 0x13d0, as every body).
 	PwBody:
-		Ticks: 960
+		Ticks: 1920
 	Tooltip:
 		Name: actor-wild-picatyrano.name
 	Health:
@@ -401,9 +436,10 @@ wild-picatyrano:
 	PwDropsMeat:
 		Amount: 600
 	Mobile:
-		Speed: 172
+		TurnSpeed: 256
+		Speed: 86
 	RevealsShroud:
 		Range: 10c0
 	Armament:
 		Weapon: PicatyranoBite
-		FireDelay: 7
+		FireDelay: 14

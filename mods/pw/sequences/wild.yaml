@@ -3,7 +3,7 @@
 wild-tyranosaurus:
 	Defaults:
 		Filename: units/wild-tyranosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -32,7 +32,7 @@ wild-tyranosaurus:
 wild-triceratops:
 	Defaults:
 		Filename: units/wild-triceratops.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 32
@@ -61,7 +61,7 @@ wild-triceratops:
 wild-ceratosaurus:
 	Defaults:
 		Filename: units/wild-ceratosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -90,7 +90,7 @@ wild-ceratosaurus:
 wild-pachycephalosaurus:
 	Defaults:
 		Filename: units/wild-pachycephalosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -119,7 +119,7 @@ wild-pachycephalosaurus:
 wild-dilophosaurus:
 	Defaults:
 		Filename: units/wild-dilophosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 12
@@ -148,7 +148,7 @@ wild-dilophosaurus:
 wild-velociraptor:
 	Defaults:
 		Filename: units/wild-velociraptor.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 8
@@ -177,7 +177,7 @@ wild-velociraptor:
 wild-brachiosaurus:
 	Defaults:
 		Filename: units/wild-brachiosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 36
@@ -202,7 +202,7 @@ wild-brachiosaurus:
 wild-stegosaurus:
 	Defaults:
 		Filename: units/wild-stegosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 32
@@ -227,7 +227,7 @@ wild-stegosaurus:
 wild-parasaurolophus:
 	Defaults:
 		Filename: units/wild-parasaurolophus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 43
@@ -252,7 +252,7 @@ wild-parasaurolophus:
 wild-saltasaurus:
 	Defaults:
 		Filename: units/wild-saltasaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 36
@@ -277,7 +277,7 @@ wild-saltasaurus:
 wild-protoceratops:
 	Defaults:
 		Filename: units/wild-protoceratops.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -302,7 +302,7 @@ wild-protoceratops:
 wild-galimimus:
 	Defaults:
 		Filename: units/wild-galimimus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -327,7 +327,7 @@ wild-galimimus:
 wild-psittacosaurus:
 	Defaults:
 		Filename: units/wild-psittacosaurus.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -352,7 +352,7 @@ wild-psittacosaurus:
 wild-pteranodon:
 	Defaults:
 		Filename: units/wild-pteranodon.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -373,7 +373,7 @@ wild-pteranodon:
 wild-rhamphorhynchus:
 	Defaults:
 		Filename: units/wild-rhamphorhynchus.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -394,7 +394,7 @@ wild-rhamphorhynchus:
 wild-plesiosaurs:
 	Defaults:
 		Filename: units/wild-plesiosaurs.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 24
@@ -419,7 +419,7 @@ wild-plesiosaurs:
 wild-peleneustes:
 	Defaults:
 		Filename: units/wild-peleneustes.png
-		Tick: 40
+		Tick: 80
 	walk:
 		Facings: -8
 		Length: 12
@@ -440,7 +440,7 @@ wild-peleneustes:
 wild-picatyrano:
 	Defaults:
 		Filename: units/wild-picatyrano.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -469,7 +469,7 @@ wild-picatyrano:
 wild-alien1:
 	Defaults:
 		Filename: units/wild-alien1.png
-		Tick: 40
+		Tick: 80
 	walk:
 		Facings: -8
 		Length: 8
@@ -493,7 +493,7 @@ wild-alien1:
 wild-alien2:
 	Defaults:
 		Filename: units/wild-alien2.png
-		Tick: 40
+		Tick: 80
 	walk:
 		Facings: -8
 		Length: 8
@@ -517,7 +517,7 @@ wild-alien2:
 wild-alien3:
 	Defaults:
 		Filename: units/wild-alien3.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -541,7 +541,7 @@ wild-alien3:
 wild-noxiousweed:
 	Defaults:
 		Filename: units/wild-noxiousweed.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -16
 	idle:
 		Start: 0
@@ -557,7 +557,7 @@ wild-noxiousweed:
 wild-poisonous:
 	Defaults:
 		Filename: units/wild-poisonous.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	idle:
 		Start: 0
@@ -576,7 +576,7 @@ wild-poisonous:
 wild-treant:
 	Defaults:
 		Filename: units/wild-treant.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	idle:
 		Start: 0
@@ -595,7 +595,7 @@ wild-treant:
 wild-demonflower:
 	Defaults:
 		Filename: units/wild-demonflower.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	idle:
 		Start: 0
@@ -617,7 +617,7 @@ wild-demonflower:
 wild-alien4:
 	Defaults:
 		Filename: units/wild-alien4.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	idle:
 		Start: 0

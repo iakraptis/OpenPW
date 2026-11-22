@@ -232,9 +232,6 @@ namespace OpenRA.Mods.Pw.Tests
 			stone?.GrantCondition(unit, unit, ticks);
 		}
 
-		[Desc("World ticks in one original tick (PwTime): the timing test reports original ticks.")]
-		public int TicksPerOriginal => PwTime.TicksPerOriginal;
-
 		[Desc("Set a unit's mana (PwMana).")]
 		public void SetMana(Actor actor, int mana) => actor.TraitOrDefault<PwMana>()?.SetShare(0, mana);
 

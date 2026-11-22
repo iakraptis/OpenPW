@@ -38,7 +38,7 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Armour added.")]
 		public readonly int Armor = 0;
 
-		[Desc("Walk speed added, pixels per tick.")]
+		[Desc("Walk speed added, pixels per original tick (two world ticks, PwTime).")]
 		public readonly int Speed = 0;
 
 		[Desc("Attack range added, pixels.")]
@@ -142,9 +142,13 @@ namespace OpenRA.Mods.Pw.Traits
 		// Bonuses in original pixels, as a share of the base value (WDist: 32 per pixel).
 		static int Percent(int bonus, int value) => bonus == 0 || value <= 0 ? 100 : (value + bonus * 32) * 100 / value;
 
-		int ISpeedModifier.GetSpeedModifier() =>
-			Percent(PwUpgrades.Bonus(self, u => u.Speed),
-				self.Info.TraitInfoOrDefault<MobileInfo>()?.Speed ?? self.Info.TraitInfoOrDefault<AircraftInfo>()?.Speed ?? 0);
+		// The speed bonus is in pixels per original tick (PwUpgrade.Speed), the base speed per world tick.
+		int ISpeedModifier.GetSpeedModifier()
+		{
+			var bonus = PwUpgrades.Bonus(self, u => u.Speed);
+			var speed = self.Info.TraitInfoOrDefault<MobileInfo>()?.Speed ?? self.Info.TraitInfoOrDefault<AircraftInfo>()?.Speed ?? 0;
+			return bonus == 0 || speed <= 0 ? 100 : (speed * PwTime.TicksPerOriginal + bonus * 32) * 100 / (speed * PwTime.TicksPerOriginal);
+		}
 
 		int IRangeModifier.GetRangeModifier()
 		{

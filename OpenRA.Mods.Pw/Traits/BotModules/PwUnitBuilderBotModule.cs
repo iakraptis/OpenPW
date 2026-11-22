@@ -27,7 +27,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwUnitBuilderBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks of the queues.")]
-		public readonly int ScanInterval = 30;
+		public readonly int ScanInterval = PwTime.Ticks(30);
 
 		[Desc("Workers trained before anything else.")]
 		public readonly int MinimumWorkers = 6;

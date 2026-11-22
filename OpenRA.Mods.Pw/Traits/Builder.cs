@@ -45,7 +45,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int RepairStep = 7;
 
 		[Desc("Ticks between repair steps (OpenRA default: 24).")]
-		public readonly int RepairInterval = 24;
+		public readonly int RepairInterval = PwTime.Ticks(24);
 
 		[Desc("How close the worker must come to repair a building.")]
 		public readonly WDist RepairRange = WDist.FromCells(1);

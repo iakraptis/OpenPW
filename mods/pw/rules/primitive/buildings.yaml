@@ -10,7 +10,7 @@ primitive-sanctuary:
 		RequiresCondition: !constructing
 	AcceptsBerries:
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-primitive-sanctuary
 		BuildPaletteOrder: 10
@@ -46,7 +46,7 @@ primitive-house:
 		Amount: 10
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 320
+		Duration: 640
 	Buildable:
 		Description: description-primitive-house
 		BuildPaletteOrder: 20
@@ -79,7 +79,7 @@ primitive-powerhouse:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 880
+		Duration: 1760
 	Buildable:
 		Description: description-primitive-powerhouse
 		BuildPaletteOrder: 30
@@ -117,7 +117,7 @@ primitive-soldierhouse:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 960
+		Duration: 1920
 	Buildable:
 		Description: description-primitive-soldierhouse
 		BuildPaletteOrder: 40
@@ -155,7 +155,7 @@ primitive-skyhouse:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-primitive-skyhouse
 		BuildPaletteOrder: 70
@@ -193,7 +193,7 @@ primitive-blacksmith:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-primitive-blacksmith
 		BuildPaletteOrder: 50
@@ -231,7 +231,7 @@ primitive-landincreaser:
 	PwProductionQueue:
 		Type: primitive-landincreaser
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-primitive-landincreaser
 		BuildPaletteOrder: 60
@@ -265,7 +265,7 @@ primitive-skyincreaser:
 	PwProductionQueue:
 		Type: primitive-skyincreaser
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-primitive-skyincreaser
 		BuildPaletteOrder: 80
@@ -296,7 +296,7 @@ primitive-stonetower:
 	Inherits: ^Defense
 	Inherits@race: ^Primitive
 	UnderConstruction:
-		Duration: 560
+		Duration: 1120
 	Buildable:
 		Description: description-primitive-stonetower
 		BuildPaletteOrder: 35
@@ -338,7 +338,7 @@ primitive-trap:
 	Inherits: ^Defense
 	Inherits@race: ^Primitive
 	UnderConstruction:
-		Duration: 480
+		Duration: 960
 	Buildable:
 		Description: description-primitive-trap
 		BuildPaletteOrder: 90
@@ -368,6 +368,7 @@ primitive-trap:
 		DetectionTypes: Invisible
 		RequiresCondition: !constructing
 	Cloak:
+		CloakDelay: 60
 		CloakStyle: Alpha
 		CloakedAlpha: 0.55
 		DetectionTypes: Invisible

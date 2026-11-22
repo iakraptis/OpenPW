@@ -13,7 +13,7 @@ elf-heaven:
 		RequiresCondition: !constructing
 	AcceptsBerries:
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-elf-heaven
 		BuildPaletteOrder: 10
@@ -50,7 +50,7 @@ elf-elftree:
 		Amount: 10
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 320
+		Duration: 640
 	Buildable:
 		Description: description-elf-elftree
 		BuildPaletteOrder: 20
@@ -84,7 +84,7 @@ elf-redhall:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 880
+		Duration: 1760
 	Buildable:
 		Description: description-elf-redhall
 		BuildPaletteOrder: 30
@@ -123,7 +123,7 @@ elf-bluehall:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 880
+		Duration: 1760
 	Buildable:
 		Description: description-elf-bluehall
 		BuildPaletteOrder: 40
@@ -162,7 +162,7 @@ elf-manahall:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 960
+		Duration: 1920
 	Buildable:
 		Description: description-elf-manahall
 		BuildPaletteOrder: 50
@@ -201,7 +201,7 @@ elf-skyhall:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-elf-skyhall
 		BuildPaletteOrder: 60
@@ -236,7 +236,7 @@ elf-elflibrary:
 	Inherits@race: ^Elf
 	Inherits@conjured: ^ElfBuilding
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-elf-elflibrary
 		BuildPaletteOrder: 70
@@ -271,7 +271,7 @@ elf-manalibrary:
 	Inherits@race: ^Elf
 	Inherits@conjured: ^ElfBuilding
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-elf-manalibrary
 		BuildPaletteOrder: 80
@@ -306,7 +306,7 @@ elf-skylibrary:
 	Inherits@race: ^Elf
 	Inherits@conjured: ^ElfBuilding
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-elf-skylibrary
 		BuildPaletteOrder: 90
@@ -343,7 +343,7 @@ elf-bubble:
 	Inherits@race: ^Elf
 	Inherits@conjured: ^ElfBuilding
 	UnderConstruction:
-		Duration: 480
+		Duration: 960
 	Buildable:
 		Description: description-elf-bubble
 		BuildPaletteOrder: 35
@@ -378,7 +378,7 @@ elf-bubble:
 		RequiresCondition: !constructing && detection
 	Armament:
 		# Strikes on step 5 of its attack animation (.chr 0x247c).
-		FireDelay: 5
+		FireDelay: 10
 		Weapon: BubbleShot
 		RequiresCondition: !constructing
 	WithAttackAnimation:

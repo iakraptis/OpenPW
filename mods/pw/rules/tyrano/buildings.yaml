@@ -11,7 +11,7 @@ tyrano-tyranonest:
 		RequiresCondition: !constructing
 	AcceptsBerries:
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-tyrano-tyranonest
 		BuildPaletteOrder: 10
@@ -47,7 +47,7 @@ tyrano-nest:
 		Amount: 10
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 320
+		Duration: 640
 	Buildable:
 		Description: description-tyrano-nest
 		BuildPaletteOrder: 20
@@ -80,7 +80,7 @@ tyrano-eggnest:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 960
+		Duration: 1920
 	Buildable:
 		Description: description-tyrano-eggnest
 		BuildPaletteOrder: 30
@@ -116,7 +116,7 @@ tyrano-landnest:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-tyrano-landnest
 		BuildPaletteOrder: 40
@@ -153,7 +153,7 @@ tyrano-skynest:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-tyrano-skynest
 		BuildPaletteOrder: 50
@@ -188,7 +188,7 @@ tyrano-thrownest:
 	Inherits@race: ^Tyrano
 	Inherits@exits: ^Exits5x3
 	UnderConstruction:
-		Duration: 960
+		Duration: 1920
 	Buildable:
 		Description: description-tyrano-thrownest
 		BuildPaletteOrder: 60
@@ -225,7 +225,7 @@ tyrano-upgradenest:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 960
+		Duration: 1920
 	Buildable:
 		Description: description-tyrano-upgradenest
 		BuildPaletteOrder: 70
@@ -262,7 +262,7 @@ tyrano-landnisdos:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1760
+		Duration: 3520
 	Buildable:
 		Description: description-tyrano-landnisdos
 		BuildPaletteOrder: 80
@@ -295,7 +295,7 @@ tyrano-skynisdos:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1760
+		Duration: 3520
 	Buildable:
 		Description: description-tyrano-skynisdos
 		BuildPaletteOrder: 90
@@ -327,7 +327,7 @@ tyrano-ascomoid:
 	Inherits: ^Defense
 	Inherits@race: ^Tyrano
 	UnderConstruction:
-		Duration: 560
+		Duration: 1120
 	Buildable:
 		Description: description-tyrano-ascomoid
 		BuildPaletteOrder: 35

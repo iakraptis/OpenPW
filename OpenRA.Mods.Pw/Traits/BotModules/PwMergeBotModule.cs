@@ -30,7 +30,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly Dictionary<string, int> Into = [];
 
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 40;
+		public readonly int ScanInterval = PwTime.Ticks(40);
 
 		[Desc("Only units within this many cells of the main building merge.")]
 		public readonly int BaseRadius = 20;

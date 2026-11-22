@@ -24,7 +24,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwAbilityBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 25;
+		public readonly int ScanInterval = PwTime.Ticks(25);
 
 		[Desc("How far beyond its range a caster looks for a target, in cells (it walks up to cast).")]
 		public readonly int ExtraRange = 3;

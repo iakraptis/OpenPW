@@ -5,7 +5,7 @@ primitive-item-shield-of-peace:
 	Inherits: ^Item
 	Buildable:
 		Queue: primitive-blacksmith
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 200
 	Valued:
 		Cost: 100
@@ -21,7 +21,7 @@ primitive-item-fire-arrow:
 	Inherits: ^Item
 	Buildable:
 		Queue: primitive-blacksmith
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 210
 	Valued:
 		Cost: 150
@@ -37,7 +37,7 @@ primitive-item-venom-arrow:
 	Inherits: ^Item
 	Buildable:
 		Queue: primitive-blacksmith
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 220
 	Valued:
 		Cost: 150
@@ -53,7 +53,7 @@ primitive-item-spear-of-justice:
 	Inherits: ^Item
 	Buildable:
 		Queue: primitive-blacksmith
-		BuildDuration: 240
+		BuildDuration: 480
 		BuildPaletteOrder: 230
 	Valued:
 		Cost: 300

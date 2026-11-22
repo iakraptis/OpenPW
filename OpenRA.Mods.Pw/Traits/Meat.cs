@@ -31,7 +31,7 @@ namespace OpenRA.Mods.Pw.Traits
 	[Desc("Meat on the ground. Rots: loses 1 every RotInterval ticks, gone at 0.")]
 	public class PwMeatInfo : TraitInfo
 	{
-		public readonly int RotInterval = 32;
+		public readonly int RotInterval = PwTime.Ticks(32);
 
 		public override object Create(ActorInitializer init) { return new PwMeat(init, this); }
 	}
@@ -116,7 +116,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly WDist SearchRange = WDist.FromCells(6);
 
 		[Desc("Ticks between looks for meat while idle.")]
-		public readonly int SearchInterval = 32;
+		public readonly int SearchInterval = PwTime.Ticks(32);
 
 		[VoiceReference]
 		public readonly string Voice = "Action";
@@ -132,10 +132,10 @@ namespace OpenRA.Mods.Pw.Traits
 		public const string ShareOrderID = "PwShareMeat";
 
 		// Ticks the members have to meet before the meat is shared among those who made it.
-		const int ShareTimeout = 400;
+		const int ShareTimeout = 400 * PwTime.TicksPerOriginal;
 
 		// Ticks per meat eaten (1 HP healed each).
-		const int HealingInterval = 8;
+		const int HealingInterval = 8 * PwTime.TicksPerOriginal;
 
 		readonly PwMeatEaterInfo info;
 		readonly IHealth health;
@@ -251,7 +251,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwRegeneratesInfo : TraitInfo, Requires<IHealthInfo>
 	{
 		public readonly int Amount = 1;
-		public readonly int Interval = 32;
+		public readonly int Interval = PwTime.Ticks(32);
 
 		public override object Create(ActorInitializer init) { return new PwRegenerates(init.Self, this); }
 	}

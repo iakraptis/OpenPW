@@ -28,10 +28,10 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly WDist Radius = WDist.FromCells(8);
 
 		[Desc("Ticks between looks while idle.")]
-		public readonly int ScanInterval = 15;
+		public readonly int ScanInterval = PwTime.Ticks(15);
 
 		[Desc("Ticks a creature it gave up on (out of reach, flew off) is left alone.")]
-		public readonly int GiveUpTicks = 500;
+		public readonly int GiveUpTicks = PwTime.Ticks(500);
 
 		[GrantedConditionReference]
 		[Desc("Condition granted while hunting is on (none by default).")]

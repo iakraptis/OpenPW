@@ -50,7 +50,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly bool AutoHeal = false;
 
 		[Desc("Ticks between AutoHeal casts (the original's every 16 ticks, staggered between units).")]
-		public readonly int AutoHealInterval = 16;
+		public readonly int AutoHealInterval = PwTime.Ticks(16);
 
 		[Desc("AutoHeal starts on. The player turns it off and on with a right click on the spell's button (order ",
 			"PwSpellAutoCast); off, the spell is only cast when ordered.")]
@@ -84,7 +84,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("Ticks between steps. Spell art advances one frame per tick, so a blow on every frame is 1 (record 0x8bc ",
 			"lists the frames that hit); a jump portal throws every 4.")]
-		public readonly int StepInterval = 1;
+		public readonly int StepInterval = PwTime.Ticks(1);
 
 		[Desc("Ticks before the first step: the effect frame that hits (record 0x8bc), one frame per tick.")]
 		public readonly int Delay = 0;
@@ -256,7 +256,11 @@ namespace OpenRA.Mods.Pw.Traits
 
 			var interval = Math.Max(1, Info.AutoHealInterval);
 			if (autoHealCountdown < 0)
-				autoHealCountdown = (int)(self.ActorID % (uint)interval);
+			{
+				// Staggered by whole original ticks, as the original's (tick & 15) == (slot & 15).
+				var originalInterval = Math.Max(1, interval / PwTime.TicksPerOriginal);
+				autoHealCountdown = PwTime.Ticks((int)(self.ActorID % (uint)originalInterval));
+			}
 
 			if (autoHealCountdown-- > 0)
 				return;
@@ -464,7 +468,7 @@ namespace OpenRA.Mods.Pw.Traits
 			for (var t = 0; t < ticks; t += Info.StepInterval)
 			{
 				var delay = t + 1;
-				var show = t % 40 == 0 && Info.Image != null;
+				var show = t % PwTime.Ticks(40) == 0 && Info.Image != null;
 				world.AddFrameEndTask(w => w.Add(new OpenRA.Effects.DelayedAction(delay, () =>
 				{
 					if (show)

@@ -4,7 +4,7 @@
 
 TyranosaurusBite:
 	Inherits: ^Melee
-	ReloadDelay: 36
+	ReloadDelay: 72
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
 	Report: weapon-tyranos-hit-0.wav
@@ -14,21 +14,21 @@ TyranosaurusBite:
 
 TriceratopsBite:
 	Inherits: ^Melee
-	ReloadDelay: 52
+	ReloadDelay: 104
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 80
 	Report: weapon-dinos-hit-0.wav
 
 CeratosaurusBite:
 	Inherits: ^Melee
-	ReloadDelay: 34
+	ReloadDelay: 68
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 50
 	Report: weapon-dinos-hit-0.wav
 
 PachycephalosaurusBite:
 	Inherits: ^Melee
-	ReloadDelay: 42
+	ReloadDelay: 84
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 	Report: weapon-dinos-hit-0.wav
@@ -36,10 +36,10 @@ PachycephalosaurusBite:
 DilophosaurusSpit:
 	Inherits: ^Arrow
 	Inherits@poison: ^Poison
-	ReloadDelay: 36
+	ReloadDelay: 72
 	Range: 4c0
 	Projectile: PwBullet
-		Speed: 576
+		Speed: 288
 		Image: weapon-poison-arrows
 		Sequences: flight
 	Warhead@1Dam: SubtractArmorDamage
@@ -48,14 +48,14 @@ DilophosaurusSpit:
 
 VelociraptorBite:
 	Inherits: ^Melee
-	ReloadDelay: 24
+	ReloadDelay: 48
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
 	Report: weapon-velocis-hit-0.wav
 
 PicatyranoBite:
 	Inherits: ^Melee
-	ReloadDelay: 40
+	ReloadDelay: 80
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
 	Report: weapon-tyranos-hit-0.wav

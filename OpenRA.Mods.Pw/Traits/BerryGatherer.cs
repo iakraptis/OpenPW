@@ -27,7 +27,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int Amount = 12;
 
 		[Desc("Ticks of gathering per trip (default 48; the worker's gathering animation plays for this long).")]
-		public readonly int GatherTicks = 48;
+		public readonly int GatherTicks = PwTime.Ticks(48);
 
 		[Desc("How far to look for another bush when one is empty.")]
 		public readonly WDist SearchRange = WDist.FromCells(16);
@@ -58,7 +58,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly string FlightPalette = "effect";
 
 		[Desc("Speed of the flying berries: the record's 4 px per tick, x 710/576 as every missile (weapons/defaults.yaml).")]
-		public readonly int FlightSpeed = 158;
+		public readonly int FlightSpeed = PwTime.PerTick(158);
 
 		[VoiceReference]
 		public readonly string Voice = "Action";

@@ -3,7 +3,7 @@
 tyrano-dinos:
 	Defaults:
 		Filename: units/tyrano-dinos.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 10
@@ -56,7 +56,7 @@ tyrano-dinos:
 tyrano-masos:
 	Defaults:
 		Filename: units/tyrano-masos.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 28
@@ -85,7 +85,7 @@ tyrano-masos:
 tyrano-velocis:
 	Defaults:
 		Filename: units/tyrano-velocis.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 25
@@ -114,7 +114,7 @@ tyrano-velocis:
 tyrano-twinvelocis:
 	Defaults:
 		Filename: units/tyrano-twinvelocis.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 38
@@ -143,7 +143,7 @@ tyrano-twinvelocis:
 tyrano-dilophos:
 	Defaults:
 		Filename: units/tyrano-dilophos.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 19
@@ -172,7 +172,7 @@ tyrano-dilophos:
 tyrano-rhamphos:
 	Defaults:
 		Filename: units/tyrano-rhamphos.png
-		Tick: 40
+		Tick: 80
 	walk:
 		Facings: -8
 		Length: 8
@@ -196,7 +196,7 @@ tyrano-rhamphos:
 tyrano-twinrhamphos:
 	Defaults:
 		Filename: units/tyrano-twinrhamphos.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -217,7 +217,7 @@ tyrano-twinrhamphos:
 tyrano-pteras:
 	Defaults:
 		Filename: units/tyrano-pteras.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -242,7 +242,7 @@ tyrano-pteras:
 tyrano-trices:
 	Defaults:
 		Filename: units/tyrano-trices.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 18
@@ -271,7 +271,7 @@ tyrano-trices:
 tyrano-dsunguri:
 	Defaults:
 		Filename: units/tyrano-dsunguri.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -292,7 +292,7 @@ tyrano-dsunguri:
 tyrano-eggthrower:
 	Defaults:
 		Filename: units/tyrano-eggthrower.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 50
@@ -321,7 +321,7 @@ tyrano-eggthrower:
 tyrano-mutant:
 	Defaults:
 		Filename: units/tyrano-mutant.png
-		Tick: 40
+		Tick: 80
 		ZOffset: 8192
 	walk:
 		Facings: -8
@@ -346,7 +346,7 @@ tyrano-mutant:
 tyrano-tyranos:
 	Defaults:
 		Filename: units/tyrano-tyranos.png
-		Tick: 40
+		Tick: 80
 	stand:
 		Facings: -8
 		Length: 16
@@ -375,7 +375,7 @@ tyrano-tyranos:
 tyrano-tyranonest:
 	Defaults:
 		Filename: units/tyrano-tyranonest.png
-		Tick: 40
+		Tick: 80
 		Offset: -96, -64
 	make:
 		Start: 0
@@ -394,7 +394,7 @@ tyrano-tyranonest:
 tyrano-nest:
 	Defaults:
 		Filename: units/tyrano-nest.png
-		Tick: 40
+		Tick: 80
 		Offset: -48, -32
 	make:
 		Start: 0
@@ -413,7 +413,7 @@ tyrano-nest:
 tyrano-ascomoid:
 	Defaults:
 		Filename: units/tyrano-ascomoid.png
-		Tick: 40
+		Tick: 80
 		Offset: -32, -32
 	make:
 		Start: 0
@@ -435,7 +435,7 @@ tyrano-ascomoid:
 tyrano-eggnest:
 	Defaults:
 		Filename: units/tyrano-eggnest.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -32
 	make:
 		Start: 0
@@ -457,7 +457,7 @@ tyrano-eggnest:
 tyrano-landnest:
 	Defaults:
 		Filename: units/tyrano-landnest.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	make:
 		Start: 0
@@ -476,7 +476,7 @@ tyrano-landnest:
 tyrano-skynest:
 	Defaults:
 		Filename: units/tyrano-skynest.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	make:
 		Start: 0
@@ -495,7 +495,7 @@ tyrano-skynest:
 tyrano-thrownest:
 	Defaults:
 		Filename: units/tyrano-thrownest.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -514,7 +514,7 @@ tyrano-thrownest:
 tyrano-upgradenest:
 	Defaults:
 		Filename: units/tyrano-upgradenest.png
-		Tick: 40
+		Tick: 80
 		Offset: -80, -48
 	make:
 		Start: 0
@@ -536,7 +536,7 @@ tyrano-upgradenest:
 tyrano-landnisdos:
 	Defaults:
 		Filename: units/tyrano-landnisdos.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	make:
 		Start: 0
@@ -555,7 +555,7 @@ tyrano-landnisdos:
 tyrano-skynisdos:
 	Defaults:
 		Filename: units/tyrano-skynisdos.png
-		Tick: 40
+		Tick: 80
 		Offset: -64, -48
 	make:
 		Start: 0

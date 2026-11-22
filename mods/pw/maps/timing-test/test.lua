@@ -1,5 +1,5 @@
 -- Timings in original ticks (tickrate-plan.md): how long things take, measured in world ticks and divided by the world
--- ticks in one original tick (PwTest.TicksPerOriginal). Each is checked against the value measured before the tick
+-- ticks in one original tick (PwTime.TicksPerOriginal). Each is checked against the value measured before the tick
 -- change (Baseline), within 3% or 2 original ticks. A missing baseline only prints the value.
 -- Measured on 2026-11-22, one world tick per original tick (71 ms at normal speed).
 Baseline = {
@@ -19,11 +19,8 @@ Baseline = {
     ["velociraptor respawns"] = 2255,
 }
 
--- The world ticks of an original duration.
-T = function(originalTicks) return originalTicks * PwTest.TicksPerOriginal end
-
 Measure = function(name, startTick)
-    local ticks = (DateTime.GameTime - startTick) / PwTest.TicksPerOriginal
+    local ticks = (DateTime.GameTime - startTick) / PwTime.TicksPerOriginal
     local base = Baseline[name]
     if base == nil then
         print("TIMING " .. name .. " = " .. ticks)
@@ -37,7 +34,7 @@ end
 -- Measure from now until cond() holds (or the original-tick timeout passes: a failed check).
 Until = function(name, timeout, cond)
     local start = DateTime.GameTime
-    WaitFor(name .. " happens", T(timeout), cond, function(ok) if ok then Measure(name, start) end end)
+    WaitFor(name .. " happens", timeout, cond, function(ok) if ok then Measure(name, start) end end)
 end
 
 WorldLoaded = function()
@@ -48,25 +45,25 @@ WorldLoaded = function()
     -- Population room for the trained Soldier.
     for x = 2, 14, 3 do Actor.Create("primitive-house", true, { Owner = me, Location = CPos.New(x, 31) }) end
 
-    Later(T(5), Walk)
-    Later(T(5), Attack)
-    Later(T(5), Train)
-    Later(T(5), Construct)
-    Later(T(5), ManaRegen)
-    Later(T(5), Cure)
-    Later(T(5), Body)
-    Later(T(5), Respawn)
-    Later(T(5), Gather)
-    Later(T(5), Fly)
-    Later(T(5), Repair)
-    FinishWhenDone("TIMING", T(3500))
+    Later(5, Walk)
+    Later(5, Attack)
+    Later(5, Train)
+    Later(5, Construct)
+    Later(5, ManaRegen)
+    Later(5, Cure)
+    Later(5, Body)
+    Later(5, Respawn)
+    Later(5, Gather)
+    Later(5, Fly)
+    Later(5, Repair)
+    FinishWhenDone("TIMING", 3500)
 end
 
 -- A Soldier walks 10 cells.
 Walk = function()
     local soldier = Actor.Create("primitive-soldier", true, { Owner = me, Location = CPos.New(2, 2) })
     soldier.Stance = "HoldFire"
-    Later(T(2), function()
+    Later(2, function()
         soldier.Move(CPos.New(12, 2))
         Until("soldier walks 10 cells", 400, function() return soldier.Location == CPos.New(12, 2) end)
     end)
@@ -80,10 +77,10 @@ Attack = function()
     target.Stance = "HoldFire"
     local hits = { }
     Trigger.OnDamaged(target, function() hits[#hits + 1] = DateTime.GameTime end)
-    Later(T(2), function()
+    Later(2, function()
         local start = DateTime.GameTime
         soldier.Attack(target)
-        WaitFor("the Soldier hits three times", T(300), function() return #hits >= 3 end, function(ok)
+        WaitFor("the Soldier hits three times", 300, function() return #hits >= 3 end, function(ok)
             if not ok then return end
             Measure("first hit after the attack order", start)
             Measure("soldier attack cycle", hits[1] + (DateTime.GameTime - hits[2]))
@@ -97,7 +94,7 @@ Train = function()
     local house = Actor.Create("primitive-soldierhouse", true, { Owner = me, Location = CPos.New(20, 2) })
     local done = false
     Trigger.OnProduction(house, function() done = true end)
-    Later(T(2), function()
+    Later(2, function()
         PwTest.Train(house, "primitive-soldier")
         Until("soldierhouse trains a soldier", 600, function() return done end)
     end)
@@ -106,7 +103,7 @@ end
 -- A BuildMan beside the place builds a House.
 Construct = function()
     local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = CPos.New(2, 9) })
-    Later(T(2), function()
+    Later(2, function()
         PwTest.Construct(worker, "primitive-house", CPos.New(4, 9))
         Until("buildman builds a house", 900, function()
             local houses = Utils.Where(me.GetActorsByType("primitive-house"), function(h) return h.Location == CPos.New(4, 9) end)
@@ -119,7 +116,7 @@ end
 ManaRegen = function()
     local red = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(14, 9) })
     red.Stance = "HoldFire"
-    Later(T(2), function()
+    Later(2, function()
         PwTest.SetMana(red, 0)
         Until("redelf regains 10 mana", 400, function() return PwTest.Mana(red) >= 10 end)
     end)
@@ -131,7 +128,7 @@ Cure = function()
     local hurt = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(18, 12) })
     unicorn.Stance = "HoldFire"
     hurt.Stance = "HoldFire"
-    Later(T(2), function()
+    Later(2, function()
         hurt.Health = 10
         Until("cure heals 60 hp", 400, function() return hurt.Health >= 70 end)
     end)
@@ -141,7 +138,7 @@ end
 Body = function()
     local soldier = Actor.Create("primitive-soldier", true, { Owner = enemy, Location = CPos.New(2, 14) })
     soldier.Stance = "HoldFire"
-    Later(T(2), function()
+    Later(2, function()
         soldier.Kill()
         Later(1, function()
             Until("soldier body lies", 1000, function() return PwTest.Bodies(me, CPos.New(2, 14)) == 0 end)
@@ -152,7 +149,7 @@ end
 -- A dead Velociraptor comes back.
 Respawn = function()
     local raptor = Actor.Create("wild-velociraptor", true, { Owner = creeps, Location = CPos.New(30, 30) })
-    Later(T(2), function()
+    Later(2, function()
         raptor.Kill()
         Until("velociraptor respawns", 3000, function() return #creeps.GetActorsByType("wild-velociraptor") > 0 end)
     end)
@@ -163,7 +160,7 @@ Gather = function()
     Actor.Create("primitive-sanctuary", true, { Owner = me, Location = CPos.New(22, 20) })
     local bush = Actor.Create("berry-bush-1", true, { Owner = Player.GetPlayer("Neutral"), Location = CPos.New(16, 22) })
     local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = CPos.New(16, 24) })
-    Later(T(2), function()
+    Later(2, function()
         local earned = PwTest.Earned(me)
         PwTest.Gather(worker, bush)
         Until("buildman first berries", 400, function() return PwTest.Carried(worker) > 0 end)
@@ -175,7 +172,7 @@ end
 Fly = function()
     local flyer = Actor.Create("tyrano-pteras", true, { Owner = me, Location = CPos.New(2, 20) })
     flyer.Stance = "HoldFire"
-    Later(T(20), function()
+    Later(20, function()
         flyer.Move(CPos.New(10, 20))
         Until("pteras flies 8 cells", 400, function() return flyer.Location == CPos.New(10, 20) end)
     end)
@@ -185,7 +182,7 @@ end
 Repair = function()
     local house = Actor.Create("primitive-house", true, { Owner = me, Location = CPos.New(26, 10) })
     local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = CPos.New(26, 13) })
-    Later(T(2), function()
+    Later(2, function()
         house.Health = house.MaxHealth / 2
         local from = house.Health
         PwTest.OrderOn(worker, "PwRepairBuilding", house)

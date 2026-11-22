@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwHuntingBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between checks.")]
-		public readonly int ScanInterval = 50;
+		public readonly int ScanInterval = PwTime.Ticks(50);
 
 		[Desc("Units within this many cells of the main building hunt; further out they don't.")]
 		public readonly int HuntRadius = 14;

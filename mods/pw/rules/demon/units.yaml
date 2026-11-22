@@ -17,7 +17,7 @@ demon-insect:
 		XpPerLevel: 10
 		AttackGain: 18
 		ArmorGain: 11
-		AttackDelay: 12
+		AttackDelay: 24
 	UsesPopulation:
 		Amount: 1
 	# It builds but can't repair: the original's Insect isn't ordered onto damaged buildings.
@@ -27,7 +27,7 @@ demon-insect:
 	Buildable:
 		Description: description-demon-insect
 		Queue: demon-demonden
-		BuildDuration: 160
+		BuildDuration: 320
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: demon-insect
@@ -40,13 +40,14 @@ demon-insect:
 	PwArmor:
 		Value: 0
 	Mobile:
+		TurnSpeed: 256
 		Locomotor: hover-worker
-		Speed: 160
+		Speed: 80
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
-		FireDelay: 4
+		FireDelay: 8
 		Weapon: InsectHit
 
 demon-skeleton:
@@ -60,14 +61,14 @@ demon-skeleton:
 		XpPerLevel: 14
 		AttackGain: 27
 		ArmorGain: 19
-		AttackDelay: 19
+		AttackDelay: 38
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 1
 	Buildable:
 		Description: description-demon-skeleton
 		Queue: demon-deathden
-		BuildDuration: 224
+		BuildDuration: 448
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: demon-skeleton
@@ -80,12 +81,13 @@ demon-skeleton:
 	PwArmor:
 		Value: 2
 	Mobile:
-		Speed: 176
+		TurnSpeed: 256
+		Speed: 88
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 7 of its attack animation (.chr 0x247c).
-		FireDelay: 7
+		FireDelay: 14
 		Weapon: SkeletonArrow
 
 # Invisible (.chr 0x1f8 bit 0x2, ^Invisible).
@@ -102,14 +104,14 @@ demon-mudman:
 		XpPerLevel: 18
 		AttackGain: 27
 		ArmorGain: 18
-		AttackDelay: 31
+		AttackDelay: 62
 		DelayReduction: 0, 11, 22, 33, 44, 55, 66, 77, 88, 100
 	UsesPopulation:
 		Amount: 2
 	Buildable:
 		Description: description-demon-mudman
 		Queue: demon-deathden
-		BuildDuration: 400
+		BuildDuration: 800
 		BuildPaletteOrder: 20
 		Prerequisites: demon-dirtyportal
 	RenderSprites:
@@ -123,12 +125,13 @@ demon-mudman:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 192
+		TurnSpeed: 256
+		Speed: 96
 	RevealsShroud:
 		Range: 7c0
 	Armament:
 		# Strikes on step 5 of its attack animation (.chr 0x247c).
-		FireDelay: 5
+		FireDelay: 10
 		Weapon: MudManHit
 
 # Stone curse from level 1 (the help file's level 2).
@@ -144,7 +147,7 @@ demon-kelpa:
 		XpPerLevel: 14
 		AttackGain: 27
 		ArmorGain: 18
-		AttackDelay: 28
+		AttackDelay: 56
 		DelayReduction: 0, 5, 10, 15, 20, 25, 30, 35, 40, 50
 		SpellPower: 0, 0, 5, 10, 15, 20, 25, 30, 35, 50
 	UsesPopulation:
@@ -152,7 +155,7 @@ demon-kelpa:
 	Buildable:
 		Description: description-demon-kelpa
 		Queue: demon-magicden
-		BuildDuration: 320
+		BuildDuration: 640
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: demon-kelpa
@@ -165,12 +168,13 @@ demon-kelpa:
 	PwArmor:
 		Value: 5
 	Mobile:
-		Speed: 284
+		TurnSpeed: 256
+		Speed: 142
 	RevealsShroud:
 		Range: 8c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: CelberosFire
 	# Turns an enemy unit to stone: it can't move or attack. Record 11: 85 kill points; its 66 is the unit's stone
 	# counter, counted down in the unit's update (0x461b37; every tick, D).
@@ -179,7 +183,7 @@ demon-kelpa:
 		Target: Unit
 		Cost: 85
 		MinLevel: 1
-		PetrifyTicks: 66
+		PetrifyTicks: 132
 		Image: spell-stone-curse
 		Icon: ability-stone-curse
 		Sound: spell-stone-curse-0.wav
@@ -196,14 +200,14 @@ demon-kingdemon:
 		XpPerLevel: 18
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 35
+		AttackDelay: 70
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 6
 	Buildable:
 		Description: description-demon-kingdemon
 		Queue: demon-hell
-		BuildDuration: 560
+		BuildDuration: 1120
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: demon-kingdemon
@@ -216,12 +220,13 @@ demon-kingdemon:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 178
+		TurnSpeed: 256
+		Speed: 89
 	RevealsShroud:
 		Range: 11c0
 	Armament:
 		# Strikes on step 9 of its attack animation (.chr 0x247c).
-		FireDelay: 9
+		FireDelay: 18
 		Weapon: KingDemonFire
 
 # Rise death from the start (the help file's level 1).
@@ -237,7 +242,7 @@ demon-devil:
 		XpPerLevel: 30
 		AttackGain: 45
 		ArmorGain: 18
-		AttackDelay: 16
+		AttackDelay: 32
 		DelayReduction: 0, 3, 6, 9, 12, 15, 18, 21, 24, 30
 		RangeBonus: 0, 7, 14, 21, 28, 35, 42, 49, 56, 64
 	UsesPopulation:
@@ -245,7 +250,7 @@ demon-devil:
 	Buildable:
 		Description: description-demon-devil
 		Queue: demon-demonden
-		BuildDuration: 2880
+		BuildDuration: 5760
 		BuildPaletteOrder: 70
 		Prerequisites: demon-deathden, demon-flyden, demon-magicden, demon-hell, demon-dirtyportal, demon-highportal
 	RenderSprites:
@@ -259,12 +264,13 @@ demon-devil:
 	PwArmor:
 		Value: 35
 	Mobile:
-		Speed: 192
+		TurnSpeed: 256
+		Speed: 96
 	RevealsShroud:
 		Range: 11c0
 	Armament:
 		# Strikes on step 18 of its attack animation (.chr 0x247c).
-		FireDelay: 18
+		FireDelay: 36
 		Weapon: Apocalypse
 	# Raises three zombies around it (record 15: 100 kill points, 0x1ec 3).
 	PwSpell@RISE-DEATH:
@@ -302,7 +308,7 @@ demon-devil:
 		Range: 8c0
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
-		FireDelay: 4
+		FireDelay: 8
 		Weapon: ZombieHit
 
 demon-risezombie1:
@@ -310,14 +316,16 @@ demon-risezombie1:
 	RenderSprites:
 		Image: demon-risezombie1
 	Mobile:
-		Speed: 128
+		TurnSpeed: 256
+		Speed: 64
 
 demon-risezombie2:
 	Inherits: ^Zombie
 	RenderSprites:
 		Image: demon-risezombie2
 	Mobile:
-		Speed: 160
+		TurnSpeed: 256
+		Speed: 80
 
 # Flyers. The DeathEye scouts: unarmed, invisible and a detector (.chr 0x1f8 0x3: ^Invisible), seeing invisible units
 # over its sight, which Learn DeathEye Sight widens by 128 px. It doesn't gain levels.
@@ -341,7 +349,7 @@ demon-deatheye:
 	Buildable:
 		Description: description-demon-deatheye
 		Queue: demon-flyden
-		BuildDuration: 560
+		BuildDuration: 1120
 		BuildPaletteOrder: 10
 	RenderSprites:
 		Image: demon-deatheye
@@ -354,11 +362,14 @@ demon-deatheye:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 176
+		AltitudeVelocity: 0c22
+		Speed: 88
 	RevealsShroud:
 		Range: 10c0
 	# No attack animation (it has no attack).
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 
 # The Phantom carries 12 (.chr 0x188 on a transport), landed to load. It doesn't gain levels.
@@ -370,7 +381,7 @@ demon-phantom:
 	Buildable:
 		Description: description-demon-phantom
 		Queue: demon-flyden
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 20
 		Prerequisites: demon-magicden
 	RenderSprites:
@@ -384,18 +395,24 @@ demon-phantom:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 208
+		AltitudeVelocity: 0c22
+		Speed: 104
 		IdleBehavior: Land
 		LandableTerrainTypes: Clear, Ramp
 	RevealsShroud:
 		Range: 11c0
 	Cargo:
+		AfterLoadDelay: 16
+		BeforeUnloadDelay: 16
+		AfterUnloadDelay: 50
 		Types: Ground
 		MaxWeight: 12
 		UnloadVoice: Action
 	# Unload at a place (the command panel's Unload button).
 	PwUnloadAt:
 	WithInfantryBody@FLIGHT:
+		MinIdleDelay: 60
+		MaxIdleDelay: 220
 		DefaultAttackSequence: walk
 
 demon-darkbat:
@@ -406,14 +423,14 @@ demon-darkbat:
 		XpPerLevel: 14
 		AttackGain: 27
 		ArmorGain: 27
-		AttackDelay: 28
+		AttackDelay: 56
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 3
 	Buildable:
 		Description: description-demon-darkbat
 		Queue: demon-flyden
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 30
 		Prerequisites: demon-dirtyportal
 	RenderSprites:
@@ -427,12 +444,13 @@ demon-darkbat:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 240
+		AltitudeVelocity: 0c22
+		Speed: 120
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 8 of its attack animation (.chr 0x247c).
-		FireDelay: 8
+		FireDelay: 16
 		Weapon: NoiseWave
 
 demon-gargoyle:
@@ -444,14 +462,14 @@ demon-gargoyle:
 		XpPerLevel: 18
 		AttackGain: 36
 		ArmorGain: 27
-		AttackDelay: 36
+		AttackDelay: 72
 		RangeBonus: 0, 18, 36, 54, 72, 90, 108, 126, 144, 160
 	UsesPopulation:
 		Amount: 6
 	Buildable:
 		Description: description-demon-gargoyle
 		Queue: demon-hell
-		BuildDuration: 960
+		BuildDuration: 1920
 		BuildPaletteOrder: 20
 		Prerequisites: demon-highportal
 	RenderSprites:
@@ -465,12 +483,13 @@ demon-gargoyle:
 	PwArmor:
 		Value: 0
 	Aircraft:
-		Speed: 144
+		AltitudeVelocity: 0c22
+		Speed: 72
 	RevealsShroud:
 		Range: 12c0
 	Armament:
 		# Strikes on step 6 of its attack animation (.chr 0x247c).
-		FireDelay: 6
+		FireDelay: 12
 		Weapon: RedEye
 
 # The Warlock hovers (.chr 0x17c = 2, ^HoveringFiend): over ground and water, not over cliffs; ground weapons reach
@@ -487,7 +506,7 @@ demon-warlock:
 	Buildable:
 		Description: description-demon-warlock
 		Queue: demon-magicden
-		BuildDuration: 480
+		BuildDuration: 960
 		BuildPaletteOrder: 20
 		Prerequisites: demon-highportal
 	RenderSprites:
@@ -501,7 +520,8 @@ demon-warlock:
 	PwArmor:
 		Value: 0
 	Mobile:
-		Speed: 168
+		TurnSpeed: 256
+		Speed: 84
 	RevealsShroud:
 		Range: 7c0
 	# Record 13: a poisonous cloud, 3 damage to every living thing within 112 px every tick (all its frames hit,
@@ -512,7 +532,7 @@ demon-warlock:
 		Cost: 120
 		Damage: 3
 		Steps: 144
-		EffectTicks: 144
+		EffectTicks: 288
 		Radius: 3c512
 		LivingOnly: true
 		AffectsRelationships: Ally, Enemy, Neutral

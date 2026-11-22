@@ -30,7 +30,7 @@ namespace OpenRA.Mods.Pw.Traits
 	public class PwBaseBuilderBotModuleInfo : ConditionalTraitInfo
 	{
 		[Desc("Ticks between building decisions.")]
-		public readonly int DecisionInterval = 60;
+		public readonly int DecisionInterval = PwTime.Ticks(60);
 
 		[Desc("How many buildings may be under construction at once.")]
 		public readonly int MaxConcurrentConstructions = 1;

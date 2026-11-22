@@ -31,10 +31,10 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int MaxDefenders = 6;
 
 		[Desc("Ticks before the same attacker is answered again.")]
-		public readonly int ResponseInterval = 75;
+		public readonly int ResponseInterval = PwTime.Ticks(75);
 
 		[Desc("Ticks between scans for hostile wild creatures near the base and its workers.")]
-		public readonly int ScanInterval = 50;
+		public readonly int ScanInterval = PwTime.Ticks(50);
 
 		[Desc("Hostile wild creatures within this many cells of the bot's buildings or workers are attacked first.")]
 		public readonly int ClearRadius = 8;

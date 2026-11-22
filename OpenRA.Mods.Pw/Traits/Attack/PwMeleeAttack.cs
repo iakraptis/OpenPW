@@ -25,7 +25,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly int SearchRadius = 6;
 
 		[Desc("Ticks between checks of whether the target can be reached.")]
-		public readonly int CheckInterval = 15;
+		public readonly int CheckInterval = PwTime.Ticks(15);
 
 		public override object Create(ActorInitializer init) { return new PwMeleeAttack(init.Self, this); }
 	}

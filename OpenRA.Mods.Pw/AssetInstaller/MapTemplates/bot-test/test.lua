@@ -2,7 +2,8 @@
 -- workers; each is named after its race. The installer writes one map per battle (AssetInstaller/TestMaps.cs) and sets
 -- Bots, Checks and BattleName below. With Checks (bot-test), every bot must grow its workforce, build a base and an
 -- army, and guard it early with towers (by the main building and by the berries); they must fight early, and some bot
--- must destroy a building of another. The battle goes on until one bot is left or MaxTicks (a hard cap). Every 5000
+-- must destroy a building of another. The battle goes on until one bot is left or MaxTicks (a hard cap). Times are
+-- original ticks (testlib, Now()). Every 5000
 -- ticks each bot's state is printed; at the end, one "BATTLE RESULT" line per bot and a "BATTLE END" line, which
 -- tools/battle_stats.py collects.
 MaxTicks = 40000
@@ -98,10 +99,10 @@ Battle = function()
         if buildings + #army > 0 then
             alive[#alive + 1] = p
         elseif not score[p.InternalName].gone then
-            score[p.InternalName].gone = DateTime.GameTime
+            score[p.InternalName].gone = Now()
         end
     end
-    if #alive > 1 and DateTime.GameTime < MaxTicks - 300 then
+    if #alive > 1 and Now() < MaxTicks - 300 then
         Later(250, Battle)
         return
     end
@@ -116,7 +117,7 @@ Battle = function()
         local name = p.InternalName
         local buildings, army = Standing(p)
         local s = score[name]
-        print("bot: standing at tick " .. DateTime.GameTime .. ": " .. name .. " buildings " .. buildings .. ", army "
+        print("bot: standing at tick " .. Now() .. ": " .. name .. " buildings " .. buildings .. ", army "
             .. #army .. " (" .. Census(army) .. "), kills " .. s.kills .. ", losses " .. s.losses)
         print("BATTLE RESULT battle=" .. BattleName .. " bot=" .. name .. " race=" .. p.Faction
             .. " alive=" .. ((buildings + #army > 0) and 1 or 0) .. " gone=" .. (s.gone or -1)
@@ -127,7 +128,7 @@ Battle = function()
             .. " earned20k=" .. (s.earned[20000] or -1) .. " kills=" .. s.kills .. " losses=" .. s.losses
             .. " killsValue=" .. p.KillsCost .. " lossesValue=" .. p.DeathsCost)
     end
-    print("BATTLE END battle=" .. BattleName .. " tick=" .. DateTime.GameTime .. " winner=" .. winner .. " leader=" .. leader)
+    print("BATTLE END battle=" .. BattleName .. " tick=" .. Now() .. " winner=" .. winner .. " leader=" .. leader)
     battleOver = true
 end
 
@@ -182,15 +183,15 @@ Watch = function()
                 end)
             end
         end
-        if DateTime.GameTime >= nextReport[name] then
+        if Now() >= nextReport[name] then
             -- The berries earned by each 5000 ticks, for the economy comparison.
             if nextReport[name] > 0 then score[name].earned[nextReport[name]] = PwTest.Earned(p) end
             nextReport[name] = nextReport[name] + 5000
-            print("bot: tick " .. DateTime.GameTime .. " " .. name .. " workers " .. workers .. ", buildings " .. #base
+            print("bot: tick " .. Now() .. " " .. name .. " workers " .. workers .. ", buildings " .. #base
                 .. " (" .. Census(base) .. "), army " .. #army .. " (" .. Census(army) .. ", value " .. armyValue
                 .. "), berries " .. (p.Cash + p.Resources) .. " (earned " .. PwTest.Earned(p) .. ", spent "
                 .. PwTest.Spent(p) .. "), kills " .. score[name].kills .. ", losses " .. score[name].losses)
         end
     end
-    if not finished and not battleOver then Trigger.AfterDelay(250, Watch) end
+    if not finished and not battleOver then Trigger.AfterDelay(PwTime.Ticks(250), Watch) end
 end

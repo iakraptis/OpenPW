@@ -111,6 +111,10 @@ player:
 			tyrano-twinrhamphos: 1
 	SquadManagerBotModule@easy:
 		RequiresCondition: enable-easy-ai
+		# Twice the engine's ticks: the world runs two ticks per original tick (tickrate-plan.md).
+		AssignRolesInterval: 100
+		AttackForceInterval: 150
+		RushInterval: 1200
 		SquadSize: 8
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).
 		IgnoredEnemyTargetTypes: Wild
@@ -124,13 +128,13 @@ player:
 
 	PwBaseBuilderBotModule@medium:
 		RequiresCondition: enable-medium-ai
-		DecisionInterval: 50
+		DecisionInterval: 100
 		MinimumWorkers: 5
 		CashReserve: 150
 		PopulationMargin: 4
 		# A second main building by other berries after about 8 minutes (71 ms ticks); its towers come from the
 		# higher tower limits.
-		ExpansionDelay: 6750
+		ExpansionDelay: 13500
 		# One Trap by the berry bushes.
 		BushDefenses:
 			primitive-trap: 1
@@ -206,7 +210,7 @@ player:
 	# with every attack wave.
 	PwDetectorBotModule@medium:
 		RequiresCondition: enable-medium-ai
-		EscortDelay: 8500
+		EscortDelay: 17000
 	PwSpellBotModule@medium:
 		RequiresCondition: enable-medium-ai
 		# The Elves' spells for now; the Demons' come later.
@@ -220,6 +224,10 @@ player:
 			tyrano-twinrhamphos: 3
 	SquadManagerBotModule@medium:
 		RequiresCondition: enable-medium-ai
+		# Twice the engine's ticks: the world runs two ticks per original tick (tickrate-plan.md).
+		AssignRolesInterval: 100
+		AttackForceInterval: 150
+		RushInterval: 1200
 		SquadSize: 10
 		SquadSizeRandomBonus: 3
 		# Attack waves go for the other players, not wild creatures (PwDefenseBotModule deals with those).

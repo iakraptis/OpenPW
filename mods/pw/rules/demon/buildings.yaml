@@ -11,7 +11,7 @@ demon-demonden:
 		RequiresCondition: !constructing
 	AcceptsBerries:
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-demon-demonden
 		BuildPaletteOrder: 10
@@ -47,7 +47,7 @@ demon-tomb:
 		Amount: 10
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 320
+		Duration: 640
 	Buildable:
 		Description: description-demon-tomb
 		BuildPaletteOrder: 20
@@ -80,7 +80,7 @@ demon-deathden:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 880
+		Duration: 1760
 	Buildable:
 		Description: description-demon-deathden
 		BuildPaletteOrder: 30
@@ -118,7 +118,7 @@ demon-flyden:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-demon-flyden
 		BuildPaletteOrder: 40
@@ -156,7 +156,7 @@ demon-magicden:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-demon-magicden
 		BuildPaletteOrder: 50
@@ -194,7 +194,7 @@ demon-hell:
 		Amount: 1
 		RequiresCondition: !constructing
 	UnderConstruction:
-		Duration: 1120
+		Duration: 2240
 	Buildable:
 		Description: description-demon-hell
 		BuildPaletteOrder: 60
@@ -228,7 +228,7 @@ demon-dirtyportal:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Demon
 	UnderConstruction:
-		Duration: 1280
+		Duration: 2560
 	Buildable:
 		Description: description-demon-dirtyportal
 		BuildPaletteOrder: 70
@@ -262,7 +262,7 @@ demon-highportal:
 	Inherits: ^ProductionBuilding
 	Inherits@race: ^Demon
 	UnderConstruction:
-		Duration: 1440
+		Duration: 2880
 	Buildable:
 		Description: description-demon-highportal
 		BuildPaletteOrder: 80
@@ -298,7 +298,7 @@ demon-volcano:
 	Inherits: ^Defense
 	Inherits@race: ^Demon
 	UnderConstruction:
-		Duration: 560
+		Duration: 1120
 	Buildable:
 		Description: description-demon-volcano
 		BuildPaletteOrder: 35
@@ -333,7 +333,7 @@ demon-volcano:
 		RequiresCondition: !constructing && detection
 	Armament:
 		# Strikes on step 4 of its attack animation (.chr 0x247c).
-		FireDelay: 4
+		FireDelay: 8
 		Weapon: VolcanoShot
 		RequiresCondition: !constructing
 	# Its attack art is the fire alone: it rises above the crater, which stays.

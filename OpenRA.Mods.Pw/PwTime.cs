@@ -16,9 +16,12 @@ namespace OpenRA.Mods.Pw
 	public static class PwTime
 	{
 		// World ticks in one original tick.
-		public const int TicksPerOriginal = 1;
+		public const int TicksPerOriginal = 2;
 
 		// An original duration in world ticks.
 		public static int Ticks(int originalTicks) => originalTicks * TicksPerOriginal;
+
+		// A distance an original tick covers (pixels x 32, a WDist length) covered in one world tick, rounded.
+		public static int PerTick(int perOriginalTick) => (perOriginalTick + TicksPerOriginal / 2) / TicksPerOriginal;
 	}
 }

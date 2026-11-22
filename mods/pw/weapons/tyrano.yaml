@@ -4,21 +4,21 @@
 
 DinosHit:
 	Inherits: ^Melee
-	ReloadDelay: 31
+	ReloadDelay: 62
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 11
 	Report: weapon-dinos-hit-0.wav
 
 MasosHit:
 	Inherits: ^Melee
-	ReloadDelay: 20
+	ReloadDelay: 40
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 15
 	Report: weapon-masos-hit-0.wav
 
 VelocisHit:
 	Inherits: ^Melee
-	ReloadDelay: 29
+	ReloadDelay: 58
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
 	Report: weapon-velocis-hit-0.wav
@@ -27,7 +27,7 @@ VelocisHit:
 # The mod's damage (the original's 55).
 TwinVelocisHit:
 	Inherits: VelocisHit
-	ReloadDelay: 40
+	ReloadDelay: 80
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 60
 
@@ -35,24 +35,24 @@ TwinVelocisHit:
 PoisonSpit:
 	Inherits: ^Arrow
 	Inherits@poison: ^Poison
-	ReloadDelay: 29
+	ReloadDelay: 58
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-poison-arrows
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 25
 	Report: weapon-poison-arrows-0.wav
 
 RhamphosArrow:
 	Inherits: ^Arrow
-	ReloadDelay: 35
+	ReloadDelay: 70
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-rhamphos-arrows
 		Sequences: flight
-		Speed: 640
+		Speed: 320
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 27
 	Report: weapon-rhamphos-arrows-0.wav
@@ -63,12 +63,12 @@ RhamphosArrow:
 
 PterasAxe:
 	Inherits: ^Arrow
-	ReloadDelay: 41
+	ReloadDelay: 82
 	Range: 5c0
 	Projectile: PwBullet
 		Image: weapon-pteras-axe
 		Sequences: flight
-		Speed: 480
+		Speed: 240
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 30
 	Report: weapon-pteras-axe-0.wav
@@ -80,12 +80,12 @@ PterasAxe:
 # Trices: a boomerang (tumbling, not directional) at ground or air.
 CarrnosBoomerang:
 	Inherits: ^Arrow
-	ReloadDelay: 48
+	ReloadDelay: 96
 	Range: 7c0
 	Projectile: PwBullet
 		Image: weapon-carrnos-boomerang
 		Sequences: flight
-		Speed: 480
+		Speed: 240
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 50
 	Report: weapon-carrnos-boomerang-0.wav
@@ -97,12 +97,12 @@ CarrnosBoomerang:
 # EggThrower: a lobbed egg, ground only, splashing 48 px.
 EggThrow:
 	Inherits: ^Thrown
-	ReloadDelay: 70
+	ReloadDelay: 140
 	Range: 13c0
 	Projectile: PwBullet
 		Image: weapon-egg-throw
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 		Mode: 0
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
@@ -118,12 +118,12 @@ EggThrow:
 # Mutant: at ground or air, splashing 64 px.
 MutantArrow:
 	Inherits: ^Arrow
-	ReloadDelay: 64
+	ReloadDelay: 128
 	Range: 6c0
 	Projectile: PwBullet
 		Image: weapon-mutant-arrows
 		Sequences: flight
-		Speed: 576
+		Speed: 288
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 100
 		# The original damage falls to zero at the 64 px splash radius.
@@ -139,7 +139,7 @@ MutantArrow:
 TyranosHit:
 	Inherits: ^Melee
 	ValidTargets: Ground, Air
-	ReloadDelay: 41
+	ReloadDelay: 82
 	Warhead@1Dam: SubtractArmorDamage
 		ValidTargets: Ground, Air
 		Damage: 200
@@ -151,12 +151,12 @@ TyranosHit:
 # Ascomoid: the Tyrano tower's spore shot at ground or air (20 px per tick).
 AscomoidShot:
 	Inherits: ^Arrow
-	ReloadDelay: 29
+	ReloadDelay: 58
 	Range: 9c0
 	Projectile: PwBullet
 		Image: weapon-ascomoid
 		Sequences: flight
-		Speed: 640
+		Speed: 320
 	Warhead@1Dam: SubtractArmorDamage
 		Damage: 35
 	Report: weapon-ascomoid-0.wav

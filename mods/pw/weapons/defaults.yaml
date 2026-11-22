@@ -40,7 +40,7 @@
 ^Poison:
 	Warhead@Stun: GrantExternalCondition
 		Condition: stunned
-		Duration: 10
+		Duration: 20
 		Range: 0c256
 		ValidTargets: Ground, Air
 
