@@ -441,7 +441,8 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
     (1 HP every 8 ticks). Meat rots on the ground; other items don't.
   - Workers can be ordered onto damaged friendly buildings to repair them from range: up to 7 HP every 24 ticks,
     costing the OpenRA default 20% full-repair value prorated to each step's HP.
-  - Wild creatures respawn about 2 minutes after death (`PwRespawns`); predators attack nearby units
+  - Wild creatures respawn about 2 minutes after death (`PwRespawns`; the original also does, after a per-type wait:
+    docs/game/rules.md); predators attack nearby units
     (`^WildPredator`, `AttackAnything`, scan radius 3).
   - The Chief: Morale (+10% attack and armour to nearby units) and Fall out (80 mana, a DoT that leaves the target
     at 1 HP; needs Improve Fall out for Chief). Mana regenerates (`PwMana`).
@@ -576,7 +577,7 @@ dead.
     appears (`^ElfBuilding`).
   - Spells (`PwSpell`, now general): which spells a unit has, their level and their research come from the original
     (`.chr` 0x1f0, record 0x160 and 0x15c; C, `FUN_0046c3a5`), with mana costs. Shield and Mass temper use
-    `PwShield`, Resurrect uses the world's `PwGraveyard` (living deaths), and Fake makes a timed, harmless copy
+    `PwShield`, Resurrect raises one body (`PwBody`, the world's `PwGraveyard`), and Fake makes a timed, harmless copy
     (`ExternalCondition@ILLUSION` on `^Unit`). The Unicorn automatically heals the most injured nearby ally while it
     has mana. The ManaSpread refills casters' mana (`PwManaAura`), and Study Mana Potion Secret raises mana by 50.
   - Data fixes: the second "Study Divine being's Weapon Secret" (record 47) raises armour and is named so. The
@@ -682,7 +683,7 @@ dead.
     ground mutations (armour, weapon) are researched before more units (`PriorityResearch`).
   - Elf spells (2026-11-05, `PwSpellBotModule`): casters cast by what a spell does (blow on a unit, the one it
     kills or the dearest; area blow or portal where 3+ enemies stand, Meteor 6+; Cure under 60% health; Shield on an
-    ally under fire, Mass temper over 3+; Fake near a fight; Resurrect where 2+ fell; Teleport home under 35%
+    ally under fire, Mass temper over 3+; Fake near a fight; Resurrect on the dearest body; Teleport home under 35%
     health). Research that unlocks a spell comes first. The Unicorn and ManaSpread are trained (weights) and follow
     the main group. `Spells` lists the Elf spells; the Demon spells use the same module once listed.
   - Two levels (2026-11-12, branch `ai_diff`): Normal is renamed **Easy** (bot type `easy`; the installer's battle

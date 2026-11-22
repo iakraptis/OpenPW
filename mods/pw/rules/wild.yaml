@@ -5,6 +5,13 @@
 wild-tyranosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 10098 ticks after it dies (about 11 min 57 s), as the original:
+	# fall 18 + body 480 (.chr 0x13d0) + wait 9600 (.chr 0x18c).
+	PwRespawns:
+		Delay: 10098
+	# Its body lies 960 ticks (mod change: twice the original's 480, .chr 0x13d0, as every body).
+	PwBody:
+		Ticks: 960
 	# Mod change: it sees invisible units within 10 cells (no wild creature is a detector in the original, .chr 0x1f8).
 	DetectCloaked:
 		Range: 10c0
@@ -28,6 +35,10 @@ wild-tyranosaurus:
 wild-triceratops:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 6094 ticks after it dies (about 7 min 13 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 5760 (.chr 0x18c).
+	PwRespawns:
+		Delay: 6094
 	Tooltip:
 		Name: actor-wild-triceratops.name
 	Health:
@@ -49,6 +60,10 @@ wild-triceratops:
 wild-ceratosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 4174 ticks after it dies (about 4 min 56 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 3840 (.chr 0x18c).
+	PwRespawns:
+		Delay: 4174
 	Tooltip:
 		Name: actor-wild-ceratosaurus.name
 	Health:
@@ -68,6 +83,10 @@ wild-ceratosaurus:
 wild-pachycephalosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 3210 ticks after it dies (about 3 min 48 s), as the original:
+	# fall 10 + body 320 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
+	PwRespawns:
+		Delay: 3210
 	Tooltip:
 		Name: actor-wild-pachycephalosaurus.name
 	Health:
@@ -87,6 +106,10 @@ wild-pachycephalosaurus:
 wild-dilophosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 3214 ticks after it dies (about 3 min 48 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
+	PwRespawns:
+		Delay: 3214
 	# Mod change: it sees invisible units within 7 cells (no wild creature is a detector in the original, .chr 0x1f8).
 	DetectCloaked:
 		Range: 7c0
@@ -110,6 +133,10 @@ wild-dilophosaurus:
 wild-velociraptor:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 2254 ticks after it dies (about 2 min 40 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
+	PwRespawns:
+		Delay: 2254
 	Tooltip:
 		Name: actor-wild-velociraptor.name
 	Health:
@@ -128,6 +155,10 @@ wild-velociraptor:
 
 wild-brachiosaurus:
 	Inherits: ^Wild
+	# Back 8014 ticks after it dies (about 9 min 29 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 7680 (.chr 0x18c).
+	PwRespawns:
+		Delay: 8014
 	Tooltip:
 		Name: actor-wild-brachiosaurus.name
 	Health:
@@ -145,6 +176,10 @@ wild-brachiosaurus:
 
 wild-stegosaurus:
 	Inherits: ^Wild
+	# Back 6094 ticks after it dies (about 7 min 13 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 5760 (.chr 0x18c).
+	PwRespawns:
+		Delay: 6094
 	Tooltip:
 		Name: actor-wild-stegosaurus.name
 	Health:
@@ -162,6 +197,10 @@ wild-stegosaurus:
 
 wild-parasaurolophus:
 	Inherits: ^Wild
+	# Back 5134 ticks after it dies (about 6 min 5 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 4800 (.chr 0x18c).
+	PwRespawns:
+		Delay: 5134
 	Tooltip:
 		Name: actor-wild-parasaurolophus.name
 	Health:
@@ -179,6 +218,10 @@ wild-parasaurolophus:
 
 wild-saltasaurus:
 	Inherits: ^Wild
+	# Back 4174 ticks after it dies (about 4 min 56 s), as the original:
+	# fall 14 + body 320 (.chr 0x13d0) + wait 3840 (.chr 0x18c).
+	PwRespawns:
+		Delay: 4174
 	Tooltip:
 		Name: actor-wild-saltasaurus.name
 	Health:
@@ -196,6 +239,10 @@ wild-saltasaurus:
 
 wild-protoceratops:
 	Inherits: ^Wild
+	# Back 1290 ticks after it dies (about 1 min 32 s), as the original:
+	# fall 10 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
+	PwRespawns:
+		Delay: 1290
 	Tooltip:
 		Name: actor-wild-protoceratops.name
 	Health:
@@ -213,6 +260,10 @@ wild-protoceratops:
 
 wild-galimimus:
 	Inherits: ^Wild
+	# Back 1290 ticks after it dies (about 1 min 32 s), as the original:
+	# fall 10 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
+	PwRespawns:
+		Delay: 1290
 	Tooltip:
 		Name: actor-wild-galimimus.name
 	Health:
@@ -230,6 +281,10 @@ wild-galimimus:
 
 wild-psittacosaurus:
 	Inherits: ^Wild
+	# Back 970 ticks after it dies (about 1 min 9 s), as the original:
+	# fall 10 + body 320 (.chr 0x13d0) + wait 640 (.chr 0x18c).
+	PwRespawns:
+		Delay: 970
 	Tooltip:
 		Name: actor-wild-psittacosaurus.name
 	Health:
@@ -247,6 +302,10 @@ wild-psittacosaurus:
 
 wild-pteranodon:
 	Inherits: ^WildFlyer
+	# Back 2886 ticks after it dies (about 3 min 25 s), as the original:
+	# fall 6 + body 0 (.chr 0x13d0) + wait 2880 (.chr 0x18c).
+	PwRespawns:
+		Delay: 2886
 	Tooltip:
 		Name: actor-wild-pteranodon.name
 	Health:
@@ -262,6 +321,10 @@ wild-pteranodon:
 
 wild-rhamphorhynchus:
 	Inherits: ^WildFlyer
+	# Back 1926 ticks after it dies (about 2 min 17 s), as the original:
+	# fall 6 + body 0 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
+	PwRespawns:
+		Delay: 1926
 	Tooltip:
 		Name: actor-wild-rhamphorhynchus.name
 	Health:
@@ -277,6 +340,10 @@ wild-rhamphorhynchus:
 
 wild-plesiosaurs:
 	Inherits: ^WildSwimmer
+	# Back 2245 ticks after it dies (about 2 min 39 s), as the original:
+	# fall 5 + body 320 (.chr 0x13d0) + wait 1920 (.chr 0x18c).
+	PwRespawns:
+		Delay: 2245
 	Tooltip:
 		Name: actor-wild-plesiosaurs.name
 	Health:
@@ -294,6 +361,10 @@ wild-plesiosaurs:
 
 wild-peleneustes:
 	Inherits: ^WildSwimmer
+	# Back 1285 ticks after it dies (about 1 min 31 s), as the original:
+	# fall 5 + body 320 (.chr 0x13d0) + wait 960 (.chr 0x18c).
+	PwRespawns:
+		Delay: 1285
 	Tooltip:
 		Name: actor-wild-peleneustes.name
 	Health:
@@ -314,6 +385,13 @@ wild-peleneustes:
 wild-picatyrano:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Back 10098 ticks after it dies (about 11 min 57 s), as the original:
+	# fall 18 + body 480 (.chr 0x13d0) + wait 9600 (.chr 0x18c).
+	PwRespawns:
+		Delay: 10098
+	# Its body lies 960 ticks (mod change: twice the original's 480, .chr 0x13d0, as every body).
+	PwBody:
+		Ticks: 960
 	Tooltip:
 		Name: actor-wild-picatyrano.name
 	Health:

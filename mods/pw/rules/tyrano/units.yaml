@@ -351,6 +351,10 @@ tyrano-rhamphos:
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^Ranged
 	Inherits@disguise: ^DisguisableArmedHoverer
+	# Its art leaves no body (.chr 0x13d0 = 0): an unseen mark where it fell, which Resurrect can raise, shown as a
+	# grey dot only to a player with an AngelElf (mod change).
+	PwBody:
+		Marker: true
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 27

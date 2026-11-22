@@ -94,7 +94,25 @@ does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage k
   (C, `FUN_0046089a`).
 - Items on the ground count down every 32 ticks from a per-type period (table `0x5675fc`): Food 1, so meat loses 1
   per 32 ticks until gone; the other items 400 (C, `FUN_00462a30`). The mod keeps the other items until picked up.
-- Mod addition: dead wild creatures come back where they were placed after a long delay (`PwRespawns`).
+- Dead wild creatures come back, as in the original (C, `Pw.exe` 0x460b2a-0x460c5f, 2026-11-22): once a wild
+  creature's body is gone (below), it waits its type's `.chr` 0x18c in ticks (the training time field: Velociraptor
+  1920, Tyranosaurus 9600, Psittacosaurus 640), then stands again on the place where it was first put, wild (owner 8)
+  and whole. Resurrect takes it out of the dead for good. The mod (`PwRespawns`, each creature's `Delay` in
+  rules/wild.yaml) waits the same total from the death: fall, original body time and wait (Psittacosaurus 970 ticks,
+  about 69 seconds at the default speed; Velociraptor 2254, about 2 min 40 s; Tyranosaurus 10098, about 12 min).
+
+## Dead units and bodies
+
+A unit that dies goes to a list of dead units (C, `FUN_00462061`) and plays its die animation (`.chr` group 3), one
+frame a tick (C, `0x460ac0`). A ground unit then lies on the animation's last frame for its type's `.chr` 0x13d0
+ticks (C, `0x460b10` → `0x461faa`): 320 for most ground units, 480 for the Tyranosaurus and PicaTyrano, 0 for every
+flyer, the hovering Rhamphos and ManaSpread, the BowMachine and the Wizard, which vanish once they have fallen. Then
+the body is no longer drawn (unit 0x6c = 1, `FUN_004597ca`) and the unit leaves the list. A Fake copy (unit flag 0x10)
+leaves no body. While a unit falls or lies, Resurrect can raise it. The mod draws it with `PwBody` (on `^Unit`)
+and doubles every body's time (640 and 960 ticks: about 45 seconds for most at the default speed). Mod change: the
+flyers (flying machines too), the Rhamphos, the ManaSpread and the Wizard, whose art leaves nothing lying, leave a
+mark for 640 ticks that Resurrect can raise, drawn as a grey dot only for a player who owns an AngelElf;
+the BowMachine still leaves nothing.
 
 ## Repairs
 
@@ -250,9 +268,15 @@ unit (the shield pool of `0x478db8`, drained by damage in `FUN_00457d4b`), Mass 
 friendly units within 56 px; Teleport the Ranger to any explored place; Jump portal open 54 ticks (0x1e8, counted every
 tick, `0x478b6e`), throwing enemies that walk in every 4 ticks (`0x478a40`) 12 cells away (the landing is the mod's); Drop stone 200 within 64 px; Cure (below); Fake a copy of a unit, the caster's own, harmless, gone after 960 ticks (Fake's 0x1ec 30 ×
 32: the original's timer for summoned units); Meteor 60 meteors of 30 within 64 px, falling within 80 px of the
-place 7 to 54 ticks after the cast, the ManaSpread lost; Resurrect the living units that died within 64 px of the place lately, the caster's own,
-at half health. The ManaSpread's passive (.chr 0x1f8 bit 0x4, and its name) gives nearby casters mana (the amounts
+place 7 to 54 ticks after the cast, the ManaSpread lost; Resurrect (below). The ManaSpread's passive (.chr 0x1f8 bit 0x4, and its name) gives nearby casters mana (the amounts
 are the mod's). Magic.trt holds 16 icons (records 0-15): Cure, record 18, takes Vanishing's.
+
+**Resurrect** (record 10, the AngelElf; target type 4, a fallen unit; 80 mana, the mod's 84) raises one body (C, `Pw.exe`,
+2026-11-22). The target is the dead unit under the cursor (C, `FUN_00475104`): any unit type (not a building) that
+is dead, still in the dead list and seen by the player, whoever owned it. The cast (C, `0x479397`) gives the unit to
+the caster's player and stands it up with 0x1e8 (50) percent of its most health and 0x1ec (50) percent of its most
+mana. The mod raises the nearest body within 20 px of the click (`PwSpell`, `PwGraveyard`), a new unit of the same
+type (its levels are not kept); with no body there the spell is not cast.
 
 **Cure** (record 18, the Unicorn) is cast on its own, as a passive (C, `Pw.exe`, 2026-11-22):
 

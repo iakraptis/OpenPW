@@ -26,7 +26,9 @@ namespace OpenRA.Mods.Pw.Traits
 		"world keeps the timers).")]
 	public class PwRespawnsInfo : TraitInfo
 	{
-		[Desc("Ticks from death to return (1,690: about 2 minutes at the default speed).")]
+		[Desc("Ticks from death to return. Each creature sets the original's (Pw.exe 0x460b69): its fall, its body ",
+			"(.chr 0x13d0) and its type's wait (.chr 0x18c), counted from the death so the mod's longer bodies don't ",
+			"delay it.")]
 		public readonly int Delay = 1690;
 
 		public override object Create(ActorInitializer init) { return new PwRespawns(init, this); }
@@ -46,7 +48,7 @@ namespace OpenRA.Mods.Pw.Traits
 		void INotifyKilled.Killed(Actor self, AttackInfo e)
 		{
 			if (home != null)
-				self.World.WorldActor.TraitOrDefault<PwRespawner>()?.Schedule(self.Info.Name, self.Owner, home.Value, info.Delay);
+				self.World.WorldActor.TraitOrDefault<PwRespawner>()?.Schedule(self.Info.Name, self.ActorID, self.Owner, home.Value, info.Delay);
 		}
 	}
 
@@ -56,20 +58,23 @@ namespace OpenRA.Mods.Pw.Traits
 
 	public class PwRespawner : ITick
 	{
-		readonly List<(string Actor, Player Owner, CPos Home, int Due)> pending = [];
+		readonly List<(string Actor, uint Dead, Player Owner, CPos Home, int Due)> pending = [];
 		int now;
 
-		public void Schedule(string actor, Player owner, CPos home, int delay)
+		public void Schedule(string actor, uint dead, Player owner, CPos home, int delay)
 		{
-			pending.Add((actor, owner, home, now + delay));
+			pending.Add((actor, dead, owner, home, now + delay));
 		}
+
+		// The dead creature was raised by Resurrect (the original's raised unit leaves the dead for good).
+		public void Cancel(uint dead) => pending.RemoveAll(p => p.Dead == dead);
 
 		void ITick.Tick(Actor self)
 		{
 			now++;
 			for (var i = pending.Count - 1; i >= 0; i--)
 			{
-				var (actor, owner, home, due) = pending[i];
+				var (actor, _, owner, home, due) = pending[i];
 				if (now < due)
 					continue;
 

@@ -212,6 +212,9 @@ primitive-bowmachine:
 	Inherits@race: ^Primitive
 	Inherits@attack: ^Ranged
 	Inherits@morale: ^Morale
+	# .chr 0x13d0 = 0: no body, a machine (nothing to raise).
+	PwBody:
+		Ticks: 0
 	Passenger:
 		Weight: 4
 	UsesPopulation:

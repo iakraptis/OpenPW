@@ -11,6 +11,10 @@ elf-wizard:
 	Inherits@move: ^FootMovement
 	Inherits@race: ^Elf
 	Inherits@attack: ^Ranged
+	# Its art leaves no body (.chr 0x13d0 = 0): an unseen mark where it fell, which Resurrect can raise, shown as a
+	# grey dot only to a player with an AngelElf (mod change).
+	PwBody:
+		Marker: true
 	Passenger:
 		Weight: 1
 	PwLevels:
@@ -423,6 +427,10 @@ elf-pixie:
 elf-manaspread:
 	Inherits: ^LivingHoverer
 	Inherits@race: ^Elf
+	# Its art leaves no body (.chr 0x13d0 = 0): an unseen mark where it fell, which Resurrect can raise, shown as a
+	# grey dot only to a player with an AngelElf (mod change).
+	PwBody:
+		Marker: true
 	-Targetable@HOVER:
 	UsesPopulation:
 		Amount: 2
@@ -619,15 +627,19 @@ elf-angelelf:
 		Weapon: AngelRing
 	PwMana:
 		Max: 100
-	# Record 10: the living units that died within 64 px of the place lately come back, the AngelElf's own, at half
-	# health (its 0x1e8 50); 80 mana. "This spell can be cast on both friendly and hostile units."
+	# Record 10 (target 4, a fallen unit): the one body clicked (PwBody, while it lies) comes back, the AngelElf's own
+	# whoever owned it, at half health and half mana (its 0x1e8 and 0x1ec, 50 each; Pw.exe 0x479397). "This
+	# spell can be cast on both friendly and hostile units."
 	PwSpell@RESURRECT:
 		Name: resurrect
 		Target: Ground
-		ManaCost: 80
+		# Mod change: 84, the original's 80 and 5%.
+		ManaCost: 84
 		Resurrect: true
 		ResurrectHealth: 50
-		Radius: 2c0
+		ResurrectMana: 50
+		# How near the click the body must lie.
+		Radius: 0c640
 		Image: spell-resurrect
 		Icon: ability-resurrect
 		Sound: spell-resurrect-0.wav
