@@ -127,11 +127,12 @@ do
         WaitFor("the hunter kills both creatures around it", 3000, function() return raptor.IsDead and grazer.IsDead end, function(ok)
             if not ok then return end
             Check(deaths[1] == "wild-velociraptor", "the aggressive Velociraptor first (" .. table.concat(deaths, ", ") .. ")")
+            -- Checked now: the Galimimus comes back 1290 ticks after it dies (PwRespawns), and the Powerman may hunt it.
+            Check(flyer.Health == flyer.MaxHealth, "the hunting Powerman leaves the flying Pteranodon alone")
+            Check((brawler.Location - brawlerStart).Length <= 3, "the Powerman doesn't chase what it can't strike")
             WaitFor("the hunter picks up their meat", 1500, function() return PwTest.CarriedMeat(hunter) > 0 end, function()
                 Check(not farGrazer.IsDead, "a Galimimus outside its radius is left alone")
                 Check(not spareGrazer.IsDead and spareGrazer.Health == spareGrazer.MaxHealth, "a Knight that isn't hunting leaves the Galimimus beside it alone")
-                Check(flyer.Health == flyer.MaxHealth, "the hunting Powerman leaves the flying Pteranodon alone")
-                Check((brawler.Location - brawlerStart).Length <= 3, "the Powerman doesn't chase what it can't strike")
             end)
         end)
         Later(2, Together)

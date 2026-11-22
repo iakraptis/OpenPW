@@ -72,7 +72,8 @@
 		MoveSequence: walk
 		DefaultAttackSequence: attack
 	# Dead, it falls (its die animation, facing the way it fell) and its body lies for 640 ticks, about 45 seconds
-	# (mod change: twice the original's 320, .chr 0x13d0; flyers and machines set 0), while Resurrect can raise it (Pw.exe 0x460ac0). A Fake copy leaves nothing.
+	# (mod change: twice the original's 320, .chr 0x13d0), while Resurrect can raise it (Pw.exe 0x460ac0). Flyers and
+	# the Wizard leave a grey dot instead, the BowMachine nothing, a Fake copy nothing.
 	PwBody:
 		RequiresCondition: !illusion
 	WithDeathAnimation@ILLUSION:
@@ -205,9 +206,9 @@
 ^WildFlyer:
 	Inherits: ^Wild
 	PwTakeOff:
-	# No body: it vanishes once it has fallen (.chr 0x13d0 = 0).
+	# Its art leaves no body (.chr 0x13d0 = 0): a grey dot marks where it fell, which Resurrect can raise (mod change).
 	PwBody:
-		Ticks: 0
+		Marker: true
 	# The flight loops all the time, standing or moving, with no idle animation: hovering, an aircraft is idle and
 	# busy on alternate ticks, and each idle tick restarted the loop (the wings froze on the first frame).
 	-WithInfantryBody:
@@ -340,9 +341,10 @@
 # that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
 # (not ^Machine), since these targetables replace the ground one.
 ^AirMovement:
-	# No body: it vanishes once it has fallen (.chr 0x13d0 = 0 for every flyer).
+	# Its art leaves no body (.chr 0x13d0 = 0 for every flyer): a grey dot marks where it fell, which Resurrect can
+	# raise (mod change).
 	PwBody:
-		Ticks: 0
+		Marker: true
 	Targetable@AIR:
 		TargetTypes: Air, Machine
 		RequiresCondition: airborne

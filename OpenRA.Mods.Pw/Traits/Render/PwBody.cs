@@ -35,6 +35,10 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Ticks the body lies after the die animation.")]
 		public readonly int Ticks = 640;
 
+		[Desc("Its art ends with nothing to leave lying (flyers, the Wizard): once fallen, a grey dot marks the body ",
+			"instead (a mod addition: in the original these leave no body, so Resurrect can't reach them).")]
+		public readonly bool Marker = false;
+
 		[Desc("Resurrect can raise it. The original lets it raise any unit (0x475104 checks only that it is a unit, ",
 			"dead and seen).")]
 		public readonly bool Raisable = true;
@@ -66,7 +70,7 @@ namespace OpenRA.Mods.Pw.Traits
 			var palette = Info.IsPlayerPalette ? Info.Palette + self.Owner.InternalName : Info.Palette;
 
 			var grave = Info.Raisable ? world.WorldActor.TraitOrDefault<PwGraveyard>()?.Bury(self, lifetime) : null;
-			world.AddFrameEndTask(w => w.Add(new PwBodyEffect(w, pos, facing, image, Info.Sequence, palette, lifetime, grave)));
+			world.AddFrameEndTask(w => w.Add(new PwBodyEffect(w, pos, facing, image, Info.Sequence, palette, lifetime, grave, Info.Marker)));
 		}
 	}
 }

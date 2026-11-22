@@ -97,8 +97,9 @@ does it is not traced in `Pw.exe`; the record's 0x150, once taken for a damage k
 - Dead wild creatures come back, as in the original (C, `Pw.exe` 0x460b2a-0x460c5f, 2026-11-22): once a wild
   creature's body is gone (below), it waits its type's `.chr` 0x18c in ticks (the training time field: Velociraptor
   1920, Tyranosaurus 9600, Psittacosaurus 640), then stands again on the place where it was first put, wild (owner 8)
-  and whole. Resurrect takes it out of the dead for good. The mod (`PwRespawns`) waits 1690 ticks from the death for
-  every creature, not the per-type wait.
+  and whole. Resurrect takes it out of the dead for good. The mod (`PwRespawns`, each creature's `Delay` in
+  rules/wild.yaml) waits the same total from the death: fall, original body time and wait (Psittacosaurus 970 ticks,
+  about 69 seconds at the default speed; Velociraptor 2254, about 2 min 40 s; Tyranosaurus 10098, about 12 min).
 
 ## Dead units and bodies
 
@@ -108,7 +109,9 @@ ticks (C, `0x460b10` → `0x461faa`): 320 for most ground units, 480 for the Tyr
 flyer, the hovering Rhamphos and ManaSpread, the BowMachine and the Wizard, which vanish once they have fallen. Then
 the body is no longer drawn (unit 0x6c = 1, `FUN_004597ca`) and the unit leaves the list. A Fake copy (unit flag 0x10)
 leaves no body. While a unit falls or lies, Resurrect can raise it. The mod draws it with `PwBody` (on `^Unit`)
-and doubles every body's time (640 and 960 ticks: about 45 seconds for most at the default speed).
+and doubles every body's time (640 and 960 ticks: about 45 seconds for most at the default speed). Mod change: the
+flyers (flying machines too), the Rhamphos, the ManaSpread and the Wizard, whose art leaves nothing lying, leave a
+grey dot for 640 ticks that Resurrect can raise; the BowMachine still leaves nothing.
 
 ## Repairs
 
@@ -267,7 +270,7 @@ tick, `0x478b6e`), throwing enemies that walk in every 4 ticks (`0x478a40`) 12 c
 place 7 to 54 ticks after the cast, the ManaSpread lost; Resurrect (below). The ManaSpread's passive (.chr 0x1f8 bit 0x4, and its name) gives nearby casters mana (the amounts
 are the mod's). Magic.trt holds 16 icons (records 0-15): Cure, record 18, takes Vanishing's.
 
-**Resurrect** (record 10, the AngelElf; target type 4, a fallen unit; 80 mana) raises one body (C, `Pw.exe`,
+**Resurrect** (record 10, the AngelElf; target type 4, a fallen unit; 80 mana, the mod's 84) raises one body (C, `Pw.exe`,
 2026-11-22). The target is the dead unit under the cursor (C, `FUN_00475104`): any unit type (not a building) that
 is dead, still in the dead list and seen by the player, whoever owned it. The cast (C, `0x479397`) gives the unit to
 the caster's player and stands it up with 0x1e8 (50) percent of its most health and 0x1ec (50) percent of its most

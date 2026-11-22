@@ -351,9 +351,9 @@ tyrano-rhamphos:
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^Ranged
 	Inherits@disguise: ^DisguisableArmedHoverer
-	# .chr 0x13d0 = 0: no body.
+	# Its art leaves no body (.chr 0x13d0 = 0): a grey dot marks where it fell, which Resurrect can raise (mod change).
 	PwBody:
-		Ticks: 0
+		Marker: true
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 27
