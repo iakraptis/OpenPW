@@ -107,7 +107,8 @@ frame a tick (C, `0x460ac0`). A ground unit then lies on the animation's last fr
 ticks (C, `0x460b10` → `0x461faa`): 320 for most ground units, 480 for the Tyranosaurus and PicaTyrano, 0 for every
 flyer, the hovering Rhamphos and ManaSpread, the BowMachine and the Wizard, which vanish once they have fallen. Then
 the body is no longer drawn (unit 0x6c = 1, `FUN_004597ca`) and the unit leaves the list. A Fake copy (unit flag 0x10)
-leaves no body. While a unit falls or lies, Resurrect can raise it. The mod draws it with `PwBody` (on `^Unit`).
+leaves no body. While a unit falls or lies, Resurrect can raise it. The mod draws it with `PwBody` (on `^Unit`)
+and doubles every body's time (640 and 960 ticks: about 45 seconds for most at the default speed).
 
 ## Repairs
 

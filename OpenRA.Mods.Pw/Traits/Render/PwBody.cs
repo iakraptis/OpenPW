@@ -18,8 +18,9 @@ using OpenRA.Traits;
 namespace OpenRA.Mods.Pw.Traits
 {
 	[Desc("A unit that leaves a body (Pw.exe 0x460ac0, the dead units' update): it plays its die animation facing the ",
-		"way it fell, then lies on the last frame for Ticks (.chr 0x13d0: 320 for most ground units, 480 for the big ",
-		"Tyranosaurs, 0 for flyers and machines, which vanish once they have fallen). While it falls or lies, ",
+		"way it fell, then lies on the last frame for Ticks (the original's .chr 0x13d0: 320 for most ground units, 480 ",
+		"for the big Tyranosaurs, 0 for flyers and machines, which vanish once they have fallen; the mod doubles it, ",
+		"about 45 seconds at the default speed). While it falls or lies, ",
 		"Resurrect (PwSpell) can raise it (PwGraveyard).")]
 	public class PwBodyInfo : ConditionalTraitInfo, Requires<RenderSpritesInfo>
 	{
@@ -32,7 +33,7 @@ namespace OpenRA.Mods.Pw.Traits
 		public readonly bool IsPlayerPalette = true;
 
 		[Desc("Ticks the body lies after the die animation.")]
-		public readonly int Ticks = 320;
+		public readonly int Ticks = 640;
 
 		[Desc("Resurrect can raise it. The original lets it raise any unit (0x475104 checks only that it is a unit, ",
 			"dead and seen).")]

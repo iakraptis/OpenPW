@@ -10,7 +10,7 @@
 -- 7. Meteor (ManaSpread, after Study Meteor): it dies, meteors hurt the enemies there.
 -- 8. Resurrect (AngelElf, 80 mana): the enemy RedElf whose body lies there comes back, the caster's own, at half
 --    health and half mana; the Soldier lying beside it stays dead (one body a cast). Where no body lies, or once a
---    body is gone (its die animation and 320 ticks), it isn't cast and costs nothing.
+--    body is gone (its die animation and 640 ticks), it isn't cast and costs nothing.
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
 -- 10. Mass temper (WhiteElf, level 3): the friendly units around the place get a 160 shield.
 -- 11. Jump portal (Ranger, level 3): an enemy standing in the portal is thrown away.
@@ -305,8 +305,8 @@ Resurrect = function()
                 end)
             end)
         end)
-        -- The old body: the Soldier's die animation (14 ticks) and 320 more, then it is gone.
-        Later(360, function()
+        -- The old body: the Soldier's die animation (14 ticks) and 640 more, then it is gone.
+        Later(680, function()
             local before = PwTest.Mana(late)
             PwTest.CastAt(late, "resurrect", CPos.New(20, 22))
             Later(60, function()

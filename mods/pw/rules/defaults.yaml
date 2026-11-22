@@ -71,8 +71,8 @@
 		StandSequences: stand
 		MoveSequence: walk
 		DefaultAttackSequence: attack
-	# Dead, it falls (its die animation, facing the way it fell) and its body lies for 320 ticks (.chr 0x13d0; flyers
-	# and machines set 0), while Resurrect can raise it (Pw.exe 0x460ac0). A Fake copy leaves nothing.
+	# Dead, it falls (its die animation, facing the way it fell) and its body lies for 640 ticks, about 45 seconds
+	# (mod change: twice the original's 320, .chr 0x13d0; flyers and machines set 0), while Resurrect can raise it (Pw.exe 0x460ac0). A Fake copy leaves nothing.
 	PwBody:
 		RequiresCondition: !illusion
 	WithDeathAnimation@ILLUSION:
