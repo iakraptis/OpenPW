@@ -105,6 +105,7 @@ Hotkeys:
 	common|hotkeys/production-common.yaml
 	common|hotkeys/supportpowers.yaml
 	common|hotkeys/viewport.yaml
+	pw|hotkeys.yaml
 
 FluentMessages:
 	common|fluent/common.ftl

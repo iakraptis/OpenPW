@@ -40,8 +40,10 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly World world;
 		readonly SlotButtonWidget[] slots;
 
-		// The Attack slot's key: the engine's AttackMove hotkey (A by default, set in the hotkey settings).
+		// The Attack and Patrol slots' keys: the engine's AttackMove hotkey and PW's Patrol (hotkeys.yaml), A and P by
+		// default, set in the hotkey settings.
 		readonly HotkeyReference attackMoveKey;
+		readonly HotkeyReference patrolKey;
 		static readonly HotkeyReference NoKey = new();
 
 		[ObjectCreator.UseCtor]
@@ -49,6 +51,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		{
 			this.world = world;
 			attackMoveKey = modData.Hotkeys["AttackMove"];
+			patrolKey = modData.Hotkeys["Patrol"];
 			slots = widget.Children.OfType<SlotButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
 			{
@@ -68,7 +71,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var finished = producer?.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 			var queue = finished ? producer?.TraitsImplementing<ProductionQueue>().FirstOrDefault(q => q.Enabled) : null;
 
-			// Only training and spells cast on their own take the right button, and only Attack a key; in every
+			// Only training and spells cast on their own take the right button, and only Attack and Patrol a key; in every
 			// other use a right click passes through and no key is bound.
 			foreach (var slot in slots)
 			{
@@ -305,11 +308,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
 			slot.IsHighlighted = () => patrollers.All(p => p.IsDead || PwPatrol.IsPatrolling(p));
-			slot.GetTooltipText = () => FluentProvider.GetMessage("label-patrol");
+			slot.GetTooltipText = () => KeyLabel(FluentProvider.GetMessage("label-patrol"), patrolKey);
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-patrol");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () => world.OrderGenerator = new PatrolOrderGenerator(patrollers);
+			slot.Key = patrolKey;
 		}
 
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
