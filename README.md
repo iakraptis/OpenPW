@@ -2,7 +2,7 @@
 
 A restoration of **Primitive Wars** (Arxel Tribe, Wizard Soft, 2001) on the [OpenRA](https://www.openra.net)
 engine, built with the OpenRA Mod SDK. The engine is downloaded automatically by the first build, from our fork
-[iakraptis/OpenRA](https://github.com/iakraptis/OpenRA) (branch `jmods`: upstream OpenRA `bleed` plus our engine
+[iakraptis/OpenRA](https://github.com/iakraptis/OpenRA) (branch `netframe`: upstream OpenRA `bleed` plus our engine
 fixes, pinned by commit in `mod.config`).
 
 This repository holds only code, rules and documentation. No original game files are included: the asset installer
