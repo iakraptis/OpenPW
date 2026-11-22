@@ -40,10 +40,18 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		readonly World world;
 		readonly SlotButtonWidget[] slots;
 
+		// The Attack and Patrol slots' keys: the engine's AttackMove hotkey and PW's Patrol (hotkeys.yaml), A and P by
+		// default, set in the hotkey settings.
+		readonly HotkeyReference attackMoveKey;
+		readonly HotkeyReference patrolKey;
+		static readonly HotkeyReference NoKey = new();
+
 		[ObjectCreator.UseCtor]
-		public CommandPanelLogic(Widget widget, World world)
+		public CommandPanelLogic(Widget widget, World world, ModData modData)
 		{
 			this.world = world;
+			attackMoveKey = modData.Hotkeys["AttackMove"];
+			patrolKey = modData.Hotkeys["Patrol"];
 			slots = widget.Children.OfType<SlotButtonWidget>().Where(b => b.Id.StartsWith("SLOT_", System.StringComparison.Ordinal)).ToArray();
 			foreach (var slot in slots)
 			{
@@ -63,9 +71,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var finished = producer?.TraitOrDefault<UnderConstruction>()?.IsComplete ?? true;
 			var queue = finished ? producer?.TraitsImplementing<ProductionQueue>().FirstOrDefault(q => q.Enabled) : null;
 
-			// Only training takes the right button (ShowTraining); in every other use a right click passes through.
+			// Only training and spells cast on their own take the right button, and only Attack and Patrol a key; in every
+			// other use a right click passes through and no key is bound.
 			foreach (var slot in slots)
+			{
 				slot.OnRightClick = null;
+				slot.Key = NoKey;
+			}
 
 			if (builder != null)
 				ShowBuildList(builder);
@@ -276,12 +288,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
 			slot.IsHighlighted = () => false;
-			slot.GetTooltipText = () => FluentProvider.GetMessage("label-attack");
+			slot.GetTooltipText = () => KeyLabel(FluentProvider.GetMessage("label-attack"), attackMoveKey);
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-attack");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () => world.OrderGenerator =
 				new PwAttackMoveOrderGenerator(world, attackers.Where(a => !a.IsDead));
+			slot.Key = attackMoveKey;
 		}
 
 		// Then a click on the map: the units go back and forth between where they are and there, attacking every enemy
@@ -295,11 +308,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			slot.GetText = () => "";
 			slot.IsDisabled = () => false;
 			slot.IsHighlighted = () => patrollers.All(p => p.IsDead || PwPatrol.IsPatrolling(p));
-			slot.GetTooltipText = () => FluentProvider.GetMessage("label-patrol");
+			slot.GetTooltipText = () => KeyLabel(FluentProvider.GetMessage("label-patrol"), patrolKey);
 			slot.GetTooltipDesc = () => FluentProvider.GetMessage("tooltip-patrol");
 			slot.Get<SpriteWidget>("ICON").GetSprite = () => icon;
 			slot.Get<LabelWidget>("PROGRESS").GetText = () => "";
 			slot.OnClick = () => world.OrderGenerator = new PatrolOrderGenerator(patrollers);
+			slot.Key = patrolKey;
 		}
 
 		// A toggle: lit while every selected hunter hunts; a click turns hunting on for all of them (off when all hunt).
@@ -428,6 +442,13 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			return string.Join(", ", buildable.Prerequisites
 				.Where(p => !p.StartsWith('~') && !techTree.HasPrerequisites(new[] { p }))
 				.Select(p => world.Map.Rules.Actors.TryGetValue(p.TrimStart('!'), out var a) ? ActorName(a) : p));
+		}
+
+		// A label with its key, "Attack (A)", as the key is bound now.
+		static string KeyLabel(string label, HotkeyReference key)
+		{
+			var hotkey = key.GetValue();
+			return hotkey.IsValid() ? $"{label} ({hotkey.DisplayString()})" : label;
 		}
 
 		static string ActorName(ActorInfo info)

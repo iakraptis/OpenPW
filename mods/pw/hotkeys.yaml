@@ -1,0 +1,4 @@
+Patrol: P
+	Description: hotkey-description-patrol
+	Types: Unit
+	Contexts: player

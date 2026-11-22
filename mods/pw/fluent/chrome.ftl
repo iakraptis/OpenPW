@@ -170,3 +170,6 @@ tooltip-main-menu-intro-unavailable = The intro is not available yet.
 ## PwEndScreenWidget
 label-end-elapsed = Elapsed time { $time }
 label-end-continue = Click to continue
+
+## hotkeys.yaml
+hotkey-description-patrol = Patrol
