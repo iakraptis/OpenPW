@@ -59,33 +59,37 @@ DefaultOrderGenerator: UnitOrderGenerator
 
 # Primitive Wars runs its game logic in ticks of these lengths (Pw.exe 0x563ac4, docs/game/rules.md); the default
 # is 71 ms. All durations and speeds in the rules are original ticks, so they need no rescaling.
+# OrderLatency: in a multiplayer game an order is carried out this many network frames (3 ticks each) after it is
+# given, so that every player runs it on the same tick; a skirmish always uses 1. PW's ticks are long (the original's
+# 71 ms), so the values are chosen for about 0.4 s at each speed, as the engine's own mods have (RA: 0.36-0.48 s):
+# Timestep x 3 x OrderLatency. Fewer frames would feel quicker but stall more on a slow connection.
 GameSpeeds:
 	DefaultSpeed: default
 	Speeds:
 		fastest:
 			Name: options-game-speed.fastest
 			Timestep: 45
-			OrderLatency: 4
+			OrderLatency: 3
 		faster:
 			Name: options-game-speed.faster
 			Timestep: 55
-			OrderLatency: 4
+			OrderLatency: 2
 		fast:
 			Name: options-game-speed.fast
 			Timestep: 62
-			OrderLatency: 3
+			OrderLatency: 2
 		default:
 			Name: options-game-speed.normal
 			Timestep: 71
-			OrderLatency: 3
+			OrderLatency: 2
 		slower:
 			Name: options-game-speed.slower
 			Timestep: 100
-			OrderLatency: 3
+			OrderLatency: 1
 		slowest:
 			Name: options-game-speed.slowest
 			Timestep: 142
-			OrderLatency: 3
+			OrderLatency: 1
 		# The automated test maps only (5x normal): selected by their map options.
 		test:
 			Name: options-game-speed-test
