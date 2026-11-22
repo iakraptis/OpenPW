@@ -43,8 +43,8 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Enemies an area spell that kills its caster (Meteor) must reach.")]
 		public readonly int MinSacrificeTargets = 6;
 
-		[Desc("Graves a raising spell must reach.")]
-		public readonly int MinGraves = 2;
+		[Desc("Cost (Valued) a body must be worth for a raising spell (Resurrect: one body).")]
+		public readonly int MinRaiseValue = 300;
 
 		[Desc("Allies are healed below this share of their health, in percent.")]
 		public readonly int HealBelow = 60;
@@ -126,7 +126,7 @@ namespace OpenRA.Mods.Pw.Traits
 				return Flee(self);
 
 			if (spell.Resurrect)
-				return Graves(self, spell, reach);
+				return Graves(self, reach);
 
 			if (spell.Illusion)
 				return InFight(self) ? Unit(self, spell, reach, a => !Harmless(a), Cost) : Target.Invalid;
@@ -198,18 +198,16 @@ namespace OpenRA.Mods.Pw.Traits
 			return centre != null && count >= needed ? Target.FromPos(centre.CenterPosition) : Target.Invalid;
 		}
 
-		// Raising the dead: the grave within reach with the most graves around it.
-		Target Graves(Actor self, PwSpellInfo spell, WDist reach)
+		// Raising the dead: the most costly body within reach that the bot sees.
+		Target Graves(Actor self, WDist reach)
 		{
-			var since = world.WorldTick - spell.ResurrectAge;
-			var graves = world.WorldActor.Trait<PwGraveyard>().Recent(since)
-				.Where(g => (g.Position - self.CenterPosition).HorizontalLengthSquared <= (reach + spell.Radius).LengthSquared).ToList();
-			var (grave, count) = graves
+			var grave = world.WorldActor.Trait<PwGraveyard>().Open(world, player)
 				.Where(g => (g.Position - self.CenterPosition).HorizontalLengthSquared <= reach.LengthSquared)
-				.Select(g => (Grave: g, Count: graves.Count(o => (o.Position - g.Position).HorizontalLengthSquared <= spell.Radius.LengthSquared)))
-				.MaxByOrDefault(g => g.Count);
+				.Select(g => (Grave: g, Value: PwBotUtils.Cost(world.Map.Rules.Actors[g.Type])))
+				.Where(g => g.Value >= Info.MinRaiseValue)
+				.MaxByOrDefault(g => g.Value).Grave;
 
-			return count >= Info.MinGraves ? Target.FromPos(grave.Position) : Target.Invalid;
+			return grave != null ? Target.FromPos(grave.Position) : Target.Invalid;
 		}
 
 		// A caster about to die, in a fight, goes home.

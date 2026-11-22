@@ -134,13 +134,14 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Condition the copy's ExternalCondition grants.")]
 		public readonly string IllusionCondition = "illusion";
 
-		[Desc("The living units that died within Radius of the target place in the last ResurrectAge ticks come back, ",
-			"the caster's own, with ResurrectHealth percent of their health (PwGraveyard).")]
+		[Desc("The body (PwBody) at the target place, within Radius, that the caster's owner sees comes back, the ",
+			"caster's own whoever owned it, with ResurrectHealth and ResurrectMana percent of its most (Pw.exe ",
+			"0x479397: record 10's 0x1e8 and 0x1ec). With no body there, it isn't cast.")]
 		public readonly bool Resurrect = false;
 
-		public readonly int ResurrectAge = 1500;
-
 		public readonly int ResurrectHealth = 50;
+
+		public readonly int ResurrectMana = 50;
 
 		[ActorReference]
 		[Desc("Units raised around the caster, Summon[i] for the i-th (repeating).")]
@@ -235,6 +236,9 @@ namespace OpenRA.Mods.Pw.Traits
 			if (Info.Target == PwSpellTarget.Ground && target.Type == TargetType.Invalid)
 				return;
 
+			if (Info.Resurrect && FindBody(self, target.CenterPosition) == null)
+				return;
+
 			self.QueueActivity(order.Queued, new CastSpell(self, this, target));
 		}
 
@@ -280,9 +284,18 @@ namespace OpenRA.Mods.Pw.Traits
 		// Called by CastSpell once the caster is in range, facing the target.
 		public void Release(Actor self, Target target) => Cast(self, target, ordered: true);
 
+		// Resurrect's body at the place, the one the caster's owner sees there.
+		public PwGraveyard.Grave FindBody(Actor self, WPos pos) =>
+			self.World.WorldActor.TraitOrDefault<PwGraveyard>()?.Find(self.World, self.Owner, pos, Info.Radius);
+
 		void Cast(Actor self, Target target, bool ordered)
 		{
 			if (!IsReady(self))
+				return;
+
+			// The body may have gone while the caster came: then nothing is spent.
+			var body = Info.Resurrect ? FindBody(self, target.CenterPosition) : null;
+			if (Info.Resurrect && body == null)
 				return;
 
 			if (Info.Cost > 0)
@@ -354,8 +367,11 @@ namespace OpenRA.Mods.Pw.Traits
 			if (Info.Illusion && victim != null)
 				world.AddFrameEndTask(w => MakeIllusion(self, victim, w));
 
-			if (Info.Resurrect)
-				world.AddFrameEndTask(w => RaiseDead(self, pos, w));
+			if (body != null)
+			{
+				world.WorldActor.Trait<PwGraveyard>().Take(body);
+				world.AddFrameEndTask(w => RaiseDead(self, body, w));
+			}
 
 			if (Info.SummonCount > 0 && Info.Summon.Length > 0)
 				world.AddFrameEndTask(w => Raise(self, w));
@@ -499,30 +515,28 @@ namespace OpenRA.Mods.Pw.Traits
 				?.GrantCondition(copy, self);
 		}
 
-		// The recent dead around the place rise, the caster's own.
-		void RaiseDead(Actor self, WPos pos, World w)
+		// The body rises where it lay, the caster's own (the original hands the dead unit to the caster's player,
+		// 0x4793bf), with part of its health and mana. A wild creature raised doesn't also come back wild later.
+		void RaiseDead(Actor self, PwGraveyard.Grave grave, World w)
 		{
-			if (self.IsDead || !self.IsInWorld)
+			w.WorldActor.TraitOrDefault<PwRespawner>()?.Cancel(grave.ActorID);
+
+			var mobile = w.Map.Rules.Actors[grave.Type].TraitInfoOrDefault<MobileInfo>();
+			var cell = w.Map.FindTilesInCircle(grave.Cell, 3)
+				.Where(c => mobile == null || mobile.CanEnterCell(w, null, c))
+				.Select(c => (CPos?)c)
+				.FirstOrDefault();
+			if (cell == null)
 				return;
 
-			foreach (var grave in w.WorldActor.Trait<PwGraveyard>().Take(pos, Info.Radius, w.WorldTick - Info.ResurrectAge))
-			{
-				var mobile = w.Map.Rules.Actors[grave.Type].TraitInfoOrDefault<MobileInfo>();
-				var cell = w.Map.FindTilesInCircle(grave.Cell, 3)
-					.Where(c => mobile == null || mobile.CanEnterCell(w, null, c))
-					.Select(c => (CPos?)c)
-					.FirstOrDefault();
-				if (cell == null)
-					continue;
-
-				w.CreateActor(grave.Type,
-				[
-					new LocationInit(cell.Value),
-					new OwnerInit(self.Owner),
-					new FacingInit(grave.Facing),
-					new HealthInit(Info.ResurrectHealth),
-				]);
-			}
+			var risen = w.CreateActor(grave.Type,
+			[
+				new LocationInit(cell.Value),
+				new OwnerInit(self.Owner),
+				new FacingInit(grave.Facing),
+				new HealthInit(Info.ResurrectHealth),
+			]);
+			risen.TraitOrDefault<PwMana>()?.SetShare(Info.ResurrectMana);
 		}
 
 		// The raised units appear on free cells around the caster, as its owner's.
@@ -616,10 +630,10 @@ namespace OpenRA.Mods.Pw.Traits
 		}
 	}
 
-	[Desc("Attach to the world: the living units that died lately, which Resurrect (PwSpell) brings back.")]
+	[Desc("Attach to the world: the dead units whose bodies still lie (PwBody), which Resurrect (PwSpell) raises.")]
 	public class PwGraveyardInfo : TraitInfo
 	{
-		[Desc("Deaths kept, the oldest forgotten first.")]
+		[Desc("Bodies kept at most, the oldest forgotten first.")]
 		public readonly int Capacity = 200;
 
 		public override object Create(ActorInitializer init) { return new PwGraveyard(this); }
@@ -627,22 +641,32 @@ namespace OpenRA.Mods.Pw.Traits
 
 	public class PwGraveyard
 	{
-		public readonly struct Grave
+		// A body: open from the death until its time is up (Expires, a world tick) or Resurrect takes it.
+		public sealed class Grave
 		{
 			public readonly string Type;
+			public readonly uint ActorID;
 			public readonly CPos Cell;
 			public readonly WPos Position;
 			public readonly WAngle Facing;
 			public readonly int Tick;
+			public readonly int Expires;
+			public bool Taken { get; private set; }
 
-			public Grave(string type, CPos cell, WPos position, WAngle facing, int tick)
+			public Grave(Actor dead, int lifetime)
 			{
-				Type = type;
-				Cell = cell;
-				Position = position;
-				Facing = facing;
-				Tick = tick;
+				Type = dead.Info.Name;
+				ActorID = dead.ActorID;
+				Cell = dead.Location;
+				Position = dead.CenterPosition;
+				Facing = dead.TraitOrDefault<IFacing>()?.Facing ?? WAngle.Zero;
+				Tick = dead.World.WorldTick;
+				Expires = Tick + lifetime;
 			}
+
+			public bool IsOpen(int now) => !Taken && now < Expires;
+
+			public void Take() => Taken = true;
 		}
 
 		readonly PwGraveyardInfo info;
@@ -653,23 +677,33 @@ namespace OpenRA.Mods.Pw.Traits
 			this.info = info;
 		}
 
-		public void Bury(Actor dead)
+		public Grave Bury(Actor dead, int lifetime)
 		{
-			graves.Add(new Grave(dead.Info.Name, dead.Location, dead.CenterPosition,
-				dead.TraitOrDefault<IFacing>()?.Facing ?? WAngle.Zero, dead.World.WorldTick));
+			var now = dead.World.WorldTick;
+			graves.RemoveAll(g => !g.IsOpen(now));
+			var grave = new Grave(dead, lifetime);
+			graves.Add(grave);
 			if (graves.Count > info.Capacity)
 				graves.RemoveAt(0);
+
+			return grave;
 		}
 
-		// The graves dug no earlier than the tick (the AI looks where to raise the dead).
-		public IEnumerable<Grave> Recent(int since) => graves.Where(g => g.Tick >= since);
+		// The bodies lying now that the player sees (the AI looks for one to raise).
+		public IEnumerable<Grave> Open(World world, Player viewer) =>
+			graves.Where(g => g.IsOpen(world.WorldTick) && (viewer == null || viewer.Shroud.IsVisible(g.Position)));
 
-		// The graves within the radius of the place, dug no earlier than the tick; they are emptied.
-		public List<Grave> Take(WPos pos, WDist radius, int since)
+		// The body under the place (within the radius, the nearest), if the player sees it: Resurrect's target, one
+		// body as the original's (FUN_00475104: the dead unit under the cursor, seen by the player).
+		public Grave Find(World world, Player viewer, WPos pos, WDist radius) =>
+			Open(world, viewer)
+				.Where(g => (g.Position - pos).HorizontalLengthSquared <= radius.LengthSquared)
+				.MinByOrDefault(g => (g.Position - pos).HorizontalLengthSquared);
+
+		public void Take(Grave grave)
 		{
-			var taken = graves.Where(g => g.Tick >= since && (g.Position - pos).HorizontalLengthSquared <= radius.LengthSquared).ToList();
-			graves.RemoveAll(taken.Contains);
-			return taken;
+			grave.Take();
+			graves.Remove(grave);
 		}
 	}
 }

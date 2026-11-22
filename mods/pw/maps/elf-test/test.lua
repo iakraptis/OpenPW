@@ -8,7 +8,9 @@
 --    each cast 2 HP a tick for 15 ticks (so 62 to 90 HP in 48 ticks, not the 96 of 2 HP every tick). Fake (after
 --    Study Fake): a harmless copy.
 -- 7. Meteor (ManaSpread, after Study Meteor): it dies, meteors hurt the enemies there.
--- 8. Resurrect (AngelElf, 80 mana): a unit that fell there comes back, the caster's own, at half health.
+-- 8. Resurrect (AngelElf, 80 mana): the enemy RedElf whose body lies there comes back, the caster's own, at half
+--    health and half mana; the Soldier lying beside it stays dead (one body a cast). Where no body lies, or once a
+--    body is gone (its die animation and 320 ticks), it isn't cast and costs nothing.
 -- 9. Study Mana Potion Secret raises an Elf's mana by 50.
 -- 10. Mass temper (WhiteElf, level 3): the friendly units around the place get a 160 shield.
 -- 11. Jump portal (Ranger, level 3): an enemy standing in the portal is thrown away.
@@ -274,19 +276,43 @@ end
 
 Resurrect = function()
     local angel = Actor.Create("elf-angelelf", true, { Owner = me, Location = CPos.New(16, 26) })
-    local fallen = Actor.Create("primitive-soldier", true, { Owner = enemy, Location = CPos.New(20, 27) })
+    local fallen = Actor.Create("elf-redelf", true, { Owner = enemy, Location = CPos.New(20, 27) })
+    local beside = Actor.Create("primitive-soldier", true, { Owner = enemy, Location = CPos.New(21, 27) })
+    local late = Actor.Create("elf-angelelf", true, { Owner = me, Location = CPos.New(16, 22) })
+    local old = Actor.Create("primitive-soldier", true, { Owner = enemy, Location = CPos.New(20, 22) })
     angel.Stance = "HoldFire"
+    late.Stance = "HoldFire"
     Later(2, function()
         fallen.Kill()
+        beside.Kill()
+        old.Kill()
         Later(5, function()
-            PwTest.CastAt(angel, "resurrect", CPos.New(20, 27))
-            WaitFor("Resurrect raises the fallen Soldier, the AngelElf's own", 200, function()
-                return #me.GetActorsByType("primitive-soldier") == 1
-            end, function(ok)
-                if not ok then return end
-                local risen = me.GetActorsByType("primitive-soldier")[1]
-                Check(risen.Health == risen.MaxHealth / 2, "at half health (" .. risen.Health .. ")")
-                Check(PwTest.Mana(angel) < 30, "Resurrect costs 80 mana (" .. PwTest.Mana(angel) .. " left)")
+            local before = PwTest.Mana(angel)
+            PwTest.CastAt(angel, "resurrect", CPos.New(25, 27))
+            Later(40, function()
+                Check(PwTest.Mana(angel) >= before, "with no body there, Resurrect isn't cast (" .. PwTest.Mana(angel) .. " mana)")
+                PwTest.CastAt(angel, "resurrect", CPos.New(20, 27))
+                WaitFor("Resurrect raises the fallen RedElf, the AngelElf's own", 200, function()
+                    return #me.GetActorsByType("elf-redelf") > 0 and #Utils.Where(me.GetActorsByType("elf-redelf"),
+                        function(a) return a.Location == CPos.New(20, 27) end) == 1
+                end, function(ok)
+                    if not ok then return end
+                    local risen = Utils.Where(me.GetActorsByType("elf-redelf"), function(a) return a.Location == CPos.New(20, 27) end)[1]
+                    Check(risen.Health == risen.MaxHealth / 2, "at half health (" .. risen.Health .. ")")
+                    Check(PwTest.Mana(risen) == PwTest.MaxMana(risen) / 2, "with half its mana (" .. PwTest.Mana(risen) .. ")")
+                    Check(PwTest.Mana(angel) < 30, "Resurrect costs 80 mana (" .. PwTest.Mana(angel) .. " left)")
+                    Check(#me.GetActorsByType("primitive-soldier") == 0, "the Soldier beside it stays dead")
+                end)
+            end)
+        end)
+        -- The old body: the Soldier's die animation (14 ticks) and 320 more, then it is gone.
+        Later(360, function()
+            local before = PwTest.Mana(late)
+            PwTest.CastAt(late, "resurrect", CPos.New(20, 22))
+            Later(60, function()
+                Check(PwTest.Mana(late) >= before, "a body gone, Resurrect isn't cast (" .. PwTest.Mana(late) .. " mana)")
+                Check(#Utils.Where(me.GetActorsByType("primitive-soldier"), function(a) return a.Location == CPos.New(20, 22) end) == 0,
+                    "and the Soldier stays dead")
             end)
         end)
     end)

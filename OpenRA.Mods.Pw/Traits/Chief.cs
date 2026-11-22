@@ -49,6 +49,9 @@ namespace OpenRA.Mods.Pw.Traits
 
 		public void Give(int amount) => Mana = Math.Min(Max, Mana + amount);
 
+		// A share of its most, in percent (a unit Resurrect raises).
+		public void SetShare(int percent) => Mana = Max * percent / 100;
+
 		public bool Spend(int amount)
 		{
 			if (Mana < amount)

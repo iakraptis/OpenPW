@@ -5,6 +5,9 @@
 wild-tyranosaurus:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Its body lies 480 ticks (.chr 0x13d0).
+	PwBody:
+		Ticks: 480
 	# Mod change: it sees invisible units within 10 cells (no wild creature is a detector in the original, .chr 0x1f8).
 	DetectCloaked:
 		Range: 10c0
@@ -314,6 +317,9 @@ wild-peleneustes:
 wild-picatyrano:
 	Inherits: ^Wild
 	Inherits@attack: ^WildPredator
+	# Its body lies 480 ticks (.chr 0x13d0).
+	PwBody:
+		Ticks: 480
 	Tooltip:
 		Name: actor-wild-picatyrano.name
 	Health:

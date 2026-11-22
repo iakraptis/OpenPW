@@ -89,7 +89,7 @@ The bots cast the Elf spells with `PwSpellBotModule` (rules/ai.yaml). They choos
 | Shield | on an army unit under fire, without a shield |
 | Mass temper | over 3 or more unshielded army units, in a fight |
 | Fake | on the most expensive unit nearby, in a fight |
-| Resurrect | where 2 or more units fell lately |
+| Resurrect | on the most costly body in reach (cost 300 or more) |
 | Teleport | the Ranger flees home below 35% health, with enemies near |
 
 Cure needs no orders: every 16 ticks the Unicorn casts it on the unit Cure was last cast on, otherwise the most hurt

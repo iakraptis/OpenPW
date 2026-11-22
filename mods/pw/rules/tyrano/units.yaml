@@ -351,6 +351,9 @@ tyrano-rhamphos:
 	Inherits@race: ^Tyrano
 	Inherits@attack: ^Ranged
 	Inherits@disguise: ^DisguisableArmedHoverer
+	# .chr 0x13d0 = 0: no body.
+	PwBody:
+		Ticks: 0
 	PwLevels:
 		XpPerLevel: 14
 		AttackGain: 27

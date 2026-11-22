@@ -71,10 +71,15 @@
 		StandSequences: stand
 		MoveSequence: walk
 		DefaultAttackSequence: attack
-	WithDeathAnimation:
+	# Dead, it falls (its die animation, facing the way it fell) and its body lies for 320 ticks (.chr 0x13d0; flyers
+	# and machines set 0), while Resurrect can raise it (Pw.exe 0x460ac0). A Fake copy leaves nothing.
+	PwBody:
+		RequiresCondition: !illusion
+	WithDeathAnimation@ILLUSION:
 		DeathSequence: die
 		UseDeathTypeSuffix: false
 		CrushedSequence: die
+		RequiresCondition: illusion
 	# Stone curse (a Kelpa's spell, PwSpell) turns it to stone for a while: grey, it can't move or attack (the
 	# movement and attack mixins pause on "petrified", "stunned" or "bubbled").
 	ExternalCondition@PETRIFIED:
@@ -200,6 +205,9 @@
 ^WildFlyer:
 	Inherits: ^Wild
 	PwTakeOff:
+	# No body: it vanishes once it has fallen (.chr 0x13d0 = 0).
+	PwBody:
+		Ticks: 0
 	# The flight loops all the time, standing or moving, with no idle animation: hovering, an aircraft is idle and
 	# busy on alternate ticks, and each idle tick restarted the loop (the wings froze on the first frame).
 	-WithInfantryBody:
@@ -332,6 +340,9 @@
 # that reach it (arrows, stones) hit them; landed they count as ground units. Units using it inherit ^Unit directly
 # (not ^Machine), since these targetables replace the ground one.
 ^AirMovement:
+	# No body: it vanishes once it has fallen (.chr 0x13d0 = 0 for every flyer).
+	PwBody:
+		Ticks: 0
 	Targetable@AIR:
 		TargetTypes: Air, Machine
 		RequiresCondition: airborne
