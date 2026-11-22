@@ -29,7 +29,7 @@ TwinVelocisHit:
 	Inherits: VelocisHit
 	ReloadDelay: 80
 	Warhead@1Dam: SubtractArmorDamage
-		Damage: 60
+		Damage: 58
 
 # Dilophos: spits poison at ground or air (18 px per tick).
 PoisonSpit:

@@ -161,7 +161,7 @@ tyrano-twinvelocis:
 		Cost: 0
 	# The mod's health (the original's 350): as much as its two parts, so merging isn't a loss.
 	Health:
-		HP: 400
+		HP: 375
 	PwArmor:
 		Value: 0
 	Mobile:
@@ -570,7 +570,7 @@ tyrano-mutant:
 		Cost: 0
 	# The mod's health (the original's 550): more than its three parts' 730, so merging isn't a loss.
 	Health:
-		HP: 900
+		HP: 780
 	PwArmor:
 		Value: 0
 	Aircraft:
