@@ -1,8 +1,9 @@
 # The actor template tree (plan.md §3.1). Templates hold behaviour, never balance: HP, attack, armour, cost, speed,
 # sight and build time live on the concrete actors, with the values from docs/game/<race>.md.
 #
-# Units in the original are measured in pixels and ticks; here 1 px = 32 WDist (a 32 px cell is 1c0) and one tick
-# is one world tick (the game speeds in mod.yaml are the original ones).
+# Units in the original are measured in pixels and ticks; here 1 px = 32 WDist (a 32 px cell is 1c0) and one original
+# tick is two world ticks (PwTime, tickrate-plan.md): durations in the rules are twice the original's, speeds per tick
+# half. Comments quote the original's ticks (docs/game).
 
 # Everything that takes part in a game.
 ^ExistsInWorld:

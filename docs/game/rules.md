@@ -13,8 +13,12 @@ the options slider shows `15 − index` (C, `0x456a1d`, `0x42a5e2`).
 All durations in the data are ticks: training and construction (`.chr` 0x18c), upgrades (`Upgrade.upi` 0x204),
 items. Animations advance one sequence step per tick. A walking unit moves each tick by the walk step for its
 facing and current frame, plus the speed upgrade's bonus on each moving axis (C, `0x45d1a0`). So the "speed"
-in the race tables is pixels per tick: Soldier 5.8 px per tick, about 82 px per second at the default speed. For OpenRA, the mod's `GameSpeeds` can use the same table (`Timestep: 71` as default), so durations
-and speeds keep their original values without rescaling.
+in the race tables is pixels per tick: Soldier 5.8 px per tick, about 82 px per second at the default speed.
+
+The mod runs two world ticks for each original tick (`PwTime.TicksPerOriginal`, tickrate-plan.md): its game speeds
+are half the table's (36 ms at normal speed, close to OpenRA's 40), so the rules hold durations twice the original's
+and speeds per tick half (Soldier 2.9 px per world tick), and every animation frame lasts two world ticks. The tables
+in docs/game keep the original's ticks.
 
 ## Resources
 
