@@ -60,7 +60,7 @@ DefaultOrderGenerator: UnitOrderGenerator
 # Primitive Wars runs its game logic in ticks of these lengths (Pw.exe 0x563ac4, docs/game/rules.md); the default
 # is 71 ms. All durations and speeds in the rules are original ticks, so they need no rescaling.
 # OrderLatency: in a multiplayer game an order is carried out this many network frames after it is given, so that every
-# player runs it on the same tick; a skirmish always uses 1. NetFrameInterval: ticks per network frame (engine fork,
+# player runs it on the same tick; a skirmish keeps 3 ticks (engine fork). NetFrameInterval: ticks per network frame (engine fork,
 # GameSpeed.NetFrameInterval; the engine's default is 3). PW's ticks are long (the original's 71 ms), so a frame is one
 # tick (an order waits at most one tick to be sent) and OrderLatency gives about 0.4 s at each speed, as the engine's
 # own mods have (RA: 0.36-0.48 s): Timestep x OrderLatency. Fewer would feel quicker but stall more on a slow line.
