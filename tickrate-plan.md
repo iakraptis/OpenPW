@@ -132,3 +132,35 @@ Game speeds (ms per world tick):
   to catch these.
 - **Engine defaults** may change the feel (snappier turns, for example). Each needs a decision.
 - **Performance:** twice the ticks per second costs more CPU.
+
+## Status (2026-11-22, branch tickrate)
+
+Done:
+
+- Step 0: `timing-test` (14 timings in original ticks) and `utility --dump-numbers` (15,170 rule numbers, defaults
+  included).
+- Steps 1-4: `PwTime.TicksPerOriginal = 2`; `tools/rescale_ticks.py` rescaled 700 values in the rules, weapons, map
+  rules and sequences, and its `--check` finds no number that changed differently from its table. Engine defaults the
+  rules relied on are set explicitly, doubled. The C# defaults read `PwTime.Ticks`/`PwTime.PerTick`; fixed tick
+  constants are scaled; the speed upgrade stays in original pixels per tick; Cure's stagger counts original ticks; the
+  installer writes the doubled frame times.
+- Step 5: option 2, the engine's `NetFrameInterval` of 3 with OrderLatency for about 0.4 s at every speed.
+- Step 6: instead of doubling the tests' numbers, `testlib.lua` takes original ticks (`Later`, `WaitFor`,
+  `FinishWhenDone`, `Now`) through the `PwTime` Lua global; the battle template and the campaign script count original
+  ticks (the campaign's triggers run once an original tick).
+- Step 7: rules.md, the `mod.yaml` and `defaults.yaml` comments. Rule comments quote the original's ticks.
+- Step 8 so far:
+  - `timing-test`: every timing within 2% of before (repair 2% faster, the rest within 1%).
+  - All 13 test maps: 12 pass; `bot-medium-test` fails the same check as before the change ("MedElf's attack has a
+    Pixie with it").
+  - bot-test (4 bots, 39,750 original ticks): the economy keeps its pace (berries earned by 5k, 10k and 20k ticks
+    as in the last runs); it ran 18% longer at the test speed, so two world ticks cost about 1.2 times one.
+    At normal speed that is about 20 ms of work in each 72 ms original tick.
+
+Left:
+
+- Watch a game: animations and attack hits on their frames.
+- A multiplayer game on one PC, judged for smoothness.
+- The engine fork's network frame change (`netframe`) is no longer used (NetFrameInterval is the engine's 3): the mod
+  could go back to `jmods` once `NetFrameInterval` is taken out of `mod.yaml`.
+- Release notes: replays and saves from earlier versions won't play.
