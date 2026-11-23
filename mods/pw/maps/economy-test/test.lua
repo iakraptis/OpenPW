@@ -76,6 +76,7 @@ do
         end
 
         local most, ticks = 0, 0
+        local full = PwTest.Berries(taken)
         local function Sample()
             most = math.max(most, PwTest.Gatherers(taken))
             ticks = ticks + 1
@@ -85,8 +86,8 @@ do
             end
 
             Check(most == 1, "never more than one worker gathers a bush at once (most at once: " .. most .. ")")
-            Check(PwTest.Berries(taken) < 4000, "the bush they were sent to is gathered")
-            Check(PwTest.Berries(free) < 4000, "a worker finding its bush taken gathers the free one 4 cells away")
+            Check(PwTest.Berries(taken) < full, "the bush they were sent to is gathered")
+            Check(PwTest.Berries(free) < full, "a worker finding its bush taken gathers the free one 4 cells away")
         end
 
         Later(2, function()
@@ -165,26 +166,34 @@ do
     end
 
     Limit = function()
-        Check(PwTest.PopulationLimit(me) == 10, "Sanctuary and PowerHouse provide 10 (" .. PwTest.PopulationLimit(me) .. ")")
-        Check(PwTest.PopulationUsed(me) == 3, "three Buildmen use 3 (" .. PwTest.PopulationUsed(me) .. ")")
+        local limit = PwTest.Rule("primitive-sanctuary", "ProvidesPopulation", "Amount")
+            + PwTest.Rule("primitive-powerhouse", "ProvidesPopulation", "Amount")
+        local workers = 3 * PwTest.Rule("primitive-buildman", "UsesPopulation", "Amount")
+        local powerman = PwTest.Rule("primitive-powerman", "UsesPopulation", "Amount")
+        local houseAdds = PwTest.Rule("primitive-house", "ProvidesPopulation", "Amount")
+        Check(PwTest.PopulationLimit(me) == limit, "Sanctuary and PowerHouse provide " .. limit .. " (" .. PwTest.PopulationLimit(me) .. ")")
+        Check(PwTest.PopulationUsed(me) == workers, "three Buildmen use " .. workers .. " (" .. PwTest.PopulationUsed(me) .. ")")
 
-        -- 3 + 3 Powermen x 2 = 9; a fourth (11) is over the limit.
-        for i = 1, 4 do PwTest.Train(powerhouse, "primitive-powerman") end
-        Check(PwTest.PopulationUsed(me) == 9, "only three of four Powermen start (" .. PwTest.PopulationUsed(me) .. " used)")
+        -- As many Powermen as fit start; one more is over the limit.
+        local fit = math.floor((limit - workers) / powerman)
+        for i = 1, fit + 1 do PwTest.Train(powerhouse, "primitive-powerman") end
+        local used = workers + fit * powerman
+        Check(PwTest.PopulationUsed(me) == used,
+            "only " .. fit .. " of " .. (fit + 1) .. " Powermen start (" .. PwTest.PopulationUsed(me) .. " used, expected " .. used .. ")")
 
         PwTest.Construct(builder, "primitive-house", At(4, 24))
         Later(5, function()
             local house = me.GetActorsByType("primitive-house")[1]
             Check(house ~= nil, "a Buildman starts a House")
             if house == nil then return end
-            Check(PwTest.PopulationLimit(me) == 10, "a House under construction provides nothing")
+            Check(PwTest.PopulationLimit(me) == limit, "a House under construction provides nothing")
             WaitFor("the Buildman goes inside the House to build it", 300, function() return not builder.IsInWorld end)
             WaitFor("the House is finished", 2000, function() return PwTest.Finished(house) end, function(ok)
                 if not ok then return end
-                Check(PwTest.PopulationLimit(me) == 20, "a finished House adds 10 (" .. PwTest.PopulationLimit(me) .. ")")
+                Check(PwTest.PopulationLimit(me) == limit + houseAdds, "a finished House adds " .. houseAdds .. " (" .. PwTest.PopulationLimit(me) .. ")")
                 Later(2, function() Check(builder.IsInWorld and not builder.IsDead, "the Buildman comes out of the finished House") end)
                 PwTest.Train(powerhouse, "primitive-powerman")
-                Check(PwTest.PopulationUsed(me) >= 11, "with the House, the fourth Powerman starts")
+                Check(PwTest.PopulationUsed(me) >= used + powerman, "with the House, the Powerman left over starts")
             end)
         end)
     end

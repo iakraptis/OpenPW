@@ -1,6 +1,13 @@
 -- Test: Combat. Merged from combat-test, defence-test, levels-test (research/tools/merge_tests.py): each is a section of
 -- this map, 54 cells from the next, with its own players; At(x, y) is a cell of the section. A
 -- section's checks carry its name.
+
+-- What a hit does (SubtractArmorDamage): the weapon's damage plus the attacker's attack bonus, minus the target type's
+-- armour, at least 1; the numbers come from the rules, so a balance change doesn't break the checks.
+local function Hit(weapon, bonus, targetType)
+    return math.max(1, PwTest.Weapon(weapon, "Damage") + bonus - PwTest.RuleOr(targetType, "PwArmor", "Value", 0))
+end
+
 local BaseCheck, BaseWaitFor, BaseFinish = Check, WaitFor, FinishWhenDone
 local Sections, Deadline = { }, 0
 
@@ -31,10 +38,10 @@ do
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
 
-        Later(5, function() FirstHit("primitive-powerman", "primitive-buildman", 25, At(4, 4), At(5, 4)) end)
-        Later(5, function() FirstHit("primitive-soldier", "primitive-powerman", 17, At(4, 12), At(10, 12)) end)
-        Later(5, function() FirstHit("primitive-buildman", "primitive-powerman-shield-of-peace", 1, At(4, 20), At(5, 20)) end)
-        Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", 10, At(20, 20), At(22, 14)) end)
+        Later(5, function() FirstHit("primitive-powerman", "primitive-buildman", Hit("PowerManHit", 0, "primitive-buildman"), At(4, 4), At(5, 4)) end)
+        Later(5, function() FirstHit("primitive-soldier", "primitive-powerman", Hit("SoldierArrow", 0, "primitive-powerman"), At(4, 12), At(10, 12)) end)
+        Later(5, function() FirstHit("primitive-buildman", "primitive-powerman-shield-of-peace", Hit("BuildManHit", 0, "primitive-powerman-shield-of-peace"), At(4, 20), At(5, 20)) end)
+        Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", Hit("BuildManHit", 0, "primitive-powerhouse"), At(20, 20), At(22, 14)) end)
         Later(5, MissileModes)
         Later(5, MeleeBlocked)
         Later(5, AttackMove)
@@ -196,7 +203,7 @@ do
             return healthBeforeMove ~= nil and movingTarget.Health < healthBeforeMove
         end, function(ok)
             if ok then
-                Check(healthBeforeMove - movingTarget.Health == 17,
+                Check(healthBeforeMove - movingTarget.Health == Hit("SoldierArrow", 0, "primitive-powerman"),
                     "the first tracking arrow hits the moved target exactly once")
             end
         end)
@@ -220,8 +227,9 @@ do
         end, function(ok)
             if not ok then return end
             piercer.Stop()
-            Check(aimedTarget.MaxHealth - aimedTarget.Health == 40, "a mode-4 sword hits its aimed target once")
-            Check(fullRangeTarget.MaxHealth - fullRangeTarget.Health == 40,
+            local sword = Hit("ShootSword", 0, "primitive-giant")
+            Check(aimedTarget.MaxHealth - aimedTarget.Health == sword, "a mode-4 sword hits its aimed target once")
+            Check(fullRangeTarget.MaxHealth - fullRangeTarget.Health == sword,
                 "a mode-4 sword hits an actor beyond its aimed target once")
         end)
 
@@ -298,7 +306,17 @@ do
 
         WaitFor("a worker repairs a building", 400, function() return tower.Health == tower.MaxHealth end, function(ok)
             if ok then
-                Check(me.Cash == 19998, "repairing 10 HP costs 2 at the default 20% repair price")
+                -- RepairBuildingActivity: RepairStep HP at a time, each for its share of RepairPercent of the value.
+                local percent = PwTest.Rule("primitive-buildman", "Builder", "RepairPercent")
+                local step = PwTest.Rule("primitive-buildman", "Builder", "RepairStep")
+                local value = PwTest.Rule("primitive-stonetower", "Valued", "Cost")
+                local cost, left = 0, 10
+                while left > 0 do
+                    local hp = math.min(step, left)
+                    cost = cost + math.max(1, math.floor(hp * percent * value / (tower.MaxHealth * 100)))
+                    left = left - hp
+                end
+                Check(me.Cash == 20000 - cost, "repairing 10 HP costs " .. cost .. " at the " .. percent .. "% repair price (paid " .. 20000 - me.Cash .. ")")
                 Check(not PwTest.CanOrder(worker, "PwRepairBuilding", tower), "a worker cannot target a fully repaired building")
             end
 
@@ -377,7 +395,7 @@ do
         Actor.Create("elf-bubble", true, { Owner = me, Location = At(18, 51) })
         local raptor = Actor.Create("wild-velociraptor", true, { Owner = enemy, Location = At(23, 51) })
         Later(1, function() pixie.Stance = "HoldFire" end)
-        FirstHit("the Bubble hits a flying Death Eye", eye, 2, 300)
+        FirstHit("the Bubble hits a flying Death Eye", eye, Hit("BubbleShot", 0, "demon-deatheye"), 300)
 
         local start
         WaitFor("the Bubble hits a wild Velociraptor", 300, function() return raptor.Health < raptor.MaxHealth end, function(ok)
@@ -401,18 +419,17 @@ do
 
     Tower = function()
         Actor.Create("primitive-stonetower", true, { Owner = me, Location = At(4, 4) })
-        -- Powerman: armour 3, so a stone does 37. 6 cells away, inside the 9-cell range.
+        -- A Powerman 6 cells away, inside the 9-cell range.
         local target = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(11, 5) })
         target.Stance = "HoldFire"
-        FirstHit("a StoneTower stones an enemy in range", target, 37, 300)
+        FirstHit("a StoneTower stones an enemy in range", target, Hit("Stone", 0, "primitive-powerman"), 300)
     end
 
     Trap = function()
         Actor.Create("primitive-trap", true, { Owner = me, Location = At(4, 16) })
         local target = Actor.Create("primitive-giant", true, { Owner = enemy, Location = At(6, 16) })
         target.Stance = "HoldFire"
-        -- Giant: armour 5, so a snap does 75.
-        FirstHit("a Trap snaps at an enemy beside it", target, 75, 300)
+        FirstHit("a Trap snaps at an enemy beside it", target, Hit("TrapSnap", 0, "primitive-giant"), 300)
     end
 
     Unfinished = function()
@@ -493,24 +510,27 @@ do
 
     LevelUp = function()
         local man = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(28, 3) })
-        -- 10 per level: 25 experience is level 2 with 5 over.
-        PwTest.GiveExperience(man, 25)
-        Check(PwTest.Level(man) == 2 and PwTest.Experience(man) == 5, "25 experience makes a Buildman level 2 with 5 over")
-        PwTest.GiveExperience(man, 1000)
-        Check(PwTest.Level(man) == 9, "levels stop at 9")
+        -- XpPerLevel per level: two levels' worth and 5 more is level 2 with 5 over.
+        local xp = PwTest.Rule("primitive-buildman", "PwLevels", "XpPerLevel")
+        local maxLevel = PwTest.Rule("primitive-buildman", "PwLevels", "MaxLevel")
+        PwTest.GiveExperience(man, 2 * xp + 5)
+        Check(PwTest.Level(man) == 2 and PwTest.Experience(man) == 5, (2 * xp + 5) .. " experience makes a Buildman level 2 with 5 over")
+        PwTest.GiveExperience(man, xp * maxLevel * 10)
+        Check(PwTest.Level(man) == maxLevel, "levels stop at " .. maxLevel)
     end
 
     LevelNine = function()
-        -- A level 9 Buildman hits for 10 + 18 = 28 on armour 0.
+        -- A Buildman at the top level has its whole AttackGain.
         local man = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(3, 20) })
         local target = Actor.Create("primitive-buildman", true, { Owner = enemy, Location = At(4, 20) })
-        PwTest.GiveExperience(man, 90)
+        PwTest.GiveLevels(man, PwTest.Rule("primitive-buildman", "PwLevels", "MaxLevel"))
+        local hits = Hit("BuildManHit", PwTest.Rule("primitive-buildman", "PwLevels", "AttackGain"), "primitive-buildman")
         Later(1, function()
             target.Stance = "HoldFire"
             man.Attack(target)
         end)
         WaitFor("a level 9 Buildman hits", 300, function() return target.Health < target.MaxHealth end, function(ok)
-            if ok then Check(target.MaxHealth - target.Health == 28, "a level 9 Buildman hits for 28 (did " .. (target.MaxHealth - target.Health) .. ")") end
+            if ok then Check(target.MaxHealth - target.Health == hits, "a top-level Buildman hits for " .. hits .. " (did " .. (target.MaxHealth - target.Health) .. ")") end
         end)
     end
 
@@ -518,7 +538,7 @@ do
         -- A level 9 Soldier reaches 256 + 160 = 416 px (13 cells); a new one only 8.
         local soldier = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(16, 28) })
         local target = Actor.Create("primitive-buildman", true, { Owner = enemy, Location = At(16, 17) })
-        PwTest.GiveExperience(soldier, 9 * 14)
+        PwTest.GiveLevels(soldier, PwTest.Rule("primitive-soldier", "PwLevels", "MaxLevel"))
         Later(1, function()
             target.Stance = "HoldFire"
             soldier.Attack(target, false)

@@ -10,6 +10,7 @@
 #endregion
 
 using System.Linq;
+using Eluant;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Mods.Pw.Activities;
 using OpenRA.Mods.Pw.Traits;
@@ -133,6 +134,20 @@ namespace OpenRA.Mods.Pw.Tests
 
 		[Desc("Give a unit experience, as kills would.")]
 		public void GiveExperience(Actor actor, int amount) => actor.TraitOrDefault<PwLevels>()?.GiveExperience(amount);
+
+		[Desc("The experience a unit needs for each level (its XpPerLevel, less the player's upgrades), or -1.")]
+		public int ExperiencePerLevel(Actor actor) => actor.TraitOrDefault<PwLevels>()?.ExperiencePerLevel ?? -1;
+
+		[Desc("A unit's spell power at its level (percent its spells' effect grows by), or 0.")]
+		public int SpellPower(Actor actor) => actor.TraitOrDefault<PwLevels>()?.SpellPower ?? 0;
+
+		[Desc("Raise a unit exactly this many levels (its experience towards the next one then starts from 0).")]
+		public void GiveLevels(Actor actor, int levels)
+		{
+			var l = actor.TraitOrDefault<PwLevels>();
+			if (l != null && levels > 0)
+				l.GiveExperience(l.ExperiencePerLevel * levels - l.Experience);
+		}
 
 		[Desc("Whether the player has researched an upgrade level.")]
 		public bool Researched(Player player, string upgrade) =>
@@ -266,6 +281,62 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("The internal name of the player the actor appears to belong to (a disguised unit: the Creeps).")]
 		public string AppearsOwnedBy(Actor actor) =>
 			actor.EffectiveOwner != null && actor.EffectiveOwner.Disguised ? actor.EffectiveOwner.Owner.InternalName : actor.Owner.InternalName;
+
+		[Desc("A number from the rules as the game loaded them (inheritance and map rules applied), so tests follow a " +
+			"balance change: Rule(\"tyrano-twinvelocis\", \"Health\", \"HP\"). The trait is named as in the YAML, with " +
+			"its @suffix when it has one (\"Armament@PRIMARY\"). A distance gives its length in world units.")]
+		public int Rule(string actorType, string trait, string field)
+		{
+			if (!Context.World.Map.Rules.Actors.TryGetValue(actorType, out var info))
+				throw new LuaException($"Rule: no actor type {actorType}");
+
+			var at = trait.IndexOf('@');
+			var (name, instance) = at < 0 ? (trait, null) : (trait[..at], trait[(at + 1)..]);
+			var traitInfo = info.TraitInfos<TraitInfo>().FirstOrDefault(t => t.GetType().Name == name + "Info"
+				&& (instance == null || t.InstanceName == instance))
+				?? throw new LuaException($"Rule: {actorType} has no {trait}");
+
+			return Number(traitInfo, field) ?? throw new LuaException($"Rule: {actorType} {trait} has no number {field}");
+		}
+
+		[Desc("As Rule, but the fallback when the actor has no such trait (armour on an actor without PwArmor: 0).")]
+		public int RuleOr(string actorType, string trait, string field, int fallback)
+		{
+			if (!Context.World.Map.Rules.Actors.TryGetValue(actorType, out var info))
+				throw new LuaException($"RuleOr: no actor type {actorType}");
+
+			var at = trait.IndexOf('@');
+			var (name, instance) = at < 0 ? (trait, null) : (trait[..at], trait[(at + 1)..]);
+			var found = info.TraitInfos<TraitInfo>().Any(t => t.GetType().Name == name + "Info" && (instance == null || t.InstanceName == instance));
+			return found ? Rule(actorType, trait, field) : fallback;
+		}
+
+		[Desc("A number from a weapon's rules: the weapon's own field (ReloadDelay, Range), else the first of its " +
+			"warheads that has it (Damage): Weapon(\"TwinVelocisHit\", \"Damage\").")]
+		public int Weapon(string weapon, string field)
+		{
+			if (!Context.World.Map.Rules.Weapons.TryGetValue(weapon.ToLowerInvariant(), out var info))
+				throw new LuaException($"Weapon: no weapon {weapon}");
+
+			return Number(info, field) ?? info.Warheads.Select(w => Number(w, field)).FirstOrDefault(n => n != null)
+				?? throw new LuaException($"Weapon: {weapon} has no number {field}");
+		}
+
+		// A public field or property holding a number (or a distance), or null.
+		static int? Number(object source, string field)
+		{
+			var type = source.GetType();
+			var value = type.GetField(field)?.GetValue(source) ?? type.GetProperty(field)?.GetValue(source);
+			return value switch
+			{
+				int i => i,
+				long l => (int)l,
+				short s => s,
+				byte b => b,
+				WDist d => d.Length,
+				_ => null,
+			};
+		}
 
 		[Desc("Whether the actor shows the coloured tint of a condition (petrified, stunned): the condition is on.")]
 		public bool Tinted(Actor actor, string condition) =>

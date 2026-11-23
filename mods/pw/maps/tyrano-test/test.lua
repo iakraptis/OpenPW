@@ -41,7 +41,8 @@ Production = function()
             return #nests == before + 1 and PwTest.Finished(nests[#nests])
         end, function(built)
             if built then
-                Check(PwTest.PopulationLimit(me) == limit + 10, "the Nest adds 10 population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
+                local adds = PwTest.Rule("tyrano-nest", "ProvidesPopulation", "Amount")
+                Check(PwTest.PopulationLimit(me) == limit + adds, "the Nest adds " .. adds .. " population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
             end
         end)
     end)
@@ -50,7 +51,9 @@ end
 Merging = function()
     local a = Actor.Create("tyrano-velocis", true, { Owner = me, Location = CPos.New(4, 12) })
     local b = Actor.Create("tyrano-velocis", true, { Owner = me, Location = CPos.New(7, 12) })
-    a.Health = 100
+    a.Health = math.floor(a.MaxHealth / 2)
+    -- MergeUnits: the mean of their health percentages, each rounded down.
+    local percent = math.floor((math.floor(a.Health * 100 / a.MaxHealth) + 100) / 2)
     PwTest.Merge({ a, b })
     Later(60, function()
         Check(#me.GetActorsByType("tyrano-twinvelocis") == 0 and not a.IsDead and a.IsInWorld,
@@ -64,20 +67,24 @@ Merging = function()
             local twin = me.GetActorsByType("tyrano-twinvelocis")[1]
             Check(not a.IsInWorld and not b.IsInWorld, "the Velocis are inside it")
             Check(PwTest.MergedParts(twin) == 2, "it holds two units (" .. PwTest.MergedParts(twin) .. ")")
-            -- Half and full health: 75% of 375, rounded down.
-            Check(twin.Health == 281, "it has their mean health (" .. twin.Health .. " of 375)")
+            -- Half and full health: their mean percentage of its health, rounded down.
+            local expected = math.floor(twin.MaxHealth * percent / 100)
+            Check(twin.Health == expected, "it has their mean health (" .. twin.Health .. " of " .. twin.MaxHealth .. ", expected " .. expected .. ")")
             Later(5, function() SplitTwin(twin, a, b) end)
         end)
     end)
 end
 
 SplitTwin = function(twin, a, b)
+    -- PwMerged: its health share as a whole percentage (rounded down), of each part's health.
+    local share = math.floor(twin.Health * 100 / twin.MaxHealth)
+    local expected = math.floor(a.MaxHealth * share / 100)
     PwTest.Split(twin)
     Later(5, function()
         Check(twin.IsDead or not twin.IsInWorld, "the split TwinVelocis is gone")
         Check(a.IsInWorld and b.IsInWorld and not a.IsDead and not b.IsDead, "the two Velocis are back")
-        -- 281 of 375 is 74% (PwMerge rounds the share down to a whole percent): 148 of 200 each.
-        Check(a.Health == 148 and b.Health == 148, "each has its health share (" .. a.Health .. ", " .. b.Health .. ")")
+        Check(a.Health == expected and b.Health == expected,
+            "each has its health share (" .. a.Health .. ", " .. b.Health .. "; expected " .. expected .. ")")
     end)
 end
 
