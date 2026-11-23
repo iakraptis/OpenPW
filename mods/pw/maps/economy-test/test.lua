@@ -109,18 +109,20 @@ do
                 for _, m in ipairs(men) do if not m.IsIdle then return false end end
                 return true
             end, function()
-                -- A unit walking out can nudge an earlier one aside, so most (not all) end up on the front row.
-                local seen, distinct, beside, front = { }, true, true, 0
+                -- A unit walking out can nudge an earlier one aside, so most (not all) end up on the front row; one
+                -- nudged a row further down (row 6) still came out of the front.
+                local seen, distinct, beside, front, cells = { }, true, true, 0, { }
                 for _, m in ipairs(men) do
                     local key = m.Location.X .. "," .. m.Location.Y
                     if seen[key] then distinct = false end
                     seen[key] = true
+                    cells[#cells + 1] = key
                     if math.abs(m.Location.X - 20) > 4 or math.abs(m.Location.Y - 3) > 3 then beside = false end
-                    if m.Location.Y == 5 then front = front + 1 end
+                    if m.Location.Y == 5 or m.Location.Y == 6 then front = front + 1 end
                 end
                 Check(distinct, "trained Powermen stand on different exit cells")
                 Check(beside, "trained Powermen stand around the Powerhouse (within 2 cells)")
-                Check(front >= 2, "trained Powermen mostly use the front exits below the Powerhouse")
+                Check(front >= 2, "trained Powermen mostly use the front exits below the Powerhouse (" .. table.concat(cells, " ") .. ")")
             end)
         end))
     end
