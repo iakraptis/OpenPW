@@ -1,5 +1,5 @@
 """Collect the AI battle results: the "BATTLE RESULT" and "BATTLE END" lines the battle maps print (the installer's
-AssetInstaller/MapTemplates/bot-test/test.lua), from test-results/<map>-stdout.txt.
+AssetInstaller/MapTemplates/bot-test/test.lua), from test-results/<map>/stdout.txt (engine/tools/run_tests.py).
 
 Every run is appended to test-results/battles.csv (one row per bot per battle), so results build up over runs; the
 summary (wins and economy per race, the duel results, every battle of this run) is printed and written to
@@ -36,7 +36,8 @@ def collect(maps):
     commit = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     rows = []
     for name in maps:
-        text = (RESULTS / f'{name}-stdout.txt').read_text(encoding='utf-8', errors='replace') if (RESULTS / f'{name}-stdout.txt').exists() else ''
+        path = RESULTS / name / 'stdout.txt'
+        text = path.read_text(encoding='utf-8', errors='replace') if path.exists() else ''
         results = [pairs(l) for l in text.splitlines() if 'BATTLE RESULT ' in l]
         end = next((pairs(l) for l in text.splitlines() if 'BATTLE END ' in l), None)
         if not results or not end:
@@ -133,8 +134,8 @@ def summary(rows, title):
 
 def main(maps):
     if not maps:
-        maps = sorted(p.name[:-len('-stdout.txt')] for p in RESULTS.glob('*-stdout.txt')
-                      if p.name.startswith(('battle-', 'bot-test')))
+        maps = sorted(p.parent.name for p in RESULTS.glob('*/stdout.txt')
+                      if p.parent.name.startswith(('battle-', 'bot-test')))
     rows = collect(maps)
     if not rows:
         sys.exit('No battle results found.')

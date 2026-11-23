@@ -1,6 +1,24 @@
 {
   "manual": [],
-  "max_ticks": {"bot-test": 90000},
-  "timeout_seconds": {"bot-test": 900},
+  "max_ticks": {
+    "bot-test": 90000,
+    "battle-four-ways": 310000,
+    "battle-primitive-tyrano": 310000,
+    "battle-primitive-demon": 310000,
+    "battle-primitive-elf": 310000,
+    "battle-tyrano-demon": 310000,
+    "battle-tyrano-elf": 310000,
+    "battle-demon-elf": 310000
+  },
+  "timeout_seconds": {
+    "bot-test": 900,
+    "battle-four-ways": 3600,
+    "battle-primitive-tyrano": 3600,
+    "battle-primitive-demon": 3600,
+    "battle-primitive-elf": 3600,
+    "battle-tyrano-demon": 3600,
+    "battle-tyrano-elf": 3600,
+    "battle-demon-elf": 3600
+  },
   "default_timeout_seconds": 300
 }
