@@ -1,18 +1,22 @@
--- Easy AIs, all against all on a converted original map at 5x speed, each from its main building and four
--- workers; each is named after its race. The installer writes one map per battle (AssetInstaller/TestMaps.cs) and sets
--- Bots, Checks and BattleName below. With Checks (bot-test), every bot must grow its workforce, build a base and an
+-- AIs, all against all on a converted original map at 5x speed, each from its main building and four workers; each is
+-- named after its race. The installer writes one map per battle (AssetInstaller/TestMaps.cs) and sets Bots, Checks,
+-- Level (the AIs', as the map's players have it: Easy for bot-test, Medium for the battles) and BattleName below. With Checks (bot-test), every bot must grow its workforce, build a base and an
 -- army, and guard it early with towers (by the main building and by the berries); they must fight early, and some bot
 -- must destroy a building of another. A bot that has lost its main building has lost, whatever else it still has. The
 -- battle goes on until one bot is left or MaxTicks (a hard cap: 40000 for bot-test, 150000 for the battles, about 3
 -- hours at normal speed). Times are original ticks (testlib, Now()). Every 5000 ticks each bot's state is printed; at
--- the end, one "BATTLE RESULT" line per bot and a "BATTLE END" line, which tools/battle_stats.py collects.
+-- the end, one "BATTLE RESULT" line per bot and a "BATTLE END" line, which tools/battle_stats.py collects. The first
+-- time a bot has its leader (the unit its main building trains last, once every other building stands: the Chief,
+-- Tyranos, Devil, AngelElf) a "bot: ... leader" line is printed, and the results give that tick and the most it had.
 Bots = { "Primitive", "Tyrano", "Demon", "Elf" }
 Checks = true
+Level = "easy"
 BattleName = "bot-test"
 MaxTicks = Checks and 40000 or 150000
 -- Written by the asset installer (OpenRA.Mods.Pw/AssetInstaller/MapTemplates/bot-test) on the converted map.
 Races = {
     primitive = {
+        Leader = "primitive-chief",
         Workers = { "primitive-buildman" },
         Main = "primitive-sanctuary",
         Base = { "primitive-house", "primitive-powerhouse", "primitive-soldierhouse", "primitive-skyhouse",
@@ -22,6 +26,7 @@ Races = {
         Towers = { "primitive-stonetower" },
     },
     tyrano = {
+        Leader = "tyrano-tyranos",
         Workers = { "tyrano-dinos" },
         Main = "tyrano-tyranonest",
         Base = { "tyrano-nest", "tyrano-eggnest", "tyrano-landnest", "tyrano-skynest", "tyrano-thrownest",
@@ -31,6 +36,7 @@ Races = {
         Towers = { "tyrano-ascomoid" },
     },
     demon = {
+        Leader = "demon-devil",
         Workers = { "demon-insect" },
         Main = "demon-demonden",
         Base = { "demon-tomb", "demon-deathden", "demon-flyden", "demon-magicden", "demon-hell", "demon-dirtyportal",
@@ -40,6 +46,7 @@ Races = {
         Towers = { "demon-volcano" },
     },
     elf = {
+        Leader = "elf-angelelf",
         Workers = { "elf-wizard" },
         Main = "elf-heaven",
         Base = { "elf-elftree", "elf-redhall", "elf-bluehall", "elf-manahall", "elf-skyhall", "elf-elflibrary",
@@ -62,7 +69,7 @@ WorldLoaded = function()
     kills = 0
     buildingKills = 0
     score = { }
-    for _, name in ipairs(Bots) do score[name] = { kills = 0, losses = 0, gone = nil, earned = { } } end
+    for _, name in ipairs(Bots) do score[name] = { kills = 0, losses = 0, gone = nil, earned = { }, leaderAt = nil, leaders = 0 } end
     Watch()
     Battle()
     if not Checks then
@@ -129,7 +136,8 @@ Battle = function()
             .. " peakArmyValue=" .. peak[name].armyValue .. " earned=" .. PwTest.Earned(p) .. " spent=" .. PwTest.Spent(p)
             .. " earned5k=" .. (s.earned[5000] or -1) .. " earned10k=" .. (s.earned[10000] or -1)
             .. " earned20k=" .. (s.earned[20000] or -1) .. " kills=" .. s.kills .. " losses=" .. s.losses
-            .. " killsValue=" .. p.KillsCost .. " lossesValue=" .. p.DeathsCost)
+            .. " killsValue=" .. p.KillsCost .. " lossesValue=" .. p.DeathsCost .. " level=" .. Level
+            .. " leaderAt=" .. (s.leaderAt or -1) .. " peakLeaders=" .. s.leaders)
     end
     print("BATTLE END battle=" .. BattleName .. " tick=" .. Now() .. " winner=" .. winner .. " leader=" .. leader)
     battleOver = true
@@ -158,6 +166,12 @@ Watch = function()
         if #army > peak[name].army then peak[name].army = #army end
         local armyValue = PwTest.ArmyValue(p)
         if armyValue > peak[name].armyValue then peak[name].armyValue = armyValue end
+        local leaders = #p.GetActorsByTypes({ race.Leader })
+        if leaders > score[name].leaders then score[name].leaders = leaders end
+        if leaders > 0 and not score[name].leaderAt then
+            score[name].leaderAt = Now()
+            print("bot: tick " .. Now() .. " " .. name .. " has its leader (" .. race.Leader .. ")")
+        end
         local towers = p.GetActorsByTypes(race.Towers)
         if #towers > peak[name].towers then peak[name].towers = #towers end
         local hq = Map.NamedActor(name .. "Main")

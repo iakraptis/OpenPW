@@ -6,6 +6,7 @@ Usage (from the repository root):
   python run_tests.py --no-build --no-check
   python run_tests.py --windowed --only combat-test   # watch one test in a window, at normal speed
   python run_tests.py --battles      # the AI battles (bot-test and the battle-* maps), then tools/battle_stats.py
+  python run_tests.py --battles --rounds 5 --only battle-primitive-elf,battle-demon-elf   # some battles, five times
 
 The maps run through engine/tools/run_tests.py: each as its own game with no window (Game.Platform=Null) and no
 waiting for the game speed (Launch.Uncapped=true), several at once. testlib.lua reports the result with
@@ -60,24 +61,34 @@ def main():
     parser.add_argument('--no-build', action='store_true')
     parser.add_argument('--no-check', action='store_true')
     parser.add_argument('--battles', action='store_true', help='run the AI battles and collect their stats')
+    parser.add_argument('--rounds', type=int, default=1, help='with --battles: play them this many times')
     args, engine_args = parser.parse_known_args()
 
     if not args.no_build and not build():
         sys.exit('Build failed')
     yaml_ok = True if args.no_check else check_yaml()
 
-    battles = battle_maps() if args.battles else []
-    if args.battles:
+    runner = [sys.executable, str(ENGINE / 'tools' / 'run_tests.py'), '--mod-dir', str(SDK)]
+    if not args.battles:
+        ok = subprocess.run(runner + engine_args).returncode == 0
+    else:
+        # The battles to play: --only's, else every one; each round's results go to the history (battle_stats).
+        if '--only' in engine_args:
+            i = engine_args.index('--only')
+            battles = engine_args[i + 1].split(',')
+            del engine_args[i:i + 2]
+        else:
+            battles = battle_maps()
         if not battles:
             sys.exit(f'No battle maps in {CONTENT_MAPS}: run install-assets first')
-        engine_args = ['--only', ','.join(battles), *engine_args]
-    ok = subprocess.run([sys.executable, str(ENGINE / 'tools' / 'run_tests.py'), '--mod-dir', str(SDK),
-                         *engine_args]).returncode == 0
-    if battles:
         sys.path.insert(0, str(SDK / 'tools'))
         import battle_stats
-        print()
-        battle_stats.main(battles)
+        ok = True
+        for round in range(1, args.rounds + 1):
+            print(f'\nRound {round} of {args.rounds}', flush=True)
+            ok = subprocess.run(runner + ['--only', ','.join(battles)] + engine_args).returncode == 0 and ok
+            print()
+            battle_stats.main(battles)
     print(f'YAML check {"PASS" if yaml_ok else "FAIL"}')
     sys.exit(0 if ok and yaml_ok else 1)
 
