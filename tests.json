@@ -1,0 +1,6 @@
+{
+  "manual": [],
+  "max_ticks": {"bot-test": 90000},
+  "timeout_seconds": {"bot-test": 900},
+  "default_timeout_seconds": 300
+}
