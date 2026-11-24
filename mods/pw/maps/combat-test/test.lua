@@ -17,7 +17,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local AttackMove, Exposure, FirstHit, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, Exposure, FirstHit, GroupAttack, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -44,6 +44,7 @@ do
         Later(5, function() FirstHit("primitive-buildman", "primitive-powerhouse", Hit("BuildManHit", 0, "primitive-powerhouse"), At(20, 20), At(22, 14)) end)
         Later(5, MissileModes)
         Later(5, MeleeBlocked)
+        Later(5, GroupAttack)
         Later(5, AttackMove)
         Later(5, MeleeAround)
         Later(5, Patrolling)
@@ -169,6 +170,41 @@ do
             other.Kill()
             blockers[1].Kill()
             WaitFor("a blocked melee unit returns to its target", 400, function() return target.Health < target.MaxHealth end)
+        end)
+    end
+
+    -- A group ordered to attack one unit of an enemy group (MeleeAttack): 18 Powermen on the middle one of nine,
+    -- which fight back. The ordered one dies long before the units at the back get there; they go on to the rest of
+    -- the group instead of stopping where they are (some beyond automatic targeting's 5 cells, left standing).
+    GroupAttack = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local enemies, attackers = { }, { }
+        for _, y in ipairs({ 4, 6, 8 }) do
+            for x = 44, 48, 2 do enemies[#enemies + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(x, y) }) end
+        end
+        for x = 20, 25 do
+            for y = 5, 7 do attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(x, y) }) end
+        end
+        -- A unit idle for a moment between one fight and the next is fine (its automatic targeting looks every 6-16
+        -- ticks); standing for longer is what goes wrong (without the fix, some stood for the whole fight).
+        local ordered, stood
+        local idle = { }
+        Later(2, function()
+            for _, a in ipairs(attackers) do a.Attack(enemies[4]) end
+            ordered = true
+        end)
+        local function Done()
+            local alive = false
+            for _, e in ipairs(enemies) do if not e.IsDead then alive = true end end
+            if not alive then return true end
+            for i, a in ipairs(attackers) do
+                idle[i] = ordered and not a.IsDead and a.IsIdle and (idle[i] or 0) + 1 or 0
+                if idle[i] > 60 and not stood then stood = i .. " at " .. a.Location.X .. "," .. a.Location.Y end
+            end
+            return false
+        end
+        WaitFor("a group sent at one of an enemy group kills them all", 900, Done, function()
+            Check(stood == nil, "no unit of the group stands idle while the enemy group fights" .. (stood and " (" .. stood .. ")" or ""))
         end)
     end
 
