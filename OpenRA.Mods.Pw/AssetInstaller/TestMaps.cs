@@ -37,20 +37,21 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 
 		static readonly string[] Colors = { "E02020", "2050E0", "20C020", "E0C020" };
 
-		// Battles of Easy AIs, each starting as a player of its race does (rules/world.yaml StartingUnits): its main
-		// building and four workers, named after its race. bot-test (the four races on (4) The X Cross) is a test with
-		// checks; the battle-* maps only report (run_tests.py --battles runs them, tools/battle_stats.py collects them):
-		// the four races on (4) Four Ways, and every pairing of two races on (2) One vs One.
-		static readonly (string Name, string Title, string BaseMap, bool Checks, int[] Races)[] Battles =
-			new (string Name, string Title, string BaseMap, bool Checks, int[] Races)[]
+		// Battles of AIs, each starting as a player of its race does (rules/world.yaml StartingUnits): its main building
+		// and four workers, named after its race. bot-test (Easy AIs, the four races on (4) The X Cross) is a test with
+		// checks; the battle-* maps (Medium AIs) only report (run_tests.py --battles runs them, tools/battle_stats.py
+		// collects them): the four races on (4) Four Ways, and every pairing of two races on (2) One vs One.
+		static readonly (string Name, string Title, string BaseMap, bool Checks, string Level, int[] Races)[] Battles =
+			new (string Name, string Title, string BaseMap, bool Checks, string Level, int[] Races)[]
 			{
-				("bot-test", "Test: Bots", "4-the-x-cross", true, new[] { 0, 1, 2, 3 }),
-				("battle-four-ways", "Battle: Four Ways", "4-four-ways", false, new[] { 0, 1, 2, 3 }),
+				("bot-test", "Test: Bots", "4-the-x-cross", true, "easy", new[] { 0, 1, 2, 3 }),
+				("battle-four-ways", "Battle: Four Ways", "4-four-ways", false, "medium", new[] { 0, 1, 2, 3 }),
 			}
 			.Concat(
 				from a in Enumerable.Range(0, Races.Length)
 				from b in Enumerable.Range(a + 1, Races.Length - a - 1)
-				select ($"battle-{Faction(a)}-{Faction(b)}", $"Battle: {BotName(a)} vs {BotName(b)}", DuelMap, false, new[] { a, b }))
+				select ($"battle-{Faction(a)}-{Faction(b)}", $"Battle: {BotName(a)} vs {BotName(b)}", DuelMap, false, "medium",
+					new[] { a, b }))
 			.ToArray();
 
 		static string Faction(int race) => Races[race].Faction;
@@ -73,10 +74,10 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				foreach (var file in Directory.GetFiles(baseFolder).Where(f => Path.GetFileName(f) != "map.yaml"))
 					c.WriteFile($"maps/{battle.Name}/{Path.GetFileName(file)}", File.ReadAllBytes(file));
 
-				c.WriteText($"maps/{battle.Name}/test.lua", Script(script, battle.Name, battle.Checks, battle.Races));
+				c.WriteText($"maps/{battle.Name}/test.lua", Script(script, battle.Name, battle.Checks, battle.Level, battle.Races));
 				c.WriteFile($"maps/{battle.Name}/testlib.lua", testlib);
 				var source = File.ReadAllText(Path.Combine(baseFolder, "map.yaml")).Replace("\r\n", "\n");
-				c.WriteText($"maps/{battle.Name}/map.yaml", BattleYaml(source, battle.Title, battle.Races));
+				c.WriteText($"maps/{battle.Name}/map.yaml", BattleYaml(source, battle.Title, battle.Level, battle.Races));
 			}
 
 			ExportPathing(c, testlib);
@@ -141,12 +142,13 @@ Rules:
 			c.WriteText($"maps/{Name}/map.yaml", s.ToString());
 		}
 
-		// The template with this battle's settings: its bots, whether it checks, its name.
-		static string Script(string template, string name, bool checks, int[] races)
+		// The template with this battle's settings: its bots and their level, whether it checks, its name.
+		static string Script(string template, string name, bool checks, string level, int[] races)
 		{
 			var bots = string.Join(", ", races.Select(r => "\"" + BotName(r) + "\""));
 			var lua = Regex.Replace(template, "^Bots = .*$", "Bots = { " + bots + " }", RegexOptions.Multiline);
 			lua = Regex.Replace(lua, "^Checks = .*$", "Checks = " + (checks ? "true" : "false"), RegexOptions.Multiline);
+			lua = Regex.Replace(lua, "^Level = .*$", "Level = \"" + level + "\"", RegexOptions.Multiline);
 			return Regex.Replace(lua, "^BattleName = .*$", "BattleName = \"" + name + "\"", RegexOptions.Multiline);
 		}
 
@@ -162,7 +164,7 @@ Rules:
 			return memory.ToArray();
 		}
 
-		static string BattleYaml(string source, string title, int[] races)
+		static string BattleYaml(string source, string title, string level, int[] races)
 		{
 			var lines = source.Split('\n');
 			string Field(string name) => lines.First(l => l.StartsWith(name + ":", System.StringComparison.Ordinal));
@@ -196,7 +198,7 @@ Rules:
 			{
 				var enemies = bots.Where(b => b != bots[i]).Append("Creeps");
 				s.Append(CultureInfo.InvariantCulture,
-					$"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: easy\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
+					$"\tPlayerReference@{bots[i]}:\n\t\tName: {bots[i]}\n\t\tBot: {level}\n\t\tFaction: {Faction(races[i])}\n\t\tLockFaction: True\n");
 				s.Append(CultureInfo.InvariantCulture, $"\t\tColor: {Colors[races[i]]}\n\t\tEnemies: {string.Join(", ", enemies)}\n");
 			}
 

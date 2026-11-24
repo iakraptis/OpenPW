@@ -140,10 +140,12 @@ do
     end
 
     Together = function()
-        -- A slow Stegosaurus (it doesn't run far and lead them to the others' creatures) beside two hunting Powermen.
-        local prey = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 17) })
-        local a = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(24, 17) })
-        local b = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(28, 17) })
+        -- A slow Stegosaurus (it doesn't run far and lead them to the others' creatures) beside two hunting Powermen,
+        -- far below the rest: a fight moves it around, and higher up it could come within the hunting Powerman's
+        -- radius (step 4).
+        local prey = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 38) })
+        local a = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(24, 38) })
+        local b = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(28, 38) })
         local struck = { }
         Trigger.OnDamaged(prey, function(_, attacker)
             if attacker == a then struck.a = true elseif attacker == b then struck.b = true end
@@ -155,7 +157,7 @@ do
         WaitFor("two hunters kill the Stegosaurus", 2500, function() return prey.IsDead end, function(ok)
             if not ok then return end
             Check(struck.a and struck.b, "both of them struck it")
-            local other = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 22) })
+            local other = Actor.Create("wild-stegosaurus", true, { Owner = Player.GetPlayer("Creeps"), Location = At(26, 43) })
             Later(2, function()
                 Check(PwTest.Hunting(a), "the hunter still hunts before it is given an order")
                 PwTest.OrderOn(a, "Attack", other)

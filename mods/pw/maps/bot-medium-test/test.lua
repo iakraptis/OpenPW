@@ -7,9 +7,11 @@
 -- 2. It trains Revolvers (its detector) and posts one between the Sanctuary and those bushes, one at the base's edge
 --    toward the enemy.
 -- 3. It builds a second Sanctuary by the far bushes (ExpansionDelay).
--- Bottom: MedElf, a Medium Elf AI, has a Heaven, the halls (a ManaHall trains Pixies, its detector), trees and 14
--- idle RedElves; its enemy's House is far to the south-east.
--- 4. The RedElves attack, and a Pixie goes with them (more than 20 cells from the Heaven, near an attacking RedElf).
+-- Bottom: MedElf, a Medium Elf AI, has a Heaven, the halls (a ManaHall trains Pixies, its detector), trees, 14
+-- idle RedElves and two Pixies, which take the home and edge posts; its enemy's House is far to the south-east.
+-- 4. The RedElves attack, and the Pixie it trains next goes with them (more than 20 cells from the Heaven, near an
+--    attacking RedElf). Without the two at the start it would be the third Pixie, about 3400 ticks of training (one
+--    at a time), and the attack can be back home before it is out.
 local function Near(a, cell, cells)
     local dx, dy = a.Location.X - cell.X, a.Location.Y - cell.Y
     return dx * dx + dy * dy <= cells * cells
@@ -47,6 +49,8 @@ WorldLoaded = function()
     end)
 
     local heaven = CPos.New(7, 50)
+    Actor.Create("elf-pixie", true, { Owner = elf, Location = CPos.New(10, 47) })
+    Actor.Create("elf-pixie", true, { Owner = elf, Location = CPos.New(12, 47) })
     WaitFor("MedElf's attack has a Pixie with it", 8000, function()
         local out = { }
         for _, r in ipairs(elf.GetActorsByType("elf-redelf")) do

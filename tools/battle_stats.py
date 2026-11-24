@@ -1,9 +1,10 @@
 """Collect the AI battle results: the "BATTLE RESULT" and "BATTLE END" lines the battle maps print (the installer's
-AssetInstaller/MapTemplates/bot-test/test.lua), from test-results/<map>-stdout.txt.
+AssetInstaller/MapTemplates/bot-test/test.lua), from test-results/<map>/stdout.txt (engine/tools/run_tests.py).
 
 Every run is appended to test-results/battles.csv (one row per bot per battle), so results build up over runs; the
-summary (wins and economy per race, the duel results, every battle of this run) is printed and written to
-test-results/battles.md, over this run and over the whole history.
+summary (wins, economy and leaders per race, the duel results, every battle of this run) is printed and written to
+test-results/battles.md, over this run and over every run with the same AI level (rows from before the level was
+recorded were Easy AIs).
 
 Usage (from the repository root): python tools/battle_stats.py [map ...]   (default: every battle with results)
 run_tests.py --battles calls it after running the battles.
@@ -23,7 +24,7 @@ REPORT = RESULTS / 'battles.md'
 RACES = ['primitive', 'tyrano', 'demon', 'elf']
 FIELDS = ['run', 'commit', 'battle', 'tick', 'winner', 'leader', 'bot', 'race', 'alive', 'gone', 'buildings', 'army',
           'armyValue', 'assets', 'peakWorkers', 'peakArmy', 'peakArmyValue', 'earned', 'spent', 'earned5k', 'earned10k',
-          'earned20k', 'kills', 'losses', 'killsValue', 'lossesValue']
+          'earned20k', 'kills', 'losses', 'killsValue', 'lossesValue', 'level', 'leaderAt', 'peakLeaders']
 
 
 def pairs(line):
@@ -36,7 +37,8 @@ def collect(maps):
     commit = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     rows = []
     for name in maps:
-        text = (RESULTS / f'{name}-stdout.txt').read_text(encoding='utf-8', errors='replace') if (RESULTS / f'{name}-stdout.txt').exists() else ''
+        path = RESULTS / name / 'stdout.txt'
+        text = path.read_text(encoding='utf-8', errors='replace') if path.exists() else ''
         results = [pairs(l) for l in text.splitlines() if 'BATTLE RESULT ' in l]
         end = next((pairs(l) for l in text.splitlines() if 'BATTLE END ' in l), None)
         if not results or not end:
@@ -53,16 +55,26 @@ def history():
     if not HISTORY.exists():
         return []
     with HISTORY.open(encoding='utf-8', newline='') as f:
-        return list(csv.DictReader(f))
+        rows = list(csv.DictReader(f))
+    for r in rows:
+        r['level'] = r.get('level') or 'easy'
+    return rows
 
 
 def append(rows):
-    new = not HISTORY.exists()
-    with HISTORY.open('a', encoding='utf-8', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
-        if new:
+    old = history()
+    header = []
+    if HISTORY.exists():
+        with HISTORY.open(encoding='utf-8', newline='') as f:
+            header = next(csv.reader(f), [])
+    if header != FIELDS:
+        # An older file: rewritten with today's columns (the new ones empty, the level Easy).
+        with HISTORY.open('w', encoding='utf-8', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=FIELDS)
             w.writeheader()
-        w.writerows(rows)
+            w.writerows({k: r.get(k, '') for k in FIELDS} for r in old)
+    with HISTORY.open('a', encoding='utf-8', newline='') as f:
+        csv.DictWriter(f, fieldnames=FIELDS).writerows(rows)
 
 
 def num(v):
@@ -90,14 +102,19 @@ def summary(rows, title):
             s['survived'] += num(r['alive'])
             for k in ('earned', 'earned10k', 'spent', 'peakArmy', 'peakArmyValue', 'kills', 'losses', 'killsValue', 'lossesValue'):
                 s[k] += max(num(r[k]), 0)
-    out += ['| Race | Games | Wins | Leads at cap | Survived | Earned (avg) | Earned by 10k | Peak army | Peak army value | '
-            'Kills / losses | Kill value / loss value |', '|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|']
+            if num(r.get('leaderAt') or -1) >= 0:
+                s['leaders'] += 1
+                s['leaderAt'] += num(r['leaderAt'])
+    out += ['| Race | Games | Wins | Leads at cap | Survived | Leader built (avg tick) | Earned (avg) | Earned by 10k | '
+            'Peak army | Peak army value | Kills / losses | Kill value / loss value |',
+            '|---|---:|---:|---:|---:|---|---:|---:|---:|---:|---|---|']
     for race in RACES:
         s = stats[race]
         g = s['games'] or 1
         if not s['games']:
             continue
-        out.append(f"| {race} | {s['games']} | {s['wins']} | {s['leads']} | {s['survived']} | {s['earned'] // g} | "
+        built = f"{s['leaders']} ({s['leaderAt'] // s['leaders']})" if s['leaders'] else '0'
+        out.append(f"| {race} | {s['games']} | {s['wins']} | {s['leads']} | {s['survived']} | {built} | {s['earned'] // g} | "
                    f"{s['earned10k'] // g} | {s['peakArmy'] // g} | {s['peakArmyValue'] // g} | "
                    f"{s['kills'] // g} / {s['losses'] // g} | {s['killsValue'] // g} / {s['lossesValue'] // g} |")
 
@@ -122,10 +139,12 @@ def summary(rows, title):
             out.append(f'| {x} | ' + ' | '.join('x' if x == y else '-'.join(map(str, duel[(x, y)])) if (x, y) in duel else ''
                                                for y in RACES) + ' |')
 
-    out += ['', '| Run | Battle | Ticks | Winner | Leader | Bots (alive: assets, earned, kills/losses) |', '|---|---|---:|---|---|---|']
+    out += ['', '| Run | Battle | Ticks | Winner | Ahead | Bots (alive: assets, earned, kills/losses; leader built at) |',
+            '|---|---|---:|---|---|---|']
     for (run, battle), bots in sorted(battles.items()):
         desc = '; '.join(f"{r['bot']} ({'alive' if num(r['alive']) else 'out @' + r['gone']}: {r['assets']}, "
-                         f"{r['earned']}, {r['kills']}/{r['losses']})" for r in bots)
+                         f"{r['earned']}, {r['kills']}/{r['losses']}"
+                         + (f"; leader @{r['leaderAt']}" if num(r.get('leaderAt') or -1) >= 0 else '') + ')' for r in bots)
         b = bots[0]
         out.append(f"| {run} | {battle} | {b['tick']} | {b['winner']} | {b['leader']} | {desc} |")
     return '\n'.join(out)
@@ -133,13 +152,16 @@ def summary(rows, title):
 
 def main(maps):
     if not maps:
-        maps = sorted(p.name[:-len('-stdout.txt')] for p in RESULTS.glob('*-stdout.txt')
-                      if p.name.startswith(('battle-', 'bot-test')))
+        maps = sorted(p.parent.name for p in RESULTS.glob('*/stdout.txt')
+                      if p.parent.name.startswith(('battle-', 'bot-test')))
     rows = collect(maps)
     if not rows:
         sys.exit('No battle results found.')
     append(rows)
-    text = '# AI battles\n\n' + summary(rows, 'This run') + '\n\n' + summary(history(), 'All runs') + '\n'
+    levels = {r['level'] or 'easy' for r in rows}
+    same = [r for r in history() if r['level'] in levels]
+    text = ('# AI battles\n\n' + summary(rows, 'This run') + '\n\n'
+            + summary(same, 'All runs (' + ', '.join(sorted(levels)) + ' AIs)') + '\n')
     REPORT.write_text(text, encoding='utf-8')
     print(summary(rows, 'This run'))
     print(f'\nHistory: {HISTORY} ({len(history())} rows); report: {REPORT}')

@@ -1,57 +1,33 @@
-"""OpenPW test suite runner: build, YAML check, then every automated test map in sequence.
+"""OpenPW test suite runner: build, YAML check, then the test maps through the engine's shared runner.
 
 Usage (from the repository root):
-  python run_tests.py                 # build + check-yaml + all maps
+  python run_tests.py                 # build + check-yaml + every *-test map, headless and in parallel
   python run_tests.py --only start-test,combat-test
   python run_tests.py --no-build --no-check
-  python run_tests.py --battles      # the AI battles (bot-test and battle-* maps, about 90 minutes), then tools/battle_stats.py
+  python run_tests.py --windowed --only combat-test   # watch one test in a window, at normal speed
+  python run_tests.py --battles      # the AI battles (bot-test and the battle-* maps), then tools/battle_stats.py
+  python run_tests.py --battles --rounds 5 --only battle-primitive-elf,battle-demon-elf   # some battles, five times
 
-Each map is launched with Launch.Map=<map>. A map PASSES when its expected number of "... TEST PASS" lines has
-appeared (C# harness tests print to stdout, Lua tests to %APPDATA%/OpenRA/Logs/lua.log). It FAILS on a
-"TEST FAIL"/"FAIL:" line, an exception on stderr, a fatal Lua error, a new exception log, or a timeout.
-Logs and summary.md are written to test-results/. The maps need the game assets
-converted from an original copy of Primitive Wars (install-assets). They share testlib.lua and the PwTest Lua
-helpers (OpenRA.Mods.Pw/Tests/PwTestGlobal.cs).
+The maps run through engine/tools/run_tests.py: each as its own game with no window (Game.Platform=Null) and no
+waiting for the game speed (Launch.Uncapped=true), several at once. testlib.lua reports the result with
+Test.Pass/Test.Fail and the game exits with its code; each map's output, logs and replay go to test-results/<map>/,
+the summary to test-results/summary.md. Per-map settings (tick limits, timeouts, manual maps) are in tests.json. Other
+options (--jobs, --windowed, ...) are passed to the engine runner. The maps need the game assets converted from an
+original copy of Primitive Wars (install-assets); the installer also builds bot-test, the battles and pathing-test in
+the player content folder.
 """
 import argparse
 import os
 import re
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 SDK = Path(__file__).resolve().parent
 ENGINE = SDK / 'engine'
 MAPS = SDK / 'mods' / 'pw' / 'maps'
-# Test maps the asset installer may build on converted original maps, in the player content folder.
+# Maps the asset installer builds on converted original maps, in the player content folder.
 CONTENT_MAPS = Path(os.environ.get('APPDATA', '')) / 'OpenRA' / 'Content' / 'pw' / 'maps'
-RESULTS = SDK / 'test-results'
-LOGS = Path(os.environ.get('APPDATA', '')) / 'OpenRA' / 'Logs'
-
-# Maps that are not automated tests.
-MANUAL = set()
-
-# Number of "TEST PASS" lines a map prints when everything passed (default 1).
-EXPECTED_PASSES = {}
-
-DEFAULT_TIMEOUT = 180  # seconds of wall time, including game start-up
-# The bot battles play up to 40000 ticks at 5x speed (their script's MaxTicks), about 11 minutes at most.
-TIMEOUTS = {'bot-test': 2400}
-BATTLE_TIMEOUT = 2400
-
-FAIL_PATTERN = re.compile(r'TEST FAIL|FAIL:|Fatal Lua Error')
-
-
-def read(path: Path) -> str:
-    try:
-        return path.read_text(encoding='utf-8', errors='replace')
-    except OSError:
-        return ''
-
-
-def kill_openra():
-    subprocess.run(['taskkill', '/F', '/IM', 'OpenRA.exe'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def build():
@@ -75,91 +51,46 @@ def check_yaml():
     return not errors
 
 
-def run_map(name: str):
-    RESULTS.mkdir(exist_ok=True)
-    out_path, err_path = RESULTS / f'{name}-stdout.txt', RESULTS / f'{name}-stderr.txt'
-    lua_log = LOGS / 'lua.log'
-    lua_log.unlink(missing_ok=True)
-    started = time.time()
-    expected = EXPECTED_PASSES.get(name, 1)
-    timeout = TIMEOUTS.get(name, BATTLE_TIMEOUT if name.startswith('battle-') else DEFAULT_TIMEOUT)
-
-    with open(out_path, 'w') as out, open(err_path, 'w') as err:
-        proc = subprocess.Popen([str(ENGINE / 'bin' / 'OpenRA.exe'), 'Game.Mod=pw', 'Engine.EngineDir=..',
-                                 'Engine.ModSearchPaths=../mods,./mods', f'Launch.Map={name}'],
-                                cwd=ENGINE, stdout=out, stderr=err)
-        verdict, detail = None, ''
-        while verdict is None:
-            time.sleep(1)
-            text = read(out_path) + '\n' + read(lua_log)
-            stderr = read(err_path)
-            crash_logs = [p for p in LOGS.glob('exception-*.log') if p.stat().st_mtime >= started]
-            fail = FAIL_PATTERN.search(text)
-            if 'Exception' in stderr:
-                verdict, detail = 'FAIL', next((l for l in stderr.splitlines() if 'Exception' in l), '')
-            elif fail:
-                verdict, detail = 'FAIL', next(l for l in text.splitlines() if FAIL_PATTERN.search(l))
-            elif crash_logs:
-                verdict, detail = 'FAIL', f'crash log {crash_logs[0].name}: ' + next(
-                    (l for l in read(crash_logs[0]).splitlines() if 'Exception' in l), '')
-            elif sum('TEST PASS' in l for l in text.splitlines()) >= expected:
-                verdict = 'PASS'
-            elif proc.poll() is not None:
-                verdict, detail = 'FAIL', f'game exited (code {proc.returncode}) before passing'
-            elif time.time() - started > timeout:
-                verdict, detail = 'FAIL', f'timeout after {timeout}s; last output: ' + (text.strip().splitlines() or [''])[-1]
-        proc.kill()
-        proc.wait()
-        # lua.log is only flushed when the game closes; re-check it for errors the live read missed.
-        late = read(lua_log)
-        if verdict == 'PASS' and FAIL_PATTERN.search(late):
-            verdict, detail = 'FAIL', next(l for l in late.splitlines() if FAIL_PATTERN.search(l))
-        elif verdict == 'FAIL' and 'Fatal Lua Error' in late and 'Lua' not in detail:
-            detail += ' | ' + next(l for l in late.splitlines() if 'Fatal Lua Error' in l)
-
-    (RESULTS / f'{name}-lua.txt').write_text(read(lua_log), encoding='utf-8')
-    return verdict, detail.strip()[:300], time.time() - started
+def battle_maps():
+    folders = [f for f in (MAPS, CONTENT_MAPS) if f.is_dir()]
+    return sorted({p.name for f in folders for p in f.iterdir() if p.name.startswith('battle-') or p.name == 'bot-test'})
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--only', help='comma-separated map names')
     parser.add_argument('--no-build', action='store_true')
     parser.add_argument('--no-check', action='store_true')
-    parser.add_argument('--battles', action='store_true', help='run the AI battles (battle-* maps) and collect their stats')
-    args = parser.parse_args()
+    parser.add_argument('--battles', action='store_true', help='run the AI battles and collect their stats')
+    parser.add_argument('--rounds', type=int, default=1, help='with --battles: play them this many times')
+    args, engine_args = parser.parse_known_args()
 
-    kill_openra()
     if not args.no_build and not build():
         sys.exit('Build failed')
     yaml_ok = True if args.no_check else check_yaml()
 
-    folders = [MAPS] + ([CONTENT_MAPS] if CONTENT_MAPS.is_dir() else [])
-    if args.battles:
-        maps = sorted(p.name for folder in folders for p in folder.iterdir() if p.name.startswith('battle-') or p.name == 'bot-test')
+    runner = [sys.executable, str(ENGINE / 'tools' / 'run_tests.py'), '--mod-dir', str(SDK)]
+    if not args.battles:
+        ok = subprocess.run(runner + engine_args).returncode == 0
     else:
-        maps = args.only.split(',') if args.only else sorted({
-            p.name for folder in folders for p in folder.iterdir() if p.name.endswith('-test') and p.name not in MANUAL})
-    results = []
-    for name in maps:
-        print(f'{name:22} ...', end=' ', flush=True)
-        verdict, detail, seconds = run_map(name)
-        print(f'{verdict} ({seconds:.0f}s) {detail}', flush=True)
-        results.append((name, verdict, seconds, detail))
-
-    passed = sum(v == 'PASS' for _, v, _, _ in results)
-    lines = ['# Test suite results', '', f'YAML check: {"PASS" if yaml_ok else "FAIL"}', '',
-             f'{passed}/{len(results)} maps passed', '', '| Map | Result | Time | Detail |', '|---|---|---:|---|']
-    lines += [f'| {n} | {v} | {s:.0f}s | {d.replace("|", "/")} |' for n, v, s, d in results]
-    (RESULTS / 'summary.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
-    print(f'\n{passed}/{len(results)} passed, YAML check {"PASS" if yaml_ok else "FAIL"}; see {RESULTS / "summary.md"}')
-    battles = [n for n, _, _, _ in results if n.startswith('battle-') or n == 'bot-test']
-    if battles:
+        # The battles to play: --only's, else every one; each round's results go to the history (battle_stats).
+        if '--only' in engine_args:
+            i = engine_args.index('--only')
+            battles = engine_args[i + 1].split(',')
+            del engine_args[i:i + 2]
+        else:
+            battles = battle_maps()
+        if not battles:
+            sys.exit(f'No battle maps in {CONTENT_MAPS}: run install-assets first')
         sys.path.insert(0, str(SDK / 'tools'))
         import battle_stats
-        print()
-        battle_stats.main(battles)
-    sys.exit(0 if passed == len(results) and yaml_ok else 1)
+        ok = True
+        for round in range(1, args.rounds + 1):
+            print(f'\nRound {round} of {args.rounds}', flush=True)
+            ok = subprocess.run(runner + ['--only', ','.join(battles)] + engine_args).returncode == 0 and ok
+            print()
+            battle_stats.main(battles)
+    print(f'YAML check {"PASS" if yaml_ok else "FAIL"}')
+    sys.exit(0 if ok and yaml_ok else 1)
 
 
 if __name__ == '__main__':

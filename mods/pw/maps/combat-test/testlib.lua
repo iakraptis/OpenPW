@@ -76,8 +76,10 @@ Finish = function()
     pending = { }
     if #failures == 0 then
         print(testName .. " TEST PASS (" .. checks .. " checks)")
+        if Test then Test.Pass() end
     else
         print(testName .. " TEST FAIL: " .. #failures .. " of " .. checks .. " checks failed: " .. table.concat(failures, "; "))
+        if Test then Test.Fail() end
     end
 end
 

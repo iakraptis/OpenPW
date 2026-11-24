@@ -64,8 +64,8 @@ Merging = function()
             local twin = me.GetActorsByType("tyrano-twinvelocis")[1]
             Check(not a.IsInWorld and not b.IsInWorld, "the Velocis are inside it")
             Check(PwTest.MergedParts(twin) == 2, "it holds two units (" .. PwTest.MergedParts(twin) .. ")")
-            -- Half and full health: 75% of 400.
-            Check(twin.Health == 300, "it has their mean health (" .. twin.Health .. " of 400)")
+            -- Half and full health: 75% of 375, rounded down.
+            Check(twin.Health == 281, "it has their mean health (" .. twin.Health .. " of 375)")
             Later(5, function() SplitTwin(twin, a, b) end)
         end)
     end)
@@ -76,8 +76,8 @@ SplitTwin = function(twin, a, b)
     Later(5, function()
         Check(twin.IsDead or not twin.IsInWorld, "the split TwinVelocis is gone")
         Check(a.IsInWorld and b.IsInWorld and not a.IsDead and not b.IsDead, "the two Velocis are back")
-        -- 300 of 400 is 75%: 150 of 200 each.
-        Check(a.Health == 150 and b.Health == 150, "each has its health share (" .. a.Health .. ", " .. b.Health .. ")")
+        -- 281 of 375 is 74% (PwMerge rounds the share down to a whole percent): 148 of 200 each.
+        Check(a.Health == 148 and b.Health == 148, "each has its health share (" .. a.Health .. ", " .. b.Health .. ")")
     end)
 end
 
