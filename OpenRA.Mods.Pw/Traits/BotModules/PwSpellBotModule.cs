@@ -34,6 +34,15 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Ticks between checks.")]
 		public readonly int ScanInterval = PwTime.Ticks(20);
 
+		[Desc("Ticks a caster waits after casting before it casts again, whatever its mana (the bot casts less than mana",
+			"allows). A teleport home to flee isn't held back.")]
+		public readonly int CastDelay = 0;
+
+		[Desc("Ticks a caster waits, once an enemy unit comes within reach of its spells, before it casts (it doesn't",
+			"cast the moment it meets the enemy). Starts again when no enemy is within reach. Heals and a teleport home",
+			"to flee aren't held back.")]
+		public readonly int EngageDelay = 0;
+
 		[Desc("How far beyond a spell's range a caster looks for a target, in cells (it walks up to cast).")]
 		public readonly int ExtraRange = 3;
 
@@ -65,6 +74,12 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		readonly World world;
 		readonly Player player;
+
+		// When each caster may cast again (CastDelay).
+		readonly Dictionary<Actor, int> nextCast = [];
+
+		// When each caster first had an enemy unit within reach of its spells (EngageDelay).
+		readonly Dictionary<Actor, int> metEnemy = [];
 		int ticks;
 
 		public PwSpellBotModule(Actor self, PwSpellBotModuleInfo info)
@@ -83,6 +98,13 @@ namespace OpenRA.Mods.Pw.Traits
 				.Where(c => c.Actor.Owner == player && !c.Actor.IsDead && c.Actor.IsInWorld)
 				.GroupBy(c => c.Actor).ToList();
 
+			var now = world.WorldTick;
+			foreach (var gone in nextCast.Where(n => n.Value <= now || n.Key.IsDead).Select(n => n.Key).ToList())
+				nextCast.Remove(gone);
+
+			foreach (var gone in metEnemy.Keys.Where(a => a.IsDead || !a.IsInWorld).ToList())
+				metEnemy.Remove(gone);
+
 			var cast = new HashSet<Actor>();
 			foreach (var caster in casters)
 			{
@@ -90,7 +112,11 @@ namespace OpenRA.Mods.Pw.Traits
 				if (Casting(self) || Harmless(self))
 					continue;
 
-				foreach (var spell in caster.Select(c => c.Trait).Where(s => !s.Info.AutoHeal && (Info.Spells.Count == 0 || Info.Spells.Contains(s.Info.Name))))
+				var spells = caster.Select(c => c.Trait)
+					.Where(s => !s.Info.AutoHeal && (Info.Spells.Count == 0 || Info.Spells.Contains(s.Info.Name))).ToList();
+				var waiting = nextCast.ContainsKey(self) || !Engaged(self, spells, now);
+
+				foreach (var spell in spells)
 				{
 					if (!spell.IsUnlocked(self))
 					{
@@ -101,7 +127,7 @@ namespace OpenRA.Mods.Pw.Traits
 						continue;
 					}
 
-					if (!spell.IsReady(self))
+					if (!spell.IsReady(self) || (waiting && !spell.Info.Teleport && !IsHeal(spell.Info)))
 						continue;
 
 					var target = Choose(self, spell.Info);
@@ -111,12 +137,41 @@ namespace OpenRA.Mods.Pw.Traits
 					AIUtils.BotDebug("{0}: {1} casts {2}.", player, self.Info.Name, spell.Info.Name);
 					bot.QueueOrder(PwSpell.Cast(self, spell.Info.Name, target));
 					cast.Add(self);
+					if (Info.CastDelay > 0 && !spell.Info.Teleport)
+						nextCast[self] = now + Info.CastDelay;
+
 					break;
 				}
 			}
 
 			foreach (var caster in casters.Select(c => c.Key).Where(c => !cast.Contains(c)))
 				Follow(bot, caster);
+		}
+
+		static bool IsHeal(PwSpellInfo spell) => spell.Heal > 0 && !spell.Teleport;
+
+		// Whether the caster has had an enemy unit within reach of its spells for EngageDelay ticks. An enemy leaving
+		// reach starts it over.
+		bool Engaged(Actor self, List<PwSpell> spells, int now)
+		{
+			if (Info.EngageDelay <= 0)
+				return true;
+
+			var ranges = spells.Where(s => !s.Info.Teleport).Select(s => s.Info.Range).ToList();
+			var reach = (ranges.Count > 0 ? ranges.Max() : WDist.Zero) + WDist.FromCells(Info.ExtraRange);
+			if (!Visible(self.CenterPosition, reach).Any(a => Enemy(a) && !PwBotUtils.IsBuilding(a.Info) && !Harmless(a)))
+			{
+				metEnemy.Remove(self);
+				return false;
+			}
+
+			if (!metEnemy.TryGetValue(self, out var since))
+			{
+				metEnemy[self] = now;
+				return false;
+			}
+
+			return now - since >= Info.EngageDelay;
 		}
 
 		Target Choose(Actor self, PwSpellInfo spell)

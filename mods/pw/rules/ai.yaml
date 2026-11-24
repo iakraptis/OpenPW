@@ -100,6 +100,9 @@ player:
 	PwHuntingBotModule@easy:
 		RequiresCondition: enable-easy-ai
 	PwSpellBotModule@easy:
+		# Elf casters wait before their first spell on meeting an enemy, and between spells.
+		CastDelay: 1000
+		EngageDelay: 250
 		RequiresCondition: enable-easy-ai
 		# The Elves' spells for now; the Demons' come later.
 		Spells: thunder-bolt, shield, mass-temper, teleport, jump-portal, drop-stone, cure, fake, meteor, resurrect
@@ -212,6 +215,8 @@ player:
 		RequiresCondition: enable-medium-ai
 		EscortDelay: 17000
 	PwSpellBotModule@medium:
+		CastDelay: 500
+		EngageDelay: 150
 		RequiresCondition: enable-medium-ai
 		# The Elves' spells for now; the Demons' come later.
 		Spells: thunder-bolt, shield, mass-temper, teleport, jump-portal, drop-stone, cure, fake, meteor, resurrect
