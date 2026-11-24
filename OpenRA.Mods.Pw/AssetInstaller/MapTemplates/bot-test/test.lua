@@ -8,6 +8,8 @@
 -- the end, one "BATTLE RESULT" line per bot and a "BATTLE END" line, which tools/battle_stats.py collects. The first
 -- time a bot has its leader (the unit its main building trains last, once every other building stands: the Chief,
 -- Tyranos, Devil, AngelElf) a "bot: ... leader" line is printed, and the results give that tick and the most it had.
+-- The start positions are shuffled for every battle (some spots favour their owner): the map places each bot's start at
+-- a spawn point, and the script moves them on the first ticks; the results give each bot's start.
 Bots = { "Primitive", "Tyrano", "Demon", "Elf" }
 Checks = true
 Level = "easy"
@@ -56,7 +58,50 @@ Races = {
     },
 }
 
+-- Each bot's main building as placed (by RandomStarts), for the tower checks.
+Main = { }
+Start = { }
+
+-- Shuffles the bots' starts: each one's main building and four workers (what the map placed, at the spawn points) go,
+-- and on the next tick a bot gets its start at the spawn point the shuffle gave it (the old buildings are gone by then);
+-- the battle begins a tick later.
+RandomStarts = function(andThen)
+    local spots = { }
+    for i, name in ipairs(Bots) do
+        local main = Map.NamedActor(name .. "Main")
+        spots[i] = main.Location
+        main.Destroy()
+        for w = 0, 3 do
+            local worker = Map.NamedActor(name .. "Worker" .. w)
+            if worker then worker.Destroy() end
+        end
+    end
+    for i = #spots, 2, -1 do
+        local j = Utils.RandomInteger(1, i + 1)
+        spots[i], spots[j] = spots[j], spots[i]
+    end
+    Trigger.AfterDelay(1, function()
+        for i, name in ipairs(Bots) do
+            local p = Player.GetPlayer(name)
+            local race = Races[p.Faction]
+            local at = spots[i]
+            Start[name] = at
+            Main[name] = Actor.Create(race.Main, true, { Owner = p, Location = at })
+            for w = 0, 3 do
+                Actor.Create(race.Workers[1], true, { Owner = p, Location = CPos.New(at.X + w, at.Y + 5) })
+            end
+            print("bot: " .. name .. " starts at " .. at.X .. "," .. at.Y)
+        end
+        -- Created actors join the world at the end of the tick: the battle starts on the next one.
+        Trigger.AfterDelay(1, andThen)
+    end)
+end
+
 WorldLoaded = function()
+    RandomStarts(Begin)
+end
+
+Begin = function()
     players, isBot, peak, guard, nextReport = { }, { }, { }, { }, { }
     for _, name in ipairs(Bots) do
         local p = Player.GetPlayer(name)
@@ -137,7 +182,8 @@ Battle = function()
             .. " earned5k=" .. (s.earned[5000] or -1) .. " earned10k=" .. (s.earned[10000] or -1)
             .. " earned20k=" .. (s.earned[20000] or -1) .. " kills=" .. s.kills .. " losses=" .. s.losses
             .. " killsValue=" .. p.KillsCost .. " lossesValue=" .. p.DeathsCost .. " level=" .. Level
-            .. " leaderAt=" .. (s.leaderAt or -1) .. " peakLeaders=" .. s.leaders)
+            .. " leaderAt=" .. (s.leaderAt or -1) .. " peakLeaders=" .. s.leaders
+            .. " start=" .. Start[name].X .. "," .. Start[name].Y)
     end
     print("BATTLE END battle=" .. BattleName .. " tick=" .. Now() .. " winner=" .. winner .. " leader=" .. leader)
     battleOver = true
@@ -174,7 +220,7 @@ Watch = function()
         end
         local towers = p.GetActorsByTypes(race.Towers)
         if #towers > peak[name].towers then peak[name].towers = #towers end
-        local hq = Map.NamedActor(name .. "Main")
+        local hq = Main[name]
         for _, t in ipairs(towers) do
             if hq and not hq.IsDead and (t.Location - hq.Location).Length <= 8 then guard[name].hq = true end
             for _, a in ipairs(Map.ActorsInCircle(t.CenterPosition, WDist.FromCells(6))) do
