@@ -8,6 +8,15 @@ General:
 Terrain:
 	TerrainType@Clear:
 		Type: Clear
+	# Water and Cliff as in the real tilesets (jungle.yaml): ground units can't walk them (Locomotor TerrainSpeeds).
+	TerrainType@Water:
+		Type: Water
+		TargetTypes: Water
+		Color: 3C7A8C
+	TerrainType@Cliff:
+		Type: Cliff
+		TargetTypes: Ground
+		Color: 5A5040
 
 Templates:
 	Template@255:
@@ -17,3 +26,17 @@ Templates:
 		Categories: Terrain
 		Tiles:
 			0: Clear
+	Template@3:
+		Id: 3
+		Images: tilesets/types/water.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Water
+	Template@4:
+		Id: 4
+		Images: tilesets/types/cliff.png
+		Size: 1,1
+		Categories: Terrain
+		Tiles:
+			0: Cliff

@@ -53,6 +53,8 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			// The ring with the arrow pointing down: loading units into a transport.
 			("enter", 92, 8),
 			("enter-blocked", 0, 1),
+
+			// The hand: picking up meat and items.
 			("capture", 80, 4),
 			("capture-blocked", 0, 1),
 			("harvest", 36, 1),

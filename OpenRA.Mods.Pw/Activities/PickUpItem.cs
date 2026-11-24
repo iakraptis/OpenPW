@@ -39,6 +39,7 @@ namespace OpenRA.Mods.Pw.Activities
 			if (IsCanceling || !PwItemUser.CanPickUp(self, item))
 				return true;
 
+			item.Trait<PwItem>().Claimant = self;
 			var target = Target.FromActor(item);
 			if (!target.IsInRange(self.CenterPosition, Reach))
 			{
@@ -56,6 +57,13 @@ namespace OpenRA.Mods.Pw.Activities
 			var facing = self.TraitOrDefault<IFacing>()?.Facing ?? WAngle.Zero;
 			QueueChild(new Transform(becomes) { Facing = facing, SkipMakeAnims = true });
 			return false;
+		}
+
+		protected override void OnLastRun(Actor self)
+		{
+			// Given up (cancelled, unreachable): another unit may go for it.
+			if (!item.IsDead && item.TraitOrDefault<PwItem>() is PwItem i && i.Claimant == self)
+				i.Claimant = null;
 		}
 	}
 }

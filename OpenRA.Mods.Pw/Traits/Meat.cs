@@ -28,15 +28,19 @@ namespace OpenRA.Mods.Pw.Traits
 			: base(value) { }
 	}
 
-	[Desc("Meat on the ground. Rots: loses 1 every RotInterval ticks, gone at 0.")]
+	[Desc("Meat on the ground. Rots: loses 1 every RotInterval ticks, gone at 0. Gone at once where no unit could walk to ",
+		"it: a cell whose terrain isn't one of Terrain (water, cliffs), or under a building (placed there later too).")]
 	public class PwMeatInfo : TraitInfo
 	{
 		public readonly int RotInterval = PwTime.Ticks(32);
 
+		[Desc("Terrain types meat can lie on: those ground units walk (the foot Locomotor's TerrainSpeeds).")]
+		public readonly HashSet<string> Terrain = ["Clear", "Ramp"];
+
 		public override object Create(ActorInitializer init) { return new PwMeat(init, this); }
 	}
 
-	public class PwMeat : ITick
+	public class PwMeat : ITick, INotifyAddedToWorld
 	{
 		readonly PwMeatInfo info;
 		int ticks;
@@ -50,6 +54,8 @@ namespace OpenRA.Mods.Pw.Traits
 			Amount = init.GetValue<PwMeatAmountInit, int>(1);
 		}
 
+		public void SetAmount(int amount) => Amount = Math.Max(1, amount);
+
 		public int Take(Actor self)
 		{
 			if (Taken)
@@ -60,13 +66,28 @@ namespace OpenRA.Mods.Pw.Traits
 			return Amount;
 		}
 
+		// Where no unit could reach it: off the walkable terrain, or under a building.
+		bool Unreachable(Actor self)
+		{
+			var map = self.World.Map;
+			var cell = self.Location;
+			return !map.Contains(cell) || !info.Terrain.Contains(map.GetTerrainInfo(cell).Type)
+				|| self.World.ActorMap.GetActorsAt(cell).Any(a => a != self && a.Info.HasTraitInfo<BuildingInfo>());
+		}
+
+		void INotifyAddedToWorld.AddedToWorld(Actor self)
+		{
+			if (Unreachable(self))
+				Take(self);
+		}
+
 		void ITick.Tick(Actor self)
 		{
 			if (Taken || ++ticks < info.RotInterval)
 				return;
 
 			ticks = 0;
-			if (--Amount <= 0)
+			if (--Amount <= 0 || Unreachable(self))
 				Take(self);
 		}
 	}

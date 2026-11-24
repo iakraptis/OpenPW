@@ -9,6 +9,7 @@
  */
 #endregion
 
+using OpenRA.Mods.Common.Activities;
 using OpenRA.Mods.Common.Traits;
 using OpenRA.Traits;
 
@@ -29,6 +30,9 @@ namespace OpenRA.Mods.Pw.Traits
 
 	public class PwFleeWhenHit : INotifyDamage
 	{
+		// A hovering flyer with nothing to do runs the engine's FlyIdle for good, so it is never IsIdle.
+		static bool IsIdle(Actor self) => self.IsIdle || self.CurrentActivity is FlyIdle;
+
 		readonly PwFleeWhenHitInfo info;
 
 		public PwFleeWhenHit(PwFleeWhenHitInfo info)
@@ -38,7 +42,7 @@ namespace OpenRA.Mods.Pw.Traits
 
 		void INotifyDamage.Damaged(Actor self, AttackInfo e)
 		{
-			if (e.Damage.Value <= 0 || e.Attacker == null || self.IsDead || !self.IsIdle || self.Info.HasTraitInfo<AttackBaseInfo>())
+			if (e.Damage.Value <= 0 || e.Attacker == null || self.IsDead || !IsIdle(self) || self.Info.HasTraitInfo<AttackBaseInfo>())
 				return;
 
 			var random = self.World.SharedRandom;
