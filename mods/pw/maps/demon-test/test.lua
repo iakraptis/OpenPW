@@ -51,7 +51,8 @@ Production = function()
             return #tombs == before + 1 and PwTest.Finished(tombs[#tombs])
         end, function(built)
             if built then
-                Check(PwTest.PopulationLimit(me) == limit + 10, "the Tomb adds 10 population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
+                local adds = PwTest.Rule("demon-tomb", "ProvidesPopulation", "Amount")
+                Check(PwTest.PopulationLimit(me) == limit + adds, "the Tomb adds " .. adds .. " population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
             end
         end)
     end)
@@ -69,8 +70,11 @@ KillPoints = function()
     end)
     WaitFor("a Skeleton kills a BuildMan", 300, function() return victim.IsDead end, function(ok)
         if not ok then return end
-        -- A quarter of the BuildMan's 100.
-        Check(skeleton.Health == 55, "it gains a quarter of the BuildMan's health as KP (" .. skeleton.Health .. ")")
+        -- Its share (PwKillPoints) of the BuildMan's full health, up to its own full health.
+        local share = PwTest.Rule("demon-skeleton", "PwKillPoints", "Share")
+        local gain = math.floor(PwTest.Rule("primitive-buildman", "Health", "HP") * share / 100)
+        local kp = math.min(30 + gain, skeleton.MaxHealth)
+        Check(skeleton.Health == kp, "it gains " .. share .. "% of the BuildMan's health as KP (" .. skeleton.Health .. ", expected " .. kp .. ")")
         local machine = Actor.Create("primitive-bowmachine", true, { Owner = enemy, Location = CPos.New(6, 14) })
         machine.Stance = "HoldFire"
         Later(2, function()
@@ -79,7 +83,7 @@ KillPoints = function()
         end)
         WaitFor("the Skeleton destroys a BowMachine", 300, function() return machine.IsDead end, function(destroyed)
             if destroyed then
-                Check(skeleton.Health == 55, "a machine gives no KP (" .. skeleton.Health .. ")")
+                Check(skeleton.Health == kp, "a machine gives no KP (" .. skeleton.Health .. ")")
             end
         end)
     end)
@@ -92,11 +96,12 @@ StoneCurse = function()
     target.Stance = "HoldFire"
     PwTest.CastOn(kelpa, "stone-curse", target)
     Later(30, function()
-        Check(kelpa.Health == 250, "no Stone curse below level 1 (" .. kelpa.Health .. " KP)")
-        PwTest.GiveExperience(kelpa, 14)
+        Check(kelpa.Health == kelpa.MaxHealth, "no Stone curse below its level (" .. kelpa.Health .. " KP)")
+        PwTest.GiveLevels(kelpa, PwTest.Rule("demon-kelpa", "PwSpell@STONE-CURSE", "MinLevel"))
         PwTest.CastOn(kelpa, "stone-curse", target)
         Later(30, function()
-            Check(kelpa.Health == 165, "Stone curse costs 85 KP (" .. kelpa.Health .. ")")
+            local cost = PwTest.Rule("demon-kelpa", "PwSpell@STONE-CURSE", "Cost")
+            Check(kelpa.Health == kelpa.MaxHealth - cost, "Stone curse costs " .. cost .. " KP (" .. kelpa.Health .. ")")
             local at = target.Location
             target.Move(CPos.New(17, 14))
             -- The curse lasts 66 ticks from the cast.
@@ -118,7 +123,8 @@ NoxiousGas = function()
     Later(10, function() PwTest.CastAt(warlock, "noxious-gas", CPos.New(27, 8)) end)
     WaitFor("the cloud hurts the enemy PowerMan", 300, function() return foe.Health < foe.MaxHealth end, function(ok)
         if not ok then return end
-        Check(warlock.Health == 80, "Noxious gas costs 120 KP (" .. warlock.Health .. ")")
+        local cost = PwTest.Rule("demon-warlock", "PwSpell@NOXIOUS-GAS", "Cost")
+        Check(warlock.Health == warlock.MaxHealth - cost, "Noxious gas costs " .. cost .. " KP (" .. warlock.Health .. ")")
         Later(60, function()
             Check(friend.IsDead or friend.Health < friend.MaxHealth, "it hurts the Warlock's own Skeleton too")
             Check(house.Health == house.MaxHealth, "it doesn't hurt buildings")
@@ -131,12 +137,13 @@ Quake = function()
     local house = Actor.Create("primitive-house", true, { Owner = enemy, Location = CPos.New(27, 18) })
     Later(10, function() PwTest.CastAt(warlock, "quake", CPos.New(28, 18)) end)
     Later(60, function()
-        Check(warlock.Health == 200 and house.Health == house.MaxHealth, "no Quake below level 1")
-        PwTest.GiveExperience(warlock, 18)
+        Check(warlock.Health == warlock.MaxHealth and house.Health == house.MaxHealth, "no Quake below its level")
+        PwTest.GiveLevels(warlock, PwTest.Rule("demon-warlock", "PwSpell@QUAKE", "MinLevel"))
         PwTest.CastAt(warlock, "quake", CPos.New(28, 18))
         WaitFor("Quake hurts an enemy House", 300, function() return house.Health < house.MaxHealth end, function(ok)
             if ok then
-                Check(warlock.Health == 50, "Quake costs 150 KP (" .. warlock.Health .. ")")
+                local cost = PwTest.Rule("demon-warlock", "PwSpell@QUAKE", "Cost")
+                Check(warlock.Health == warlock.MaxHealth - cost, "Quake costs " .. cost .. " KP (" .. warlock.Health .. ")")
             end
         end)
     end)
@@ -149,7 +156,8 @@ Suicide = function()
     Later(10, function() PwTest.CastSelf(warlock, "suicide") end)
     WaitFor("a Warlock's Suicide kills it", 100, function() return warlock.IsDead end, function(ok)
         if ok then
-            Check(foe.Health == foe.MaxHealth - 150, "the PowerMan beside it takes 150 (" .. foe.Health .. " of " .. foe.MaxHealth .. ")")
+            local damage = PwTest.Rule("demon-warlock", "PwSpell@SUICIDE", "Damage")
+            Check(foe.Health == math.max(foe.MaxHealth - damage, 0), "the PowerMan beside it takes " .. damage .. " (" .. foe.Health .. " of " .. foe.MaxHealth .. ")")
         end
     end)
 end
@@ -162,7 +170,8 @@ RiseDeath = function()
         return #me.GetActorsByTypes({ "demon-risezombie1", "demon-risezombie2" }) == 3
     end, function(ok)
         if ok then
-            Check(devil.Health == 800, "Rise death costs 100 KP (" .. devil.Health .. ")")
+            local cost = PwTest.Rule("demon-devil", "PwSpell@RISE-DEATH", "Cost")
+            Check(devil.Health == devil.MaxHealth - cost, "Rise death costs " .. cost .. " KP (" .. devil.Health .. ")")
         end
     end)
 end

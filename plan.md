@@ -496,6 +496,10 @@ The spell costs, levels and research were found since (2026-11-03, [rules.md](do
 - Test map: the converted original maps work directly.
 - Automated tests: Lua test maps (`mods/pw/maps/*-test`, shared `testlib.lua`, `PwTest` helpers in
   `OpenRA.Mods.Pw/Tests`), run by `python run_tests.py`. Each fix gets a check that fails without it.
+  - Stats come from the rules, not the test: `PwTest.Rule(actor, trait, field)` (`RuleOr` with a fallback),
+    `PwTest.Weapon(weapon, field)`, `PwTest.GiveLevels`, `PwTest.SpellPower`, so a balance pass leaves the tests
+    passing (checked 2026-11-23 with 12 stats changed across the races). `timing-test` is the exception: its
+    baselines are measured durations.
   - Merged by theme on 2026-11-03 (`research/tools/merge_tests.py`; every check kept): `economy-test` (gathering,
     population, rally), `combat-test` (combat, defence, levels), `primitive-test` (items, upgrades, chief, air),
     `wildlife-test` (wild, hunting, meat, share meat), `bot-modules-test` (the AI's ability, defence, hunting and

@@ -201,7 +201,10 @@ do
                 Check(meat ~= nil, "the Galimimus leaves meat")
                 if meat == nil then return end
                 local amount = PwTest.MeatAmount(meat)
-                Check(amount >= 29 and amount <= 40, "the meat is worth about its cost (" .. amount .. ")")
+                -- PwDropsMeat: three quarters of its Amount plus a random quarter; it may have rotted by 1 since.
+                local worth = PwTest.Rule("wild-galimimus-quick", "PwDropsMeat", "Amount")
+                Check(amount >= math.floor(worth * 3 / 4) - 1 and amount <= worth,
+                    "the meat is worth about its cost, " .. worth .. " (" .. amount .. ")")
                 Check(not PwTest.CanOrder(machine, "PwPickUpMeat", meat), "a machine can't pick up meat")
                 -- The hunter, hurt, picks it up and eats it.
                 hunter.Health = hunter.MaxHealth - 10

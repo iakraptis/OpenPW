@@ -195,8 +195,8 @@ do
         white = Map.NamedActor("BotSpellWhiteElf")
         enemies = { }
         for i = 0, 3 do enemies[#enemies + 1] = Map.NamedActor("BotSpellEnemy" .. i) end
-        PwTest.GiveExperience(red, 100)
-        PwTest.GiveExperience(blue, 100)
+        PwTest.GiveLevels(red, 8)
+        PwTest.GiveLevels(blue, 6)
         white.Health = white.MaxHealth / 4
         local hurt = white.Health
         Later(1, function()

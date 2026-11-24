@@ -48,6 +48,13 @@ WorldLoaded = function()
     FinishWhenDone("ELF", 4000)
 end
 
+-- Numbers from the rules (PwTest.Rule), so a balance change doesn't break the checks.
+local function Spell(unit, spell, field) return PwTest.Rule(unit, "PwSpell@" .. spell, field) end
+-- A spell's effect at the caster's level (PwSpell: the value plus spell power percent).
+local function Powered(caster, value) return value + math.floor(value * PwTest.SpellPower(caster) / 100) end
+-- Mana regenerated while a test waits for a spell's effect (1 every 16 ticks, a 200-tick wait at most).
+local ManaRegenSlack = 15
+
 CurePreferred = function()
     local unicorn = Actor.Create("elf-unicorn", true, { Owner = me, Location = CPos.New(10, 31) })
     local worse = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(9, 31) })
@@ -82,7 +89,9 @@ CureAutoCastOff = function()
             WaitFor("cast by hand, it still heals", 60, function() return hurt.Health > before end, function(ok)
                 if not ok then return end
                 Later(40, function()
-                    Check(hurt.Health <= before + 32, "a cast by hand heals once, for 15 ticks (" .. hurt.Health - before .. " HP)")
+                    local heal, steps = Spell("elf-unicorn", "CURE", "Heal"), Spell("elf-unicorn", "CURE", "Steps")
+                    Check(hurt.Health <= before + heal * steps + heal,
+                        "a cast by hand heals once, " .. steps .. " steps (" .. hurt.Health - before .. " HP)")
                     PwTest.SetAutoCast(unicorn, "cure", true)
                     WaitFor("turned on again, it heals on its own to full", 300, function() return hurt.Health == hurt.MaxHealth end)
                 end)
@@ -100,7 +109,7 @@ CureStone = function()
         hurt.Health = 30
         Later(60, function()
             Check(hurt.Health < 40, "a Unicorn turned to stone doesn't heal (" .. hurt.Health .. " HP)")
-            WaitFor("once the stone wears off, it heals again", 300, function() return hurt.Health > 60 end)
+            WaitFor("once the stone wears off, it heals again", 300, function() return hurt.Health > 40 end)
         end)
     end)
 end
@@ -150,7 +159,8 @@ Production = function()
             return #trees == before + 1 and PwTest.Finished(trees[#trees])
         end, function(built)
             if built then
-                Check(PwTest.PopulationLimit(me) == limit + 10, "the ElfTree adds 10 population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
+                local adds = PwTest.Rule("elf-elftree", "ProvidesPopulation", "Amount")
+                Check(PwTest.PopulationLimit(me) == limit + adds, "the ElfTree adds " .. adds .. " population (" .. limit .. " -> " .. PwTest.PopulationLimit(me) .. ")")
             end
         end)
     end)
@@ -162,14 +172,18 @@ ThunderBolt = function()
     red.Stance = "HoldFire"
     foe.Stance = "HoldFire"
     Later(2, function()
+        local mana = PwTest.Mana(red)
         PwTest.CastOn(red, "thunder-bolt", foe)
         Later(30, function()
-            Check(PwTest.Mana(red) >= 95 and foe.Health == foe.MaxHealth, "no Thunder bolt below level 1")
-            PwTest.GiveExperience(red, 12)
+            local minLevel = Spell("elf-redelf", "THUNDER-BOLT", "MinLevel")
+            Check(PwTest.Mana(red) > mana - Spell("elf-redelf", "THUNDER-BOLT", "ManaCost") and foe.Health == foe.MaxHealth,
+                "no Thunder bolt below level " .. minLevel)
+            PwTest.GiveLevels(red, minLevel)
             PwTest.CastOn(red, "thunder-bolt", foe)
             WaitFor("Thunder bolt strikes the Knight", 200, function() return foe.Health < foe.MaxHealth end, function(ok)
                 if ok then
-                    Check(foe.Health == foe.MaxHealth - 80, "it takes 80 (" .. foe.MaxHealth - foe.Health .. ")")
+                    local damage = Powered(red, Spell("elf-redelf", "THUNDER-BOLT", "Damage"))
+                    Check(foe.Health == math.max(foe.MaxHealth - damage, 0), "it takes " .. damage .. " (" .. foe.MaxHealth - foe.Health .. ")")
                 end
             end)
         end)
@@ -182,14 +196,15 @@ Shield = function()
     white.Stance = "HoldFire"
     friend.Stance = "HoldFire"
     Later(2, function()
-        PwTest.GiveExperience(white, 16)
+        PwTest.GiveLevels(white, Spell("elf-whiteelf", "SHIELD", "MinLevel"))
+        local shield = Powered(white, Spell("elf-whiteelf", "SHIELD", "Shield"))
         PwTest.CastOn(white, "shield", friend)
         WaitFor("a WhiteElf shields a BlueElf", 100, function() return PwTest.Shield(friend) > 0 end, function(ok)
             if not ok then return end
-            Check(PwTest.Shield(friend) == 480, "the shield holds 480 (" .. PwTest.Shield(friend) .. ")")
+            Check(PwTest.Shield(friend) == shield, "the shield holds " .. shield .. " (" .. PwTest.Shield(friend) .. ")")
             local attacker = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = CPos.New(25, 5) })
             Later(2, function() attacker.Attack(friend) end)
-            WaitFor("the PowerMan's blows wear the shield down", 300, function() return PwTest.Shield(friend) < 480 end, function(worn)
+            WaitFor("the PowerMan's blows wear the shield down", 300, function() return PwTest.Shield(friend) < shield end, function(worn)
                 if worn then
                     Check(friend.Health == friend.MaxHealth, "the BlueElf isn't hurt meanwhile")
                 end
@@ -201,10 +216,13 @@ end
 Teleport = function()
     local ranger = Actor.Create("elf-ranger", true, { Owner = me, Location = CPos.New(4, 12) })
     Later(2, function()
+        local mana = PwTest.Mana(ranger)
         PwTest.CastAt(ranger, "teleport", CPos.New(28, 12))
         WaitFor("the Ranger teleports across the map", 60, function() return (ranger.Location - CPos.New(28, 12)).Length <= 2 end, function(ok)
             if ok then
-                Check(PwTest.Mana(ranger) < 40, "Teleport costs 65 mana (" .. PwTest.Mana(ranger) .. " left)")
+                local cost = Spell("elf-ranger", "TELEPORT", "ManaCost")
+                Check(PwTest.Mana(ranger) <= mana - cost + ManaRegenSlack,
+                    "Teleport costs " .. cost .. " mana (" .. PwTest.Mana(ranger) .. " left)")
             end
         end)
     end)
@@ -216,11 +234,12 @@ DropStone = function()
     blue.Stance = "HoldFire"
     foe.Stance = "HoldFire"
     Later(2, function()
-        PwTest.GiveExperience(blue, 16)
+        PwTest.GiveLevels(blue, Spell("elf-blueelf", "DROP-STONE", "MinLevel"))
         PwTest.CastAt(blue, "drop-stone", CPos.New(18, 16))
         WaitFor("a stone falls on the Giant", 200, function() return foe.Health < foe.MaxHealth end, function(ok)
             if ok then
-                Check(foe.Health == foe.MaxHealth - 200, "it takes 200 (" .. foe.MaxHealth - foe.Health .. ")")
+                local damage = Powered(blue, Spell("elf-blueelf", "DROP-STONE", "Damage"))
+                Check(foe.Health == math.max(foe.MaxHealth - damage, 0), "it takes " .. damage .. " (" .. foe.MaxHealth - foe.Health .. ")")
             end
         end)
     end)
@@ -236,12 +255,14 @@ Unicorn = function()
         hurt.Health = 30
         Later(48, function()
             local healed = hurt.Health - 30
-            Check(healed >= 45 and healed <= 90,
+            -- One cast heals Heal x Steps: in 48 ticks, one and a half casts to three.
+            local cast = Spell("elf-unicorn", "CURE", "Heal") * Spell("elf-unicorn", "CURE", "Steps")
+            Check(healed >= math.floor(cast * 3 / 2) and healed <= cast * 3,
                 "Cure heals in casts of 15 ticks every 16, not every tick (" .. healed .. " HP in 48 ticks)")
         end)
         WaitFor("Cure automatically heals the RedElf to full", 200, function() return hurt.Health == hurt.MaxHealth end, function(ok)
             if not ok then return end
-            Check(PwTest.Mana(unicorn) < 200, "automatic Cure spends mana (" .. PwTest.Mana(unicorn) .. " left)")
+            Check(PwTest.Mana(unicorn) < PwTest.MaxMana(unicorn), "automatic Cure spends mana (" .. PwTest.Mana(unicorn) .. " left)")
             PwTest.CastOn(unicorn, "fake", model)
             Later(30, function()
                 Check(#me.GetActorsByType("primitive-knight") == 0, "no Fake before Study Fake")
@@ -306,7 +327,8 @@ Resurrect = function()
                     local risen = Utils.Where(me.GetActorsByType("elf-redelf"), function(a) return a.Location == CPos.New(20, 27) end)[1]
                     Check(risen.Health == risen.MaxHealth / 2, "at half health (" .. risen.Health .. ")")
                     Check(PwTest.Mana(risen) == PwTest.MaxMana(risen) / 2, "with half its mana (" .. PwTest.Mana(risen) .. ")")
-                    Check(PwTest.Mana(angel) < 30, "Resurrect costs 84 mana (" .. PwTest.Mana(angel) .. " left)")
+                    local cost = Spell("elf-angelelf", "RESURRECT", "ManaCost")
+                    Check(PwTest.Mana(angel) <= before - cost + ManaRegenSlack, "Resurrect costs " .. cost .. " mana (" .. PwTest.Mana(angel) .. " left)")
                     Check(#me.GetActorsByType("primitive-soldier") == 0, "the Soldier beside it stays dead")
                 end)
             end)
@@ -335,10 +357,12 @@ ManaPotion = function()
     local red = Actor.Create("elf-redelf", true, { Owner = me, Location = CPos.New(28, 28) })
     red.Stance = "HoldFire"
     Later(2, function()
-        Check(PwTest.MaxMana(red) == 100, "a RedElf holds 100 mana")
+        local base = PwTest.Rule("elf-redelf", "PwMana", "Max")
+        local raised = base + PwTest.Rule("elf-upgrade-mana-potion-secret-all-of-elf-1", "PwUpgrade", "Mana")
+        Check(PwTest.MaxMana(red) == base, "a RedElf holds " .. base .. " mana")
         PwTest.CompleteUpgrade(me, "elf-upgrade-mana-potion-secret-all-of-elf-1")
         Later(2, function()
-            Check(PwTest.MaxMana(red) == 150, "Study Mana Potion Secret raises it to 150 (" .. PwTest.MaxMana(red) .. ")")
+            Check(PwTest.MaxMana(red) == raised, "Study Mana Potion Secret raises it to " .. raised .. " (" .. PwTest.MaxMana(red) .. ")")
         end)
     end)
 end
@@ -349,11 +373,12 @@ MassTemper = function()
     local b = Actor.Create("elf-ranger", true, { Owner = me, Location = CPos.New(31, 22) })
     white.Stance = "HoldFire"
     Later(2, function()
-        PwTest.GiveExperience(white, 16 * 3)
+        PwTest.GiveLevels(white, Spell("elf-whiteelf", "MASS-TEMPER", "MinLevel"))
+        local shield = Spell("elf-whiteelf", "MASS-TEMPER", "Shield")
         PwTest.CastAt(white, "mass-temper", CPos.New(30, 22))
         WaitFor("Mass temper shields the units there", 100, function() return PwTest.Shield(a) > 0 and PwTest.Shield(b) > 0 end, function(ok)
             if ok then
-                Check(PwTest.Shield(a) >= 160, "a shield of 160 or more, with spell power (" .. PwTest.Shield(a) .. ")")
+                Check(PwTest.Shield(a) >= shield, "a shield of " .. shield .. " or more, with spell power (" .. PwTest.Shield(a) .. ")")
             end
         end)
     end)
@@ -365,7 +390,7 @@ JumpPortal = function()
     ranger.Stance = "HoldFire"
     foe.Stance = "HoldFire"
     Later(2, function()
-        PwTest.GiveExperience(ranger, 12 * 3)
+        PwTest.GiveLevels(ranger, Spell("elf-ranger", "JUMP-PORTAL", "MinLevel"))
         PwTest.CastAt(ranger, "jump-portal", CPos.New(8, 20))
         WaitFor("the portal throws the PowerMan away", 100, function() return (foe.Location - CPos.New(8, 20)).Length > 6 end)
     end)

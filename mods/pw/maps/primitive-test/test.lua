@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Items: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Items: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local Make, PickUp, Shield, WorldLoaded, blacksmith, enemy, me
+    local Make, PickUp, Shield, WorldLoaded, blacksmith, enemy, me, percent
     -- Items (Item.itm, rules/primitive/items.yaml). The Blacksmith makes an item, which appears on the ground beside it,
     -- even when every cell there is taken. A unit of the type it equips walks over, picks it up and becomes the equipped
     -- type for good, keeping its level, experience and health.
@@ -51,8 +51,10 @@ do
             PwTest.PickUp(soldier, item)
             PwTest.PickUp(stranger, item)
             Check(soldier.IsIdle and stranger.IsIdle, "only the owner's units of the item's type can pick it up")
-            PwTest.GiveExperience(powerman, 14 * 3 + 5)
-            powerman.Health = 80
+            PwTest.GiveLevels(powerman, 3)
+            PwTest.GiveExperience(powerman, 5)
+            powerman.Health = math.floor(powerman.MaxHealth / 2)
+            percent = math.floor(powerman.Health * 100 / powerman.MaxHealth)
             PwTest.PickUp(powerman, item)
         end)
         WaitFor("a Powerman picks up the Shield of Peace", 600, function()
@@ -64,8 +66,9 @@ do
             Check(powerman.IsDead or not powerman.IsInWorld, "the plain Powerman is replaced")
             Check(PwTest.Level(equipped) == 3 and PwTest.Experience(equipped) == 5,
                 "the equipped Powerman keeps level 3 and 5 experience (" .. PwTest.Level(equipped) .. ", " .. PwTest.Experience(equipped) .. ")")
-            -- Half health (80 of 160) stays half (75 of 150).
-            Check(equipped.Health == 75, "the equipped Powerman keeps its share of health (" .. equipped.Health .. ")")
+            -- Half health stays half: the same percentage (rounded down) of the equipped Powerman's health.
+            local expected = math.floor(equipped.MaxHealth * percent / 100)
+            Check(equipped.Health == expected, "the equipped Powerman keeps its share of health (" .. equipped.Health .. ", expected " .. expected .. ")")
         end)
     end
     Sections[#Sections + 1] = WorldLoaded
@@ -81,7 +84,7 @@ do
     -- Upgrades (Upgrade.upi, rules/primitive/upgrades.yaml). Buildings research them like units, one level at a time.
     -- 1. Level 2 is offered only after level 1, and a researched level isn't offered again.
     -- 2. The same level can't be queued twice.
-    -- 3. Improve Ground Primitive Weapon 1: +3 attack (a Powerman hits a Buildman for 28).
+    -- 3. Improve Ground Primitive Weapon 1: more attack (a Powerman hits a Buildman for its damage plus the upgrade's).
     -- 4. Improve Gathering Amount: 16 berries per trip.
     -- 5. Reduce Level Up Exp. 1: a Buildman levels every 8 experience instead of 10.
     Weapon1 = "primitive-upgrade-ground-primitive-weapon-1"
@@ -116,7 +119,10 @@ do
                 attacker.Attack(target)
             end)
             WaitFor("an upgraded Powerman hits", 300, function() return target.Health < target.MaxHealth end, function(hit)
-                if hit then Check(target.MaxHealth - target.Health == 28, "an upgraded Powerman hits for 28 (did " .. (target.MaxHealth - target.Health) .. ")") end
+                -- SubtractArmorDamage: the weapon's damage plus the upgrade's attack, minus the target's armour.
+                local hits = math.max(1, PwTest.Weapon("PowerManHit", "Damage") + PwTest.Rule(Weapon1, "PwUpgrade", "Attack")
+                    - PwTest.Rule("primitive-buildman", "PwArmor", "Value"))
+                if hit then Check(target.MaxHealth - target.Health == hits, "an upgraded Powerman hits for " .. hits .. " (did " .. (target.MaxHealth - target.Health) .. ")") end
             end)
         end)
     end
@@ -129,14 +135,16 @@ do
             local worker = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(12, 18) })
             Later(2, function() PwTest.Gather(worker, UpgradesBushNear) end)
             WaitFor("an upgraded Buildman gathers", 600, function() return PwTest.Carried(worker) > 0 end, function(gathered)
-                if gathered then Check(PwTest.Carried(worker) == 16, "an upgraded Buildman carries 16 (" .. PwTest.Carried(worker) .. ")") end
+                local carries = PwTest.Rule("primitive-buildman", "BerryGatherer", "Amount") + PwTest.Rule(Gathering, "PwUpgrade", "Gathering")
+                if gathered then Check(PwTest.Carried(worker) == carries, "an upgraded Buildman carries " .. carries .. " (" .. PwTest.Carried(worker) .. ")") end
             end)
         end)
         WaitFor("the Sanctuary researches Reduce Level Up Exp.", 2500, function() return PwTest.Researched(me, LevelExp) end, function(ok)
             if not ok then return end
             local man = Actor.Create("primitive-buildman", true, { Owner = me, Location = At(28, 28) })
-            PwTest.GiveExperience(man, 8)
-            Check(PwTest.Level(man) == 1, "with Reduce Level Up Exp. 1, 8 experience is a level")
+            local needed = PwTest.Rule("primitive-buildman", "PwLevels", "XpPerLevel") - PwTest.Rule(LevelExp, "PwUpgrade", "LevelCost")
+            PwTest.GiveExperience(man, needed)
+            Check(PwTest.Level(man) == 1, "with Reduce Level Up Exp. 1, " .. needed .. " experience is a level")
         end)
     end
     Sections[#Sections + 1] = WorldLoaded
@@ -180,8 +188,11 @@ do
         Actor.Create("primitive-chief", true, { Owner = me, Location = At(4, 4) })
         local attacker = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(6, 4) })
         local target = Actor.Create("primitive-buildman", true, { Owner = enemy, Location = At(7, 4) })
-        -- 25 attack, +10%: 27.
-        FirstHit("a Powerman beside his Chief hits harder", attacker, target, 27)
+        -- The Powerman's attack with the morale bonus (rounded down), minus the Buildman's armour.
+        local attack = math.floor(PwTest.Weapon("PowerManHit", "Damage")
+            * PwTest.Rule("primitive-powerman", "FirepowerMultiplier@MORALE", "Modifier") / 100)
+        FirstHit("a Powerman beside his Chief hits harder", attacker, target,
+            math.max(1, attack - PwTest.Rule("primitive-buildman", "PwArmor", "Value")))
     end
 
     MoraleArmour = function()
@@ -189,8 +200,11 @@ do
         local defender = Actor.Create("primitive-powerman-shield-of-peace", true, { Owner = me, Location = At(6, 16) })
         local attacker = Actor.Create("primitive-powerman", true, { Owner = enemy, Location = At(7, 16) })
         Later(1, function() defender.Stance = "HoldFire" end)
-        -- 25 attack against armour 10 + 10% = 11: 14 (15 without the Chief).
-        FirstHit("an enemy hits a Powerman beside his Chief less", attacker, defender, 14)
+        -- The Powerman's attack against the defender's armour with the morale bonus (rounded down).
+        local armour = math.floor(PwTest.Rule("primitive-powerman-shield-of-peace", "PwArmor", "Value")
+            * PwTest.Rule("primitive-powerman-shield-of-peace", "PwArmorMultiplier@MORALE", "Modifier") / 100)
+        FirstHit("an enemy hits a Powerman beside his Chief less", attacker, defender,
+            math.max(1, PwTest.Weapon("PowerManHit", "Damage") - armour))
     end
 
     FallOut = function()
@@ -202,14 +216,14 @@ do
             PwTest.OrderOn(chief, "PwFallOut", target)
         end)
         Later(60, function()
-            Check(target.Health == target.MaxHealth and PwTest.Mana(chief) == 100, "Fall out does nothing before its upgrade")
+            Check(target.Health == target.MaxHealth and PwTest.Mana(chief) == PwTest.MaxMana(chief), "Fall out does nothing before its upgrade")
             PwTest.CompleteUpgrade(me, "primitive-upgrade-fall-out-for-chief-1")
             PwTest.OrderOn(chief, "PwFallOut", target)
             WaitFor("Fall out wears the target down", 600, function() return target.IsDead or target.Health == 1 end, function(ok)
                 if not ok then return end
                 Check(not target.IsDead and target.Health == 1, "Fall out leaves the target at 1 HP")
                 local mana = PwTest.Mana(chief)
-                Check(mana < 100, "Fall out costs mana (" .. mana .. " left)")
+                Check(mana < PwTest.MaxMana(chief), "Fall out costs mana (" .. mana .. " left)")
                 Later(100, function() Check(PwTest.Mana(chief) > mana, "mana refills over time") end)
             end)
         end)
