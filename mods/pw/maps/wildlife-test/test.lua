@@ -79,6 +79,18 @@ do
         WaitFor("a hit plant-eater runs off", 400, function()
             return grazer.IsDead or (grazer.Health < grazer.MaxHealth and grazer.Location ~= start)
         end)
+
+        -- A flyer runs off too: hovering, it is never idle (the engine's FlyIdle), which the check used to require.
+        -- It also wanders on its own, so it must still be where it started when first hit, and away soon after.
+        local flyStart = At(40, 6)
+        local flyer = Actor.Create("wild-pteranodon", true, { Owner = creeps, Location = flyStart })
+        local archer = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(40, 12) })
+        Later(2, function() archer.Attack(flyer) end)
+        WaitFor("a soldier hits a flyer", 400, function() return flyer.IsDead or flyer.Health < flyer.MaxHealth end, function(ok)
+            if not ok or flyer.IsDead then return end
+            Check(flyer.Location == flyStart, "the flyer was still where it started when hit (" .. flyer.Location.X .. "," .. flyer.Location.Y .. ")")
+            WaitFor("a hit flyer runs off", 100, function() return flyer.IsDead or flyer.Location ~= flyStart end)
+        end)
     end
     Sections[#Sections + 1] = WorldLoaded
 end
