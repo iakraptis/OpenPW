@@ -55,7 +55,7 @@ TerrainFormat: DefaultTerrain
 
 SpriteSequenceFormat: DefaultSpriteSequence
 
-DefaultOrderGenerator: UnitOrderGenerator
+DefaultOrderGenerator: PwUnitOrderGenerator
 
 # Primitive Wars runs its game logic in ticks of 71 ms at normal speed (Pw.exe 0x563ac4, docs/game/rules.md). The mod
 # runs two world ticks for each (tickrate-plan.md, PwTime): 36 ms at normal speed, close to OpenRA's 40, with every

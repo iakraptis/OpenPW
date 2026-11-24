@@ -96,7 +96,7 @@ namespace OpenRA.Mods.Pw.Traits
 		sealed class PickUpTargeter : UnitOrderTargeter
 		{
 			public PickUpTargeter()
-				: base(PwItemUser.OrderID, 7, "move", false, true) { }
+				: base(PwItemUser.OrderID, 7, "capture", false, true) { }
 
 			public override bool CanTargetActor(Actor self, Actor target, TargetModifiers modifiers, ref string cursor)
 			{
