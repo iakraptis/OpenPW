@@ -10,7 +10,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Items: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Items: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local Make, PickUp, Shield, WorldLoaded, blacksmith, enemy, me, percent
+    local Hunters, Make, PickUp, Shield, WorldLoaded, blacksmith, enemy, me, percent
     -- Items (Item.itm, rules/primitive/items.yaml). The Blacksmith makes an item, which appears on the ground beside it,
     -- even when every cell there is taken. A unit of the type it equips walks over, picks it up and becomes the equipped
     -- type for good, keeping its level, experience and health.
@@ -25,6 +25,7 @@ do
         for x = 9, 15 do Actor.Create("primitive-buildman", true, { Owner = me, Location = At(x, 13) }) end
 
         Later(5, Make)
+        Later(5, Hunters)
         FinishWhenDone("ITEMS", 2500)
     end
 
@@ -69,6 +70,42 @@ do
             -- Half health stays half: the same percentage (rounded down) of the equipped Powerman's health.
             local expected = math.floor(equipped.MaxHealth * percent / 100)
             Check(equipped.Health == expected, "the equipped Powerman keeps its share of health (" .. equipped.Health .. ", expected " .. expected .. ")")
+        end)
+    end
+
+    -- Hunting units fetch an item they can use on their own, like meat: only one of the type it equips (two hunting
+    -- Soldiers for a Fire Arrow: one goes, the other stays), not a hunting Powerman beside it or a Soldier not hunting.
+    -- The equipped Soldier is still hunting.
+    Hunters = function()
+        local arrow = "primitive-item-fire-arrow"
+        local item = Actor.Create(arrow, true, { Owner = me, Location = At(20, 40) })
+        local powerman = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(16, 40) })
+        local idle = Actor.Create("primitive-soldier", true, { Owner = me, Location = At(23, 40) })
+        local hunters = {
+            Actor.Create("primitive-soldier", true, { Owner = me, Location = At(19, 46) }),
+            Actor.Create("primitive-soldier", true, { Owner = me, Location = At(21, 46) }),
+        }
+        Later(1, function()
+            PwTest.Hunt(powerman, true)
+            for _, h in ipairs(hunters) do PwTest.Hunt(h, true) end
+        end)
+        WaitFor("a hunting Soldier fetches the Fire Arrow on its own", 600, function()
+            return #me.GetActorsByType("primitive-soldier-fire-arrow") == 1
+        end, function(ok)
+            if not ok then return end
+            local equipped = me.GetActorsByType("primitive-soldier-fire-arrow")[1]
+            Check(item.IsDead or not item.IsInWorld, "the Fire Arrow is gone")
+            Check(PwTest.Hunting(equipped), "the equipped Soldier is still hunting")
+            Later(60, function()
+                local plain = 0
+                for _, h in ipairs(hunters) do if not h.IsDead and h.IsInWorld then plain = plain + 1 end end
+                Check(plain == 1 and #me.GetActorsByType("primitive-soldier-fire-arrow") == 1,
+                    "only one of the two hunting Soldiers took it (" .. plain .. " plain left)")
+                Check(not powerman.IsDead and powerman.IsInWorld and powerman.Type == "primitive-powerman",
+                    "the hunting Powerman leaves a Soldier's item alone")
+                Check(not idle.IsDead and idle.IsInWorld and idle.Type == "primitive-soldier",
+                    "a Soldier that isn't hunting doesn't fetch it")
+            end)
         end)
     end
     Sections[#Sections + 1] = WorldLoaded

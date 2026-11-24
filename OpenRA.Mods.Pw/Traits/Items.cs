@@ -35,6 +35,13 @@ namespace OpenRA.Mods.Pw.Traits
 	{
 		// Set by the first unit to reach it, so two can't take the same item.
 		public bool Taken;
+
+		// The unit walking to it (PickUpItem), so hunters don't all go for the same one.
+		public Actor Claimant;
+
+		// Free for a unit to go for on its own: nobody else is on the way to it.
+		public bool IsClaimedByOther(Actor self) =>
+			Claimant != null && Claimant != self && !Claimant.IsDead && Claimant.IsInWorld;
 	}
 
 	[Desc("Picks up items (PwItem) of its own type: the order walks to the item, then the unit becomes the item's type, ",
