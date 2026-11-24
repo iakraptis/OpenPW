@@ -188,6 +188,9 @@ namespace OpenRA.Mods.Pw.Tests
 		[Desc("Meat left in a piece of meat on the ground, or -1 for anything else.")]
 		public int MeatAmount(Actor meat) => meat.TraitOrDefault<PwMeat>()?.Amount ?? -1;
 
+		[Desc("Sets the meat left in a piece of meat on the ground (at least 1).")]
+		public void SetMeatAmount(Actor meat, int amount) => meat.TraitOrDefault<PwMeat>()?.SetAmount(amount);
+
 		[Desc("A unit's mana, or -1 without any.")]
 		public int Mana(Actor actor) => actor.TraitOrDefault<PwMana>()?.Mana ?? -1;
 

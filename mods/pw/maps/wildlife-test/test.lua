@@ -175,7 +175,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Meat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Meat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local Hunt, Regenerate, Rot, WorldLoaded, creeps, me
+    local Hunt, Regenerate, Rot, Unreachable, WorldLoaded, creeps, me
     -- Meat (docs/game/rules.md). A killed wild creature leaves meat worth about its cost (Galimimus 40: 30-40). Living
     -- units pick it up, carry it and eat it while hurt (1 meat, 1 HP per tick); machines don't. Meat on the ground rots.
     -- Wild creatures heal on their own and come back a while after they die (here after 100 ticks).
@@ -186,6 +186,7 @@ do
         Later(5, Hunt)
         Later(5, Rot)
         Later(5, Regenerate)
+        Later(5, Unreachable)
         FinishWhenDone("MEAT", 2500)
     end
 
@@ -223,6 +224,37 @@ do
         -- Meat made without an amount is worth 1: it rots away within 32 ticks.
         local meat = Actor.Create("meat-small", true, { Owner = creeps, Location = At(25, 25) })
         WaitFor("meat on the ground rots away", 100, function() return meat.IsDead or not meat.IsInWorld end)
+    end
+
+    -- Meat where no unit could walk to it is gone at once: on water, on a cliff, under a building, and when a
+    -- building goes up over it later. Meat on open ground stays.
+    Unreachable = function()
+        local function Gone(a) return a.IsDead or not a.IsInWorld end
+        local function Meat(cell)
+            local m = Actor.Create("meat-small", true, { Owner = creeps, Location = cell })
+            PwTest.SetMeatAmount(m, 500)
+            return m
+        end
+        -- The map has a pond at (40..42, 10..12) and a cliff at (44..45, 10..11) (tilesets/test.yaml).
+        local water, cliff = At(41, 11), At(44, 10)
+        Check(Map.TerrainType(water) == "Water" and Map.TerrainType(cliff) == "Cliff", "the map has water and a cliff")
+
+        local open = Meat(At(30, 30))
+        local onWater = Meat(water)
+        local onCliff = Meat(cliff)
+        Actor.Create("primitive-house", true, { Owner = me, Location = At(34, 30) })
+        local underHouse = Meat(At(34, 30))
+        local builtOver = Meat(At(38, 30))
+        Later(2, function()
+            Check(Gone(onWater), "meat on water is gone")
+            Check(Gone(onCliff), "meat on a cliff is gone")
+            Check(Gone(underHouse), "meat under a building is gone")
+            Check(not Gone(open) and not Gone(builtOver), "meat on open ground stays")
+            Actor.Create("primitive-house", true, { Owner = me, Location = At(38, 30) })
+            WaitFor("meat a building goes up over is gone", 100, function() return Gone(builtOver) end, function()
+                Check(not Gone(open), "the meat on open ground is still there (" .. PwTest.MeatAmount(open) .. ")")
+            end)
+        end)
     end
 
     Regenerate = function()
