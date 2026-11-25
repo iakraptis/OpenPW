@@ -77,7 +77,7 @@ Arguments a1…a4 in order. Used by the campaign: 1, 14, 16, 17, 18, 19, 20, 21,
 |---|---|---:|
 | 0 | camera to the centre of location a1 | 48 |
 | 1 | **transmission**: shows the text ("Speaker - message", names in brackets) for length / 2 + 80 ticks; the trigger is done when it has shown | 381 |
-| 2 | creates units (a2 ≥ 1000: type a2 − 1000) at location a3 | 3 |
+| 2 | puts a ground object (the `OBI` pool, `FUN_00462b10`) of `Item.itm` type a2 − 1000 at location a3's centre: the story items, 18 the Sword of Jurrasic (P11, D12), 22 the Sorcerous of the Neuully (E05) | 3 |
 | 3 | victory; if a trigger waits for the win (condition 19), the first victory only lets it run | 65 |
 | 4, 5 | defeat, draw | 32 |
 | 6, 7, 9 | give the units in location a4 to player a5; destroy them; move them to location a5 | 0 |
@@ -85,7 +85,7 @@ Arguments a1…a4 in order. Used by the campaign: 1, 14, 16, 17, 18, 19, 20, 21,
 | 11, 13 | copy the mission title strings; set the objectives text | 0 |
 | 14, 15 | set a player's score, resources | 0 |
 | 17, 18 | trigger a1 not done (runs again), done (never runs) | 1 |
-| 19 | change the units of type a1 in team a3 owned by a4 into type a2 owned by a5 | 9 |
+| 19 | change the units of type a1 in team a3 owned by a4 into type a2 owned by a5, with the new type's full stats (a1 = a2: only the owner changes; E02 turns Elves into Demons, P04 and P09 hand units over) | 9 |
 | 20, 25 | camera to team a1 (follow), centre of team a1 | 54 |
 | 21 | kill team a1 | 0 |
 | 22, 23 | set, clear unit flags of team a1 (+0xa0 bits 0 and 7, +0x58 bit 5) around scripted scenes; meaning unknown | 62 |

@@ -69,11 +69,18 @@ local function Inside(actor, location)
 	return r[1] <= x and x <= r[3] and r[2] <= y and y <= r[4]
 end
 
+-- Placed units that action 19 turned into another type: the new actor, by the placed one's name.
+local Replaced = { }
+
+local function Member(name)
+	return Replaced[name] or Map.NamedActor(name)
+end
+
 -- The living members of a team (the original drops the dead ones every tick).
 local function Team(index)
 	local members = { }
 	for _, name in ipairs(Mission.Teams[index] or { }) do
-		local actor = Map.NamedActor(name)
+		local actor = Member(name)
 		if actor and not actor.IsDead and actor.IsInWorld then
 			members[#members + 1] = actor
 		end
@@ -221,6 +228,24 @@ local Actions = {
 
 		return Now < ShowUntil[index]
 	end,
+	-- Puts a ground object of type a2 - 1000 at location a3's centre (FUN_00462b10, the OBI pool): in the campaign, a story
+	-- item (Item.itm 18 the Sword of Jurrasic, 22 the Sorcerous of the Neuully; rules/campaign.yaml). The human's
+	-- units (or their allies') take it by walking onto it.
+	[2] = function(a)
+		local x, y = Centre(a[3])
+		if a[2] < 1000 or not x then
+			return
+		end
+
+		local item = Actor.Create(string.format("story-item-%02d", a[2] - 1000), true,
+			{ Owner = Player.GetPlayer("Neutral"), Location = ToCell(x, y) })
+		Trigger.OnEnteredProximityTrigger(item.CenterPosition, WDist.New(768), function(unit, id)
+			if not item.IsDead and unit.HasProperty("Move") and (unit.Owner == Human or unit.Owner.IsAlliedWith(Human)) then
+				Trigger.RemoveProximityTrigger(id)
+				item.Destroy()
+			end
+		end)
+	end,
 	[3] = function()
 		-- With a trigger waiting for the victory, the win only lets that trigger run; its chain ends with a victory.
 		if VictoryTrigger and not VictoryPending then
@@ -262,6 +287,28 @@ local Actions = {
 	[16] = function(a) Command(Team(a[1]), a[2]) end,
 	[17] = function(a) Done[a[1]] = false end,
 	[18] = function(a) Done[a[1]] = true end,
+	-- The units of type a1 in team a3 owned by player a4 become type a2 owned by player a5, at full health (the original
+	-- copies the new type's stats over, FUN_00405170 case 0x13). A new type is a new actor in the old one's place.
+	[19] = function(a)
+		local from, to = Mission.Types[a[1]], Mission.Types[a[2]]
+		local owner, newOwner = GetPlayer(a[4]), GetPlayer(a[5])
+		if not from or not to or not owner or not newOwner then
+			return
+		end
+
+		for _, name in ipairs(Mission.Teams[a[3]] or { }) do
+			local actor = Member(name)
+			if actor and not actor.IsDead and actor.IsInWorld and actor.Type == from and actor.Owner == owner then
+				if from == to then
+					actor.Owner = newOwner
+					actor.Health = actor.MaxHealth
+				else
+					Replaced[name] = Actor.Create(to, true, { Owner = newOwner, Location = actor.Location, Facing = actor.Facing })
+					actor.Destroy()
+				end
+			end
+		end
+	end,
 	[20] = function(a)
 		local members = Team(a[1])
 		if #members > 0 then

@@ -469,6 +469,28 @@ primitive-revolver:
 		MoveSequence: walk
 		DefaultAttackSequence: stand
 
+# Kalma, the eagle (.chr 14): a summon in the original, never trained, with no weapon. The campaign places one (P10,
+# P11); the Chief's summoning isn't made yet.
+primitive-kalma:
+	Inherits: ^LivingFlyer
+	Inherits@race: ^Primitive
+	-Buildable:
+	# Its art has no death frames: killed, it is gone (a summon).
+	-WithDeathAnimation@ILLUSION:
+	-PwBody:
+	RenderSprites:
+		Image: primitive-kalma
+	Tooltip:
+		Name: actor-primitive-kalma.name
+	Health:
+		HP: 300
+	Aircraft:
+		Speed: 144
+	RevealsShroud:
+		Range: 11c128
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: walk
+
 primitive-squadron:
 	Inherits: ^Unit
 	Inherits@move: ^AirMovement

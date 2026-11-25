@@ -62,3 +62,75 @@ PicatyranoBite:
 	Warhead@2Eff: CreateEffect
 		ValidTargets: Ground, Air
 		ImpactSounds: weapon-tyranos-hit-1.wav
+
+# The aliens' shot (JW2_12 Alien.wpn). Its record gives no projectile speed (0); it flies as fast as the arrows.
+^AlienShot:
+	Inherits: ^Arrow
+	Projectile: PwBullet
+		Speed: 288
+		Image: weapon-alien
+		Sequences: flight
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-alien
+		Explosions: impact
+
+Alien1Shot:
+	Inherits: ^AlienShot
+	ReloadDelay: 48
+	Range: 5c0
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 20
+
+Alien2Shot:
+	Inherits: ^AlienShot
+	ReloadDelay: 76
+	Range: 7c0
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 70
+
+Alien3Hit:
+	Inherits: ^Melee
+	ReloadDelay: 100
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 50
+
+# The plants' spores: the Ascomoid's shot (JW2_12 Ascomoid.wpn, 20 px per tick). ReloadDelay is the attack animation
+# plus the attack delay (.chr 0x13cc), in world ticks.
+^PlantSpore:
+	Inherits: ^Arrow
+	Range: 8c0
+	Projectile: PwBullet
+		Image: weapon-ascomoid
+		Sequences: flight
+		Speed: 320
+	Report: weapon-ascomoid-0.wav
+	Warhead@2Eff: CreateEffect
+		ValidTargets: Ground, Air
+		Image: weapon-ascomoid
+		Explosions: impact
+
+NoxiousWeedSpore:
+	Inherits: ^PlantSpore
+	ReloadDelay: 64
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 15
+
+PoisonousSpore:
+	Inherits: ^PlantSpore
+	ReloadDelay: 80
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 10
+
+TreantSpore:
+	Inherits: ^PlantSpore
+	ReloadDelay: 64
+	Range: 7c0
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 10
+
+DemonFlowerSpore:
+	Inherits: ^PlantSpore
+	ReloadDelay: 100
+	Warhead@1Dam: SubtractArmorDamage
+		Damage: 25

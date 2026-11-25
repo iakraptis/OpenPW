@@ -40,6 +40,8 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		const int SlotRows = 2;
 		const int TrainingWidth = 48;
 		const int PanelGap = 6;
+		const int ChatAboveWindowBottom = 56;
+		const int ChatGap = 4;
 
 		readonly World world;
 		readonly InterfaceBarWidget bar;
@@ -56,7 +58,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		Rectangle radarArea;
 		readonly ButtonWidget[] slots;
 		readonly (ButtonWidget Button, string Area, string Image)[] buttons;
-		readonly Widget worldRoot, menuRoot;
+		readonly Widget worldRoot, menuRoot, chatRoot;
 		Widget openPanel;
 
 		[ObjectCreator.UseCtor]
@@ -142,6 +144,7 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 
 			worldRoot = Ui.Root.Get("WORLD_ROOT");
 			menuRoot = Ui.Root.Get("MENU_ROOT");
+			chatRoot = widget.GetOrNull("CHAT_ROOT");
 			buttons[1].Button.OnClick = () => OpenMenuPanel(IngameInfoPanel.Objectives);
 			buttons[2].Button.OnClick = () => OpenMenuPanel(IngameInfoPanel.Chat);
 
@@ -159,6 +162,12 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		void Layout()
 		{
 			bar.Layout();
+
+			// The engine's chat panel keeps 56 pixels to the window's bottom (common|chrome/ingame-chat.yaml): its root moves
+			// up by the bar's height, less those 56, so the messages show just above the bar.
+			if (chatRoot != null)
+				chatRoot.Bounds = new WidgetBounds(0, bar.Top - bar.RenderBounds.Bottom + ChatAboveWindowBottom - ChatGap, 0, 0);
+
 			var hole = bar.Area("hole");
 			if (hole != radarArea)
 			{
