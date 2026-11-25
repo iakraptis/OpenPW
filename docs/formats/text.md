@@ -64,6 +64,27 @@ enemy building, else a unit (`FUN_0041cde0`). The squad walks to the gathering p
 there for its members (at most 8 checks), then goes for the target, picks the next when it falls and comes home
 when too few are left (`FUN_00420b10`, squad states 10-20).
 
+The AI turn (`FUN_004192a0`): every player flagged as a computer (`P_PLAYE` 0xf4 + 4 × player) runs once every
+128 original ticks, in turn (all of them on the first tick): the script again from the top (`FUN_004197a0`, so the
+settings are set again every turn and the branches are re-tested), its bases (main buildings, `FUN_0041e230`), idle
+workers to the berries (`FUN_0041e0b0`), research (`FUN_00422540`; while a research is due, nothing is trained that
+turn), training and building (`FUN_0041e670`), the attack decision (`FUN_0041c470`), defence of the alarm points
+(`FUN_0041d490`: units at home go to an enemy near one, twice its strength, allies' too; an alarm point is where
+one of its units was hit, up to 4, one within 8 cells of another taking its place: `FUN_0041dde0`,
+`FUN_0041de40`) and the squads
+(`FUN_00420b10`). A unit with no squad gets one (`FUN_00421f30`): the script's teams (with `ON_EXCEPT_TRIGGER_TEAM`)
+1, workers 2, home 3 or 4, hunters 5. An attack takes units of squads 3-5. Squads give orders only to idle units: a
+gathering squad goes on when its idle members are within (members / 2 + 8) cells of the point; an attacking one
+sends the idle ones further than that from the target there (`FUN_004211e0`). `UNUSE_SCRIPT` stops the player's
+AI altogether.
+
+The placed army joins the home squads and attacks like any unit: in the original P01 the Demons' first attack
+(at 3:30) is their 3 placed Skeletons and 2 Zombies with 4 trained Skeletons, then 3 and 5 Skeletons, then
+Kelpas. (Their "camps" of 50 more Skeletons are units deleted in the editor, left in `OBC`: [map.md](map.md).)
+
+`OBC` is the unit array itself (`0x7fef08`, 0x1d0 bytes a unit), saved by the editor: +0x08 is the selection (0x80)
+and control group (low 4 bits), not an AI setting.
+
 The Primitive and Demon scripts name the player with two digits (`P01_02.txt`), the Elf and Tyrano ones with one
 (`E01_2.txt`).
 

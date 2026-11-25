@@ -18,9 +18,12 @@ Each scenario's entries, in order (C):
 
 ## Players
 
-- `P_PLAYE` +0: the local (human) player, 0 in every scenario. +0x144: starting berries per player (P01: 1000 for
+- `P_PLAYE` +0: the local (human) player, 0 in every scenario. +0xa4: each player's race (0 Primitive, 1 Elf,
+  2 Tyrano, 3 Demon). +0xf4: 1 for a computer player (its AI runs). +0x144: starting berries per player (P01: 1000 for
   the human, 500 for the others). +0x234: an alliance bit mask per player.
-- `OBC`: the placed units, bases and armies included (P01: 181; all 48: about 15,000), with their owner (0-7, 8 wild).
+- `OBC`: the placed units, bases and armies included, with their owner (0-7, 8 wild): the live list only
+  ([map.md](map.md); P01: 91 of the 181 filled slots, all 48: 10,720 of 14,661; the rest were deleted in the
+  editor).
   The slots are **0x1d0** bytes (D: the code indexes `0x7fef08 + 4 · 0x74 · i`); teams refer to units by slot.
 - `P_UB`: unit availability, a byte per player and type (170 types). P01 lets the human build only the Buildman,
   Powerman, House and Powerhouse.

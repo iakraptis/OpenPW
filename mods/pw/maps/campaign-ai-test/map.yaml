@@ -66,7 +66,7 @@ Actors:
 		Location: 17,24
 	KeptSkeleton: demon-skeleton
 		Owner: Raider
-		Location: 12,50
+		Location: 14,28
 	TargetSanctuary: primitive-sanctuary
 		Owner: Target
 		Location: 50,20
@@ -86,9 +86,8 @@ Rules: pw|rules/campaign-ai.yaml
 			ExploredMapCheckboxEnabled: True
 			ExploredMapCheckboxLocked: True
 		-ConquestVictoryConditions:
-		# As a mission's rules (AssetInstaller/Campaign.cs): Raider wants 4 Skeletons and has no Death Den, and attacks at
-		# 3 (the strength shares off); its placed KeptSkeleton stays
-		# where it is. Passive's script is UNUSE_SCRIPT.
+		# As a mission's rules (AssetInstaller/Campaign.cs): Raider wants 3 Skeletons and has no Death Den, attacks at 3
+		# (the strength shares off), and keeps KeptSkeleton out of it; Passive's script is UNUSE_SCRIPT.
 		PwCampaignBotModule@campaign:
 			Train:
 				Raider:
@@ -104,6 +103,8 @@ Rules: pw|rules/campaign-ai.yaml
 					HUNT: 0
 				Passive:
 					PASSIVE: 1
+			Kept:
+				Raider: KeptSkeleton
 	world:
 		-SpawnStartingUnits:
 		LuaScript:

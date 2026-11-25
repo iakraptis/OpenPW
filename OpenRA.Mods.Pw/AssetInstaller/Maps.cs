@@ -132,7 +132,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var starts = StartPositions(jw2.Read("P_PLAYE"));
 
 			// Only wild creatures (owner 8) are placed on the skirmish maps; they become Creeps actors.
-			var creatures = PlacedUnits(jw2.Read("OBC"), image).Where(u => u.Owner == 8)
+			var creatures = PlacedUnits(jw2.Read("OBC"), jw2.Read("JW2"), image).Where(u => u.Owner == 8)
 				.Select(u => (u.Actor, u.X, u.Y, u.Facing)).ToList();
 
 			var slug = Regex.Replace(map.Title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
@@ -388,19 +388,23 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			return objects;
 		}
 
-		// OBC (docs/formats/map.md): the unit table, 0x1d0-byte slots, live when +0x60 is 1; the campaign's teams refer to
-		// units by slot. Positions are pixels (a building's is its footprint's top-left corner, which is how its sprites are
-		// placed, Units.cs), so every kind lands on cell position / 32. Facing 1-8 runs clockwise from north. Types without
-		// art (the "Null" entries) are left out.
-		public static List<Placed> PlacedUnits(byte[] obc, Func<int, string> image)
+		// OBC (docs/formats/map.md): the game's unit array as the editor saved it, 0x1d0-byte slots; the campaign's teams
+		// refer to units by slot. The units on the map are the live list: from the slot at JW2 +0x143c (a byte offset into
+		// OBC), each slot's +0x1cc is the next one's (0 ends it). The other slots are units deleted in the editor (the
+		// free list, from JW2 +0x1440), which still hold their type and place: P01 has 91 live units and 90 deleted ones.
+		// Positions are pixels (a building's is its footprint's top-left corner, which is how its sprites are placed,
+		// Units.cs), so every kind lands on cell position / 32. Facing 1-8 runs clockwise from north. Types without art
+		// (the "Null" entries) are left out.
+		public static List<Placed> PlacedUnits(byte[] obc, byte[] jw2, Func<int, string> image)
 		{
 			const int SlotSize = 0x1d0;
 			var units = new List<Placed>();
-			for (var slot = 0; (slot + 1) * SlotSize <= obc.Length; slot++)
+			var seen = new HashSet<int>();
+			for (var at = BitConverter.ToInt32(jw2, 0x143c); at > 0 && at % SlotSize == 0 && at + SlotSize <= obc.Length && seen.Add(at);
+				at = BitConverter.ToInt32(obc, at + 0x1cc))
 			{
-				var o = slot * SlotSize;
-				if (BitConverter.ToInt32(obc, o + 0x60) != 1)
-					continue;
+				var slot = at / SlotSize;
+				var o = at;
 
 				var type = BitConverter.ToInt32(obc, o);
 				var actor = type >= 0 && type < 170 ? image(type) : null;

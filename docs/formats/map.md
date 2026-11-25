@@ -42,20 +42,31 @@ Loaded to `0x5631fc`, so the resource array the cost code uses (`0x563340`) is a
 ## `OBC`: placed units
 
 The game's unit table itself: 2,048 slots of 0x1d0 bytes (the code indexes `0x7fef08 + 4 · 0x74 · i`; the campaign's
-teams refer to units by slot). A slot is live when +0x60 is 1. The skirmish maps place **only wild creatures**
-(owner 8): no player units or buildings; the campaign places bases and armies ([campaign.md](campaign.md)).
+teams refer to units by slot). The units on the map are the **live list**: it starts at the byte offset (into
+`OBC`) stored at `JW2` +0x143c (the game's `DAT_0054abc0`), and each slot's +0x1cc is the next one's, +0x1c8 the
+previous one's (0 ends it). Every other slot is on the free list (head at `JW2` +0x1440): units deleted in the
+editor keep their type, owner and place there, so a slot's own fields can't tell it from a live one (C: the game's
+loops follow `[0x73]`, +0x1cc; in the original P01 the Demons start with the 3 Skeletons and 2 Zombies of the live
+list, not the 50 Skeletons of all the slots). The skirmish maps place **only wild creatures** (owner 8): no player
+units or buildings; the campaign places bases and armies ([campaign.md](campaign.md)). Deleted creatures: Dino
+Hunting 119 live of 193, Dino Legend 124 of 144, Clover 118 of 120, Jurassic World 152 of 153; the other maps none.
 
 | Offset | Content |
 |---|---|
 | 0x00 | Type (index into `JW2_09.TRC`, see [chr.md](chr.md)) |
 | 0x04 | Owner: 0–7 players, 8 wildlife |
+| 0x08 | Selection as the editor saved it: 0x80 selected, low 4 bits the control group (D: `FUN_00473228`, `FUN_00475e70`) |
+| 0x0c | Low byte: the AI squad (0 none; [text.md](text.md)) |
 | 0xa0 | Flags: bit 2 dead |
 | 0x10, 0x18 | Hit points, maximum |
-| 0x1c | Attack (copied from the type) |
-| 0x60 | 1 = alive |
+| 0x1c, 0x20 | Attack, armour (copied from the type; the AI's strength is HP + attack + armour) |
+| 0x58 | The type's flags (`.chr` 0x1ec), copied |
+| 0x60 | Activity: 1 idle (D: `FUN_004178a0`; the AI orders only idle units). Not a live flag: deleted units keep it |
+| 0x84–0x90 | The current order: kind (4 move, 5 attack-move, 6 build), target unit, x, y (D: `FUN_00417ab0`, `FUN_00417b70`) |
 | 0xa8 | Facing 1–8 |
 | 0xb8, 0xbc | Position, pixels (a building's footprint top-left corner) |
 | 0xc0–0xd4 | Copies of the position (movement targets) |
+| 0x1c8, 0x1cc | Previous and next slot in its list, as byte offsets into `OBC` |
 
 ## `P_MAP`
 

@@ -27,9 +27,9 @@ namespace OpenRA.Mods.Pw.Traits
 		"attack interval has passed, when its army reaches the attack counter, or when its army's strength (HP, attack",
 		"and armour) is a share of the enemy's whole army (winable) or of the enemy units at the enemy's base (attack",
 		"back). An attack takes some of the units at home, gathers part of the way to the enemy, then goes for it. A",
-		"share of the units at home hunts. The army the mission placed is a garrison: it stays where it is, fighting",
-		"what comes to it, and counts for none of this, so the attacks are the units it trains (as the original plays",
-		"P01: waves of 9, 3 and 5 units, not its 58 placed ones). Settings",
+		"share of the units at home hunts. The placed army is home army like any (in the original P01 the first attack",
+		"is the 3 placed Skeletons and 2 Zombies with 4 trained ones); units in the mission script's teams can be kept",
+		"out of all this (ON_EXCEPT_TRIGGER_TEAM). Settings",
 		"are by player and come from the missions' map rules (AssetInstaller/Campaign.cs); a later set replaces them",
 		"once the player has made a number of attacks (the scripts' GO_IF_OVER_ATTCNT). Only the campaign maps load it",
 		"(rules/campaign-ai.yaml).")]
@@ -56,6 +56,10 @@ namespace OpenRA.Mods.Pw.Traits
 
 		[Desc("By player: the wanted units after LaterAfter attacks.")]
 		public readonly Dictionary<string, Dictionary<string, int>> LaterTrain = [];
+
+		[Desc("By player: placed units (map actor names) the mission script moves itself; they never join attacks",
+			"or hunt (ON_EXCEPT_TRIGGER_TEAM).")]
+		public readonly Dictionary<string, HashSet<string>> Kept = [];
 
 		[Desc("Buildings go between these many cells from the base centre.")]
 		public readonly int MinBaseRadius = 3;
@@ -163,7 +167,9 @@ namespace OpenRA.Mods.Pw.Traits
 			{
 				// The placed army: what the player owns when the game starts.
 				techTree = player.PlayerActor.Trait<TechTree>();
-				kept = PwBotUtils.Owned(world, player).Where(a => PwBotUtils.IsArmy(a.Info)).ToHashSet();
+				var named = world.WorldActor.Trait<SpawnMapActors>().Actors;
+				kept = Info.Kept.TryGetValue(Name, out var names)
+					? names.Where(named.ContainsKey).Select(n => named[n]).ToHashSet() : [];
 			}
 
 			// UNUSE_SCRIPT: the original runs no AI for the player; it keeps what the mission placed.
@@ -221,7 +227,7 @@ namespace OpenRA.Mods.Pw.Traits
 			var queues = owned.SelectMany(a => a.TraitsImplementing<ProductionQueue>().Where(q => q.Enabled && PwBotUtils.IsComplete(a)))
 				.ToList();
 			var queued = queues.SelectMany(q => q.AllQueued()).GroupBy(i => i.Item).ToDictionary(g => g.Key, g => g.Count());
-			int Have(string type) => owned.Count(a => a.Info.Name == type && !kept.Contains(a)) + queued.GetValueOrDefault(type);
+			int Have(string type) => owned.Count(a => a.Info.Name == type) + queued.GetValueOrDefault(type);
 
 			foreach (var (type, count) in wanted.Where(w => Have(w.Key) < w.Value).OrderBy(w => Have(w.Key) - w.Value))
 			{
@@ -298,8 +304,7 @@ namespace OpenRA.Mods.Pw.Traits
 			var trainable = Trainable(owned).Select(i => i.Name).ToHashSet();
 			foreach (var (unit, count) in wanted)
 			{
-				if (trainable.Contains(unit) || owned.Count(a => a.Info.Name == unit && !kept.Contains(a)) >= count
-					|| !rules.TryGetValue(unit, out var info))
+				if (trainable.Contains(unit) || owned.Count(a => a.Info.Name == unit) >= count || !rules.TryGetValue(unit, out var info))
 					continue;
 
 				var buildableInfo = info.TraitInfoOrDefault<BuildableInfo>();
