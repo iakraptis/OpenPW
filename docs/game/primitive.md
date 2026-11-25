@@ -7,7 +7,8 @@ Range and sight are in pixels; speed is the average east walk step in pixels per
 
 Tech tree: Sanctuary → PowerHouse → SoldierHouse, Blacksmith, LandIncreaser, StoneTower; Blacksmith → SkyHouse →
 SkyIncreaser; LandIncreaser → Trap. The Chief needs every other building. Revolver is an air transport; Kalma
-costs nothing and cannot be trained (a summon).
+costs nothing and cannot be trained (a summon). The campaign places one (P10, P11); the mod has it as an unarmed
+flyer, without the summoning yet.
 
 ## Units
 

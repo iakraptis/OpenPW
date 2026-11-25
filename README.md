@@ -26,7 +26,9 @@ Skirmish is playable with all four races, against other players or the AI:
 - the original music, by race;
 - Modern AI with no resource cheating.
 
-The first iteration of the campaign is here. All missions are available with their dialogs and triggers. They are not playtested, and balance will be off.
+The first iteration of the campaign is here: the Primitive campaign's 12 missions, with their dialogs, triggers and
+computer players following the original's AI scripts (the Elf, Tyrano and Demon campaigns come next). They are not
+playtested, and balance will be off.
 The decoded file formats are documented in [docs/formats/](docs/formats/), the game rules recovered from the
 original in [docs/game/](docs/game/), and the roadmap in [plan.md](plan.md).
 

@@ -17,9 +17,8 @@ scenarios × 8 players; `UNUSED_SCRIPT` for empty slots). Script language:
 
 - `;` starts a comment; `:LABEL` marks a block; `END` ends it.
 - `GO_IF_UNDER_RELCNT <label> <n>` and `GO_IF_OVER_ATTCNT <label> <n>` jump on counters.
-- Settings, each with numeric arguments (percentages, counts, intervals):
-  - economy: `SET_NO_BUILDER_BERY` (build workers while berries are below a percentage),
-    `SET_NEW_BASE_BERY` (expand when berries run out), `SET_NO_SUPPLY_BY_UNIT` (houses per unit, %);
+- Settings, each with numeric arguments (percentages, counts, intervals; what each does is in the table below):
+  - economy: `SET_NO_BUILDER_BERY`, `SET_NEW_BASE_BERY`, `SET_NO_SUPPLY_BY_UNIT`;
   - production: `SET_UNIT_MAKE`, `PRIORITY_UNITMAKE`, `SET_NO_BASE_UNIT`, `SET_NO_MIDDLE_UNIT`,
     `SET_NO_HIGH_UNIT`, `ADD_UNIT_BY_ENEMY`, `SET_UNIT_BY_ENEMY`;
   - attacks: `SET_ATTACK_COUNTER`, `SET_ATTACK_INTERVAL`, `SET_ATTACK_MOVE`, `SET_ATTACK_UNIT`,
@@ -61,8 +60,8 @@ An attack (`FUN_0041c470`, then `FUN_00421b00`): when the interval has passed, o
 (or the population is above 144), or its strength (HP + attack + armour of each unit, `FUN_0041c7e0`) beats the
 enemy's by the winable or attack-back share, the AI forms a squad of the units waiting home and picks a target: an
 enemy building, else a unit (`FUN_0041cde0`). The squad walks to the gathering point (`SET_ATTACK_MOVE`), waits
-there for its members (at most 8 checks), then goes for the target, picks the next when it falls and comes home
-when too few are left (`FUN_00420b10`, squad states 10-20).
+there for its members (at most 8 AI turns), then goes for the target and picks the next when it falls
+(`FUN_00420b10`, squad states 10-14). Only one attack gathers at a time.
 
 The AI turn (`FUN_004192a0`): every player flagged as a computer (`P_PLAYE` 0xf4 + 4 × player) runs once every
 128 original ticks, in turn (all of them on the first tick): the script again from the top (`FUN_004197a0`, so the
@@ -73,8 +72,9 @@ turn), training and building (`FUN_0041e670`), the attack decision (`FUN_0041c47
 one of its units was hit, up to 4, one within 8 cells of another taking its place: `FUN_0041dde0`,
 `FUN_0041de40`) and the squads
 (`FUN_00420b10`). A unit with no squad gets one (`FUN_00421f30`): the script's teams (with `ON_EXCEPT_TRIGGER_TEAM`)
-1, workers 2, home 3 or 4, hunters 5. An attack takes units of squads 3-5. Squads give orders only to idle units: a
-gathering squad goes on when its idle members are within (members / 2 + 8) cells of the point; an attacking one
+1, workers (type flag 0x40) 2, home 3 or 4, hunters 5, detectors (`.chr` 0x1f8 bit 0x1) 6, the healer (bit 0x10,
+only the Unicorn) 8; defence squads are 0x12. Detectors and healers follow an attack squad (`FUN_004211e0`). An
+attack takes units of squads 3-5. Squads give orders only to idle units: a gathering squad goes on when its idle members are within (members / 2 + 8) cells of the point; an attacking one
 sends the idle ones further than that from the target there (`FUN_004211e0`). `UNUSE_SCRIPT` stops the player's
 AI altogether.
 
@@ -82,8 +82,11 @@ The placed army joins the home squads and attacks like any unit: in the original
 (at 3:30) is their 3 placed Skeletons and 2 Zombies with 4 trained Skeletons, then 3 and 5 Skeletons, then
 Kelpas. (Their "camps" of 50 more Skeletons are units deleted in the editor, left in `OBC`: [map.md](map.md).)
 
-`OBC` is the unit array itself (`0x7fef08`, 0x1d0 bytes a unit), saved by the editor: +0x08 is the selection (0x80)
-and control group (low 4 bits), not an AI setting.
+The mod's campaign AI (`PwCampaignBotModule`, settings written by `AssetInstaller/Campaign.cs`) plays the wanted
+units and tiers, the building of their trainers and prerequisites, houses and workers, the four attack triggers,
+the units sent, the gathering point, hunting, the teams kept back, a later phase after `GO_IF_OVER_ATTCNT` and
+`UNUSE_SCRIPT`. Not yet: defence (alarm points, towers, `SET_DEFENSE_POS`), research, new bases, the by-enemy
+settings, the original's 128-tick turn (it checks every 30 original ticks and trains one unit a check).
 
 The Primitive and Demon scripts name the player with two digits (`P01_02.txt`), the Elf and Tyrano ones with one
 (`E01_2.txt`).
