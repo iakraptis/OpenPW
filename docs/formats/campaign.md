@@ -18,9 +18,12 @@ Each scenario's entries, in order (C):
 
 ## Players
 
-- `P_PLAYE` +0: the local (human) player, 0 in every scenario. +0x144: starting berries per player (P01: 1000 for
+- `P_PLAYE` +0: the local (human) player, 0 in every scenario. +0xa4: each player's race (0 Primitive, 1 Elf,
+  2 Tyrano, 3 Demon). +0xf4: 1 for a computer player (its AI runs). +0x144: starting berries per player (P01: 1000 for
   the human, 500 for the others). +0x234: an alliance bit mask per player.
-- `OBC`: the placed units, bases and armies included (P01: 181; all 48: about 15,000), with their owner (0-7, 8 wild).
+- `OBC`: the placed units, bases and armies included, with their owner (0-7, 8 wild): the live list only
+  ([map.md](map.md); P01: 91 of the 181 filled slots, all 48: 10,720 of 14,661; the rest were deleted in the
+  editor).
   The slots are **0x1d0** bytes (D: the code indexes `0x7fef08 + 4 · 0x74 · i`); teams refer to units by slot.
 - `P_UB`: unit availability, a byte per player and type (170 types). P01 lets the human build only the Buildman,
   Powerman, House and Powerhouse.
@@ -77,7 +80,7 @@ Arguments a1…a4 in order. Used by the campaign: 1, 14, 16, 17, 18, 19, 20, 21,
 |---|---|---:|
 | 0 | camera to the centre of location a1 | 48 |
 | 1 | **transmission**: shows the text ("Speaker - message", names in brackets) for length / 2 + 80 ticks; the trigger is done when it has shown | 381 |
-| 2 | creates units (a2 ≥ 1000: type a2 − 1000) at location a3 | 3 |
+| 2 | puts a ground object (the `OBI` pool, `FUN_00462b10`) of `Item.itm` type a2 − 1000 at location a3's centre: the story items, 18 the Sword of Jurrasic (P11, D12), 22 the Sorcerous of the Neuully (E05) | 3 |
 | 3 | victory; if a trigger waits for the win (condition 19), the first victory only lets it run | 65 |
 | 4, 5 | defeat, draw | 32 |
 | 6, 7, 9 | give the units in location a4 to player a5; destroy them; move them to location a5 | 0 |
@@ -85,7 +88,7 @@ Arguments a1…a4 in order. Used by the campaign: 1, 14, 16, 17, 18, 19, 20, 21,
 | 11, 13 | copy the mission title strings; set the objectives text | 0 |
 | 14, 15 | set a player's score, resources | 0 |
 | 17, 18 | trigger a1 not done (runs again), done (never runs) | 1 |
-| 19 | change the units of type a1 in team a3 owned by a4 into type a2 owned by a5 | 9 |
+| 19 | change the units of type a1 in team a3 owned by a4 into type a2 owned by a5, with the new type's full stats (a1 = a2: only the owner changes; E02 turns Elves into Demons, P04 and P09 hand units over) | 9 |
 | 20, 25 | camera to team a1 (follow), centre of team a1 | 54 |
 | 21 | kill team a1 | 0 |
 | 22, 23 | set, clear unit flags of team a1 (+0xa0 bits 0 and 7, +0x58 bit 5) around scripted scenes; meaning unknown | 62 |

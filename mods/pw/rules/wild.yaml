@@ -443,3 +443,135 @@ wild-picatyrano:
 	Armament:
 		Weapon: PicatyranoBite
 		FireDelay: 14
+
+# The campaign's aliens (P08), from their .chr records 83-85. Speeds are the original px per tick x 16 (two world
+# ticks to one original tick). Alien1 and Alien2 hover (.chr 0x17c = 2) and shoot (JW2_12 Alien.wpn); Alien3 flies
+# and strikes.
+wild-alien1:
+	Inherits: ^Wild
+	Inherits@move: ^HoverMovement
+	Inherits@hover: ^Hovering
+	Inherits@attack: ^WildPredator
+	# Hostile: no meat, no coming back, no running off.
+	-PwDropsMeat:
+	-PwRespawns:
+	-PwFleeWhenHit:
+	Tooltip:
+		Name: actor-wild-alien1.name
+	Health:
+		HP: 200
+	PwArmor:
+		Value: 5
+	Mobile:
+		Speed: 112
+	RevealsShroud:
+		Range: 10c0
+	WithInfantryBody:
+		IdleSequences: walk
+		StandSequences: walk
+	Armament:
+		Weapon: Alien1Shot
+
+wild-alien2:
+	Inherits: ^Wild
+	Inherits@move: ^HoverMovement
+	Inherits@hover: ^Hovering
+	Inherits@attack: ^WildPredator
+	# Hostile: no meat, no coming back, no running off.
+	-PwDropsMeat:
+	-PwRespawns:
+	-PwFleeWhenHit:
+	Tooltip:
+		Name: actor-wild-alien2.name
+	Health:
+		HP: 500
+	PwArmor:
+		Value: 10
+	PwGivesExperience:
+		Experience: 4
+	Mobile:
+		Speed: 112
+	RevealsShroud:
+		Range: 10c0
+	WithInfantryBody:
+		IdleSequences: walk
+		StandSequences: walk
+	Armament:
+		Weapon: Alien2Shot
+
+wild-alien3:
+	Inherits: ^WildFlyer
+	Inherits@attack: ^WildAirPredator
+	# Hostile: no meat, no coming back, no running off.
+	-PwDropsMeat:
+	-PwRespawns:
+	-PwFleeWhenHit:
+	Tooltip:
+		Name: actor-wild-alien3.name
+	Health:
+		HP: 800
+	PwArmor:
+		Value: 20
+	Aircraft:
+		Speed: 96
+	RevealsShroud:
+		Range: 11c0
+	WithInfantryBody@FLIGHT:
+		DefaultAttackSequence: attack
+	Armament:
+		Weapon: Alien3Hit
+		# Strikes on step 4 of its attack animation (.chr 0x247c).
+		FireDelay: 8
+
+# The campaign's plants (E07), from their .chr records 160-163: rooted, they shoot the Ascomoid's spores.
+wild-noxiousweed:
+	Inherits: ^WildPlant
+	Tooltip:
+		Name: actor-wild-noxiousweed.name
+	Health:
+		HP: 200
+	PwGivesExperience:
+		Experience: 2
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: NoxiousWeedSpore
+
+wild-poisonous:
+	Inherits: ^WildPlant
+	Tooltip:
+		Name: actor-wild-poisonous.name
+	Health:
+		HP: 300
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: PoisonousSpore
+
+wild-treant:
+	Inherits: ^WildPlant
+	Tooltip:
+		Name: actor-wild-treant.name
+	Health:
+		HP: 400
+	PwGivesExperience:
+		Experience: 1
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: TreantSpore
+
+wild-demonflower:
+	Inherits: ^WildPlant
+	Tooltip:
+		Name: actor-wild-demonflower.name
+	Health:
+		HP: 200
+	PwGivesExperience:
+		Experience: 2
+	RevealsShroud:
+		Range: 10c0
+	Armament:
+		Weapon: DemonFlowerSpore
+	WithAttackAnimation:
+		Sequence: attack

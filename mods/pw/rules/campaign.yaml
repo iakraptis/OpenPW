@@ -1,0 +1,33 @@
+# Actors only the campaign missions use; their maps load this file (AssetInstaller/Campaign.cs).
+
+# Story items (Item.itm records 10-22: the Dragon's Pearl, the Sword of Jurrasic, ...): placed by a mission's script
+# (action 2, scripts/campaign.lua) on the ground, as JW2_07 I<nn>.spz. Nobody equips them: the human's units take
+# one by walking onto it, and the script goes on when they reach its place.
+^StoryItem:
+	Interactable:
+	HiddenUnderFog:
+		Type: CenterPosition
+	BodyOrientation:
+		QuantizedFacings: 1
+	RenderSprites:
+	WithSpriteBody:
+	Immobile:
+		OccupiesSpace: false
+	Tooltip:
+	ScriptTriggers:
+	MapEditorData:
+		Categories: Items
+
+story-item-18:
+	Inherits: ^StoryItem
+	Tooltip:
+		Name: actor-story-item-18.name
+	RenderSprites:
+		Image: item-18
+
+story-item-22:
+	Inherits: ^StoryItem
+	Tooltip:
+		Name: actor-story-item-22.name
+	RenderSprites:
+		Image: item-22

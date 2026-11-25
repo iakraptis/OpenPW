@@ -2,12 +2,15 @@
 # that fits the window; InterfaceBarLogic places everything below on it every tick, so the positions and sizes here
 # are only starting values.
 Container@PLAYER_WIDGETS:
-	Logic: MenuButtonsChromeLogic, InterfaceBarLogic, PwEndScreenLogic
+	Logic: MenuButtonsChromeLogic, InterfaceBarLogic, PwEndScreenLogic, LoadIngameChatLogic
 	Children:
 		LogicTicker@SIDEBAR_TICKER:
 		InterfaceBar@INTERFACE_BAR:
 			Width: WINDOW_WIDTH
 			Height: WINDOW_HEIGHT
+		# Chat and mission messages (the campaign's transmissions): the engine's CHAT_PANEL, which InterfaceBarLogic
+		# moves up so that it sits just above the bar.
+		Container@CHAT_ROOT:
 		# The berries and population, at the top right: the original resource icons (Food, House) and the numbers.
 		# InterfaceBarLogic sizes the icons with the bar.
 		StretchedImage@CASH_ICON:

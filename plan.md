@@ -734,8 +734,8 @@ dead.
   the placed bases and armies, players, unit availability, briefing text, narration MP3s and the trigger script
   (`P_SCRIP`: 256 triggers of one condition and one action; Ghidra `FUN_00404490`, `FUN_00404650`, `FUN_00405170`).
   The computer players' scripts are in Jw2_16.
-- The installer's `campaign` stage (`Campaign.cs`) converts the missions listed in its `Missions` (so far **P01,
-  Battle at Sellbaros**) into `maps/<race>-<nn>/` of the content folder: the map (shared with `Maps.cs`), every placed
+- The installer's `campaign` stage (`Campaign.cs`) converts the missions listed in its `Missions` (so far the
+  **Primitive campaign, P01-P12**) into `maps/<race>-<nn>/` of the content folder: the map (shared with `Maps.cs`), every placed
   unit (`Unit<slot>`), the players, unit availability as `~disabled` prerequisites, the briefing (`MissionData`), the
   narrations as the map's hidden `intro`/`outro` music (a sound would be decoded whole and stall the game), and
   `mission.lua` with the script. `mods/pw/missions/pw.yaml` lists them for the mission browser.
@@ -750,8 +750,15 @@ dead.
   6 cells, or waits, then returns to its target. Applies to skirmish too.
 - Map previews: the installer writes `map.png` for every converted map (skirmish, battle and campaign); the engine
   shows none without it.
-- Next: the other 47 missions; actions 2 (create units), 19 (change unit type), 22/23 (scene flags); the 7
-  campaign-only unit types (Alien1-3, the plants, the Treant); the AI scripts' branches and other settings; the
+- 2026-11-25 (branch `campaign`): the Primitive missions P02-P12. A smoke run (each mission headless for 20,000
+  ticks) found P07 and P09 lost on the first tick: they start with an army and no buildings, and the short game
+  counted only buildings; the campaign maps turn it off. The transmissions now show over the bar (the player's
+  interface had no chat panel, so `Media.DisplayMessage` showed nothing). Script actions 2 (a story item on the
+  ground, `rules/campaign.yaml`) and 19 (change a team's units' type or owner). The campaign-only units: Kalma
+  (P10, P11), Alien1-3 (P08), the plants NoxiousWeed, Poisonous, Treant and DemonFlower (E07). The AI script
+  commands are read from `Pw.exe` ([text.md](docs/formats/text.md)).
+- Next: the other races' missions; actions 22/23 (scene flags); the AI scripts' other settings and branches (attack
+  interval, units sent, gathering point, hunting, scripted teams kept home); Alien4; the Chief's Kalma summon; the
   briefing pictures.
 
 ---

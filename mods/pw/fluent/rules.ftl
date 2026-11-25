@@ -55,6 +55,8 @@ actor-primitive-bowmachine =
     .name = BowMachine
 actor-primitive-revolver =
     .name = Revolver
+actor-primitive-kalma =
+    .name = Kalma
 actor-primitive-squadron =
     .name = Squadron
 actor-primitive-flattop =
@@ -327,6 +329,10 @@ actor-demon-highportal =
 ## Map objects
 actor-meat =
     .name = Meat
+actor-story-item-18 =
+    .name = The Sword of Jurrasic
+actor-story-item-22 =
+    .name = The Sorcerous of the Neuully
 actor-berry-bush =
     .name = Berry bush
 
@@ -367,6 +373,20 @@ actor-wild-peleneustes =
     .name = Peleneustes
 actor-wild-picatyrano =
     .name = PicaTyrano
+actor-wild-alien1 =
+    .name = Alien1
+actor-wild-alien2 =
+    .name = Alien2
+actor-wild-alien3 =
+    .name = Alien3
+actor-wild-noxiousweed =
+    .name = NoxiousWeed
+actor-wild-poisonous =
+    .name = Poisonous
+actor-wild-treant =
+    .name = Treant
+actor-wild-demonflower =
+    .name = DemonFlower
 
 ## Build tooltips: what each building does (Buildable.Description, shown in the build list)
 description-primitive-sanctuary = HQ, trains BuildMen and the Chief, berry drop-off

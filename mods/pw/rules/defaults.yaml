@@ -257,6 +257,62 @@
 		TurnSpeed: 256
 		Locomotor: water
 
+# A flying wild predator (Alien3): attacks from the air, as the flying units do (^AirAttack), whatever is near.
+^WildAirPredator:
+	AttackAircraft:
+		AttackType: Hover
+		FacingTolerance: 128
+		PauseOnCondition: petrified || stunned || bubbled
+	Targetable@PREDATOR:
+		TargetTypes: Predator
+	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
+		InitialStance: AttackAnything
+		InitialStanceAI: AttackAnything
+		ScanRadius: 3
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
+		InvalidTargets: Wild
+		ValidRelationships: Enemy
+
+# The campaign's plants (NoxiousWeed, Poisonous, Treant, DemonFlower; .chr 160-163, kind 2, E07): rooted, owned by
+# Creeps, they shoot spores (the Ascomoid's, JW2_12 Ascomoid.wpn) at units in range. They don't move, flee, regrow
+# or leave meat; units fight them on their own, as predators.
+^WildPlant:
+	Inherits: ^SpriteActor
+	-QuantizeFacingsFromSequence:
+	BodyOrientation:
+		QuantizedFacings: 1
+	Selectable:
+		Priority: 3
+	SelectionDecorations:
+	Targetable:
+		TargetTypes: Ground, Wild, Predator
+	HitShape:
+	Building:
+		TerrainTypes: Clear, Ramp
+		RequiresBaseProvider: false
+	Health:
+	PwArmor:
+	RevealsShroud:
+	Tooltip:
+	WithSpriteBody:
+		Sequence: idle
+	AttackOmni:
+	AutoTarget:
+		MinimumScanTimeInterval: 6
+		MaximumScanTimeInterval: 16
+		InitialStance: AttackAnything
+		InitialStanceAI: AttackAnything
+	AutoTargetPriority@DEFAULT:
+		ValidTargets: Ground, Air
+		InvalidTargets: Wild
+		ValidRelationships: Enemy
+	PwGivesExperience:
+	MapEditorData:
+		Categories: Wildlife
+
 # Constructed: Bowmachine, flying machines. Repaired, not healed.
 ^Machine:
 	Inherits: ^Unit
