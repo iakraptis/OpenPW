@@ -183,9 +183,10 @@ do
     -- The AI casts the Elves' spells (PwSpellBotModule). Raider, an Easy Elf AI, has a Heaven, a RedElf and a
     -- BlueElf (both raised to level 1, which their spells need) and, far from the fight, a Unicorn beside a hurt
     -- WhiteElf. Four enemy Powermen stand together 7 cells from the elves, holding fire.
-    -- 1. The RedElf casts Thunder bolt on a Powerman (its mana goes down).
-    -- 2. The BlueElf casts Drop stone on the group of Powermen.
-    -- 3. The Unicorn casts Cure on the hurt WhiteElf, which heals.
+    -- 1. Not at once: an Easy AI's caster waits (EngageDelay) after an enemy comes within reach.
+    -- 2. The RedElf casts Thunder bolt on a Powerman (its mana goes down).
+    -- 3. The BlueElf casts Drop stone on the group of Powermen.
+    -- 4. The Unicorn casts Cure on the hurt WhiteElf, which heals.
     WorldLoaded = function()
         raider = Player.GetPlayer("BotSpellRaider")
         raider.Cash = 0
@@ -204,6 +205,10 @@ do
             white.Stance = "HoldFire"
         end)
 
+        Later(120, function()
+            Check(PwTest.Mana(red) == PwTest.MaxMana(red) and PwTest.Mana(blue) == PwTest.MaxMana(blue),
+                "the elves don't cast the moment they meet the enemy")
+        end)
         WaitFor("the RedElf casts Thunder bolt", 1500, function() return PwTest.Mana(red) < PwTest.MaxMana(red) end)
         WaitFor("the BlueElf casts Drop stone on the Powermen", 1500, function() return PwTest.Mana(blue) < PwTest.MaxMana(blue) end)
         WaitFor("the Unicorn casts Cure on the hurt WhiteElf", 1500, function()

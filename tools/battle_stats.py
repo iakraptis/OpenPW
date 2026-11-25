@@ -4,7 +4,8 @@ AssetInstaller/MapTemplates/bot-test/test.lua), from test-results/<map>/stdout.t
 Every run is appended to test-results/battles.csv (one row per bot per battle), so results build up over runs; the
 summary (wins, economy and leaders per race, the duel results, every battle of this run) is printed and written to
 test-results/battles.md, over this run and over every run with the same AI level (rows from before the level was
-recorded were Easy AIs).
+recorded were Easy AIs) and, when this run's battles shuffled the starts (a start column), only those that did: wins by
+start position show whether a spot favours its owner.
 
 Usage (from the repository root): python tools/battle_stats.py [map ...]   (default: every battle with results)
 run_tests.py --battles calls it after running the battles.
@@ -24,7 +25,7 @@ REPORT = RESULTS / 'battles.md'
 RACES = ['primitive', 'tyrano', 'demon', 'elf']
 FIELDS = ['run', 'commit', 'battle', 'tick', 'winner', 'leader', 'bot', 'race', 'alive', 'gone', 'buildings', 'army',
           'armyValue', 'assets', 'peakWorkers', 'peakArmy', 'peakArmyValue', 'earned', 'spent', 'earned5k', 'earned10k',
-          'earned20k', 'kills', 'losses', 'killsValue', 'lossesValue', 'level', 'leaderAt', 'peakLeaders']
+          'earned20k', 'kills', 'losses', 'killsValue', 'lossesValue', 'level', 'leaderAt', 'peakLeaders', 'start']
 
 
 def pairs(line):
@@ -33,7 +34,7 @@ def pairs(line):
 
 def collect(maps):
     """The rows of these battles' latest results."""
-    run = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+    run = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     commit = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     rows = []
     for name in maps:
@@ -139,6 +140,23 @@ def summary(rows, title):
             out.append(f'| {x} | ' + ' | '.join('x' if x == y else '-'.join(map(str, duel[(x, y)])) if (x, y) in duel else ''
                                                for y in RACES) + ' |')
 
+    # Start positions: per battle map and spot, how often its owner won (with the races that started there).
+    spots = defaultdict(lambda: [0, 0, defaultdict(int)])
+    for (_, battle), bots in battles.items():
+        for r in bots:
+            if not r.get('start'):
+                continue
+            rec = spots[(battle, r['start'])]
+            rec[0] += 1
+            rec[1] += r['winner'] == r['bot']
+            rec[2][r['race']] += 1
+    if spots:
+        out += ['', 'Start positions (games and wins of the bot starting there):', '',
+                '| Battle | Start | Games | Wins | Races there |', '|---|---|---:|---:|---|']
+        for (battle, start), (games, wins, races) in sorted(spots.items()):
+            there = ', '.join(f'{race} {n}' for race, n in sorted(races.items()))
+            out.append(f'| {battle} | {start} | {games} | {wins} | {there} |')
+
     out += ['', '| Run | Battle | Ticks | Winner | Ahead | Bots (alive: assets, earned, kills/losses; leader built at) |',
             '|---|---|---:|---|---|---|']
     for (run, battle), bots in sorted(battles.items()):
@@ -159,9 +177,11 @@ def main(maps):
         sys.exit('No battle results found.')
     append(rows)
     levels = {r['level'] or 'easy' for r in rows}
-    same = [r for r in history() if r['level'] in levels]
+    shuffled = any(r['start'] for r in rows)
+    same = [r for r in history() if r['level'] in levels and bool(r.get('start')) == shuffled]
     text = ('# AI battles\n\n' + summary(rows, 'This run') + '\n\n'
-            + summary(same, 'All runs (' + ', '.join(sorted(levels)) + ' AIs)') + '\n')
+            + summary(same, 'All runs (' + ', '.join(sorted(levels)) + ' AIs' + (', shuffled starts' if shuffled else '') + ')')
+            + '\n')
     REPORT.write_text(text, encoding='utf-8')
     print(summary(rows, 'This run'))
     print(f'\nHistory: {HISTORY} ({len(history())} rows); report: {REPORT}')
