@@ -27,7 +27,9 @@ namespace OpenRA.Mods.Pw.Traits
 		"attack interval has passed, when its army reaches the attack counter, or when its army's strength (HP, attack",
 		"and armour) is a share of the enemy's whole army (winable) or of the enemy units at the enemy's base (attack",
 		"back). An attack takes some of the units at home, gathers part of the way to the enemy, then goes for it. A",
-		"share of the units at home hunts. Units in the mission script's teams can be kept out of all this. Settings",
+		"share of the units at home hunts. The army the mission placed is a garrison: it stays where it is, fighting",
+		"what comes to it, and counts for none of this, so the attacks are the units it trains (as the original plays",
+		"P01: waves of 9, 3 and 5 units, not its 58 placed ones). Settings",
 		"are by player and come from the missions' map rules (AssetInstaller/Campaign.cs); a later set replaces them",
 		"once the player has made a number of attacks (the scripts' GO_IF_OVER_ATTCNT). Only the campaign maps load it",
 		"(rules/campaign-ai.yaml).")]
@@ -55,10 +57,6 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("By player: the wanted units after LaterAfter attacks.")]
 		public readonly Dictionary<string, Dictionary<string, int>> LaterTrain = [];
 
-		[Desc("By player: placed units (map actor names) the mission script moves itself; they never join attacks",
-			"or hunt (ON_EXCEPT_TRIGGER_TEAM).")]
-		public readonly Dictionary<string, HashSet<string>> Kept = [];
-
 		[Desc("Buildings go between these many cells from the base centre.")]
 		public readonly int MinBaseRadius = 3;
 
@@ -73,8 +71,9 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("Berry bushes this many cells from the base count for the workers wanted.")]
 		public readonly int BushRadius = 12;
 
-		[Desc("Checks an attack waits at its gathering point for its stragglers (the original's 8).")]
-		public readonly int GatherChecks = 8;
+		[Desc("Ticks an attack waits at most at its gathering point for its stragglers (the original's 8 AI turns of 128",
+			"original ticks).")]
+		public readonly int GatherTicks = PwTime.Ticks(8 * 128);
 
 		[Desc("A unit this many cells from the gathering point has arrived.")]
 		public readonly int GatherRadius = 4;
@@ -116,7 +115,7 @@ namespace OpenRA.Mods.Pw.Traits
 		// The attack gathering on its way (the original forms one at a time).
 		List<Actor> squad;
 		CPos gatherAt, targetCell;
-		int gatherChecks;
+		int gatherUntil;
 
 		public PwCampaignBotModule(Actor self, PwCampaignBotModuleInfo info)
 			: base(info)
@@ -162,10 +161,9 @@ namespace OpenRA.Mods.Pw.Traits
 		{
 			if (kept == null)
 			{
+				// The placed army: what the player owns when the game starts.
 				techTree = player.PlayerActor.Trait<TechTree>();
-				var named = world.WorldActor.Trait<SpawnMapActors>().Actors;
-				kept = Info.Kept.TryGetValue(Name, out var names)
-					? names.Where(named.ContainsKey).Select(n => named[n]).ToHashSet() : [];
+				kept = PwBotUtils.Owned(world, player).Where(a => PwBotUtils.IsArmy(a.Info)).ToHashSet();
 			}
 
 			// UNUSE_SCRIPT: the original runs no AI for the player; it keeps what the mission placed.
@@ -223,7 +221,7 @@ namespace OpenRA.Mods.Pw.Traits
 			var queues = owned.SelectMany(a => a.TraitsImplementing<ProductionQueue>().Where(q => q.Enabled && PwBotUtils.IsComplete(a)))
 				.ToList();
 			var queued = queues.SelectMany(q => q.AllQueued()).GroupBy(i => i.Item).ToDictionary(g => g.Key, g => g.Count());
-			int Have(string type) => owned.Count(a => a.Info.Name == type) + queued.GetValueOrDefault(type);
+			int Have(string type) => owned.Count(a => a.Info.Name == type && !kept.Contains(a)) + queued.GetValueOrDefault(type);
 
 			foreach (var (type, count) in wanted.Where(w => Have(w.Key) < w.Value).OrderBy(w => Have(w.Key) - w.Value))
 			{
@@ -300,7 +298,8 @@ namespace OpenRA.Mods.Pw.Traits
 			var trainable = Trainable(owned).Select(i => i.Name).ToHashSet();
 			foreach (var (unit, count) in wanted)
 			{
-				if (trainable.Contains(unit) || owned.Count(a => a.Info.Name == unit) >= count || !rules.TryGetValue(unit, out var info))
+				if (trainable.Contains(unit) || owned.Count(a => a.Info.Name == unit && !kept.Contains(a)) >= count
+					|| !rules.TryGetValue(unit, out var info))
 					continue;
 
 				var buildableInfo = info.TraitInfoOrDefault<BuildableInfo>();
@@ -488,7 +487,7 @@ namespace OpenRA.Mods.Pw.Traits
 			if (walker != null)
 				gatherAt = Reachable(walker, walker.Trait<Mobile>(), gatherAt) ?? walker.Location;
 
-			gatherChecks = 0;
+			gatherUntil = world.WorldTick + Info.GatherTicks;
 			attacks++;
 
 			// ADD_ settings grow at each attack once the later settings apply.
@@ -497,7 +496,9 @@ namespace OpenRA.Mods.Pw.Traits
 					&& !l.Key.EndsWith("_MAX", System.StringComparison.Ordinal)))
 					added[key[4..]] = added.GetValueOrDefault(key[4..]) + value;
 
-			Note("{0}: campaign attack {1} with {2} units, gathering at {3}.", player, attacks, squad.Count, gatherAt);
+			Note("{0}: campaign attack {1} at original tick {2} with {3} units ({4}), gathering at {5}.", player, attacks,
+				world.WorldTick / PwTime.TicksPerOriginal, squad.Count,
+				string.Join(", ", squad.GroupBy(a => a.Info.Name).Select(g => $"{g.Key} {g.Count()}")), gatherAt);
 			foreach (var unit in squad)
 			{
 				if (unit.TraitOrDefault<PwHunter>()?.Hunting == true)
@@ -507,13 +508,15 @@ namespace OpenRA.Mods.Pw.Traits
 			}
 		}
 
-		// The gathering squad goes on once everyone has arrived, or after GatherChecks checks.
+		// The gathering squad goes on once everyone has arrived, or after GatherTicks.
 		void Gather(IBot bot)
 		{
 			var radius = Info.GatherRadius * Info.GatherRadius;
-			if (squad.Count > 0 && ++gatherChecks <= Info.GatherChecks && squad.Any(a => (a.Location - gatherAt).LengthSquared > radius))
+			if (squad.Count > 0 && world.WorldTick < gatherUntil && squad.Any(a => (a.Location - gatherAt).LengthSquared > radius))
 				return;
 
+			Note("{0}: campaign attack {1} leaves its gathering point at original tick {2} with {3} units.", player, attacks,
+				world.WorldTick / PwTime.TicksPerOriginal, squad.Count);
 			attacking.UnionWith(squad);
 			AttackMove(bot, squad, Target(gatherAt) ?? targetCell);
 			squad = null;

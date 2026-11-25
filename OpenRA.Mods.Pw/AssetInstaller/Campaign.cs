@@ -217,17 +217,6 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {plan.LaterAfter}\n");
 			}
 
-			// ON_EXCEPT_TRIGGER_TEAM: the player's placed units in the script's teams stay out of its attacks.
-			var teamed = TeamSlots(script);
-			var kept = ai.Where(a => a.Value.KeepTeams).Select(a => (a.Key, Units: units.Where(u => names[u.Owner] == a.Key && teamed.Contains(u.Slot))
-				.Select(u => $"Unit{u.Slot}").ToList())).Where(k => k.Units.Count > 0).ToList();
-			if (kept.Count > 0)
-			{
-				s.Append("\t\t\tKept:\n");
-				foreach (var (player, list) in kept)
-					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {string.Join(", ", list)}\n");
-			}
-
 			s.Append("\tworld:\n\t\t-SpawnStartingUnits:\n\t\tLuaScript:\n\t\t\tScripts: pw|scripts/campaign.lua, mission.lua\n");
 
 			// Every unit counts towards losing, not only the buildings (the short game): some missions start with an army
@@ -270,7 +259,6 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			public readonly Dictionary<string, int> LaterTrain = [];
 			public readonly Dictionary<string, int> Later = [];
 			public int LaterAfter = -1;
-			public bool KeepTeams;
 		}
 
 		// An AI script (docs/formats/text.md). The main block runs again and again: its GO_IF_UNDER_RELCNT <label> 2 runs
@@ -305,8 +293,6 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 					var command = words[0];
 					if (command is "UNUSE_SCRIPT" or "UNUSED_SCRIPT" or "UNUNSED_SCRIPT")
 						settings["PASSIVE"] = 1;
-					else if (command == "ON_EXCEPT_TRIGGER_TEAM")
-						plan.KeepTeams = true;
 					else if (command == "SET_UNIT_MAKE" && image(Arg(words, 1)) is string unit)
 						train[unit] = Arg(words, 2);
 					else if (command.StartsWith("SET_", StringComparison.Ordinal) && Tiers.TryGetValue(command[4..], out var tiers))
@@ -339,20 +325,6 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			}
 
 			return plan;
-		}
-
-		// The placed unit slots in any of the script's teams.
-		static HashSet<int> TeamSlots(byte[] script)
-		{
-			var slots = new HashSet<int>();
-			for (var i = 0; i < Teams; i++)
-			{
-				var o = TeamsAt + i * TeamSize;
-				if (script[o + 0x7c] != 0)
-					slots.UnionWith(Enumerable.Range(0, 20).Select(k => BitConverter.ToInt32(script, o + 0x2c + 4 * k)).Where(s => s != 0));
-			}
-
-			return slots;
 		}
 
 		static void AppendPlans(StringBuilder s, string field, Dictionary<string, AiPlan> ai, Func<AiPlan, Dictionary<string, int>> values)
