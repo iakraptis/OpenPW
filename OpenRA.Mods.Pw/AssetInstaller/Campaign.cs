@@ -201,21 +201,33 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var scripts = c.Game.Archive("Jw2_16.trc");
 			string ScriptName(int player) =>
 				scripts.Contains($"{prefix}_{player:00}.txt") ? $"{prefix}_{player:00}.txt" : $"{prefix}_{player}.txt";
-			var ai = owners.Where(o => o != human).ToDictionary(o => names[o], o => AiScript(scripts, ScriptName(o), image));
+			var ai = owners.Where(o => o != human).ToDictionary(o => names[o], o => AiScript(scripts, ScriptName(o), races[o], image));
 
 			s.Append("\nRules: pw|rules/campaign-ai.yaml, pw|rules/campaign.yaml\n");
 			s.Append("\tplayer:\n\t\t# The script decides victory and defeat (scripts/campaign.lua).\n\t\t-ConquestVictoryConditions:\n");
-			s.Append("\t\tPwCampaignBotModule@campaign:\n\t\t\tTrain:\n");
-			foreach (var (player, plan) in ai.Where(a => a.Value.Train.Count > 0))
+			s.Append("\t\tPwCampaignBotModule@campaign:\n");
+			AppendPlans(s, "Train", ai, p => p.Train);
+			AppendPlans(s, "Settings", ai, p => p.Settings);
+			AppendPlans(s, "LaterTrain", ai, p => p.LaterTrain);
+			AppendPlans(s, "Later", ai, p => p.Later);
+			if (ai.Any(a => a.Value.LaterAfter >= 0))
 			{
-				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}:\n");
-				foreach (var (type, count) in plan.Train)
-					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t\t{type}: {count}\n");
+				s.Append("\t\t\tLaterAfter:\n");
+				foreach (var (player, plan) in ai.Where(a => a.Value.LaterAfter >= 0))
+					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {plan.LaterAfter}\n");
 			}
 
-			s.Append("\t\t\tAttackSize:\n");
-			foreach (var (player, plan) in ai)
-				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {plan.AttackSize}\n");
+			// ON_EXCEPT_TRIGGER_TEAM: the player's placed units in the script's teams stay out of its attacks.
+			var teamed = TeamSlots(script);
+			var kept = ai.Where(a => a.Value.KeepTeams).Select(a => (a.Key, Units: units.Where(u => names[u.Owner] == a.Key && teamed.Contains(u.Slot))
+				.Select(u => $"Unit{u.Slot}").ToList())).Where(k => k.Units.Count > 0).ToList();
+			if (kept.Count > 0)
+			{
+				s.Append("\t\t\tKept:\n");
+				foreach (var (player, list) in kept)
+					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}: {string.Join(", ", list)}\n");
+			}
+
 			s.Append("\tworld:\n\t\t-SpawnStartingUnits:\n\t\tLuaScript:\n\t\t\tScripts: pw|scripts/campaign.lua, mission.lua\n");
 
 			// Every unit counts towards losing, not only the buildings (the short game): some missions start with an army
@@ -241,21 +253,121 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				camera, placed, image));
 		}
 
-		// An AI script (docs/formats/text.md): the units it makes (SET_UNIT_MAKE <type> <count>, by actor) and how many
-		// gather before an attack (the first SET_ATTACK_COUNTER, 10 without one). Its branches are not followed yet.
-		static (List<(string Type, int Count)> Train, int AttackSize) AiScript(TrcArchive scripts, string name, Func<int, string> image)
+		// The unit tiers SET_NO_BASE_UNIT, _MIDDLE_ and _HIGH_ set, by race (Pw.exe tables 0x5476f4, 0x547734, 0x547794).
+		static readonly Dictionary<string, Dictionary<string, int[]>> Tiers = new()
 		{
-			const int DefaultAttackSize = 10;
-			if (!scripts.Contains(name))
-				return (new List<(string, int)>(), DefaultAttackSize);
+			{ "NO_BASE_UNIT", new() { { "primitive", [1, 3] }, { "elf", [17, 19] }, { "tyrano", [33, 34, 36] }, { "demon", [49, 50, 54] } } },
+			{ "NO_MIDDLE_UNIT", new() { { "primitive", [2, 4, 7, 6] }, { "elf", [18, 20, 21, 23] }, { "tyrano", [35, 37, 40, 39, 42] }, { "demon", [57, 55, 56] } } },
+			{ "NO_HIGH_UNIT", new() { { "primitive", [8, 9] }, { "elf", [25, 26, 27] }, { "tyrano", [43, 44] }, { "demon", [53, 58] } } },
+		};
 
-			var text = Encoding.GetEncoding(949).GetString(scripts.Read(name));
-			var train = Regex.Matches(text, @"^\s*SET_UNIT_MAKE\s+(\d+)\s+(\d+)", RegexOptions.Multiline)
-				.Select(m => (Type: image(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)),
-					Count: int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture)))
-				.Where(t => t.Type != null).GroupBy(t => t.Type).Select(g => (g.Key, g.Max(t => t.Count))).ToList();
-			var attack = Regex.Match(text, @"^\s*SET_ATTACK_COUNTER\s+(\d+)", RegexOptions.Multiline);
-			return (train, attack.Success ? int.Parse(attack.Groups[1].Value, CultureInfo.InvariantCulture) : DefaultAttackSize);
+		// A computer player's script as the campaign AI plays it: the start settings and wanted units, and the later
+		// ones after a number of attacks.
+		sealed class AiPlan
+		{
+			public readonly Dictionary<string, int> Train = [];
+			public readonly Dictionary<string, int> Settings = [];
+			public readonly Dictionary<string, int> LaterTrain = [];
+			public readonly Dictionary<string, int> Later = [];
+			public int LaterAfter = -1;
+			public bool KeepTeams;
+		}
+
+		// An AI script (docs/formats/text.md). The main block runs again and again: its GO_IF_UNDER_RELCNT <label> 2 runs
+		// the start block on the first tick, its GO_IF_OVER_ATTCNT <label> <n> the later block once n attacks have
+		// been made. A script without them is its own start block. UNUSE(D)_SCRIPT turns the player's AI off.
+		static AiPlan AiScript(TrcArchive scripts, string name, string race, Func<int, string> image)
+		{
+			var plan = new AiPlan();
+			if (!scripts.Contains(name))
+				return plan;
+
+			var blocks = new Dictionary<string, List<string[]>> { { "", [] } };
+			var block = blocks[""];
+			foreach (var raw in Encoding.GetEncoding(949).GetString(scripts.Read(name)).Split('\n'))
+			{
+				var words = raw.Split(';')[0].Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+				if (words.Length == 0)
+					continue;
+
+				if (words[0].StartsWith(':'))
+					blocks[words[0][1..]] = block = [];
+				else
+					block.Add(words);
+			}
+
+			int Arg(string[] words, int i) => words.Length > i && int.TryParse(words[i], NumberStyles.Integer, CultureInfo.InvariantCulture, out var v) ? v : 0;
+
+			void Apply(List<string[]> lines, Dictionary<string, int> train, Dictionary<string, int> settings)
+			{
+				foreach (var words in lines)
+				{
+					var command = words[0];
+					if (command is "UNUSE_SCRIPT" or "UNUSED_SCRIPT" or "UNUNSED_SCRIPT")
+						settings["PASSIVE"] = 1;
+					else if (command == "ON_EXCEPT_TRIGGER_TEAM")
+						plan.KeepTeams = true;
+					else if (command == "SET_UNIT_MAKE" && image(Arg(words, 1)) is string unit)
+						train[unit] = Arg(words, 2);
+					else if (command.StartsWith("SET_", StringComparison.Ordinal) && Tiers.TryGetValue(command[4..], out var tiers))
+						foreach (var type in tiers.GetValueOrDefault(race) ?? [])
+							train[image(type)] = Arg(words, 1);
+					else if (command.StartsWith("SET_", StringComparison.Ordinal))
+						settings[command[4..]] = Arg(words, 1);
+					else if (command.StartsWith("ADD_", StringComparison.Ordinal))
+					{
+						settings[command] = Arg(words, 1);
+						settings[command + "_MAX"] = Arg(words, 2);
+					}
+				}
+			}
+
+			var main = blocks[""];
+			var start = main.FirstOrDefault(w => w[0] == "GO_IF_UNDER_RELCNT");
+			var later = main.FirstOrDefault(w => w[0] == "GO_IF_OVER_ATTCNT");
+			Apply(main.Where(w => !w[0].StartsWith("GO", StringComparison.Ordinal)).ToList(), plan.Train, plan.Settings);
+			if (start != null && blocks.TryGetValue(start[1], out var startBlock))
+				Apply(startBlock, plan.Train, plan.Settings);
+
+			if (later != null && blocks.TryGetValue(later[1], out var laterBlock))
+			{
+				plan.LaterAfter = Arg(later, 2);
+				foreach (var (type, count) in plan.Train)
+					plan.LaterTrain[type] = count;
+
+				Apply(laterBlock, plan.LaterTrain, plan.Later);
+			}
+
+			return plan;
+		}
+
+		// The placed unit slots in any of the script's teams.
+		static HashSet<int> TeamSlots(byte[] script)
+		{
+			var slots = new HashSet<int>();
+			for (var i = 0; i < Teams; i++)
+			{
+				var o = TeamsAt + i * TeamSize;
+				if (script[o + 0x7c] != 0)
+					slots.UnionWith(Enumerable.Range(0, 20).Select(k => BitConverter.ToInt32(script, o + 0x2c + 4 * k)).Where(s => s != 0));
+			}
+
+			return slots;
+		}
+
+		static void AppendPlans(StringBuilder s, string field, Dictionary<string, AiPlan> ai, Func<AiPlan, Dictionary<string, int>> values)
+		{
+			var listed = ai.Where(a => values(a.Value).Count > 0).ToList();
+			if (listed.Count == 0)
+				return;
+
+			s.Append(CultureInfo.InvariantCulture, $"\t\t\t{field}:\n");
+			foreach (var (player, plan) in listed)
+			{
+				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{player}:\n");
+				foreach (var (key, value) in values(plan))
+					s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t\t{key}: {value.ToString(CultureInfo.InvariantCulture)}\n");
+			}
 		}
 
 		static string MissionLua(string prefix, byte[] script, Dictionary<int, string> names, int human, List<int> owners, byte[] playe,

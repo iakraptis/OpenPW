@@ -1,0 +1,115 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Campaign AI
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,142
+
+Bounds: 1,1,86,140
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: Random
+		Enemies: Raider, Target, Passive
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@Raider:
+		Name: Raider
+		Bot: campaign
+		Faction: demon
+		LockFaction: True
+		Enemies: Target, Creeps
+	PlayerReference@Target:
+		Name: Target
+		Faction: primitive
+		LockFaction: True
+		Enemies: Raider, Passive, Creeps
+	PlayerReference@Passive:
+		Name: Passive
+		Bot: campaign
+		Faction: demon
+		LockFaction: True
+		Enemies: Target, Creeps
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 44,70
+	RaiderDen: demon-demonden
+		Owner: Raider
+		Location: 10,20
+	RaiderInsect0: demon-insect
+		Owner: Raider
+		Location: 16,24
+	RaiderInsect1: demon-insect
+		Owner: Raider
+		Location: 17,24
+	KeptSkeleton: demon-skeleton
+		Owner: Raider
+		Location: 14,28
+	TargetSanctuary: primitive-sanctuary
+		Owner: Target
+		Location: 50,20
+	PassiveDen: demon-demonden
+		Owner: Passive
+		Location: 10,90
+	PassiveInsect: demon-insect
+		Owner: Passive
+		Location: 16,94
+
+Rules: pw|rules/campaign-ai.yaml
+	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		-ConquestVictoryConditions:
+		# As a mission's rules (AssetInstaller/Campaign.cs): Raider wants 3 Skeletons and has no Death Den, attacks at 3
+		# (the strength shares off), and keeps KeptSkeleton out of it; Passive's script is UNUSE_SCRIPT.
+		PwCampaignBotModule@campaign:
+			Train:
+				Raider:
+					demon-skeleton: 4
+				Passive:
+					demon-skeleton: 3
+			Settings:
+				Raider:
+					ATTACK_COUNTER: 3
+					ATTACK_WINABLE: 0
+					ATTACK_BACK: 0
+					ATTACK_MOVE: 50
+					HUNT: 0
+				Passive:
+					PASSIVE: 1
+			Kept:
+				Raider: KeptSkeleton
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true

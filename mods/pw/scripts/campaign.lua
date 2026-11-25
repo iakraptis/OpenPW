@@ -146,6 +146,15 @@ local function Look(x, y)
 	end
 end
 
+-- Without a window (a headless run of the mission), the game ends with the mission: past it, the player watches as
+-- a spectator, and the simulation slows to a crawl.
+local function EndHeadless(won)
+	if Test and Test.Headless then
+		local line = "campaign: " .. (won and "won" or "lost") .. " at tick " .. Now
+		if won then Test.Pass(line) else Test.Fail(line) end
+	end
+end
+
 local function Win()
 	if Ended then
 		return
@@ -160,6 +169,7 @@ local function Win()
 		if not won then
 			won = true
 			Human.MarkCompletedObjective(Objective)
+			EndHeadless(true)
 		end
 	end
 
@@ -178,6 +188,7 @@ local function Lose()
 
 	Ended = true
 	Human.MarkFailedObjective(Objective)
+	EndHeadless(false)
 end
 
 local Conditions = {
@@ -335,15 +346,20 @@ local Actions = {
 	[26] = function() Counter = Counter + 1 end,
 }
 
+-- Every enemy player beaten. A mission without enemy players (P08: only wild aliens) is won by its script alone.
 local function EnemiesDefeated()
+	local enemies = 0
 	for index, name in pairs(Mission.Players) do
 		local player = Player.GetPlayer(name)
-		if index < 8 and player ~= Human and not player.IsAlliedWith(Human) and not player.HasNoRequiredUnits() then
-			return false
+		if index < 8 and player ~= Human and not player.IsAlliedWith(Human) then
+			enemies = enemies + 1
+			if not player.HasNoRequiredUnits() then
+				return false
+			end
 		end
 	end
 
-	return true
+	return enemies > 0
 end
 
 local function RunTriggers()
