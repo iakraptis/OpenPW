@@ -59,6 +59,11 @@ own lettered Menu buttons on each race's plaque (`MenuButtons.cs`, with open-lic
   - 4: a Bink video (`BIKi`): the animated backgrounds of `Main.mnt` and `Single.mnt`. `Main.mnt`'s is 668x277,
     15 fps, 20 s: a slideshow of the races' artwork in the panel.
 
+`Brief.mnt`, the campaign's briefing screen: three widgets, the header text (99, 25 - 700, 100), the story text
+(99, 120 - 700, 510) and `button` (336, 532 - 465, 563), CONTINUE, whose normal and hover images are the file's two
+frames; no background (the page's picture fills the screen). The installer exports the button and the areas as the
+chrome collection `briefing` (Chrome.cs); PwBriefingWidget draws the screen.
+
 `Credit.mnt` is a stub ("this is null data").
 
 ## Cursors: `Mouse100.mcs`

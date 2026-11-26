@@ -16,6 +16,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using OpenRA.FileFormats;
+using OpenRA.Graphics;
 
 namespace OpenRA.Mods.Pw.AssetInstaller
 {
@@ -148,6 +150,11 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var ending = Story(Text(scenario, 0x1808, 0x1000));
 
 			var s = new StringBuilder(Maps.Header(map, $"{raceTitle} {number}: {title}", "Wizard Soft", "MissionSelector", "Campaign"));
+
+			// The briefing text of the in-game menu (MissionData Briefing) as a message of the map's map.ftl, as the
+			// engine's missions do: a YAML value can't hold line breaks, and the engine shows "\n" as it is.
+			s.Append("FluentMessages: map.ftl\n\n");
+			c.WriteText($"maps/{folder}/map.ftl", "briefing =\n" + string.Join("\n", briefing.Split('\n').Select(l => "    " + FluentText(l))) + "\n");
 			s.Append("Players:\n");
 			s.Append("\tPlayerReference@Neutral:\n\t\tName: Neutral\n\t\tOwnsWorld: True\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
 			s.Append("\tPlayerReference@Creeps:\n\t\tName: Creeps\n\t\tNonCombatant: True\n\t\tFaction: Random\n");
@@ -233,7 +240,37 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			// Every unit counts towards losing, not only the buildings (the short game): some missions start with an army
 			// and no base (P07, P09), and would otherwise be lost on the first tick.
 			s.Append("\t\tMapOptions:\n\t\t\tShortGameCheckboxEnabled: False\n\t\t\tShortGameCheckboxLocked: True\n\t\t\tShortGameCheckboxVisible: False\n");
-			s.Append(CultureInfo.InvariantCulture, $"\t\tMissionData:\n\t\t\tBriefing: {YamlLine(briefing)}\n");
+			s.Append("\t\tMissionData:\n\t\t\tBriefing: briefing\n");
+
+			// The briefing screen before the mission (Brief.mnt; PwBriefing): the header, then each page of the intro story
+			// over its picture (the story's "#<n>" lines: <prefix>_<n>.JPG, converted to briefing-<n>.png), while the
+			// narration plays.
+			// As the original shows it: one screen, the first page's picture (the map of the island) with the whole story;
+			// the second page's picture (a scene) isn't shown before the mission.
+			var story = Pages(Text(scenario, 0x808, 0x1000));
+			var pages = story.Take(1).Select(p => (p.Picture, Text: string.Join("\n\n", story.Select(q => q.Text)))).ToList();
+			s.Append(CultureInfo.InvariantCulture,
+				$"\t\tPwBriefing:\n\t\t\tHeader: {YamlLine($"{Lines(header).FirstOrDefault()}\nTitle: {title}\nObjective: {objective}")}\n");
+			s.Append("\t\t\tPages:\n");
+			for (var p = 0; p < pages.Count; p++)
+			{
+				var picture = $"briefing-{pages[p].Picture}.png";
+				var jpg = section($"{prefix}_{pages[p].Picture}.JPG");
+				if (jpg.Length > 1)
+				{
+					// At the top left of a 1024x1024 sheet: textures are a power of two on a side.
+					const int Sheet = 1024;
+					var (rgba, width, height) = Jpeg.Decode(jpg);
+					var sheet = new byte[4 * Sheet * Sheet];
+					for (var y = 0; y < Math.Min(height, Sheet); y++)
+						Array.Copy(rgba, 4 * y * width, sheet, 4 * y * Sheet, 4 * Math.Min(width, Sheet));
+
+					c.WriteFile($"maps/{folder}/{picture}", new Png(sheet, SpriteFrameType.Rgba32, Sheet, Sheet).Save());
+				}
+
+				s.Append(CultureInfo.InvariantCulture, $"\t\t\t\t{p}: {picture}|{YamlLine(pages[p].Text)}\n");
+			}
+
 			s.Append("\t\tObjectivesPanel:\n\t\t\tPanelName: MISSION_OBJECTIVES\n");
 			foreach (var actor in disabled)
 				s.Append(CultureInfo.InvariantCulture, $"\t{actor}:\n\t\tBuildable:\n\t\t\tPrerequisites: ~disabled\n");
@@ -485,6 +522,44 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		}
 
 		// The intro and ending stories: lines wrapped by hand, paragraphs split by blank lines, "#..." and "@" marker lines.
+		// A line of text inside a Fluent message: braces as literals, and a "[", "*" or "." that would open the line
+		// as a literal too (Fluent reads those as syntax).
+		static string FluentText(string line)
+		{
+			var text = Regex.Replace(line, "[{}]", m => $"{{\"{m.Value}\"}}");
+			return text.Length > 0 && "[*.".Contains(text[0]) ? $"{{\"{text[0]}\"}}{text[1..]}" : text;
+		}
+
+		// The intro story's pages: each "#<n>" line starts one, shown over picture n, its paragraphs as Story's.
+		static List<(int Picture, string Text)> Pages(string text)
+		{
+			var pages = new List<(int Picture, string Text)>();
+			var picture = -1;
+			var lines = new List<string>();
+			void Flush()
+			{
+				if (picture >= 0)
+					pages.Add((picture, Story(string.Join("\n", lines))));
+
+				lines.Clear();
+			}
+
+			foreach (var line in text.Replace("\r\n", "\n").Split('\n'))
+			{
+				var match = Regex.Match(line.Trim(), @"^#(\d+)$");
+				if (match.Success)
+				{
+					Flush();
+					picture = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+				}
+				else
+					lines.Add(line);
+			}
+
+			Flush();
+			return pages;
+		}
+
 		static string Story(string text)
 		{
 			var paragraphs = new List<string>();

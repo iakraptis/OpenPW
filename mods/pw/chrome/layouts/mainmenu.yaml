@@ -118,12 +118,20 @@ Container@MAINMENU:
 							Height: 30
 							Text: button-singleplayer-menu-skirmish
 							Font: Bold
+						# The engine's mission browser, hidden (PwMainMenuLogic): the campaign has its own button.
 						Button@MISSIONS_BUTTON:
 							X: PARENT_WIDTH / 2 + 10
 							Y: PARENT_HEIGHT / 2 - 55
 							Width: 140
 							Height: 30
 							Text: label-missions-title
+							Font: Bold
+						Button@CAMPAIGN_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-singleplayer-menu-campaign
 							Font: Bold
 						Button@LOAD_BUTTON:
 							X: PARENT_WIDTH / 2 - 150
@@ -133,6 +141,59 @@ Container@MAINMENU:
 							Text: button-singleplayer-menu-load
 							Font: Bold
 						Button@BACK_BUTTON:
+							X: PARENT_WIDTH / 2 - WIDTH / 2
+							Y: PARENT_HEIGHT / 2 + 55
+							Width: 140
+							Height: 30
+							Key: escape
+							Text: button-back
+							Font: Bold
+				# The campaign: a race, then its first mission (PwMainMenuLogic).
+				Container@CAMPAIGN_MENU:
+					Width: PARENT_WIDTH
+					Height: PARENT_HEIGHT
+					Visible: false
+					Children:
+						Label@CAMPAIGN_MENU_TITLE:
+							Y: PARENT_HEIGHT / 2 - 100
+							Width: PARENT_WIDTH
+							Height: 30
+							Text: label-campaign-title
+							Align: Center
+							Font: MediumBold
+							Contrast: true
+						Button@PRIMITIVE_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-campaign-primitive
+							Font: Bold
+						Button@ELF_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 55
+							Width: 140
+							Height: 30
+							Text: button-campaign-elf
+							Font: Bold
+							TooltipContainer: TOOLTIP_CONTAINER
+						Button@TYRANO_BUTTON:
+							X: PARENT_WIDTH / 2 - 150
+							Y: PARENT_HEIGHT / 2 - 15
+							Width: 140
+							Height: 30
+							Text: button-campaign-tyrano
+							Font: Bold
+							TooltipContainer: TOOLTIP_CONTAINER
+						Button@DEMON_BUTTON:
+							X: PARENT_WIDTH / 2 + 10
+							Y: PARENT_HEIGHT / 2 - 15
+							Width: 140
+							Height: 30
+							Text: button-campaign-demon
+							Font: Bold
+							TooltipContainer: TOOLTIP_CONTAINER
+						Button@CAMPAIGN_BACK_BUTTON:
 							X: PARENT_WIDTH / 2 - WIDTH / 2
 							Y: PARENT_HEIGHT / 2 + 55
 							Width: 140

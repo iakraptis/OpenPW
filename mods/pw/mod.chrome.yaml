@@ -1,6 +1,7 @@
 Chrome:
 	pw|chrome/chrome.yaml
 	pw|chrome/main-menu.yaml
+	pw|chrome/briefing.yaml
 
 ChromeLayout:
 	common|chrome/assetbrowser.yaml

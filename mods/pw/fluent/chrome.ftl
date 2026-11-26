@@ -166,6 +166,13 @@ tooltip-stat-construction = Under construction: a Buildman inside is building it
 ## The main menu
 button-main-menu-intro = Intro
 tooltip-main-menu-intro-unavailable = The intro is not available yet.
+button-singleplayer-menu-campaign = Campaign
+label-campaign-title = Campaign
+button-campaign-primitive = Primitive
+button-campaign-elf = Elf
+button-campaign-tyrano = Tyrano
+button-campaign-demon = Demon
+tooltip-campaign-unavailable = This campaign is not converted yet.
 
 ## PwEndScreenWidget
 label-end-elapsed = Elapsed time { $time }

@@ -49,7 +49,7 @@ MapGrid:
 
 SpriteFormats: PngSheet
 
-SoundFormats: Wav, Mp3
+SoundFormats: Wav, PwMp3
 
 TerrainFormat: DefaultTerrain
 

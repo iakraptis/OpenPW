@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using OpenRA.GameRules;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Traits;
+using OpenRA.Mods.Pw.Widgets.Logic;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Pw.Traits
@@ -29,7 +30,8 @@ namespace OpenRA.Mods.Pw.Traits
 		[Desc("The tracks played in turn after the start tune, by faction.")]
 		public readonly Dictionary<string, string[]> Battle = [];
 
-		[Desc("A track the map may define (a campaign mission's narration), played before the start tune.")]
+		[Desc("A track the map may define (a campaign mission's narration), played before the start tune; with a briefing",
+			"(PwBriefing) it plays while the briefing shows, and the race music waits for the briefing to end.")]
 		public readonly string Intro = "intro";
 
 		public override object Create(ActorInitializer init) { return new PwRaceMusic(this); }
@@ -42,6 +44,7 @@ namespace OpenRA.Mods.Pw.Traits
 		World world;
 		MusicInfo[] battle;
 		int next;
+		string waitingFaction;
 
 		public PwRaceMusic(PwRaceMusicInfo info)
 		{
@@ -51,15 +54,27 @@ namespace OpenRA.Mods.Pw.Traits
 		void IPostWorldLoaded.PostWorldLoaded(World world, WorldRenderer wr)
 		{
 			if (!world.IsLoadingGameSave)
-				Begin(world);
+				Begin(world, PwBriefingLogic.WillShow(world));
 		}
 
 		void INotifyGameLoaded.GameLoaded(World world)
 		{
-			Begin(world);
+			Begin(world, false);
 		}
 
-		void Begin(World world)
+		// The briefing is over: the narration stops and the race music starts.
+		public void EndBriefing()
+		{
+			if (waitingFaction == null)
+				return;
+
+			var faction = waitingFaction;
+			waitingFaction = null;
+			playlist.Stop();
+			PlayStart(faction);
+		}
+
+		void Begin(World world, bool briefing)
 		{
 			this.world = world;
 			playlist = world.WorldActor.Trait<MusicPlaylist>();
@@ -73,7 +88,13 @@ namespace OpenRA.Mods.Pw.Traits
 					tracks.Add(track);
 
 			battle = tracks.ToArray();
-			if (Track(info.Intro) is MusicInfo intro)
+			if (briefing)
+			{
+				waitingFaction = faction;
+				if (Track(info.Intro) is MusicInfo narration)
+					playlist.Play(narration);
+			}
+			else if (Track(info.Intro) is MusicInfo intro)
 				playlist.Play(intro, () => PlayStart(faction));
 			else
 				PlayStart(faction);
