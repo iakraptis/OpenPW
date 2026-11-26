@@ -70,11 +70,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		public static void Export(InstallContext c)
 		{
 			var image = ImageNames(c);
+			var slugs = new HashSet<string>();
 			foreach (var file in c.Game.MapFiles())
 			{
 				try
 				{
-					ExportMap(c, new TrcArchive(file), image);
+					ExportMap(c, new TrcArchive(file), image, Path.GetFileNameWithoutExtension(file), slugs);
 				}
 				catch (Exception e) when (e is InvalidDataException or FileNotFoundException)
 				{
@@ -125,9 +126,20 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			};
 		}
 
-		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image)
+		static string Slug(string title) => Regex.Replace(title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
+
+		static void ExportMap(InstallContext c, TrcArchive jw2, Func<int, string> image, string fileName, HashSet<string> slugs)
 		{
 			var map = Read(jw2.Read);
+
+			// Two maps with one title (the 2003 Korean release's Rank folder has "(4)_Four_Ways_v2.0", titled "(4) Four
+			// Ways" as the original is): the second takes its title from its file name, so neither replaces the other.
+			if (!slugs.Add(Slug(map.Title)))
+			{
+				map.Title = fileName.Replace('_', ' ');
+				slugs.Add(Slug(map.Title));
+			}
+
 			var players = jw2.Read("P_SCENA")[4];
 			var starts = StartPositions(jw2.Read("P_PLAYE"));
 
@@ -135,7 +147,7 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			var creatures = PlacedUnits(jw2.Read("OBC"), jw2.Read("JW2"), image).Where(u => u.Owner == 8)
 				.Select(u => (u.Actor, u.X, u.Y, u.Facing)).ToList();
 
-			var slug = Regex.Replace(map.Title.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
+			var slug = Slug(map.Title);
 			if (KeepAway.TryGetValue(slug, out var keepAway))
 				creatures = MoveAway(creatures, keepAway.Types, keepAway.Distance, starts, map.Objects, map.Map1, map.Width, map.Height);
 

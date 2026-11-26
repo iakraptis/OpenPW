@@ -44,7 +44,18 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 		// (an installed copy, or a development checkout with the game beside the repository).
 		public static IEnumerable<string> Candidates()
 		{
-			var names = new[] { "Primitive Wars", "PrimitiveWars", "Primitive Wars - Legend of the Land", "Legend of the Land", "PW" };
+			// The Korean release is Jurassic War 2 (docs/game/versions.md); its installer's own folder is "Pw".
+			var names = new[]
+			{
+				"Primitive Wars", "PrimitiveWars", "Primitive Wars - Legend of the Land", "Legend of the Land", "PW",
+				"Jurassic War 2", "Jurassic War II", "Jurassic_War_2", "Jw2"
+			};
+
+			// Where an installer put it: Wizard Soft's games write HKLM\SOFTWARE\WIZARD SOFT\<game>\InstallPath (the
+			// Korean release: "Jurassic era war 2").
+			foreach (var path in RegistryInstallPaths())
+				yield return path;
+
 			var bases = new List<string>();
 
 			foreach (var drive in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Fixed && d.IsReady))
@@ -80,7 +91,35 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 				upFolder = Path.GetDirectoryName(upFolder);
 			}
 
-			return bases.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(b => names.Select(n => Path.Combine(b, n)));
+			foreach (var candidate in bases.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(b => names.Select(n => Path.Combine(b, n))))
+				yield return candidate;
+		}
+
+		static IEnumerable<string> RegistryInstallPaths()
+		{
+			if (!OperatingSystem.IsWindows())
+				yield break;
+
+			var paths = new List<string>();
+			foreach (var key in new[] { @"SOFTWARE\WIZARD SOFT", @"SOFTWARE\WOW6432Node\WIZARD SOFT" })
+			{
+				try
+				{
+					using var wizard = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(key);
+					foreach (var game in wizard?.GetSubKeyNames() ?? [])
+					{
+						using var sub = wizard.OpenSubKey(game);
+						if (sub?.GetValue("InstallPath") is string path && !string.IsNullOrWhiteSpace(path))
+							paths.Add(path.TrimEnd('\\', '/'));
+					}
+				}
+				catch (Exception e) when (e is System.Security.SecurityException or UnauthorizedAccessException or IOException)
+				{
+				}
+			}
+
+			foreach (var path in paths)
+				yield return path;
 		}
 
 		public static string Detect()
