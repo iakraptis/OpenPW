@@ -56,9 +56,12 @@ namespace OpenRA.Mods.Pw.AssetInstaller
 			if (data.Length < 0x20 || Encoding.ASCII.GetString(data, 0, 4) != "TRC\x1a")
 				throw new InvalidDataException($"{path}: not a TRC file");
 
+			// +4 the slots in the directory, +8 those in use: the same in the 2002 release; the 2003 Korean one's JW2_11
+			// has 44 slots for its 27 spell effects (docs/game/versions.md), the rest empty.
 			var count = BitConverter.ToInt32(data, 4);
+			var used = BitConverter.ToInt32(data, 8);
 			dataOffset = BitConverter.ToInt32(data, 12);
-			if (count != BitConverter.ToInt32(data, 8) || dataOffset != 0x20 + 32 * count)
+			if (used < 0 || used > count || dataOffset != 0x20 + 32 * count)
 				throw new InvalidDataException($"{path}: unexpected TRC header");
 
 			var cp949 = Encoding.GetEncoding(949);
