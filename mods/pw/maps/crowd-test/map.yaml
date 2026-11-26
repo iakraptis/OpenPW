@@ -1,0 +1,68 @@
+MapFormat: 12
+
+RequiresMod: pw
+
+Title: Test: Crowds
+
+Author: OpenPW
+
+Tileset: TEST
+
+MapSize: 88,142
+
+Bounds: 1,1,86,140
+
+Visibility: MissionSelector
+
+Categories: Test
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: Random
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: Random
+		Enemies: Crowd, CrowdFoe
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		LockFaction: True
+		NonCombatant: True
+		Faction: primitive
+	PlayerReference@Crowd:
+		Name: Crowd
+		Faction: primitive
+		LockFaction: True
+		Enemies: CrowdFoe, Creeps
+	PlayerReference@CrowdFoe:
+		Name: CrowdFoe
+		Faction: primitive
+		LockFaction: True
+		Enemies: Crowd, Creeps
+
+Actors:
+	Spawn0: mpspawn
+		Owner: Neutral
+		Location: 44,70
+
+Rules:
+	player:
+		# Fog off and the map explored: the tests check rules, not visibility.
+		Shroud:
+			FogCheckboxEnabled: False
+			FogCheckboxLocked: True
+			ExploredMapCheckboxEnabled: True
+			ExploredMapCheckboxLocked: True
+		-ConquestVictoryConditions:
+	world:
+		-SpawnStartingUnits:
+		LuaScript:
+			Scripts: testlib.lua, test.lua
+		# 5x speed: the test runs in a few seconds.
+		MapOptions:
+			GameSpeed: test
+			GameSpeedDropdownLocked: true

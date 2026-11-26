@@ -17,7 +17,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local AttackMove, Exposure, FirstHit, GroupAttack, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, Exposure, FirstHit, GroupAttack, GroupEngage, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -34,6 +34,7 @@ do
     --    main building hides the player again.
     -- 10. Melee reach (^Melee 1c512): eight Powermen in the eight cells around an enemy Giant all hit it, the
     --    diagonal ones included; a Powerman holding its ground (Defend) two cells from an enemy never reaches it.
+    -- 11. A group ordered at one of an enemy group spreads over it: six Powermen 12 cells away all hit within 115 ticks.
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -45,6 +46,7 @@ do
         Later(5, MissileModes)
         Later(5, MeleeBlocked)
         Later(5, GroupAttack)
+        Later(5, GroupEngage)
         Later(5, AttackMove)
         Later(5, MeleeAround)
         Later(5, Patrolling)
@@ -205,6 +207,32 @@ do
         end
         WaitFor("a group sent at one of an enemy group kills them all", 900, Done, function()
             Check(stood == nil, "no unit of the group stands idle while the enemy group fights" .. (stood and " (" .. stood .. ")" or ""))
+        end)
+    end
+
+    -- A group ordered at one of an enemy group 12 cells away engages without queuing: six Powermen on one of six
+    -- (holding fire). A melee unit reaches only the cells beside its target, so six on one enemy lined up and waited
+    -- behind each other (the last hit about 150 ticks after the order, here); now at most three go for one enemy and the
+    -- rest take its neighbours (MeleeAttack), and a unit waits about 1.4 s behind another (Locomotor WaitAverage).
+    GroupEngage = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local enemies, attackers, hit = { }, { }, { }
+        for i = 0, 5 do
+            enemies[#enemies + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(16 + i % 2, 63 + math.floor(i / 2)) })
+            attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(4, 62 + i) })
+        end
+        for _, e in ipairs(enemies) do
+            Trigger.OnDamaged(e, function(_, attacker)
+                for i, a in ipairs(attackers) do if a == attacker then hit[i] = true end end
+            end)
+        end
+        Later(1, function()
+            for _, e in ipairs(enemies) do e.Stance = "HoldFire" end
+            for _, a in ipairs(attackers) do a.Attack(enemies[1]) end
+        end)
+        WaitFor("all six of a group ordered at one of an enemy group hit within 115 ticks", 115, function()
+            for i = 1, #attackers do if not hit[i] then return false end end
+            return true
         end)
     end
 
