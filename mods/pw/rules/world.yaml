@@ -50,16 +50,19 @@
 			DUNGEON: content|tilesets/dungeon.trt
 			RUIN: content|tilesets/ruin.trt
 	# Movement over the terrain types of the converted maps (tilesets/*.yaml): Cliff and Water block ground units.
+	# WaitAverage/WaitSpread (ticks a unit waits behind another before finding another way) are the engine's defaults,
+	# 40 and 10, about 1.4 s: the tick-rate change had doubled them to 80 and 20, which left units standing about 3 s
+	# behind each other on the way to a fight.
 	Locomotor@FOOT:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: foot
 		TerrainSpeeds:
 			Clear: 100
 			Ramp: 100
 	Locomotor@HEAVY:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: heavy
 		Crushes: infantry
 		TerrainSpeeds:
@@ -68,8 +71,8 @@
 	# Hovering (.chr 0x17c = 2: Insect, Rhamphos, Warlock): ground and water cells, but not cliffs, ridges or map objects
 	# (Pw.exe 0x45cb3c: walkable or water bit, no MAP3 object, no unit).
 	Locomotor@HOVER:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: hover
 		TerrainSpeeds:
 			Clear: 100
@@ -80,16 +83,16 @@
 	# checks only terrain, map objects and building footprints for a step (Pw.exe 0x45cb3c, docs/formats/map.md):
 	# its units walk through each other.
 	Locomotor@FOOTWORKER:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: foot-worker
 		SharesCell: true
 		TerrainSpeeds:
 			Clear: 100
 			Ramp: 100
 	Locomotor@HOVERWORKER:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: hover-worker
 		SharesCell: true
 		TerrainSpeeds:
@@ -97,14 +100,14 @@
 			Ramp: 100
 			Water: 100
 	Locomotor@WATER:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: water
 		TerrainSpeeds:
 			Water: 100
 	Locomotor@WHEELED:
-		WaitAverage: 80
-		WaitSpread: 20
+		WaitAverage: 40
+		WaitSpread: 10
 		Name: wheeled
 		TerrainSpeeds:
 			Clear: 100

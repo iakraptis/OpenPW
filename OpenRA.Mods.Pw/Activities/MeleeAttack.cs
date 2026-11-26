@@ -28,8 +28,18 @@ namespace OpenRA.Mods.Pw.Activities
 	// Once the target dies, it goes on to the nearest enemy of the target's group (combatants within searchRadius of
 	// where the target was): a group sent at an enemy group would otherwise stop wherever its units were when the first
 	// one died, and those beyond automatic targeting's reach would stand there while the rest fight.
-	public class MeleeAttack : Activity
+	// The enemy a melee attack is going for, found by other units through Activity.ActivitiesImplementing.
+	public interface IMeleeEngagement : IActivityInterface
 	{
+		Actor Engaged { get; }
+	}
+
+	public class MeleeAttack : Activity, IMeleeEngagement
+	{
+		// Most units of a side that go for one enemy together: more only queue behind each other on the way and wait for
+		// a cell beside it (a melee weapon reaches the cells around its target), so the next ones spread over its group.
+		const int MaxAttackersPerTarget = 3;
+
 		readonly AttackFrontal attack;
 		readonly Mobile mobile;
 		readonly bool onActor;
@@ -42,6 +52,11 @@ namespace OpenRA.Mods.Pw.Activities
 
 		bool attackedOrdered;
 		int ticksToCheck;
+
+		// The enemy this unit is on its way to or fighting (with the engine's Attack running for it), for the spreading.
+		Actor engaged;
+
+		Actor IMeleeEngagement.Engaged => engaged;
 
 		public MeleeAttack(Actor self, AttackFrontal attack, in Target target, bool forceAttack, Color? targetLineColor, int searchRadius, int checkInterval)
 		{
@@ -87,7 +102,17 @@ namespace OpenRA.Mods.Pw.Activities
 				if (attackedOrdered)
 					return true;
 
+				// An enemy already taken by MaxAttackersPerTarget of its side: the nearest less taken one of its group instead,
+				// unless the player forced the attack on it.
+				if (onActor && !forceAttack && Attackers(self, ordered.Actor) >= MaxAttackersPerTarget)
+				{
+					var spread = LeastTakenOfGroup(self);
+					if (spread.Type == TargetType.Actor)
+						ordered = spread;
+				}
+
 				attackedOrdered = true;
+				engaged = ordered.Type == TargetType.Actor ? ordered.Actor : null;
 				QueueChild(new Attack(self, ordered, true, forceAttack, targetLineColor));
 				return false;
 			}
@@ -100,6 +125,40 @@ namespace OpenRA.Mods.Pw.Activities
 				ticksToCheck = checkInterval;
 
 			return false;
+		}
+
+		// How many other units of its owner are going for, or fighting, the given enemy in a melee attack.
+		static int Attackers(Actor self, Actor enemy)
+		{
+			var count = 0;
+			foreach (var other in self.World.ActorsHavingTrait<Traits.PwMeleeAttack>())
+			{
+				if (other == self || other.Owner != self.Owner || other.IsDead || !other.IsInWorld)
+					continue;
+
+				if (other.CurrentActivity?.ActivitiesImplementing<IMeleeEngagement>().Any(m => m.Engaged == enemy) == true)
+					count++;
+			}
+
+			return count;
+		}
+
+		// Of the enemies of the target's group (within searchRadius of it) this unit can attack and reach, the nearest
+		// that fewer than MaxAttackersPerTarget units of its side are going for.
+		Target LeastTakenOfGroup(Actor self)
+		{
+			var position = self.CenterPosition;
+			return self.World.FindActorsInCircle(ordered.CenterPosition, WDist.FromCells(searchRadius))
+				.Where(IsEnemy(self))
+				.OrderBy(a => (a.CenterPosition - position).LengthSquared).ThenBy(a => a.ActorID)
+				.Select(Target.FromActor)
+				.FirstOrDefault(t => attack.ChooseArmamentsForTarget(t, false).Any() && Attackers(self, t.Actor) < MaxAttackersPerTarget
+					&& CanFight(self, t));
+		}
+
+		protected override void OnLastRun(Actor self)
+		{
+			engaged = null;
 		}
 
 		// The nearest enemy combatant (to this unit) within searchRadius of where the target was, that it can attack.
