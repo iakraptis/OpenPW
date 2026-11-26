@@ -735,16 +735,18 @@ dead.
   (`P_SCRIP`: 256 triggers of one condition and one action; Ghidra `FUN_00404490`, `FUN_00404650`, `FUN_00405170`).
   The computer players' scripts are in Jw2_16.
 - The installer's `campaign` stage (`Campaign.cs`) converts the missions listed in its `Missions` (so far the
-  **Primitive campaign, P01-P12**) into `maps/<race>-<nn>/` of the content folder: the map (shared with `Maps.cs`), every placed
-  unit (`Unit<slot>`), the players, unit availability as `~disabled` prerequisites, the briefing (`MissionData`), the
+  **Primitive campaign, P01-P12**) into `maps/<race>-<nn>/` of the content folder: the map (shared with `Maps.cs`), the placed
+  units of the live list (`Unit<slot>`; the other filled slots are units deleted in the editor), the players, unit availability as `~disabled` prerequisites, the briefing (`MissionData`), the
   narrations as the map's hidden `intro`/`outro` music (a sound would be decoded whole and stall the game), and
   `mission.lua` with the script. `mods/pw/missions/pw.yaml` lists them for the mission browser.
 - `mods/pw/scripts/campaign.lua` runs the triggers the way `Pw.exe` does (transmissions as mission messages,
   victory, defeat, the camera, team orders); victory and defeat are the script's (no `ConquestVictoryConditions`).
   `PwRaceMusic` plays a map's `intro` track first.
 - The computer players use the campaign AI (`rules/campaign-ai.yaml`, loaded only by the campaign maps, so the
-  skirmish AI and lobby are untouched): `PwCampaignBotModule` trains what their script names (`SET_UNIT_MAKE`) and
-  attacks in groups (`SET_ATTACK_COUNTER`, or smaller when the population is full); the placed army stays home.
+  skirmish AI and lobby are untouched): `PwCampaignBotModule` plays their scripts as `Pw.exe` does
+  ([text.md](docs/formats/text.md)): wanted units and tiers, building their trainers, houses and workers, the attack
+  triggers, the units sent, the gathering point, hunting, a later phase, `UNUSE_SCRIPT`. The placed army attacks
+  like trained units; the script's teams stay back with `ON_EXCEPT_TRIGGER_TEAM`. Test map: `campaign-ai-test`.
 - Melee units (`PwMeleeAttack`, `Activities/MeleeAttack.cs`): a melee weapon reaches only the 4 cells beside its target
   and the engine's Attack gives up when none is free; a blocked unit now fights the nearest enemy it can reach within
   6 cells, or waits, then returns to its target. Applies to skirmish too.
@@ -756,10 +758,15 @@ dead.
   interface had no chat panel, so `Media.DisplayMessage` showed nothing). Script actions 2 (a story item on the
   ground, `rules/campaign.yaml`) and 19 (change a team's units' type or owner). The campaign-only units: Kalma
   (P10, P11), Alien1-3 (P08), the plants NoxiousWeed, Poisonous, Treant and DemonFlower (E07). The AI script
-  commands are read from `Pw.exe` ([text.md](docs/formats/text.md)).
-- Next: the other races' missions; actions 22/23 (scene flags); the AI scripts' other settings and branches (attack
-  interval, units sent, gathering point, hunting, scripted teams kept home); Alien4; the Chief's Kalma summon; the
-  briefing pictures.
+  commands are read from `Pw.exe` ([text.md](docs/formats/text.md)). A headless run of a mission ends with it
+  (`Test.Headless`): past it the game crawled as a spectator.
+- 2026-11-25: the placed units were read from every filled `OBC` slot; the map only has those of the unit list from
+  `JW2` +0x143c ([map.md](docs/formats/map.md)): the campaign had 14,661 units instead of 10,720 and some skirmish
+  maps extra creatures (Dino Hunting 193 instead of 119). With the real units, the original P01 plays as the
+  converted one: the Demons' first attack is their 3 Skeletons and 2 Zombies with trained Skeletons.
+- Next: the other races' missions; actions 22/23 (scene flags); the AI's defence (alarm points, towers), research,
+  new bases and the original's 128-tick turn (its attacks come about a minute early in P01); Alien4; the Chief's
+  Kalma summon; the briefing pictures.
 
 ---
 

@@ -5,7 +5,7 @@ a fixed buffer, in this order:
 
 | Section | Size | Loaded to | Content |
 |---|---|---|---|
-| `JW2` | 0x17070 | `0x549784` | Magic `JWAR`, version 150, then run-time globals (save-game state) |
+| `JW2` | 0x17070 | `0x549784` | Magic `JWAR`, version 150, then run-time globals (save-game state); +0x143c and +0x1440: the heads of the live and free unit lists (`DAT_0054abc0` is +0x143c) |
 | `P_MAP` | 0x170 | `0x5607f4` | Map header (below) |
 | `P_SCENA` | 0x2898 | `0x560964` | Scenario: +4 number of players; +0x2808 and +0x2850 are 1 or 4 (unknown); rest zero in skirmish maps |
 | `P_PLAYE` | 0x374 | `0x5631fc` | **Players**: resources and start positions (below) |

@@ -11,7 +11,7 @@ Each scenario's entries, in order (C):
 | Entry | Content |
 |---|---|
 | `<prefix>_S.MP3`, `<prefix>_E.MP3` | Narration of the intro and of the ending story (plain MP3) |
-| `JW2` | 94,320 bytes (94,316 in T01): hero names in Korean and English; otherwise unknown |
+| `JW2` | 94,320 bytes (94,316 in T01): the run-time globals as in a skirmish map ([map.md](map.md)): hero names in Korean and English, and at +0x143c and +0x1440 the heads of the live and free unit lists in `OBC` |
 | `P_MAP`, `P_SCENA`, `P_PLAYE`, `P_UB`, `P_SCRIP`, `OBB`, `OBC`, `OBI`, `RST`, `MAP1`…`MAP3`, `BGI`, `FOGBGI`, `BRUSH`, `HILL_BRUSH`, `FOGMAP3`, `VSBGI` | The map sections, as in a skirmish `.jw2` ([map.md](map.md)); in the campaign `P_SCENA`, `P_PLAYE`, `P_UB`, `P_SCRIP` and `OBC` carry the scenario |
 | `AI` | 42,944 bytes, zero in every scenario (missing in T01, which has `RES19` instead) |
 | `<prefix>_0.JPG` … `_9.JPG` | Briefing pictures, 800 × 600: 0 a map of the island, 1 a scene; 2-9 are 1-byte placeholders |
@@ -102,5 +102,6 @@ The stale text in the other actions is leftover editor text, not shown.
 
 `<prefix>_<player>.txt`, 8 per scenario, 115 of the 384 `UNUSED_SCRIPT`: the AI script language
 ([text.md](text.md)), mostly settings. P01's player 2 (the Demons): `SET_UNIT_MAKE 49 10` and `54 3` (Skeletons,
-Kelpas), `SET_ATTACK_COUNTER 10`, defence and upgrade settings. The mod's campaign AI (`PwCampaignBotModule`) plays
-`SET_UNIT_MAKE` and `SET_ATTACK_COUNTER`; the branches (`GO_IF_…`) and the other settings are not followed yet.
+Kelpas), `SET_ATTACK_COUNTER 10`, defence and upgrade settings. How `Pw.exe` runs the scripts, and what the mod's
+campaign AI (`PwCampaignBotModule`) plays of them, is in [text.md](text.md). Players 1 and 3 of P01 are Demon
+computers with scripts but own nothing; the converter keeps only the players that own something, and the human.
