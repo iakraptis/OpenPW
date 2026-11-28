@@ -25,6 +25,20 @@ The later `JW2_11` has 27 effects (its header counts 44 slots and 27 entries, wh
 
 `JW2_02`'s `Magic.trt` (the spell buttons) and `Single.mnt` also differ.
 
+They are in use in this release, not left over (2026-11-28, read from the files):
+
+- The type records grant them: the Chief's spell mask (`.chr` 0x1f0) is `0x1000001` (Fall out and Sky Fallout), the
+  Unicorn's `0x2000100`, the Phantom's `0x4000000`.
+- `Magic.trt` holds 27 button icons (38,988 bytes, 27 × 1,444), against 16 in the English one.
+- `Jw2.exe` takes them: its spell cost check (`0x49e29f`) and cast (`0x49e382`) refuse records from `0x1b` (27) on,
+  where `Pw.exe`'s (`0x478cd5`, `0x478db8`) refuse them from `0x18` (24). The cast singles out the same records in
+  both (2, 5, 9, 15); the rest, the new three included, run from the record's own fields.
+- The records are complete: Sky Fallout 80 mana, 10 within 100 px, from level 2 (counted from 0); Blessing 150 mana;
+  Shadow Force 80 health, effect 240 for 100 ticks. None needs a research (0x15c is −1). Their header names the tool
+  "Export" where the first 24 have "JWar": they were made later, with another tool.
+
+Not checked in play (the game folders are read-only here).
+
 ## Balance changes (`JW2_09` type records)
 
 | Unit | Change (ours → later) |
