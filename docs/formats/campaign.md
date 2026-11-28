@@ -10,11 +10,11 @@ Each scenario's entries, in order (C):
 
 | Entry | Content |
 |---|---|
-| `<prefix>_S.MP3`, `<prefix>_E.MP3` | Narration of the intro and of the ending story (plain MP3) |
+| `<prefix>_S.MP3`, `<prefix>_E.MP3` | Narration of the intro and of the ending story (plain MP3: MPEG-1 layer III, 44.1 kHz, mono). The engine's MP3 loader reported mono while its decoder gives stereo, so they played at half speed; the mod's `PwMp3Loader` reports the stereo it decodes |
 | `JW2` | 94,320 bytes (94,316 in T01): the run-time globals as in a skirmish map ([map.md](map.md)): hero names in Korean and English, and at +0x143c and +0x1440 the heads of the live and free unit lists in `OBC` |
 | `P_MAP`, `P_SCENA`, `P_PLAYE`, `P_UB`, `P_SCRIP`, `OBB`, `OBC`, `OBI`, `RST`, `MAP1`…`MAP3`, `BGI`, `FOGBGI`, `BRUSH`, `HILL_BRUSH`, `FOGMAP3`, `VSBGI` | The map sections, as in a skirmish `.jw2` ([map.md](map.md)); in the campaign `P_SCENA`, `P_PLAYE`, `P_UB`, `P_SCRIP` and `OBC` carry the scenario |
 | `AI` | 42,944 bytes, zero in every scenario (missing in T01, which has `RES19` instead) |
-| `<prefix>_0.JPG` … `_9.JPG` | Briefing pictures, 800 × 600: 0 a map of the island, 1 a scene; 2-9 are 1-byte placeholders |
+| `<prefix>_0.JPG` … `_9.JPG` | Briefing pictures, 800 × 600 baseline JPEGs (4:4:4, restart markers): 0 a map of the island with the mission's places marked on it (P01: Bimarss, an arrow to Sellbaros), 1 a scene; 2-9 are 1-byte placeholders |
 
 ## Players
 
@@ -35,7 +35,7 @@ CP949, English in every scenario (C).
 | Offset | Content |
 |---|---|
 | 0x0008 | Header: "The Primitives Stage 1", `Title : …`, `Objective : …` (continued on the next lines) |
-| 0x0808 | Intro story (hand-wrapped lines, blank lines between paragraphs, `#…` and `@` marker lines) |
+| 0x0808 | Intro story (hand-wrapped lines, blank lines between paragraphs): its parts, each starting with a `#<n>` line naming a picture; `@` ends it. Every scenario has two, `#0` and `#1`. Before the mission the original shows one screen (`Brief.mnt`): picture 0, the map, with the story, while `<prefix>_S.MP3` is read out; CONTINUE starts the mission (seen in the original, P01). Picture 1 is not shown there |
 | 0x1808 | Ending story, the same way |
 
 ## The scenario script: `P_SCRIP`

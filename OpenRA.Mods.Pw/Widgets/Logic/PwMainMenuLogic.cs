@@ -10,8 +10,11 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Linq;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Widgets;
+using OpenRA.Network;
 using OpenRA.Primitives;
 using OpenRA.Widgets;
 
@@ -79,10 +82,31 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 			var credits = widget.Get("EXTRAS_MENU").Get<ButtonWidget>("CREDITS_BUTTON");
 			pictures[3].Button.OnClick = () => credits.OnClick();
 
+			// Mod change: the Single Player menu's Missions (the engine's mission browser) gives way to Campaign, which
+			// offers the four races; a race starts its campaign's first mission (its briefing first, PwBriefing). The
+			// campaign menu takes the Single Player menu's place while it is open.
+			var singleplayer = menus.Get("SINGLEPLAYER_MENU");
+			var campaign = menus.Get("CAMPAIGN_MENU");
+			var singleplayerShown = singleplayer.IsVisible;
+			var campaignOpen = false;
+			singleplayer.IsVisible = () => singleplayerShown() && !campaignOpen;
+			campaign.IsVisible = () => singleplayerShown() && campaignOpen;
+			singleplayer.Get("MISSIONS_BUTTON").IsVisible = () => false;
+			singleplayer.Get<ButtonWidget>("CAMPAIGN_BUTTON").OnClick = () => campaignOpen = true;
+			campaign.Get<ButtonWidget>("CAMPAIGN_BACK_BUTTON").OnClick = () => campaignOpen = false;
+			foreach (var race in new[] { "primitive", "elf", "tyrano", "demon" })
+			{
+				var button = campaign.Get<ButtonWidget>(race.ToUpperInvariant() + "_BUTTON");
+				var first = $"{race}-01";
+				button.IsDisabled = () => CampaignMap(first) == null;
+				button.GetTooltipText = () => button.IsDisabled() ? FluentProvider.GetMessage("tooltip-campaign-unavailable") : null;
+				button.OnClick = () => StartMission(first);
+			}
+
 			// Mod change: Exit stays on the submenus too (Single Player, Extras, Map Editor), not only on the main
 			// screen. MainMenuLogic finds it under MAIN_MENU (hidden on the submenus), so it moves out afterwards.
 			var quit = pictures[4].Button;
-			var submenus = new[] { menus.Get("SINGLEPLAYER_MENU"), menus.Get("EXTRAS_MENU"), menus.Get("MAP_EDITOR_MENU") };
+			var submenus = new[] { singleplayer, campaign, menus.Get("EXTRAS_MENU"), menus.Get("MAP_EDITOR_MENU") };
 			mainMenu.RemoveChild(quit);
 			widget.AddChild(quit);
 			quit.IsVisible = () => mainMenu.IsVisible() || Array.Exists(submenus, m => m.IsVisible());
@@ -91,6 +115,19 @@ namespace OpenRA.Mods.Pw.Widgets.Logic
 		}
 
 		public override void Tick() => Layout();
+
+		// A campaign mission converted by the installer (maps/<race>-<nn>/ of the content folder), by its folder name.
+		static MapPreview CampaignMap(string folder) =>
+			Game.ModData.MapCache.FirstOrDefault(m => m.Status == MapStatus.Available && m.Path != null
+				&& string.Equals(Path.GetFileName(m.Path.TrimEnd('/', '\\')), folder, StringComparison.OrdinalIgnoreCase));
+
+		// As the mission browser starts one: a local server with the map, the player ready.
+		static void StartMission(string folder)
+		{
+			var map = CampaignMap(folder);
+			if (map != null)
+				Game.CreateAndStartLocalServer(map.Uid, [Order.Command($"state {Session.ClientState.Ready}")]);
+		}
 
 		void Layout()
 		{
