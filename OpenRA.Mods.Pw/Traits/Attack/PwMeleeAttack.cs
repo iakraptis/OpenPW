@@ -46,7 +46,10 @@ namespace OpenRA.Mods.Pw.Traits
 			if (!allowMove || !self.Info.HasTraitInfo<MobileInfo>())
 				return base.GetAttackActivity(self, source, newTarget, allowMove, forceAttack, targetLineColor);
 
-			return new MeleeAttack(self, this, newTarget, forceAttack, targetLineColor, info.SearchRadius, info.CheckInterval);
+			// The group behaviour (spreading over the target's group, going on to it) is for the Attack command and the units'
+			// own targeting; a player's direct order on a unit (right click, source Default) is for that unit alone.
+			var groupWise = source != AttackSource.Default;
+			return new MeleeAttack(self, this, newTarget, forceAttack, targetLineColor, info.SearchRadius, info.CheckInterval, groupWise);
 		}
 	}
 }

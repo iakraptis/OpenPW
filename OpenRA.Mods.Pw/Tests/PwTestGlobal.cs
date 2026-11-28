@@ -37,6 +37,10 @@ namespace OpenRA.Mods.Pw.Tests
 		public void OrderOn(Actor actor, string order, Actor target) =>
 			Resolve(actor, new Order(order, actor, Target.FromActor(target), false));
 
+		[Desc("Send a unit with the Attack command to a place, as the command panel's button and a click do (the real ",
+			"AttackMove order; Lua's AttackMove queues the activity itself, without the order).")]
+		public void AttackMove(Actor unit, CPos cell) => Resolve(unit, new Order("AttackMove", unit, Target.FromCell(unit.World, cell), false));
+
 		[Desc("Send a unit to patrol between where it is and a place, as the Patrol button and a click do.")]
 		public void Patrol(Actor unit, CPos cell) => Resolve(unit, PwPatrol.Patrol(unit, cell, false));
 

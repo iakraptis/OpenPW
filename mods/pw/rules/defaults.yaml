@@ -44,6 +44,8 @@
 	PwArmor:
 	RevealsShroud:
 	AttackMove:
+	# The Attack command goes on to the enemies at the place, for a unit whose walk there ended blocked by others.
+	PwAttackMoveFinish:
 	# Back and forth between two places, attack-moving (the command panel's Patrol).
 	PwPatrol:
 	Guard:
@@ -181,6 +183,7 @@
 	-Buildable:
 	-MustBeDestroyed:
 	-AttackMove:
+	-PwAttackMoveFinish:
 	-PwPatrol:
 	-Guard:
 	# Hit, a plant-eater runs off and sometimes roars (predators fight back instead).
@@ -453,8 +456,8 @@
 	AutoTarget:
 		MinimumScanTimeInterval: 6
 		MaximumScanTimeInterval: 16
-		# Units scan 5 cells and go for enemies they see, as OpenSYW's infantry do.
-		ScanRadius: 5
+		# Units scan 6 cells and go for enemies they see (OpenSYW's infantry scan 5).
+		ScanRadius: 6
 		InitialStance: AttackAnything
 	AutoTargetPriority@DEFAULT:
 		ValidTargets: Ground

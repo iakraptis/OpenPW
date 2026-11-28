@@ -27,7 +27,10 @@ namespace OpenRA.Mods.Pw.Activities
 	// target is taken it fights the nearest enemy it can reach, or else waits, and then returns to its target.
 	// Once the target dies, it goes on to the nearest enemy of the target's group (combatants within searchRadius of
 	// where the target was): a group sent at an enemy group would otherwise stop wherever its units were when the first
-	// one died, and those beyond automatic targeting's reach would stand there while the rest fight.
+	// one died, and those beyond automatic targeting's reach would stand there while the rest fight. That, and spreading
+	// over the target's group (MaxAttackersPerTarget), is for the Attack command and the units' own targeting
+	// (groupWise); a player's direct order on a unit keeps every unit on that unit, and ends when it dies: the unit's
+	// automatic targeting then looks for the next one on its first idle tick (its scan interval runs only between scans).
 	// The enemy a melee attack is going for, found by other units through Activity.ActivitiesImplementing.
 	public interface IMeleeEngagement : IActivityInterface
 	{
@@ -49,6 +52,7 @@ namespace OpenRA.Mods.Pw.Activities
 		readonly Color? targetLineColor;
 		readonly int searchRadius;
 		readonly int checkInterval;
+		readonly bool groupWise;
 
 		bool attackedOrdered;
 		int ticksToCheck;
@@ -58,7 +62,8 @@ namespace OpenRA.Mods.Pw.Activities
 
 		Actor IMeleeEngagement.Engaged => engaged;
 
-		public MeleeAttack(Actor self, AttackFrontal attack, in Target target, bool forceAttack, Color? targetLineColor, int searchRadius, int checkInterval)
+		public MeleeAttack(Actor self, AttackFrontal attack, in Target target, bool forceAttack, Color? targetLineColor, int searchRadius, int checkInterval,
+			bool groupWise)
 		{
 			this.attack = attack;
 			ordered = target;
@@ -70,6 +75,7 @@ namespace OpenRA.Mods.Pw.Activities
 			this.targetLineColor = targetLineColor;
 			this.searchRadius = searchRadius;
 			this.checkInterval = checkInterval;
+			this.groupWise = groupWise;
 			mobile = self.Trait<Mobile>();
 		}
 
@@ -81,7 +87,7 @@ namespace OpenRA.Mods.Pw.Activities
 			if (!ordered.IsValidFor(self))
 			{
 				// The target is gone: on to the next of its group, if this was an attack on an enemy.
-				var next = forceAttack || !onActor ? Target.Invalid : NextOfGroup(self);
+				var next = forceAttack || !onActor || !groupWise ? Target.Invalid : NextOfGroup(self);
 				if (next.Type != TargetType.Actor)
 					return true;
 
@@ -104,7 +110,7 @@ namespace OpenRA.Mods.Pw.Activities
 
 				// An enemy already taken by MaxAttackersPerTarget of its side: the nearest less taken one of its group instead,
 				// unless the player forced the attack on it.
-				if (onActor && !forceAttack && Attackers(self, ordered.Actor) >= MaxAttackersPerTarget)
+				if (groupWise && onActor && !forceAttack && Attackers(self, ordered.Actor) >= MaxAttackersPerTarget)
 				{
 					var spread = LeastTakenOfGroup(self);
 					if (spread.Type == TargetType.Actor)

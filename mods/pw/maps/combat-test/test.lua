@@ -17,7 +17,7 @@ do
     local function Check(ok, message) return BaseCheck(ok, "Combat: " .. message) end
     local function WaitFor(message, timeout, cond, andThen) return BaseWaitFor("Combat: " .. message, timeout, cond, andThen) end
     local function FinishWhenDone(_, deadline) Deadline = math.max(Deadline, deadline) end
-    local AttackMove, Exposure, FirstHit, GroupAttack, GroupEngage, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
+    local AttackMove, Exposure, FirstHit, GroupAttack, GroupEngage, GroupFocus, MeleeAround, Patrolling, MeleeBlocked, MissileModes, Repairing, Voices, WorldLoaded, enemy, me
     -- Combat. Damage is the original rule: attack minus the target's armour, at least 1 (docs/game/rules.md).
     -- 1. A melee hit (Powerman, attack 25) takes 25 from a Buildman (armour 0).
     -- 2. An arrow (Soldier, attack 20) takes 17 from a Powerman (armour 3).
@@ -34,7 +34,9 @@ do
     --    main building hides the player again.
     -- 10. Melee reach (^Melee 1c512): eight Powermen in the eight cells around an enemy Giant all hit it, the
     --    diagonal ones included; a Powerman holding its ground (Defend) two cells from an enemy never reaches it.
-    -- 11. A group ordered at one of an enemy group spreads over it: six Powermen 12 cells away all hit within 115 ticks.
+    -- 11. A group sent with Attack at one of an enemy group spreads over it: six Powermen 12 cells away all hit within
+    --    135 ticks. Right-clicked onto one, they stay on it: none of its neighbours is hit before it dies; then each hits
+    --    one of them within 50 ticks (automatic targeting).
     WorldLoaded = function()
         me = Player.GetPlayer("Combat")
         enemy = Player.GetPlayer("Creeps")
@@ -47,6 +49,7 @@ do
         Later(5, MeleeBlocked)
         Later(5, GroupAttack)
         Later(5, GroupEngage)
+        Later(5, GroupFocus)
         Later(5, AttackMove)
         Later(5, MeleeAround)
         Later(5, Patrolling)
@@ -143,8 +146,7 @@ do
     end
 
     -- A melee unit whose target has others on every cell in reach fights another enemy near it (PwMeleeAttack), and goes
-    -- back to its target once there is a cell free. The other enemy is beyond its automatic targeting (5 cells), so
-    -- only that search finds it.
+    -- back to its target once there is a cell free.
     MeleeBlocked = function()
         local foe = Player.GetPlayer("CombatFoe")
         local target = Actor.Create("primitive-powerman-shield-of-peace", true, { Owner = foe, Location = At(40, 30) })
@@ -175,9 +177,9 @@ do
         end)
     end
 
-    -- A group ordered to attack one unit of an enemy group (MeleeAttack): 18 Powermen on the middle one of nine,
+    -- A group sent with Attack at one unit of an enemy group (MeleeAttack): 18 Powermen on the middle one of nine,
     -- which fight back. The ordered one dies long before the units at the back get there; they go on to the rest of
-    -- the group instead of stopping where they are (some beyond automatic targeting's 5 cells, left standing).
+    -- the group instead of stopping where they are (some beyond automatic targeting's 6 cells, left standing).
     GroupAttack = function()
         local foe = Player.GetPlayer("CombatFoe")
         local enemies, attackers = { }, { }
@@ -192,7 +194,7 @@ do
         local ordered, stood
         local idle = { }
         Later(2, function()
-            for _, a in ipairs(attackers) do a.Attack(enemies[4]) end
+            for _, a in ipairs(attackers) do PwTest.AttackMove(a, enemies[4].Location) end
             ordered = true
         end)
         local function Done()
@@ -210,16 +212,18 @@ do
         end)
     end
 
-    -- A group ordered at one of an enemy group 12 cells away engages without queuing: six Powermen on one of six
+    -- A group sent with Attack at one of an enemy group 12 cells away engages without queuing: six Powermen on one of six
     -- (holding fire). A melee unit reaches only the cells beside its target, so six on one enemy lined up and waited
-    -- behind each other (the last hit about 150 ticks after the order, here); now at most three go for one enemy and the
-    -- rest take its neighbours (MeleeAttack), and a unit waits about 1.4 s behind another (Locomotor WaitAverage).
+    -- behind each other (the last hit about 150 ticks after the order, here). With the Attack command automatic
+    -- targeting spreads them over the group (and at most three go for one enemy, MeleeAttack). The last first hit, in
+    -- runs on 2026-11-28 with the real order (PwTest.AttackMove) and a scan of 6 cells: 113 ticks after it with the
+    -- current rules (every run), 153 with the old blocked wait of 80, 113 without the cap.
     GroupEngage = function()
         local foe = Player.GetPlayer("CombatFoe")
         local enemies, attackers, hit = { }, { }, { }
         for i = 0, 5 do
-            enemies[#enemies + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(16 + i % 2, 63 + math.floor(i / 2)) })
-            attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(4, 62 + i) })
+            enemies[#enemies + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(34 + i % 2, 63 + math.floor(i / 2)) })
+            attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(22, 62 + i) })
         end
         for _, e in ipairs(enemies) do
             Trigger.OnDamaged(e, function(_, attacker)
@@ -228,11 +232,43 @@ do
         end
         Later(1, function()
             for _, e in ipairs(enemies) do e.Stance = "HoldFire" end
-            for _, a in ipairs(attackers) do a.Attack(enemies[1]) end
+            for _, a in ipairs(attackers) do PwTest.AttackMove(a, enemies[1].Location) end
         end)
-        WaitFor("all six of a group ordered at one of an enemy group hit within 115 ticks", 115, function()
+        WaitFor("all six of a group sent with Attack at one of an enemy group hit within 135 ticks", 135, function()
             for i = 1, #attackers do if not hit[i] then return false end end
             return true
+        end)
+    end
+
+    -- A group right-clicked onto one unit of an enemy group stays on it: six Powermen on the middle one of five
+    -- (holding fire, two cells apart, so the eight cells around it are free). The spreading over the group is for the
+    -- Attack command and automatic targeting (MeleeAttack groupWise); none of its neighbours is hit before it dies. Then
+    -- the unit's automatic targeting takes each on to a neighbour (the last hit 33 ticks after the death, 2026-11-28).
+    GroupFocus = function()
+        local foe = Player.GetPlayer("CombatFoe")
+        local target = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(48, 77) })
+        local others, attackers, stray, after = { }, { }, nil, { }
+        for _, d in ipairs({ { -2, 0 }, { 2, 0 }, { 0, -2 }, { 0, 2 } }) do
+            others[#others + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = At(48 + d[1], 77 + d[2]) })
+        end
+        for i = 0, 5 do attackers[#attackers + 1] = Actor.Create("primitive-powerman", true, { Owner = me, Location = At(38, 74 + i) }) end
+        for _, e in ipairs(others) do
+            Trigger.OnDamaged(e, function(_, attacker)
+                if not target.IsDead then stray = stray or (e.Location.X .. "," .. e.Location.Y) end
+                for i, a in ipairs(attackers) do if a == attacker then after[i] = true end end
+            end)
+        end
+        Later(1, function()
+            target.Stance = "HoldFire"
+            for _, e in ipairs(others) do e.Stance = "HoldFire" end
+            for _, a in ipairs(attackers) do a.Attack(target) end
+        end)
+        WaitFor("a group right-clicked onto one of an enemy group kills it", 400, function() return target.IsDead end, function()
+            Check(stray == nil, "no other enemy of the group is hit before the right-clicked one dies" .. (stray and " (one at " .. stray .. ")" or ""))
+            WaitFor("each of the group hits another enemy within 50 ticks of the right-clicked one's death", 50, function()
+                for i = 1, #attackers do if not after[i] then return false end end
+                return true
+            end)
         end)
     end
 
