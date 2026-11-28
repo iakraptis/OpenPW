@@ -1,16 +1,18 @@
 -- Test: Crowds. How groups of units move and fight together, against regressions in the melee attack (MeleeAttack)
 -- and the locomotors' blocked wait (Locomotor WaitAverage, rules/world.yaml). Times are original ticks; each limit
--- has a margin over what the current rules give, and fails with the rules that made combat sluggish or traffic jam.
--- 1. Brawl: 30 Powermen ordered at one of 30 enemy Powermen (which fight back) deal at least BrawlDamage to them by
---    tick 150: they engage instead of queuing behind each other. By tick 1000 no unit stands idle near an enemy.
+-- has a margin over what the current rules give.
+-- 1. Brawl: 30 Powermen sent with the Attack command at one of 30 enemy Powermen (which fight back) deal at least
+--    BrawlDamage to them by tick 150: they engage instead of queuing behind each other. By tick 1000 no unit stands idle near an enemy.
 -- 2. Bottleneck: 12 Powermen walk through a 2-cell gap in a wall of Houses, all through by tick 250.
 -- 3. Head-on jam: 40 Powermen each way through one 2-cell gap; at least JamThrough of the 80 get through by tick
 --    3000 (a short blocked wait makes them re-route back and forth instead of waiting their turn).
 
--- The limits, from runs on 2026-11-26: the brawl dealt 958-1338 by tick 150 with the current rules, 600-816 without the
--- cap of three attackers per enemy (MeleeAttack) or with the old blocked wait of 80; the jam let 57-70 through with a
--- blocked wait of 40, 51-56 with 24 or 16, 35-38 with 8 and 22-25 with 4.
-local BrawlDamage = 880
+-- The limits, from runs on 2026-11-28 with the real Attack order (PwTest.AttackMove, as the command panel and the AIs
+-- give it) and a scan of 6 cells (^Melee AutoTarget): the brawl dealt 842-1256 by tick 150 with the current rules,
+-- 876-1036 with the old blocked wait of 80 and 914-1052 without the cap of three attackers per enemy (MeleeAttack). Through the Attack command automatic targeting
+-- already spreads the units, so the ranges overlap; the limit has a margin under the current rules and catches worse
+-- regressions. The jam let 57-70 through with a blocked wait of 40, 51-56 with 24 or 16, 35-38 with 8 and 22-25 with 4.
+local BrawlDamage = 760
 local JamThrough = 50
 
 local me, foe
@@ -22,14 +24,14 @@ local function Brawl(y)
         them[#them + 1] = Actor.Create("primitive-powerman", true, { Owner = foe, Location = CPos.New(24 + i % 3, y + math.floor(i / 3)) })
     end
     local full = them[1].MaxHealth
-    Later(1, function() for _, a in ipairs(us) do a.Attack(them[1]) end end)
+    Later(1, function() for _, a in ipairs(us) do PwTest.AttackMove(a, them[1].Location) end end)
     Later(150, function()
         local lost = 0
         for _, e in ipairs(them) do lost = lost + (e.IsDead and full or (full - e.Health)) end
         print("crowd: brawl damage by tick 150: " .. lost)
         Check(lost >= BrawlDamage, "Brawl: 30 Powermen sent at 30 deal at least " .. BrawlDamage .. " damage by tick 150 (dealt " .. lost .. ")")
     end)
-    -- Every unit left near an enemy is still fighting: none stands idle within 5 cells (automatic targeting's reach) of
+    -- Every unit left near an enemy is still fighting: none stands idle within 6 cells (automatic targeting's reach) of
     -- an enemy. One left further away may stand, as any unit out of reach of the enemy does.
     Later(1000, function()
         local stood
@@ -39,13 +41,13 @@ local function Brawl(y)
                     for _, e in ipairs(pair[2]) do
                         if not e.IsDead then
                             local d = u.Location - e.Location
-                            if d.X * d.X + d.Y * d.Y <= 25 then stood = stood or (u.Location.X .. "," .. u.Location.Y) end
+                            if d.X * d.X + d.Y * d.Y <= 36 then stood = stood or (u.Location.X .. "," .. u.Location.Y) end
                         end
                     end
                 end
             end
         end
-        Check(stood == nil, "Brawl: by tick 1000 no unit stands idle within 5 cells of an enemy" .. (stood and " (one at " .. stood .. ")" or ""))
+        Check(stood == nil, "Brawl: by tick 1000 no unit stands idle within 6 cells of an enemy" .. (stood and " (one at " .. stood .. ")" or ""))
     end)
 end
 
